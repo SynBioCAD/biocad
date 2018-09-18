@@ -1,0 +1,189 @@
+
+@import "jfw.less";
+@import "variables.less";
+@import "biocad-setup.less";
+@import "biocad-circuit-view-minimap.less";
+@import "biocad-sequence-view.less";
+@import "biocad-palette.less";
+
+div.sf-circuit-view-toolbar {
+    height: 48px;
+    background-color: #555;
+
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    
+    padding-left: 10px;
+}
+
+
+
+.sf-caret {
+  animation: blinker 1.0s linear infinite;
+}
+
+@keyframes blinker {  
+  50% { opacity: 0.4; }
+}
+
+
+.sf-glyph-expand-icon:hover {
+    fill: blue;
+}
+
+
+
+.sf-circuit-view,.sf-circuit-view-overlay {
+    overflow: hidden;
+}
+
+.sf-circuit-view-scrollbar {
+    /*background-color: #999;*/
+}
+
+.sf-circuit-view-scrollbar > div {
+    background-color: #BBB;
+    border-radius: 10px;
+}
+
+.sf-circuit-view-scrollbar > div:hover {
+    background-color: #BBF;
+    border-radius: 10px;
+}
+
+.sf-circuit-view-vertical-scrollbar > div {
+}
+
+
+.sf-circuit-view-horizontal-scrollbar > div {
+}
+
+
+div.sf-inspector-container {
+    margin-left: 4px;
+    width:calc(~"100% - 8px");
+    overflow: hidden;
+
+}
+table.sf-inspector {
+    margin:0;
+    padding:0;
+    border-collapse:collapse;
+    color:black;
+    width: 100%;
+}
+
+table.sf-inspector tr {
+    margin:0;
+    padding:0;
+    border:none;
+}
+
+table.sf-inspector td {
+    margin:0;
+    padding:4px;
+    margin:0;
+    border:none;
+}
+
+table.sf-inspector tr:nth-child(even) td {
+    /*background-color: #FFF5D2;*/
+}
+
+table.sf-inspector tr:nth-child(odd) td {
+    /*background-color: #FFF;*/
+}
+
+table.sf-inspector tr.sf-inspector-oneline {
+    border-bottom: 2px solid #555;
+}
+
+table.sf-inspector tr.sf-inspector-oneline td {
+    background-color: white;
+}
+
+table.sf-inspector tr.sf-inspector-oneline td:first-child {
+    font-variant: small-caps;
+    text-transform: uppercase;
+    font-size: 9pt;
+    font-weight: bold;
+    background-color: #DDD;
+}
+
+table.sf-inspector tr.sf-inspector-oneline td:nth-child(2) {
+    box-shadow: inset 10px 0px 10px -10px rgba(0, 0, 0, 0.05);
+}
+
+
+table.sf-inspector tr.sf-inspector-twolines-header {
+    font-variant: small-caps;
+    text-transform: uppercase;
+    font-size: 9pt;
+    font-weight: bold;
+    background-color: #DDD;
+}
+
+table.sf-inspector tr.sf-inspector-twolines-value {
+    margin-left: 16px;
+    background-color: #FFF;
+    box-shadow: inset 0px 10px 10px -10px rgba(0, 0, 0, 0.05);
+}
+
+tr.sf-inspector-oneline {
+}
+
+.sf-inspector-top {
+    display: inline-flex;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    align-items: center;
+}
+
+.sf-inspector-desc {
+    font-size: 8pt;
+    padding: 8px;
+    padding-top: 0px;
+}
+
+.sf-inspector-top h1 {
+    display: inline;
+    padding-left: 16px;
+    font-size: 14pt;
+}
+
+.sf-inspector-role .sf-inspector-role-remove {
+    visibility: hidden;
+}
+
+.sf-inspector-role:hover .sf-inspector-role-remove {
+    visibility: visible;
+}
+
+.sf-inspector-role .sf-inspector-role-remove:hover {
+    color: red;
+    cursor: pointer;
+}
+
+.sf-inspector-add-role {
+    width: 100%;
+    text-align: right;
+}
+
+.sf-inspector-add-role .fa:hover {
+    color: green;
+    cursor: pointer;
+}
+
+
+
+.sf-library-folderpicker {
+    width: 100%;
+    font-size: 18pt;
+    padding-top: 16px;
+    padding-bottom: 16px;
+    text-align: center;
+}
+
+

@@ -1,0 +1,49 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "npm",
+            "script": "dev",
+            "problemMatcher": [
+            {
+                    "owner": "typescript",
+                    "severity": "error",
+                    "fileLocation": "relative",
+                    "pattern": [
+                        {
+                            "regexp": "ERROR in \\[at-loader\\] ([^:]*):(\\d+):(\\d+)",
+                            "file": 1,
+                            "line": 2,
+                            "column": 3
+                        },
+                        {
+                            "regexp": "TS(.*)",
+                            "message": 1
+                        }
+                    ]
+                },
+                {
+                    "owner": "tslint",
+                    "severity": "error",
+                    "fileLocation": "relative",
+                    "pattern": [
+                        {
+                            "regexp": "(ERROR|WARNING) in ([^:]*)",
+                            "file": 2,
+                            "severity": 1
+                        },
+                        {
+                            "regexp": "\\[(\\d+), (\\d+)\\]: (.*)",
+                            "line": 1,
+                            "column": 2,
+                            "message": 3,
+                            "loop": true
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

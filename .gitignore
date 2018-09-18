@@ -1,0 +1,14 @@
+bundle_*
+*_bundle
+*.log
+node_modules
+dist/css
+dist/js/biocad_bundle.js
+*.map
+chrome_tmp
+cache
+renderfarm/biocad/*
+.idea
+*.class
+
+

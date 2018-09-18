@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "request": "registry:npm/request#2.69.0+20160428223725",
+    "xtend": "registry:npm/xtend#4.0.0+20161006234335"
+  },
+  "globalDependencies": {
+    "node": "registry:dt/node#7.0.0+20170322231424"
+  }
+}

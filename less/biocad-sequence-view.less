@@ -1,0 +1,69 @@
+
+.sf-sequence-editor {
+    display: flex;
+    flex-direction: column;
+}
+
+.sf-sequence-editor-overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+}
+
+.sf-sequence-editor-svg {
+}
+
+.sf-sequence-editor-overlay-svg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+}
+
+div.sf-sequence-editor-svgs {
+    flex: 1 1;
+    position: relative;
+}
+
+
+div.sf-sequence-view-toolbar {
+    height: 80px;
+    background-color: #f7f7f7;
+}
+
+div.sf-sequence-view-toolbar-top {
+    .jfw-no-select;
+    height: 48px;
+    background-color: #555;
+}
+
+div.sf-sequence-view-toolbar-bottom {
+    .jfw-no-select;
+    height: 32px;
+    background-color: white;
+    padding-top: 12px;
+    padding-left: 16px;
+    font-family: monospace;
+}
+
+div.sf-sequence-view-toolbar-bottom > div {
+    display: inline;
+    padding-right: 30px;
+}
+
+.jfw-main-view.sf-sequence-view {
+    height: calc(~"100% - "@sequenceViewToolbarHeight - @topbarHeight)
+}
+
+.jfw-main-view.sf-sequence-view .sf-sequence-editor {
+    width: 100%;
+    height: 100%;
+}
+
+
+
+
+

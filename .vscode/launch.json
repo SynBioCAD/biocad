@@ -1,0 +1,36 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Launch Chrome against localhost",
+            "url": "http://localhost/biocad/#/*",
+            "webRoot": "${workspaceRoot}/dist/",
+            "runtimeExecutable": "/usr/bin/chromium-browser",
+            "sourceMaps": true,
+            "trace": true,
+            "runtimeArgs": [
+                "--disk-cache-dir=\"/dev/null\" --media-cache-dir=\"/dev/null\""
+            ]
+        },
+        {
+            "type": "chrome",
+            "request": "attach",
+            "name": "Attach to Chrome",
+            "port": 9222,
+            "webRoot": "${workspaceRoot}/dist/",
+            "sourceMaps": true,
+            "trace": true
+        },
+        {
+            "name": "Current TS File",
+            "type": "node",
+            "request": "launch",
+            "program": "${workspaceRoot}/node_modules/ts-node/dist/_bin",
+            "args": ["-r", "tsconfig-paths/register", "${relativeFile}"],
+            "cwd": "${workspaceRoot}",
+            "protocol": "inspector"
+        },
+    ]
+}

@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+	"outDir": "./dist/",
+        "target": "es6",
+        "sourceMap": true,
+        "inlineSources": false,
+        "module": "commonjs",
+        "baseUrl": ".",
+        "alwaysStrict": true,
+        "strictNullChecks": true,
+        "allowJs": true,
+        "paths": {
+            "jfw/*": [ "./node_modules/jfw/dist/jfw/*" ],
+            "jfw": [ "./node_modules/jfw/dist/jfw" ]
+        }
+    },
+    "include": [
+        "biocad/**/*",
+        "visbolite/**/*"
+    ]
+}
