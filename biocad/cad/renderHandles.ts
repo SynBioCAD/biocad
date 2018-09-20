@@ -1,11 +1,26 @@
 
 import { Rect, Vec2 } from "jfw/geom";
-import { svg } from "jfw/vdom";
+import { svg, VNode } from "jfw/vdom";
 import { drag as dragEvent } from 'jfw/event'
 
-export default function renderHandles(rect:Rect, bHover:boolean, callback:(pos:Vec2, dimensions:string[]) => void, color ?:string) {
+export default function renderHandles(rect:Rect, bHover:boolean, bResizeable:boolean, callback:(pos:Vec2, dimensions:string[]) => void, color ?:string) {
 
     const center = rect.center()
+
+    let handles:VNode[] = []
+
+    if(bResizeable) {
+        handles.push(
+            renderHandle(rect.topLeft, 'nw-resize', ['north', 'west']),
+            renderHandle(rect.bottomRight, 'se-resize', ['south', 'east']),
+            renderHandle(Vec2.fromXY(rect.topLeft.x, rect.bottomRight.y), 'sw-resize', ['south', 'west']),
+            renderHandle(Vec2.fromXY(rect.bottomRight.x, rect.topLeft.y), 'ne-resize', ['north', 'east']),
+            renderHandle(Vec2.fromXY(center.x, rect.topLeft.y), 'n-resize', ['north']),
+            renderHandle(Vec2.fromXY(rect.topLeft.x, center.y), 'w-resize', ['west']),
+            renderHandle(Vec2.fromXY(center.x, rect.bottomRight.y), 's-resize', ['south']),
+            renderHandle(Vec2.fromXY(rect.bottomRight.x, center.y), 'e-resize', ['east'])
+        )
+    }
 
     return svg('g', [
         svg('rect', {
@@ -17,16 +32,8 @@ export default function renderHandles(rect:Rect, bHover:boolean, callback:(pos:V
             stroke: color || '#AAF',
             'stroke-width': '1px',
             'stroke-dasharray': bHover ? '2, 2' : ''
-        }),
-        renderHandle(rect.topLeft, 'nw-resize', ['north', 'west']),
-        renderHandle(rect.bottomRight, 'se-resize', ['south', 'east']),
-        renderHandle(Vec2.fromXY(rect.topLeft.x, rect.bottomRight.y), 'sw-resize', ['south', 'west']),
-        renderHandle(Vec2.fromXY(rect.bottomRight.x, rect.topLeft.y), 'ne-resize', ['north', 'east']),
-        renderHandle(Vec2.fromXY(center.x, rect.topLeft.y), 'n-resize', ['north']),
-        renderHandle(Vec2.fromXY(rect.topLeft.x, center.y), 'w-resize', ['west']),
-        renderHandle(Vec2.fromXY(center.x, rect.bottomRight.y), 's-resize', ['south']),
-        renderHandle(Vec2.fromXY(rect.bottomRight.x, center.y), 'e-resize', ['east'])
-    ])
+        })
+    ].concat(handles))
 
     function renderHandle(pos, cursor, dimensions) {
 

@@ -118,6 +118,10 @@ export default abstract class Depiction extends Versioned {
 
     }
 
+    isResizeable():boolean {
+        return true
+    }
+
     isVisible():boolean {
 
         if(!this.parent)

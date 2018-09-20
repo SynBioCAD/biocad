@@ -212,7 +212,7 @@ export default class LayoutEditorOverlay extends View {
 
             if(hovering) {
 
-                handles.push(renderHandles(transform.transformRect(hovering.absoluteBoundingBox.multiply(layout.gridSize)), true, (pos:Vec2, dimensions:string[]) => {
+                handles.push(renderHandles(transform.transformRect(hovering.absoluteBoundingBox.multiply(layout.gridSize)), true, hovering.isResizeable(), (pos:Vec2, dimensions:string[]) => {
                     this.resize(hovering, pos, dimensions)
                 }))
 
@@ -251,7 +251,7 @@ export default class LayoutEditorOverlay extends View {
                             for(let d of [ dOfLocal, dOfRemote ]) {
 
                                 if (d !== hovering) {
-                                    mappings.push(renderHandles(transform.transformRect(d.absoluteBoundingBox.multiply(layout.gridSize)), true, (pos: Vec2, dimensions: string[]) => {
+                                    mappings.push(renderHandles(transform.transformRect(d.absoluteBoundingBox.multiply(layout.gridSize)), true, hovering.isResizeable(), (pos: Vec2, dimensions: string[]) => {
                                     }, '#ff6961'))
                                 }
 
@@ -272,7 +272,7 @@ export default class LayoutEditorOverlay extends View {
 
         for(let depiction of this.layoutEditor.getSelection(layout)) {
 
-            handles.push(renderHandles(transform.transformRect(depiction.absoluteBoundingBox.multiply(layout.gridSize)), false, (pos:Vec2, dimensions:string[]) => {
+            handles.push(renderHandles(transform.transformRect(depiction.absoluteBoundingBox.multiply(layout.gridSize)), false, depiction.isResizeable(), (pos:Vec2, dimensions:string[]) => {
                 this.resize(depiction, pos, dimensions)
             }))
 

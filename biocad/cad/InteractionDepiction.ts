@@ -16,5 +16,8 @@ export default abstract class InteractionDepiction extends Depiction {
 
     }
 
+    isResizeable() {
+        return false
+    }
 
 }
