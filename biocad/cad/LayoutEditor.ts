@@ -207,7 +207,7 @@ export default class LayoutEditor extends View {
         let selection:Depiction[] = []
         
         for(let ref of this.selectedDepictions) {
-            let d = ref.toDepiction(this.layout)
+            let d = ref.toDepiction(layout)
             if(d) {
                 selection.push(d)
             }

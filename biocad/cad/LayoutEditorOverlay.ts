@@ -198,7 +198,8 @@ export default class LayoutEditorOverlay extends View {
             const hovering:Depiction|null = layout.getTopIntersectingDepiction(this.mouseGridPos, true)
 
             if(hovering) {
-                handles.push(renderHandles(transform.transformRect(hovering.absoluteBoundingBox.multiply(this.layoutEditor.layout.gridSize)), true, (pos:Vec2, dimensions:string[]) => {
+
+                handles.push(renderHandles(transform.transformRect(hovering.absoluteBoundingBox.multiply(layout.gridSize)), true, (pos:Vec2, dimensions:string[]) => {
                     this.resize(hovering, pos, dimensions)
                 }))
 
@@ -237,7 +238,7 @@ export default class LayoutEditorOverlay extends View {
                             for(let d of [ dOfLocal, dOfRemote ]) {
 
                                 if (d !== hovering) {
-                                    mappings.push(renderHandles(transform.transformRect(d.absoluteBoundingBox.multiply(this.layoutEditor.layout.gridSize)), true, (pos: Vec2, dimensions: string[]) => {
+                                    mappings.push(renderHandles(transform.transformRect(d.absoluteBoundingBox.multiply(layout.gridSize)), true, (pos: Vec2, dimensions: string[]) => {
                                     }, '#ff6961'))
                                 }
 
@@ -258,7 +259,7 @@ export default class LayoutEditorOverlay extends View {
 
         for(let depiction of this.layoutEditor.getSelection(layout)) {
 
-            handles.push(renderHandles(transform.transformRect(depiction.absoluteBoundingBox.multiply(this.layoutEditor.layout.gridSize)), false, (pos:Vec2, dimensions:string[]) => {
+            handles.push(renderHandles(transform.transformRect(depiction.absoluteBoundingBox.multiply(layout.gridSize)), false, (pos:Vec2, dimensions:string[]) => {
                 this.resize(depiction, pos, dimensions)
             }))
 
@@ -274,7 +275,7 @@ export default class LayoutEditorOverlay extends View {
 
 
 
-            let intersects = this.layoutEditor.layout.getTopIntersectingDepiction(this.mouseGridPos, true)
+            let intersects = layout.getTopIntersectingDepiction(this.mouseGridPos, true)
 
             if(intersects && intersects instanceof LabelledDepiction) {
                 points = this.proposingConnectionFrom.absoluteBoundingBox
@@ -292,8 +293,8 @@ export default class LayoutEditorOverlay extends View {
 
             interaction.push(svg('path', {
                 d: [
-                    'M' + pA.multiply(this.layoutEditor.layout.gridSize).toPathString(),
-                    'L' + pB.multiply(this.layoutEditor.layout.gridSize).toPathString()
+                    'M' + pA.multiply(layout.gridSize).toPathString(),
+                    'L' + pB.multiply(layout.gridSize).toPathString()
                 ].join(''),
                 'stroke': 'red',
                 'stroke-width': '2px',
@@ -312,7 +313,7 @@ export default class LayoutEditorOverlay extends View {
             if(_selectionRect === null)
                 throw new Error('???')
 
-            const selectionRect:Rect = transform.transformRect(_selectionRect.round().multiply(this.layoutEditor.layout.gridSize))
+            const selectionRect:Rect = transform.transformRect(_selectionRect.round().multiply(layout.gridSize))
 
             selection.push(
                 svg('rect', {
@@ -341,7 +342,7 @@ export default class LayoutEditorOverlay extends View {
 
                 let r = this.proposingResult.validForRect
 
-                r = r.multiply(this.layoutEditor.layout.gridSize)
+                r = r.multiply(layout.gridSize)
 
                 console.log(r)
 
