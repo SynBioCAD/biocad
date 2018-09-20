@@ -182,7 +182,8 @@ export default class LayoutEditorOverlay extends View {
 
     render():VNode {
 
-        const layout:Layout = this.layoutEditor.layout
+        const layout:Layout = this.layoutEditor.proposedLayout
+                ? this.layoutEditor.proposedLayout : this.layoutEditor.layout
 
 
         const handles:VNode[] = []
@@ -255,7 +256,7 @@ export default class LayoutEditorOverlay extends View {
             }
         }
 
-        for(let depiction of this.layoutEditor.getSelection()) {
+        for(let depiction of this.layoutEditor.getSelection(layout)) {
 
             handles.push(renderHandles(transform.transformRect(depiction.absoluteBoundingBox.multiply(this.layoutEditor.layout.gridSize)), false, (pos:Vec2, dimensions:string[]) => {
                 this.resize(depiction, pos, dimensions)
@@ -673,9 +674,9 @@ export default class LayoutEditorOverlay extends View {
             }
         }
 
-        if(this.layoutEditor.selectionContainsPoint(gridPos)) {
+        if(this.layoutEditor.selectionContainsPoint(layout, gridPos)) {
 
-            const selection:Depiction[] = this.layoutEditor.getSelection()
+            const selection:Depiction[] = this.layoutEditor.getSelection(layout)
 
             this.draggingDepictions = []
 
@@ -797,7 +798,7 @@ export default class LayoutEditorOverlay extends View {
         var transform:Matrix = this.layoutEditor.getTransform().invert()
         const gridPos:Vec2 = transform.transformVec2(offset.divide(this.layoutEditor.layout.gridSize))
 
-        let selection:Depiction[] = this.layoutEditor.getSelection()
+        let selection:Depiction[] = this.layoutEditor.getSelection(this.layoutEditor.layout)
 
         let clickedSelection = false
 

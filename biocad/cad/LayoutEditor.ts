@@ -28,7 +28,7 @@ export default class LayoutEditor extends View {
 
     /* e.g. if suggesting putting a part into a backbone
      */
-    private proposedLayout:Layout|null
+    proposedLayout:Layout|null
     onProposeLayout:Hook<Layout>
     //private proposedGraph:SBOLXGraph|null
 
@@ -202,7 +202,7 @@ export default class LayoutEditor extends View {
     
     }
 
-    getSelection():Depiction[] {
+    getSelection(layout:Layout):Depiction[] {
 
         let selection:Depiction[] = []
         
@@ -216,9 +216,9 @@ export default class LayoutEditor extends View {
         return selection
     }
 
-    selectionContainsPoint(point:Vec2):boolean {
+    selectionContainsPoint(layout:Layout, point:Vec2):boolean {
 
-        const selection:Depiction[] = this.getSelection()
+        const selection:Depiction[] = this.getSelection(layout)
 
         for(var i = 0; i < selection.length; ++ i) {
 
@@ -230,9 +230,9 @@ export default class LayoutEditor extends View {
         return false
     }
 
-    getSelectionBoundingBox():Rect|null {
+    getSelectionBoundingBox(layout:Layout):Rect|null {
 
-        const selection:Depiction[] = this.getSelection()
+        const selection:Depiction[] = this.getSelection(layout)
 
         if(selection.length === 0)
             return null
