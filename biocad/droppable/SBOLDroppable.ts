@@ -47,7 +47,7 @@ export default class SBOLDroppable extends Droppable {
 
     getSize():Vec2 {
 
-        return this.layout.getSize().multiply(this.layout.gridSize)
+        return this.layout.getBoundingSize().multiply(this.layout.gridSize)
 
     }
 

@@ -57,6 +57,8 @@ export default class Layout extends Versioned {
     // otherwise it could be specific to the renderer
     gridSize:Vec2
 
+    size:Vec2
+
     app:BiocadApp
     graph:SBOLXGraph
     graphWatcher:Watcher|null
@@ -73,6 +75,7 @@ export default class Layout extends Versioned {
         this.identifiedChainToDepiction = new Map<string, Depiction>()
         this.uidToDepiction = new Map<number, Depiction>()
         this.gridSize = Vec2.fromXY(16, 16)
+        this.size = Vec2.fromXY(window.innerWidth, window.innerHeight).divide(this.gridSize)
         this.graphWatcher = null
         this.detailLevel = 5
 
@@ -1097,7 +1100,7 @@ export default class Layout extends Versioned {
         return boundingBox
     }
 
-    getSize():Vec2 {
+    getBoundingSize():Vec2 {
 
         let bbox = this.getBoundingBox()
 
@@ -1106,6 +1109,12 @@ export default class Layout extends Versioned {
 
         bbox.topLeft = Vec2.fromXY(0, 0)
         return bbox.size()
+    }
+
+    getSize():Vec2 {
+
+        return this.size
+
     }
 
 }

@@ -1,6 +1,6 @@
 
 
-import { h, main, diff, patch, create } from 'jfw/vdom'
+import { h, main, diff, patch, create, VNode } from 'jfw/vdom'
 
 import RenderContext from './RenderContext'
 import { Vec2 } from "jfw/geom";
@@ -59,63 +59,66 @@ export default class ScrollbarWidget {
             return h('div', '')
         }
 
-        const renderContext = this.renderContext
+        let renderContext = this.renderContext
 
-        const scrollOffset = renderContext.scrollOffset
-        const horizScrollbarWidth = this.viewportSize.x - scrollbarThickness
-        const vertScrollbarHeight = this.viewportSize.y - scrollbarThickness
+        let scrollOffset = renderContext.scrollOffset
+        let horizScrollbarWidth = this.viewportSize.x - scrollbarThickness
+        let vertScrollbarHeight = this.viewportSize.y - scrollbarThickness
 
-        var designBBox:Rect|null = renderContext.layout.getBoundingBox()
-
-        if(designBBox === null) {
-            designBBox = Rect.fromPosAndSize(Vec2.fromXY(0, 0), this.viewportSize.divide(renderContext.layout.gridSize))
-        }
-
-        const designSize = designBBox.size().multiply(renderContext.layout.gridSize)
-
-        const viewportSizeNormalized = this.viewportSize.divide(designSize).divideScalar(renderContext.scaleFactor)
-
-        const scrollOffsetNormalized = scrollOffset.divide(designSize)
+        let scrollableRect:Rect = Rect.fromPosAndSize(Vec2.fromXY(0, 0), renderContext.layout.getSize())
+        let scrollableSize = scrollableRect.size().multiply(renderContext.layout.gridSize)
+        let viewportSizeNormalized = this.viewportSize.divide(scrollableSize).divideScalar(renderContext.scaleFactor)
+        let scrollOffsetNormalized = scrollOffset.divide(scrollableSize)
 
         if(this.isFirstRender) {
 
             this.isFirstRender = false
 
-            const fitFactors = this.viewportSize.divide(designSize)
+            let bbox = renderContext.layout.getBoundingBox()
 
-            renderContext.scaleFactor = Math.min(fitFactors.x, fitFactors.y, 1.0)
-        
-            assert(!isNaN(renderContext.scaleFactor))
+            if(bbox) {
+                let designSize = bbox.size().multiply(renderContext.layout.gridSize)
 
-            this.app.update()
+                const fitFactors = this.viewportSize.divide(designSize)
+
+                renderContext.scaleFactor = Math.min(fitFactors.x, fitFactors.y, 1.0)
+            
+                assert(!isNaN(renderContext.scaleFactor))
+
+                this.app.update()
+            }
         }
 
 
+        let elems:VNode[] = []
 
-        return h('div.jfw-flow-grow', {
-        }, [
-            h('div.sf-circuit-view-scrollbar.sf-circuit-view-horizontal-scrollbar', {
-                style: {
-                    position: 'absolute',
-                    top: 0,
-                    left: scrollbarThickness + 'px',
-                    width: horizScrollbarWidth + 'px',
-                    height: scrollbarThickness + 'px'
-                }
-            }, [
-                h('div', {
+        if(viewportSizeNormalized.x <= 1.0) {
+            elems.push(
+                h('div.sf-circuit-view-scrollbar.sf-circuit-view-horizontal-scrollbar', {
                     style: {
                         position: 'absolute',
                         top: 0,
-                        left: (scrollOffsetNormalized.x * horizScrollbarWidth) + 'px',
-                        height: scrollbarThickness + 'px',
-                        width: (viewportSizeNormalized.x * horizScrollbarWidth) + 'px',
-                    },
-                    'ev-mousedown': dragHandler(onDragHorizontal, { renderContext: renderContext, widget: this })
-                })
-            ]),
+                        left: scrollbarThickness + 'px',
+                        width: horizScrollbarWidth + 'px',
+                        height: scrollbarThickness + 'px'
+                    }
+                }, [
+                    h('div', {
+                        style: {
+                            position: 'absolute',
+                            top: 0,
+                            left: (scrollOffsetNormalized.x * horizScrollbarWidth) + 'px',
+                            height: scrollbarThickness + 'px',
+                            width: (viewportSizeNormalized.x * horizScrollbarWidth) + 'px',
+                        },
+                        'ev-mousedown': dragHandler(onDragHorizontal, { renderContext: renderContext, widget: this })
+                    })
+                ])
+            )
+        }
 
-            h('div.sf-circuit-view-scrollbar.sf-circuit-view-vertical-scrollbar', {
+        if(viewportSizeNormalized.y <= 1.0) {
+            elems.push(h('div.sf-circuit-view-scrollbar.sf-circuit-view-vertical-scrollbar', {
                 style: {
                     position: 'absolute',
                     left: 0,
@@ -134,9 +137,10 @@ export default class ScrollbarWidget {
                     },
                     'ev-mousedown': dragHandler(onDragVertical, { renderContext: renderContext, widget: this })
                 })
-            ]),
+            ]))
+        }
 
-        ])
+        return h('div.jfw-flow-grow', elems)
     }
 
     update(prev:ScrollbarWidget, elem:HTMLElement):void {
@@ -144,8 +148,9 @@ export default class ScrollbarWidget {
         //elem.innerHTML = 'Content set directly on real DOM node, by widget ' +
         //'<em>after</em> update.'
 
-        if(this.renderContext !== prev.renderContext)
+        if(this.renderContext !== prev.renderContext) {
             return this.init()
+        }
 
         this.renderContext = prev.renderContext
         this._mainLoop = prev._mainLoop
@@ -172,44 +177,45 @@ ScrollbarWidget.prototype['type'] = 'Widget'
 
 function onDragHorizontal(data) {
 
+    console.log('onDragHorizontal')
+
     const dragState:string = data.dragState
     const renderContext:RenderContext = data.renderContext
     const xScroll:number = data.x
 
     const layout:Layout = renderContext.layout
 
-    const layoutBBox:Rect|null = layout.getBoundingBox()
+    const scrollableRect:Rect|null = Rect.fromPosAndSize(Vec2.fromXY(0, 0), layout.getSize())
 
     const widget:ScrollbarWidget = data.widget
 
-
     const horizScrollbarWidth = widget.viewportSize.x - scrollbarThickness
 
-    if(layoutBBox !== null) {
+    const scrollableRectPx = scrollableRect.multiply(renderContext.layout.gridSize)
 
-        const bboxPx = layoutBBox.multiply(renderContext.layout.gridSize)
+    // thats the x in unscaled coords
+    const x = ((xScroll / horizScrollbarWidth) * scrollableRectPx.size().x)
 
-        // thats the x in unscaled coords
-        const x = ((xScroll / horizScrollbarWidth) * bboxPx.size().x)
+    renderContext.scrollOffset = Vec2.fromXY(x, renderContext.scrollOffset.y)
 
-        renderContext.scrollOffset = Vec2.fromXY(x, renderContext.scrollOffset.y)
-
-        renderContext.scrollOffset = renderContext.scrollOffset.max(Vec2.zero())
+    renderContext.scrollOffset = renderContext.scrollOffset.max(Vec2.zero())
 
 // when we zoom in that gets smaller, its the number of design px we can actually see
-        const f = widget.viewportSize.divideScalar(renderContext.scaleFactor)
+    const f = widget.viewportSize.divideScalar(renderContext.scaleFactor)
 
-        const bound = bboxPx.size().subtract(f)
+    const bound = scrollableRectPx.size().subtract(f)
 
-        if(renderContext.scrollOffset.x > bound.x)
-            renderContext.scrollOffset = Vec2.fromXY(bound.x, renderContext.scrollOffset.y)
+    console.log('bound ' + bound)
+    console.log('scrollOffset ' + renderContext.scrollOffset)
 
-        //update()
-        
-        widget.app.update()
-    }
+    if(renderContext.scrollOffset.x > bound.x)
+        renderContext.scrollOffset = Vec2.fromXY(bound.x, renderContext.scrollOffset.y)
 
+    //update()
+    
+    widget.app.update()
 }
+
 
 function onDragVertical(data) {
 
@@ -219,28 +225,24 @@ function onDragVertical(data) {
 
     const layout:Layout = renderContext.layout
 
-    const layoutBBox:Rect|null = layout.getBoundingBox()
+    const scrollableRect:Rect|null = Rect.fromPosAndSize(Vec2.fromXY(0, 0), layout.getSize())
 
     const widget:ScrollbarWidget = data.widget
 
 
     const vertScrollbarWidth = widget.viewportSize.y - scrollbarThickness
 
-    if(layoutBBox !== null) {
 
+    const bboxPx = scrollableRect.multiply(renderContext.layout.gridSize)
 
-        const bboxPx = layoutBBox.multiply(renderContext.layout.gridSize)
+    const y = (yScroll / vertScrollbarWidth) * bboxPx.size().y
 
-        const y = (yScroll / vertScrollbarWidth) * bboxPx.size().y
+    renderContext.scrollOffset = Vec2.fromXY(renderContext.scrollOffset.x, y)
 
-        renderContext.scrollOffset = Vec2.fromXY(renderContext.scrollOffset.x, y)
+    renderContext.scrollOffset = renderContext.scrollOffset.max(Vec2.zero())
+    renderContext.scrollOffset = renderContext.scrollOffset.min(bboxPx.bottomRight.subtract(widget.viewportSize))
 
-        renderContext.scrollOffset = renderContext.scrollOffset.max(Vec2.zero())
-        renderContext.scrollOffset = renderContext.scrollOffset.min(bboxPx.bottomRight.subtract(widget.viewportSize))
-
-        //update()
-        
-        widget.app.update()
-    }
-
+    //update()
+    
+    widget.app.update()
 }

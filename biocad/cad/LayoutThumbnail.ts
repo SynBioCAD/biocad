@@ -49,7 +49,7 @@ export default class LayoutThumbnail extends View {
             }
         })
 
-        let size:Vec2 = this.layout.getSize()
+        let size:Vec2 = this.layout.getBoundingSize()
 
         size = size.multiply(this.layout.gridSize)
 

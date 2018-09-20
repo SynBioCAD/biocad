@@ -9,6 +9,7 @@ export default class LayoutPOD {
     static serialize(layout:Layout):any {
 
         const pod:any = {
+            size: layout.size,
             depictions: []
         }
 
@@ -29,6 +30,8 @@ export default class LayoutPOD {
     static deserialize(graph:SBOLXGraph, pod:any):Layout {
 
         const layout = new Layout(graph)
+
+        layout.size = pod.size
 
         const depictions:Depiction[] = []
 

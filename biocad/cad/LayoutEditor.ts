@@ -125,6 +125,16 @@ export default class LayoutEditor extends View {
                 overflow: 'hidden'
             }
         }, [
+            h('div', {
+                style: {
+                    position: 'absolute',
+                    left: (this.scrollbarSize - this.scrollOffset.x) + 'px',
+                    top: (this.scrollbarSize - this.scrollOffset.y) + 'px',
+                    width: (this.layout.getSize().x * this.layout.gridSize.x) * this.scaleFactor + 'px',
+                    height: (this.layout.getSize().y * this.layout.gridSize.y) * this.scaleFactor + 'px',
+                    background: createGrid(this.layout.gridSize.multiplyScalar(this.scaleFactor))
+                }
+            }),
             svg('svg', {
                 'class': 'sf-circuit-view',
                 style: {
@@ -134,8 +144,7 @@ export default class LayoutEditor extends View {
                     left: this.scrollbarSize + 'px',
                     top: this.scrollbarSize + 'px',
                     width: 'calc(100% + ' + this.scrollOffset.x + 'px)',
-                    height: 'calc(100% - ' + this.scrollbarSize + 'px)',
-                    background: createGrid(this.layout.gridSize.multiplyScalar(this.scaleFactor)),
+                    height: 'calc(100% - ' + this.scrollbarSize + 'px)'
                 }
             }, svg('g', {
                 transform: transform.toSVGString()
