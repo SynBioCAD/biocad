@@ -7,7 +7,7 @@ import { svg, VNode } from "jfw/vdom";
 import { SXInteraction, SXParticipation, SXSubComponent } from "sbolgraph";
 import { Specifiers } from 'bioterms'
 import { assert } from 'power-assert'
-import Vec2 from "jfw/geom/Vec2";
+import { Vec2, Rect } from "jfw/geom";
 import RenderContext from './RenderContext'
 import IdentifiedChain from 'biocad/IdentifiedChain';
 import drawArrow, { ArrowheadType } from '../util/drawArrow';
@@ -138,9 +138,13 @@ export default class ABInteractionDepiction extends InteractionDepiction {
             }
         }
 */
-        return drawArrow(this.waypoints.map((waypoint) => {
-            return waypoint.add(absOffset).multiply(this.layout.gridSize)
-        }), arrowhead, color, '2px')
+        return svg('g', [
+
+            drawArrow(this.waypoints.map((waypoint) => {
+                return waypoint.add(absOffset).multiply(this.layout.gridSize)
+            }), arrowhead, color, '2px')
+
+        ])
     }
 
     renderThumb(size:Vec2):VNode {
@@ -151,7 +155,14 @@ export default class ABInteractionDepiction extends InteractionDepiction {
 
     setWaypoints(waypoints:Vec2[]) {
 
-        this.waypoints = waypoints
+        let bbox = Rect.surroundingPoints(waypoints)
+
+        this.offset = bbox.topLeft
+        this.size = bbox.size()
+
+        this.waypoints = waypoints.map((waypoint) => {
+            return waypoint.subtract(this.offset)
+        })
 
     }
 

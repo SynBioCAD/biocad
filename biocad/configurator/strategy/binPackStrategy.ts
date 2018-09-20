@@ -161,11 +161,13 @@ export default function binPackStrategy(parent:Depiction|null, children:Depictio
     })
 
 
+
+    let interactionToLayer:Map<ABInteractionDepiction, number> = new Map()
+
+
     // interactions
     //
     groups.forEach((group:Group) => {
-
-        let interactionToLayer:Map<ABInteractionDepiction, number> = new Map()
 
         group.interactions.forEach((interaction:ABInteractionDepiction) => {
 
@@ -238,34 +240,6 @@ export default function binPackStrategy(parent:Depiction|null, children:Depictio
             group.h += INTERACTION_OFFSET
         }
 
-        for(let [ interaction, layerN ] of interactionToLayer) {
-
-            let { a, b } = interactionPoints(interaction)
-
-            if(layerN < 0) {
-
-                interaction.setWaypoints([
-                    Vec2.fromXY(a.x, a.y),
-                    Vec2.fromXY(a.x, a.y - INTERACTION_HEIGHT * (- layerN)),
-                    Vec2.fromXY(b.x, b.y - INTERACTION_HEIGHT * (- layerN)),
-                    Vec2.fromXY(b.x, b.y),
-                ])
-
-            } else {
-
-                let y = numBelow - layerN
-
-                interaction.setWaypoints([
-                    Vec2.fromXY(a.x, group.h - y - INTERACTION_HEIGHT + 0.2),
-                    Vec2.fromXY(a.x, group.h - y),
-                    Vec2.fromXY(b.x, group.h - y),
-                    Vec2.fromXY(b.x, group.h - y - INTERACTION_HEIGHT + 0.2),
-                ])
-
-
-            }
-
-        }
 
     })
 
@@ -318,9 +292,73 @@ export default function binPackStrategy(parent:Depiction|null, children:Depictio
         })
 
         group.interactions.forEach((interaction:ABInteractionDepiction) => {
-            interaction.offset = offset
+
+            interaction.offset = Vec2.fromXY(0, 0) // setWaypoints will update this
+
+            let layerN:number|undefined = interactionToLayer.get(interaction)
+
+            if(layerN === undefined) {
+                throw new Error('???')
+            }
+
+            let { a, b } = interactionPoints(interaction)
+
+            if(layerN < 0) {
+
+                interaction.setWaypoints([
+                    Vec2.fromXY(a.x, a.y),
+                    Vec2.fromXY(a.x, a.y - INTERACTION_HEIGHT * (- layerN)),
+                    Vec2.fromXY(b.x, b.y - INTERACTION_HEIGHT * (- layerN)),
+                    Vec2.fromXY(b.x, b.y),
+                ])
+
+            } else {
+
+                let y = numBelow - layerN
+
+                interaction.setWaypoints([
+                    Vec2.fromXY(a.x, group.h - y - INTERACTION_HEIGHT + 0.2),
+                    Vec2.fromXY(a.x, group.h - y),
+                    Vec2.fromXY(b.x, group.h - y),
+                    Vec2.fromXY(b.x, group.h - y - INTERACTION_HEIGHT + 0.2),
+                ])
+
+
+            }
+
+
+
         })
 
+        /*
+        for(let [ interaction, layerN ] of interactionToLayer) {
+
+            let { a, b } = interactionPoints(interaction)
+
+            if(layerN < 0) {
+
+                interaction.setWaypoints([
+                    Vec2.fromXY(a.x, a.y),
+                    Vec2.fromXY(a.x, a.y - INTERACTION_HEIGHT * (- layerN)),
+                    Vec2.fromXY(b.x, b.y - INTERACTION_HEIGHT * (- layerN)),
+                    Vec2.fromXY(b.x, b.y),
+                ])
+
+            } else {
+
+                let y = numBelow - layerN
+
+                interaction.setWaypoints([
+                    Vec2.fromXY(a.x, group.h - y - INTERACTION_HEIGHT + 0.2),
+                    Vec2.fromXY(a.x, group.h - y),
+                    Vec2.fromXY(b.x, group.h - y),
+                    Vec2.fromXY(b.x, group.h - y - INTERACTION_HEIGHT + 0.2),
+                ])
+
+
+            }
+
+        }*/
 
     })
 
