@@ -10,6 +10,7 @@ import { assert } from 'power-assert'
 import Vec2 from "jfw/geom/Vec2";
 import RenderContext from './RenderContext'
 import IdentifiedChain from 'biocad/IdentifiedChain';
+import drawArrow, { ArrowheadType } from '../util/drawArrow';
 
 export default class ABInteractionDepiction extends InteractionDepiction {
 
@@ -117,20 +118,10 @@ export default class ABInteractionDepiction extends InteractionDepiction {
 
         let absOffset = this.absoluteOffset
 
-        const d:string[] = [
-        ]
+        var arrowhead = ArrowheadType.Fork
+        var color = 'green'
 
-        if(this.waypoints.length > 0) {
-            d.push('M' + this.waypoints[0].add(absOffset).multiply(this.layout.gridSize).toPathString())
-        }
-
-        for(let i:number = 1; i < this.waypoints.length; ++ i) {
-            d.push('L' + this.waypoints[i].add(absOffset).multiply(this.layout.gridSize).toPathString())
-        }
-
-        var arrowhead = 'url(#sfIdontknowArrowhead)'
-        var color
-
+        /*
         if(this.depictionOf) {
 
             let interaction = this.depictionOf as SXInteraction
@@ -146,18 +137,10 @@ export default class ABInteractionDepiction extends InteractionDepiction {
                 color = 'green'
             }
         }
-
-        return svg('g', [
-
-            svg('path', {
-                d: d.join(''),
-                'stroke': color,
-                'stroke-width': '2px',
-                'fill': 'none',
-                'marker-end': arrowhead
-            })
-
-        ])
+*/
+        return drawArrow(this.waypoints.map((waypoint) => {
+            return waypoint.add(absOffset).multiply(this.layout.gridSize)
+        }), arrowhead, color, '2px')
     }
 
     renderThumb(size:Vec2):VNode {
