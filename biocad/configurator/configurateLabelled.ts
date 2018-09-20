@@ -13,25 +13,10 @@ export default function configurateLabelled(labelled:LabelledDepiction, instruct
 
     thing.offset = Vec2.fromXY(0, label.height)
 
-    if(labelled.sizeExplicit) {
-
-        label.size = Vec2.fromXY(labelled.size.x, label.size.y)
-        thing.size = Vec2.fromXY(labelled.size.x, labelled.size.y - label.size.y)
-        
-    } else {
-
-        labelled.size = Vec2.fromXY(
-            Math.max(label.size.x, thing.size.x),
-            label.size.y + thing.size.y
-        )
-
-
-    }
-
-
-
-
-
+    labelled.size = Vec2.fromXY(
+        Math.max(label.size.x, thing.size.x),
+        label.size.y + thing.size.y
+    ).max(labelled.minSize)
         
 
     /*

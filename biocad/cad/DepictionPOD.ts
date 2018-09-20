@@ -65,6 +65,7 @@ export default class DepictionPOD {
             offset: depiction.offset.toPOD(),
             offsetExplicit: depiction.offsetExplicit,
             size: depiction.size.toPOD(),
+            minSize: depiction.minSize.toPOD(),
             opacity: depiction.opacity,
             isExpandable: depiction.isExpandable,
             scale: depiction.scale.toPOD(),
@@ -145,6 +146,7 @@ export default class DepictionPOD {
         depiction.offset = Vec2.fromPOD(pod.offset)
         depiction.offsetExplicit = pod.offsetExplicit
         depiction.size = Vec2.fromPOD(pod.size)
+        depiction.minSize = Vec2.fromPOD(pod.minSize)
         depiction.opacity = pod.opacity
         depiction.isExpandable = pod.isExpandable
         depiction.scale = Vec2.fromPOD(pod.scale)

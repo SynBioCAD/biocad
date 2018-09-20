@@ -285,7 +285,7 @@ export default function binPackStrategy(parent:Depiction|null, children:Depictio
 
 
     if(parent) {
-        parent.size = Vec2.fromXY(padding + packer.root.w, padding + packer.root.h)
+        parent.size = Vec2.fromXY(padding + packer.root.w, padding + packer.root.h).max(parent.minSize)
     }
 
     groupsArr.forEach((group:Group) => {

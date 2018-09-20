@@ -83,8 +83,7 @@ function configurateWhiteboxComponent(depiction:ComponentDepiction):void {
 
     } else {
 
-        if(!depiction.sizeExplicit)
-            depiction.size = Vec2.fromXY(2, 2)
+        depiction.size = Vec2.fromXY(2, 2).max(depiction.minSize)
 
     }
 
@@ -135,9 +134,7 @@ function configurateBlackboxComponent(depiction:ComponentDepiction):void {
 
 
 
-    if(!depiction.sizeExplicit) {
-        depiction.size = Vec2.fromXY(2, 2)
-    }
+    depiction.size = Vec2.fromXY(2, 2).max(depiction.minSize)
 
     depiction.scale = visbolite.glyphScaleFromType(type)
     depiction.backbonePlacement = backbonePlacement

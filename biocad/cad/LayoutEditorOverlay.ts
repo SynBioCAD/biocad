@@ -123,7 +123,6 @@ export default class LayoutEditorOverlay extends View {
         // boundingBox is literally { offset, offset + size }
 
 
-
         if(dimensions.indexOf('south') !== -1) {
             bbox.bottomRight = Vec2.fromXY(bbox.bottomRight.x, relPos.y)
         }
@@ -141,39 +140,53 @@ export default class LayoutEditorOverlay extends View {
         bbox.bottomRight = bbox.bottomRight.max(Vec2.fromXY(1, 1))
 
 
-        // tried this to see if Versioned::onVersionChanged was causing the problem
-        // it wasn't.
+        let dL = bbox.topLeft.x - depiction.boundingBox.topLeft.x
+        let dT = bbox.topLeft.y - depiction.boundingBox.topLeft.y
+        let dR = bbox.bottomRight.x - depiction.boundingBox.bottomRight.x
+        let dB = bbox.bottomRight.y - depiction.boundingBox.bottomRight.y
+
         let stuffChanged = false
 
 
-        if(!bbox.topLeft.equals(depiction.offset)) {
+        let bboxSize = bbox.size()
+
+        if(! (depiction instanceof LabelledDepiction)) {
+            throw new Error('???')
+        }
+
+        let labelled = depiction.getLabelled()
+
+        let newSize = labelled.size.add(Vec2.fromXY(
+            (- dL) + dR,
+            (- dT) + dB
+        ))
+        
+        if (newSize.x !== depiction.size.x) {
+            labelled.minSize = Vec2.fromXY(newSize.x, labelled.minSize.y)
+            stuffChanged = true
+        }
+
+        if (newSize.y !== depiction.size.y) {
+            labelled.minSize = Vec2.fromXY(labelled.minSize.x, newSize.y)
+            stuffChanged = true
+        }
+
+        if(stuffChanged) {
+            // TODO:
+            // Currently dragging the top or left handles can cause the depiction
+            // to move, because we change the minSize but don't know what the
+            // eventual minimum size is going to be post configurate. so we change
+            // the offset and then the size ends up staying the same.
+            //
             depiction.offset = bbox.topLeft
             depiction.offsetExplicit = true
             stuffChanged = true
         }
 
-        let bboxSize = bbox.size()
-
-        if(bboxSize.x !== depiction.size.x) {
-            if(bboxSize.x > 0) {
-                depiction.size = Vec2.fromXY(bboxSize.x, depiction.size.y)
-                depiction.sizeExplicit = true
-                stuffChanged = true
-            }
-        }
-
-        if(bboxSize.y !== depiction.size.y) {
-            if(bboxSize.y > 0) {
-                depiction.size = Vec2.fromXY(depiction.size.x, bboxSize.y)
-                depiction.sizeExplicit = true
-                stuffChanged = true
-            }
-        }
-
         //console.log('llamas')
 
         if(stuffChanged)
-            depiction.touch()
+            labelled.touch()
 
         this.app.update()
         

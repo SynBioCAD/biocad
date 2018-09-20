@@ -39,10 +39,11 @@ export default abstract class Depiction extends Versioned {
     layout:Layout
 
     offset: Vec2 = new Vec2(0, 0)
-    size: Vec2 = new Vec2(0, 0)
-
-    sizeExplicit:boolean
     offsetExplicit:boolean
+
+    size: Vec2 = new Vec2(0, 0)
+    minSize:Vec2 = new Vec2(0, 0)
+
 
     uid:number
     stamp:number
@@ -73,7 +74,6 @@ export default abstract class Depiction extends Versioned {
         this.children = []
         this._depictionOf = depictionOf
         this.offsetExplicit = false
-        this.sizeExplicit = false
         this.identifiedChain = identifiedChain
     }
 
