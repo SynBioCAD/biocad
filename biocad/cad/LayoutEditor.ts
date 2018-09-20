@@ -18,6 +18,8 @@ import Droppable from "biocad/droppable/Droppable";
 import LayoutPOD from "biocad/cad/LayoutPOD";
 import SVGDefs from "biocad/cad/SVGDefs";
 import { SBOLXGraph } from "sbolgraph"
+import LayoutEditorDebugLog from './LayoutEditorDebugLog';
+import DepictionRef from './DepictionRef';
 
 export default class LayoutEditor extends View {
 
@@ -38,12 +40,14 @@ export default class LayoutEditor extends View {
     overlaySubtree:SubTree
     scrollbarSize:number
 
+    debugLog:LayoutEditorDebugLog
+
 
     scrollOffset:Vec2
     scaleFactor:number
     interactive:boolean // rendercontext
 
-    selectedUIDs:Set<number> 
+    selectedDepictions:DepictionRef[]
     onSelectDepictions:Hook<Depiction[]> 
 
     undoLevels:any[]
@@ -55,7 +59,7 @@ export default class LayoutEditor extends View {
 
         super(app)
 
-        this.selectedUIDs = new Set<number>()
+        this.selectedDepictions = []
         this.onSelectDepictions = new Hook<Depiction[]>()
         this.onProposeLayout = new Hook<Layout>()
 
@@ -65,6 +69,7 @@ export default class LayoutEditor extends View {
         this.interactive = true
         this.overlay = new LayoutEditorOverlay(this)
         this.overlaySubtree = new SubTree(this.overlay)
+        this.debugLog = new LayoutEditorDebugLog(this)
         this.scrollbarSize = 24
         this.scrollOffset = Vec2.zero()
         this.scaleFactor = 1.0
@@ -135,6 +140,17 @@ export default class LayoutEditor extends View {
             }, svg('g', {
                 transform: transform.toSVGString()
             }, svgElements)),
+            h('div', {
+                style: {
+                    position: 'absolute',
+                    left: this.scrollbarSize + 'px',
+                    top: this.scrollbarSize + 'px',
+                    width: 'calc(100% - ' + this.scrollbarSize + 'px)',
+                    height: 'calc(100% - ' + this.scrollbarSize + 'px)',
+                }
+            }, [
+                this.debugLog.render()
+            ]),
             svg('svg', {
                 'class': 'sf-circuit-view-overlay',
                 style: {
@@ -147,7 +163,7 @@ export default class LayoutEditor extends View {
             }, [
                 this.overlaySubtree.render()
             ]),
-            new ScrollbarWidget(this.app as BiocadApp, this)
+            new ScrollbarWidget(this.app as BiocadApp, this),
         ]) 
     }
 
@@ -166,12 +182,12 @@ export default class LayoutEditor extends View {
 
     selectInRect(rect:Rect) {
 
-        this.selectedUIDs.clear()
+        this.selectedDepictions.length = 0
 
         const intersecting:Depiction[] = this.layout.getDepictionsContainedByRect(rect, true)
 
         intersecting.forEach((depiction:Depiction) => {
-            this.selectedUIDs.add(depiction.uid)
+            this.selectedDepictions.push(new DepictionRef(depiction))
         })
 
         this.app.update()
@@ -181,28 +197,23 @@ export default class LayoutEditor extends View {
 
     deselectAll():void {
 
-        this.selectedUIDs.clear()
+        this.selectedDepictions.length = 0
         this.update()
     
     }
 
     getSelection():Depiction[] {
 
-        const arr:Depiction[] = []
-
-        const keys = this.selectedUIDs.keys()
-
-        for(var it:IteratorResult<number> = keys.next(); !it.done; it = keys.next()) {
-
-            const depiction:Depiction|undefined = this.layout.getDepictionForUid(it.value)
-
-            if(depiction === undefined)
-                throw new Error('???')
-
-            arr.push(depiction)
+        let selection:Depiction[] = []
+        
+        for(let ref of this.selectedDepictions) {
+            let d = ref.toDepiction(this.layout)
+            if(d) {
+                selection.push(d)
+            }
         }
 
-        return arr
+        return selection
     }
 
     selectionContainsPoint(point:Vec2):boolean {
@@ -239,6 +250,8 @@ export default class LayoutEditor extends View {
 
     proposeLayout(layout:Layout):void {
 
+        this.debugLog.log('propose layout')
+
         this.proposedLayout = layout
 
         this.onProposeLayout.fire(layout)
@@ -248,6 +261,8 @@ export default class LayoutEditor extends View {
     }
 
     acceptProposedLayout():void {
+
+        this.debugLog.log('accept proposed layout')
 
         if(this.proposedLayout === null)
             throw new Error('???')

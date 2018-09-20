@@ -64,6 +64,8 @@ export default class DNDEnterWorkspace extends DND {
 
             dOf.destroy()
 
+            console.log('targetbbox topLeft ' + targetBBox.topLeft)
+
             dInNewLayout.offsetExplicit = true
             dInNewLayout.offset = targetBBox.topLeft
 

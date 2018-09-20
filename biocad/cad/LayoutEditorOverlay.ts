@@ -36,6 +36,7 @@ import DNDMoveInWorkspace from "./dnd-action/DNDMoveInWorkspace";
 import DNDEnterWorkspace from "./dnd-action/DNDEnterWorkspace";
 import DNDEnterParent from "./dnd-action/DNDEnterParent";
 import ABInteractionDepiction from "./ABInteractionDepiction";
+import DepictionRef from "./DepictionRef";
 
 export default class LayoutEditorOverlay extends View {
 
@@ -46,7 +47,7 @@ export default class LayoutEditorOverlay extends View {
     selectionStart:Vec2|null
 
     dragging:boolean
-    draggingDepictions:{depiction:Depiction, dragOffset:Vec2}[]
+    draggingDepictions:{depiction:DepictionRef, dragOffset:Vec2}[]
 
 
     displayRect:Rect|null
@@ -254,15 +255,13 @@ export default class LayoutEditorOverlay extends View {
             }
         }
 
-        layout.depictions.forEach((depiction:Depiction) => {
+        for(let depiction of this.layoutEditor.getSelection()) {
 
-            if(this.layoutEditor.selectedUIDs.has(depiction.uid)) {
-                handles.push(renderHandles(transform.transformRect(depiction.absoluteBoundingBox.multiply(this.layoutEditor.layout.gridSize)), false, (pos:Vec2, dimensions:string[]) => {
-                    this.resize(depiction, pos, dimensions)
-                }))
-            }
+            handles.push(renderHandles(transform.transformRect(depiction.absoluteBoundingBox.multiply(this.layoutEditor.layout.gridSize)), false, (pos:Vec2, dimensions:string[]) => {
+                this.resize(depiction, pos, dimensions)
+            }))
 
-        })
+        }
 
         const interaction:VNode[] = []
 
@@ -461,9 +460,15 @@ export default class LayoutEditorOverlay extends View {
 
             let dragging = this.draggingDepictions[i]
 
+            let draggingDepiction = dragging.depiction.toDepiction(this.layoutEditor.layout)
+
+            if(!draggingDepiction) {
+                continue
+            }
+
             let newRect = Rect.fromPosAndSize(
                 this.mouseGridPos.subtract(dragging.dragOffset).round(),
-                dragging.depiction.size
+                draggingDepiction.size
             )
 
             // TODO not good with multipole depictins selected
@@ -473,7 +478,7 @@ export default class LayoutEditorOverlay extends View {
                         this.layoutEditor.layout.graph,
                         this.layoutEditor.layout,
                         this.layoutEditor.layout.graph, 
-                        dragging.depiction,
+                        draggingDepiction,
                         newRect)
 
                 if(result) {
@@ -494,20 +499,6 @@ export default class LayoutEditorOverlay extends View {
                         this.layoutEditor.proposeLayout(layout)
 
                     } else if(result.newLayout) {
-
-                        let newDragging:any[] = []
-
-                        for(let j = 0; j < this.draggingDepictions.length; ++ j) {
-                            let n = result.newLayout.getDepictionForUid(this.draggingDepictions[j].depiction.uid)
-
-                            if(!n) {
-                                continue
-                            }
-
-                            newDragging.push({ dragOffset: this.draggingDepictions[j].dragOffset, depiction: n })
-                        }
-
-                        this.draggingDepictions = newDragging
 
                         this.layoutEditor.immediatelyReplaceLayout(result.newLayout)
 
@@ -691,7 +682,7 @@ export default class LayoutEditorOverlay extends View {
             selection.forEach((d:Depiction) => {
 
                 this.draggingDepictions.push({
-                    depiction: d,
+                    depiction: new DepictionRef(d),
                     dragOffset: gridPos.subtract(d.absoluteOffset)
                 })
 
@@ -709,7 +700,7 @@ export default class LayoutEditorOverlay extends View {
                 this.dragging = true
                 this.draggingDepictions = [
                     {
-                        depiction: depiction,
+                        depiction: new DepictionRef(depiction),
                         dragOffset: gridPos.subtract(depiction.absoluteOffset)
                     }
                 ]
@@ -724,6 +715,19 @@ export default class LayoutEditorOverlay extends View {
     }
 
     onMouseup(pos:Vec2) {
+
+
+        if(this.layoutEditor.isProposingLayout()) {
+
+            this.layoutEditor.acceptProposedLayout()
+
+            this.proposingResult = null
+            
+            this.app.update()
+
+            return
+        }
+
 
         var transform:Matrix = this.layoutEditor.getTransform().invert()
 
@@ -849,8 +853,8 @@ export default class LayoutEditorOverlay extends View {
 
     private onClickDepiction(depiction:Depiction) {
 
-        this.layoutEditor.selectedUIDs.clear()
-        this.layoutEditor.selectedUIDs.add(depiction.uid)
+        this.layoutEditor.selectedDepictions.length = 0
+        this.layoutEditor.selectedDepictions.push(new DepictionRef(depiction))
         this.layoutEditor.onSelectDepictions.fire([ depiction ])
         this.update()
 
