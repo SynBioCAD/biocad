@@ -17,7 +17,7 @@ import ComponentDepiction from 'biocad/cad/ComponentDepiction';
 
 export default class LayoutEditorContextMenu extends ContextMenu {
 
-    constructor(layoutEditor:LayoutEditor, pos:Vec2, depiction:Depiction|null) {
+    constructor(layoutEditor:LayoutEditor, pos:Vec2, depictions:Depiction[]) {
 
         const app:BiocadApp = layoutEditor.app as BiocadApp
 
@@ -32,7 +32,12 @@ export default class LayoutEditorContextMenu extends ContextMenu {
 
         }))
 
-        if(depiction !== null) {
+
+        if(depictions.length === 0) {
+
+        } else if(depictions.length === 1) {
+
+            let depiction = depictions[0]
 
             items.push(new ContextMenuItem('span.fa.fa-align-justify', 'Edit Sequence', (pos:Vec2) => {
 
@@ -81,12 +86,66 @@ export default class LayoutEditorContextMenu extends ContextMenu {
 
             items.push(new ContextMenuItem('span.fa.fa-link', 'Create Interaction', (pos:Vec2) => {
 
-                layoutEditor.startCreatingInteraction(depiction)
+                layoutEditor.overlay.proposingConnectionFrom = depiction
+                layoutEditor.overlay.update()
 
                 app.closeContextMenu()
 
             }))
 
+
+        } else {
+            
+            // selection
+
+            items.push(new ContextMenuItem('span.fa.fa-object-group', 'Group as Module', (pos:Vec2) => {
+
+                layoutEditor.deselectAll()
+
+                let roots = depictions.filter((depiction) => {
+                    for(let otherDepiction of depictions) {
+                        if(depiction !== otherDepiction && depiction.isDescendentOf(otherDepiction)) {
+                            return false
+                        }
+                    }
+                    return true
+                })
+
+                let dOf = roots.map((d) => {
+                    return d.depictionOf
+                }).filter((dOf) => {
+                    return dOf && dOf instanceof SXComponent
+                }).map((dOf) => {
+                    return dOf as SXComponent
+                })
+
+                if(dOf.length > 0) {
+
+                    let wrapper = dOf[0].wrap()
+
+                    for(let i = 1; i < dOf.length; ++ i) {
+                        wrapper.createSubComponent(dOf[i])
+                    }
+
+                    layoutEditor.layout.syncAllDepictions(5)
+
+                    let bbox = roots[0].boundingBox
+
+                    for(let i = 1; i < roots.length; ++ i) {
+                        bbox = bbox.surround(roots[i].boundingBox)
+                    }
+
+                    let dInNewLayout = layoutEditor.layout.getDepictionsForUri(wrapper.uri)[0]
+                    dInNewLayout.offsetExplicit = true
+                    dInNewLayout.offset = bbox.topLeft
+
+                    layoutEditor.layout.configurate([])
+
+                }
+
+                app.closeContextMenu()
+
+            }))
 
         }
         

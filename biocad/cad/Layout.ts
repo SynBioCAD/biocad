@@ -352,7 +352,6 @@ export default class Layout extends Versioned {
 
         const graph:SBOLXGraph = this.graph
 
-
         /* Create depictions for anything that doesn't already have one
          */
 

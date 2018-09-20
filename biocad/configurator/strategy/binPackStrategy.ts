@@ -26,6 +26,7 @@ class Group {
 
     fit:Vec2
 
+    fixed:boolean
     
     constructor() {
         this.depictions = []
@@ -33,10 +34,11 @@ class Group {
         this.interactionLayers = new Map()
         this.w = 0
         this.h = 0
+        this.fixed = false
     }
 
     mergeFrom(otherGroup:Group) {
-
+        // TODO
     }
 
     interactionLayers:Map<number, LinearRangeSet>
@@ -269,24 +271,18 @@ export default function binPackStrategy(parent:Depiction|null, children:Depictio
 
     // padding
 
-    groups.forEach((group:Group) => {
-
+    for(let group of groups) {
         group.h += padding
-
-    })
-
-
-    
+    }
 
     var groupsArr:Array<Group> = Array.from(groups)
 
     groupsArr.sort((a, b) => {
-
         return Math.max(b.w, b.h) - Math.max(a.w, a.h)
-
     })
 
     packer.fit(groupsArr)
+
 
     if(parent) {
         parent.size = Vec2.fromXY(padding + packer.root.w, padding + packer.root.h)
@@ -316,7 +312,8 @@ export default function binPackStrategy(parent:Depiction|null, children:Depictio
 
         group.depictions.forEach((child:Depiction) => {
 
-            child.offset = offset.add(child.offset)
+            if(!child.offsetExplicit)
+                child.offset = offset.add(child.offset)
 
         })
 

@@ -49,9 +49,6 @@ export default class LayoutEditor extends View {
     undoLevels:any[]
 
 
-    creatingInteraction:boolean
-    creatingInteractionFrom:Depiction|undefined
-    creatingInteractionWaypoints:Vec2[]
 
 
     constructor(app:App, layout:Layout) {
@@ -73,8 +70,6 @@ export default class LayoutEditor extends View {
         this.scaleFactor = 1.0
         this.undoLevels = []
         this.proposedLayout = null
-
-        this.creatingInteraction = false
     }
 
 
@@ -287,16 +282,6 @@ export default class LayoutEditor extends View {
 
         return this.proposedLayout !== null
 
-    }
-
-
-
-    startCreatingInteraction(from:Depiction) {
-
-        this.creatingInteraction = true
-        this.creatingInteractionFrom = from
-        this.creatingInteractionWaypoints = []
-        this.overlay.update()
     }
 
 }

@@ -57,14 +57,14 @@ export default class LayoutEditorOverlay extends View {
 
     dnd:Array<DND>
 
-
-    proposingConnection:{from:Depiction,to:Depiction}|undefined
+    proposingConnectionFrom:Depiction|undefined
 
     constructor(layoutEditor:LayoutEditor) {
 
         super(layoutEditor.app)
         
         this.layoutEditor = layoutEditor
+
 
         this.proposingResult = null
 
@@ -266,11 +266,26 @@ export default class LayoutEditorOverlay extends View {
 
         const interaction:VNode[] = []
 
-        if(this.proposingConnection) {
+        if(this.proposingConnectionFrom) {
+
+            var points
+
             console.log('pc')
 
-            let points = this.proposingConnection.from.absoluteBoundingBox
-                .closestEdgeMidPointsBetweenThisAnd(this.proposingConnection.to.absoluteBoundingBox)
+
+
+            let intersects = this.layoutEditor.layout.getTopIntersectingDepiction(this.mouseGridPos, true)
+
+            if(intersects && intersects instanceof LabelledDepiction) {
+                points = this.proposingConnectionFrom.absoluteBoundingBox
+                    .closestEdgeMidPointsBetweenThisAnd(intersects.absoluteBoundingBox)
+
+            } else {
+
+                points = this.proposingConnectionFrom.absoluteBoundingBox
+                    .closestEdgeMidPointsBetweenThisAnd(Rect.fromPosAndSize(this.mouseGridPos, Vec2.fromXY(1, 1)))
+
+            }
 
             let pA = points.pointA as Vec2
             let pB = points.pointB as Vec2
@@ -441,24 +456,6 @@ export default class LayoutEditorOverlay extends View {
 
 
 
-        this.proposingConnection = undefined
-
-        let selection = this.layoutEditor.getSelection()
-
-        if(selection.length === 1) {
-
-            let s = selection[0]
-            let intersects = this.layoutEditor.layout.getTopIntersectingDepiction(this.mouseGridPos, true)
-
-            if(intersects && s !== intersects) {
-                if(s instanceof LabelledDepiction && intersects instanceof LabelledDepiction) {
-                    this.proposingConnection = { from: s, to: intersects }
-                }
-            }
-        }
-
-
-
 
         for(let i = 0; i < this.draggingDepictions.length; ++ i) {
 
@@ -615,54 +612,73 @@ export default class LayoutEditorOverlay extends View {
 
         const gridPos:Vec2 = transform.transformVec2(pos.divide(this.layoutEditor.layout.gridSize))
 
-        if(this.proposingConnection) {
-            let { from, to } = this.proposingConnection
-            let fOf = from.depictionOf
-            let tOf = to.depictionOf
-            let id = 'someinteraction'
-            let type = Specifiers.SBO.Stimulation
-            let ourrole = Specifiers.SBO.Stimulator
-            let theirrole = Specifiers.SBO.Stimulated
-            let interaction:SXInteraction|null = null
-            if(fOf instanceof SXComponent) {
-                if(tOf instanceof SXComponent) {
-                    // from component to component
-                    let wrapper = fOf.wrap()
-                    wrapper.createSubComponent(tOf)
-                    let scA = wrapper.subComponents[0]
-                    let scB = wrapper.subComponents[1]
-                    interaction = scA.createInteractionWith(scB, id, type, ourrole, theirrole)
-                } else if(tOf instanceof SXSubComponent) {
-                    // from component to subcomponent
-                    let scA = tOf.containingComponent.createSubComponent(fOf)
-                    interaction = scA.createInteractionWith(tOf, id, type, ourrole, theirrole)
-                } else {
-                    throw new Error('???')
-                }
-            } else if(fOf instanceof SXSubComponent) {
-                if(tOf instanceof SXComponent) {
-                    // from subcomponent to component
-                    let scB = fOf.containingComponent.createSubComponent(tOf)
-                    interaction = fOf.createInteractionWith(scB, id, type, ourrole, theirrole)
-                } else if(tOf instanceof SXSubComponent) {
-                    // from subcomponent to subcomponent
-                    if(tOf.containingComponent === fOf.containingComponent) {
-                        interaction = fOf.createInteractionWith(tOf,id, type, ourrole, theirrole)
+        if(this.proposingConnectionFrom) {
+
+            let from = this.proposingConnectionFrom
+            let to = this.layoutEditor.layout.getTopIntersectingDepiction(this.mouseGridPos, true)
+
+            this.proposingConnectionFrom = undefined
+
+            if(to) {
+                let fOf = from.depictionOf
+                let tOf = to.depictionOf
+                let id = 'someinteraction'
+                let type = Specifiers.SBO.Stimulation
+                let ourrole = Specifiers.SBO.Stimulator
+                let theirrole = Specifiers.SBO.Stimulated
+                let interaction:SXInteraction|null = null
+                let wrapper:SXComponent|null = null
+                if(fOf instanceof SXComponent) {
+                    if(tOf instanceof SXComponent) {
+                        // from component to component
+                        wrapper = fOf.wrap()
+                        wrapper.createSubComponent(tOf)
+                        let scA = wrapper.subComponents[0]
+                        let scB = wrapper.subComponents[1]
+                        interaction = scA.createInteractionWith(scB, id, type, ourrole, theirrole)
+                    } else if(tOf instanceof SXSubComponent) {
+                        // from component to subcomponent
+                        let scA = tOf.containingComponent.createSubComponent(fOf)
+                        interaction = scA.createInteractionWith(tOf, id, type, ourrole, theirrole)
+                    } else {
+                        throw new Error('???')
+                    }
+                } else if(fOf instanceof SXSubComponent) {
+                    if(tOf instanceof SXComponent) {
+                        // from subcomponent to component
+                        let scB = fOf.containingComponent.createSubComponent(tOf)
+                        interaction = fOf.createInteractionWith(scB, id, type, ourrole, theirrole)
+                    } else if(tOf instanceof SXSubComponent) {
+                        // from subcomponent to subcomponent
+                        if(tOf.containingComponent === fOf.containingComponent) {
+                            interaction = fOf.createInteractionWith(tOf,id, type, ourrole, theirrole)
+                        }
+                    } else {
+                        throw new Error('???')
                     }
                 } else {
                     throw new Error('???')
                 }
-            } else {
-                throw new Error('???')
-            }
-                
-            this.proposingConnection = undefined
+                    
+                this.proposingConnectionFrom = undefined
 
-            this.layoutEditor.deselectAll()
+                this.layoutEditor.deselectAll()
 
-            if(interaction) {
-                this.layoutEditor.layout.syncAllDepictions(5)
-                this.layoutEditor.layout.configurate([])
+                if(interaction) {
+                    this.layoutEditor.layout.syncAllDepictions(5)
+
+                    if(wrapper) {
+                        let wrapperD = this.layoutEditor.layout.getDepictionsForUri(wrapper.uri)[0]
+
+                        if(!wrapperD) {
+                            throw new Error('???')
+                        }
+
+                        wrapperD.offsetExplicit = from.offsetExplicit
+                        wrapperD.offset = from.offset
+                    }
+                    this.layoutEditor.layout.configurate([])
+                }
             }
         }
 
@@ -777,10 +793,29 @@ export default class LayoutEditorOverlay extends View {
         var transform:Matrix = this.layoutEditor.getTransform().invert()
         const gridPos:Vec2 = transform.transformVec2(offset.divide(this.layoutEditor.layout.gridSize))
 
-        const depiction:Depiction|null = this.layoutEditor.layout.getTopIntersectingDepiction(gridPos, true)
+        let selection:Depiction[] = this.layoutEditor.getSelection()
 
-        this.app.openContextMenu(new LayoutEditorContextMenu(this.layoutEditor, absPos, depiction))
+        let clickedSelection = false
 
+        for(let depiction of selection)  {
+            if(depiction.absoluteBoundingBox.intersectsPoint(layoutPos)) {
+                this.app.openContextMenu(new LayoutEditorContextMenu(this.layoutEditor, absPos, selection))
+                clickedSelection = true
+                break
+            }
+        }
+
+        if(!clickedSelection) {
+            this.layoutEditor.deselectAll()
+
+            const depiction:Depiction|null = this.layoutEditor.layout.getTopIntersectingDepiction(gridPos, true)
+
+            if(depiction) {
+                this.app.openContextMenu(new LayoutEditorContextMenu(this.layoutEditor, absPos, [ depiction ]))
+            } else {
+                this.app.openContextMenu(new LayoutEditorContextMenu(this.layoutEditor, absPos, []))
+            }
+        }
     }
 
     onWheel(spin:Vec2) {
