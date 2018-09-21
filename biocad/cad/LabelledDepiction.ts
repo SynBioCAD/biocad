@@ -62,9 +62,8 @@ export default class LabelledDepiction extends Depiction {
     }
 
     renderThumb(size:Vec2):VNode {
-        return svg('g', [])
+        return this.getLabelled().renderThumb(size)
     }
-
 
     getAnchorY():number {
 

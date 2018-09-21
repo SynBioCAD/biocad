@@ -17,29 +17,174 @@ import { click as clickEvent } from 'jfw/event'
 import TextInput from 'jfw/ui/form-control/TextInput';
 
 import soTrie from 'data/soTrie'
+import { Predicates, Specifiers } from 'bioterms';
+import PropertyEditor from './PropertyEditor';
+import DepictionRef from 'biocad/cad/DepictionRef';
+import PropertyEditorOneline from './PropertyEditorOneline';
+import PropertyEditorTermSet from './PropertyEditorTermSet';
+import PropertyEditorCombo from './PropertyEditorCombo';
+import LayoutEditorView from '../../cad/LayoutEditorView';
+
+const strands = [
+    {
+        name: 'Forward',
+        uri: Specifiers.SBOLX.Orientation.Inline
+    },
+    {
+        name: 'Reverse Complement',
+        uri: Specifiers.SBOLX.Orientation.ReverseComplement
+    }
+]
+
+const types = [
+    {
+        name: 'DNA',
+        uri: Specifiers.SBOLX.Type.DNA
+    },
+    {
+        name: 'RNA',
+        uri: Specifiers.SBOLX.Type.RNA
+    },
+    {
+        name: 'Protein',
+        uri: Specifiers.SBOLX.Type.Protein
+    },
+    {
+        name: 'Complex',
+        uri: Specifiers.SBOLX.Type.Complex
+    },
+    {
+        name: 'Small Molecule',
+        uri: Specifiers.SBOLX.Type.SmallMolecule
+    },
+    {
+        name: 'Effector',
+        uri: Specifiers.SBOLX.Type.Effector
+    }
+]
 
 export default class Inspector extends View {
 
-    inspecting:Depiction[]
+    private inspecting:{ uri:string, depiction:DepictionRef }[]
 
-    panels:any[]
+    renderThumb:any
 
-    roleInputs:Map<number, TextInput>
+    editors:PropertyEditor[]
 
-    constructor(app:BiocadApp) {
+    layoutEditorView:LayoutEditorView
 
-        super(app)
+    constructor(layoutEditorView:LayoutEditorView) {
 
-        this.panels = []
+        if(!layoutEditorView.app) {
+            throw new Error('lev has no app?')
+        }
+
+        super(layoutEditorView.app)
+
+        this.layoutEditorView = layoutEditorView
+
+        this.editors = []
         this.inspecting = []
+        this.renderThumb = null
+    }
 
-        this.roleInputs = new Map()
+    inspect(depictions:Depiction[]) {
+
+        this.inspecting = depictions.map((d) => {
+            let dOf = d.depictionOf
+            if(!dOf) {
+                throw new Error('???')
+            }
+            return { uri: dOf.uri, depiction: new DepictionRef(d) }
+        })
+
+        this.editors = []
+
+        for(let depiction of depictions) {
+
+            let dOf = depiction.depictionOf
+
+            if(!dOf) {
+                continue
+            }
+
+            this.editors.push(new PropertyEditorOneline('Name', dOf.uri, Predicates.Dcterms.title))
+            this.editors.push(new PropertyEditorOneline('Identifier', dOf.uri, Predicates.SBOLX.id))
+            this.editors.push(new PropertyEditorCombo('Type', dOf.uri, Predicates.SBOLX.type, types))
+            this.editors.push(new PropertyEditorCombo('Strand', dOf.uri, 'http://biocad.io/terms#strand', strands))
+            //this.editors.push(new PropertyEditorTermSet('Roles', dOf.uri, Predicates.SBOLX.hasRole, strands))
+        }
+
+        this.update()
+
     }
 
     render():VNode {
 
-        const elements:any[] = []
+        let graph = (this.app as BiocadApp).graph
 
+        let elements:any[] = []
+
+        let layout = this.layoutEditorView.layoutEditor.layout
+
+        if(this.inspecting.length === 1) {
+
+            const thumbElements:any[] = []
+
+            var thumb 
+
+            let d = this.inspecting[0].depiction.toDepiction(layout)
+
+            if(d) {
+                const thumbSize:Vec2 = Vec2.fromXY(32, 32)
+                thumbElements.push(d.renderThumb(thumbSize))
+
+                thumb = svg('svg', {
+                    style: {
+                        display: 'inline',
+                        width: thumbSize.x + 'px',
+                        height: thumbSize.y + 'px',
+                    }
+                }, thumbElements)
+            }
+
+            const depictionOf = graph.uriToFacade(this.inspecting[0].uri)
+
+            if(depictionOf) {
+
+                elements.push(h('div.sf-inspector-top', [
+                    thumb ? thumb : h('span'),
+                    h('h1', depictionOf.displayName)
+                ]))
+
+                const desc:string|undefined = depictionOf.displayDescription
+
+                elements.push(h('div.sf-inspector-desc', desc))
+
+            }
+
+        } else {
+            this.inspecting.forEach((depiction) => {
+                elements.push(h('div.sf-inspector-top', [
+                    h('h1', this.inspecting.length + ' parts')
+                ]))
+            })
+
+        }
+
+        let tableElements:any[] = []
+
+        for(let editor of this.editors) {
+            tableElements.push(editor.render(graph))
+        }
+
+        elements.push(h('div.sf-inspector-container', [
+            h('table.sf-inspector', tableElements)
+        ]))
+
+        return h('span', elements)
+
+        /*
         if(this.inspecting.length === 1) {
 
             const thumbElements:any[] = []
@@ -88,33 +233,30 @@ export default class Inspector extends View {
             const depictionOf:SXIdentified|undefined = depiction.depictionOf
 
             if(depictionOf !== undefined) {
-                tableElements.push(h('tr.sf-inspector-oneline', [
-                    h('td', 'Name'),
-                    h('td', depictionOf.name || '')
-                ]))
+
+                tableElements.push(propertyEditorOneline(depictionOf, Predicates.Dcterms.title))
 
                 var cd:SXComponent|null = cdFromDepiction(depictionOf)
 
                 if(cd !== null) {
 
-                    tableElements.push(h('tr.sf-inspector-oneline', [
-                        h('td', 'Type'),
-                        h('td', renderCDTypeChooser(cd))
-                    ]))
+                    tableElements.push()
 
                     tableElements.push(h('tr.sf-inspector-oneline', [
                         h('td', 'Strand'),
-                        h('td', renderCDStrandChooser(cd))
+                        h('td', propertyEditorCombo(cd, 'http://biocad.io/terms#strand', [
+                            {
+                                name: 'Forward',
+                                value: Specifiers.SBOL2.Orientation.Inline
+                            },
+                            {
+                                name: 'Reverse Complement',
+                                value: Specifiers.SBOL2.Orientation.ReverseComplement
+                            }
+                        ]))
+    
                     ]))
 
-                    tableElements.push(h('tr.sf-inspector-twolines-header', {
-                    }, [
-                        h('td', {
-                            colSpan: 2
-                        }, [
-                        'Roles'
-                        ])
-                    ]))
 
                     var els: VNode[] = []
 
@@ -140,28 +282,13 @@ export default class Inspector extends View {
                         els.push(roleInput.render())
                     }
 
-                    tableElements.push(h('tr.sf-inspector-twolines-value', h('td', {
-                        colSpan: '2'
-                    }, els)))
+                    tableElements.push()
                 }
             }
 
-            /*
-            tableElements.push(h('tr.sf-inspector-oneline', [
-                h('td', 'Offset'),
-                h('td', depiction.offset.toString())
-            ]))
-            tableElements.push(h('tr.sf-inspector-oneline', [
-                h('td', 'Size'),
-                h('td', depiction.size.toString())
-            ]))
-            tableElements.push(h('tr.sf-inspector-oneline', [
-                h('td', 'Y Anchor'),
-                h('td', depiction.getAnchorY().toString())
-            ]))*/
-
-        })
+        })*/
     
+        /*
         elements.push(h('div.sf-inspector-container', [
             h('table.sf-inspector', tableElements)
         ]))
@@ -171,8 +298,9 @@ export default class Inspector extends View {
 
         return h('span', elements)
 
-    }
+}*/
 
+    /*
     inspect(depictions:Depiction[]) {
 
         this.inspecting = depictions
@@ -204,11 +332,12 @@ export default class Inspector extends View {
 
         this.update()
 
-    }
+    }*/
 
 
 }
 
+/*
 function cdFromDepiction(depictionOf:SXIdentified):SXComponent|null {
 
 
@@ -235,3 +364,71 @@ function clickRemoveRole(data) {
     // I want to update anything that is watching the cd
     // the graph watcher will do that
 }
+
+
+function propertyEditorOneline(title:string, object:SXIdentified, predicate:string) {
+
+    return h('tr.sf-inspector-oneline', [
+        h('td', 'Name'),
+        h('td', object.getStringProperty(predicate))
+    ])
+
+}
+
+function propertyEditorCombo(title:string, object:SXIdentified, predicate:string, options:{name:string,value:string}[]) {
+
+    return h('select.jfw-select', {
+        //'ev-change': changeEvent(onChange, { cd: cd }),
+        value: 'TODO'
+    }, options.map((option) => {
+
+        return h('option', {
+            value: option.value,
+        }, option.name)
+
+    }))
+
+}
+
+function propertyEditorSet(title:string, object:SXIdentified, predicate:string, options:{name:string,value:string}[]) {
+
+    let els: VNode[] = []
+
+    for(let uri of object.getUriProperties(predicate)) {
+
+        els.push(
+            h('div.sf-inspector-role', [
+                describeSOUri(uri).name,
+                ' ',
+                h('span.fa.fa-minus-circle.sf-inspector-role-remove', {
+                    //'ev-click': clickEvent(clickRemoveRole, { view: this, cd: cd, role: role })
+                }, [])
+            ])
+        )
+    }
+
+    els.push(h('div.sf-inspector-add-role', [
+        h('span.fa.fa-plus-circle')
+    ]))
+
+    return [
+        h('tr.sf-inspector-twolines-header', {
+        }, [
+            h('td', {
+                colSpan: 2
+            }, [
+                title
+            ])
+        ]),
+        h('tr.sf-inspector-twolines-value', h('td', {
+            colSpan: '2'
+        }, els))
+    ]
+}
+
+
+
+
+
+
+*/

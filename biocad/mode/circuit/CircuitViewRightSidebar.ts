@@ -2,6 +2,7 @@
 import { Sidebar, SidebarSection } from 'jfw/ui'
 import Inspector from './Inspector'
 import DepictionTreeView from '../../cad/DepictionTreeView';
+import CircuitView from './CircuitView';
 
 export default class CircuitViewRightSidebar extends Sidebar {
 
@@ -11,13 +12,13 @@ export default class CircuitViewRightSidebar extends Sidebar {
     debugDepictionTreeView:DepictionTreeView
 
 
-    constructor(app) {
+    constructor(circuitView:CircuitView) {
 
-        super(app)
+        super(circuitView.app)
 
-        this.inspector = new Inspector(app)
+        this.inspector = new Inspector(circuitView)
 
-        this.debugDepictionTreeView = new DepictionTreeView(app)
+        this.debugDepictionTreeView = new DepictionTreeView(this.app)
 
         let sections = [
             new SidebarSection(

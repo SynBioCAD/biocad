@@ -38,7 +38,7 @@ export default abstract class LayoutEditorView extends View {
         super(app)
 
         this.leftSidebar = new CircuitViewLeftSidebar(app)
-        this.rightSidebar = new CircuitViewRightSidebar(app)
+        this.rightSidebar = new CircuitViewRightSidebar(this)
 
         this.toolbar = new LayoutEditorToolbar(this)
 
