@@ -4,7 +4,7 @@ import { h, svg, VNode } from 'jfw/vdom'
 import { View } from 'jfw/ui'
 import BiocadApp from "biocad/BiocadApp";
 import Depiction from "biocad/cad/Depiction";
-import { SXIdentified, SXSubComponent, SXComponent } from "sbolgraph"
+import { SXIdentified, SXSubComponent, SXComponent, SXInteraction } from "sbolgraph"
 
 import describeSOUri from 'data/describeSOUri'
 import renderCDTypeChooser from "biocad/stateless-ui/renderCDTypeChooser";
@@ -24,6 +24,9 @@ import PropertyEditorOneline from './PropertyEditorOneline';
 import PropertyEditorTermSet from './PropertyEditorTermSet';
 import PropertyEditorCombo from './PropertyEditorCombo';
 import LayoutEditorView from '../../cad/LayoutEditorView';
+import ABInteractionDepiction from '../../cad/ABInteractionDepiction';
+import PropertyEditorSiblingComponent from './PropertyEditorSubComponent';
+import ComponentDepiction from '../../cad/ComponentDepiction';
 
 const strands = [
     {
@@ -108,11 +111,36 @@ export default class Inspector extends View {
                 continue
             }
 
+            let effectiveComponent:null|SXComponent = null
+
+            if(dOf instanceof SXComponent) {
+                effectiveComponent = dOf
+            } else if(dOf instanceof SXSubComponent) {
+                effectiveComponent = dOf.instanceOf
+            }
+
             this.editors.push(new PropertyEditorOneline('Name', dOf.uri, Predicates.Dcterms.title))
             this.editors.push(new PropertyEditorOneline('Identifier', dOf.uri, Predicates.SBOLX.id))
-            this.editors.push(new PropertyEditorCombo('Type', dOf.uri, Predicates.SBOLX.type, types))
-            this.editors.push(new PropertyEditorCombo('Strand', dOf.uri, 'http://biocad.io/terms#strand', strands))
-            //this.editors.push(new PropertyEditorTermSet('Roles', dOf.uri, Predicates.SBOLX.hasRole, strands))
+
+            if(effectiveComponent) {
+
+                this.editors.push(new PropertyEditorCombo('Type', effectiveComponent.uri, Predicates.SBOLX.type, types))
+                this.editors.push(new PropertyEditorCombo('Strand', effectiveComponent.uri, 'http://biocad.io/terms#strand', strands))
+                //this.editors.push(new PropertyEditorTermSet('Roles', dOf.uri, Predicates.SBOLX.hasRole, strands))
+
+            }
+            
+            if(depiction instanceof ABInteractionDepiction) {
+                let interaction = depiction.depictionOf
+
+                if(! (interaction instanceof SXInteraction)) {
+                    throw new Error('???')
+                }
+
+                for(let participation of interaction.participations) {
+                    this.editors.push(new PropertyEditorSiblingComponent('Participant', interaction.containingModule.uri, participation.uri, Predicates.SBOLX.participant))
+                }
+            }
         }
 
         this.update()
@@ -183,6 +211,10 @@ export default class Inspector extends View {
         ]))
 
         return h('span', elements)
+
+    }
+
+}
 
         /*
         if(this.inspecting.length === 1) {
@@ -333,9 +365,6 @@ export default class Inspector extends View {
         this.update()
 
     }*/
-
-
-}
 
 /*
 function cdFromDepiction(depictionOf:SXIdentified):SXComponent|null {

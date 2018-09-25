@@ -12,8 +12,11 @@ export default class InteractionDepictionFactory {
 
         if(interaction.participations.length === 2) {
 
-            return new ABInteractionDepiction(layout, interaction, chain, parent)
+            let d = new ABInteractionDepiction(layout, interaction, chain, parent)
 
+            d.mapParticipationsToDepictions(interaction)
+
+            return d
         }
 
         if(interaction.participations.length === 3) {

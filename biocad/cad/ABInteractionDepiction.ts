@@ -30,15 +30,9 @@ export default class ABInteractionDepiction extends InteractionDepiction {
             throw new Error('Need exactly two participants for ABInteractionDepiction')
         }
 
-        const { a, b } = this.mapParticipationsToDepictions(depictionOf)
-
-        this.a = a
-        this.b = b
-
-
     }
 
-    private mapParticipationsToDepictions(interaction:SXInteraction):{ a:Depiction, b:Depiction } {
+    mapParticipationsToDepictions(interaction:SXInteraction) {
 
         if(interaction.participants.length !== 2) {
             throw new Error('Need exactly two participants for ABInteractionDepiction')
@@ -109,7 +103,8 @@ export default class ABInteractionDepiction extends InteractionDepiction {
             throw new Error('missing depiction: ' + b.uri)
         }
 
-        return { a: depictionA, b: depictionB }
+        this.a = depictionA
+        this.b = depictionB
     }
 
 

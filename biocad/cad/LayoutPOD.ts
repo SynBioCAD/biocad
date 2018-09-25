@@ -3,6 +3,7 @@ import Layout from "biocad/cad/Layout";
 import Depiction from "biocad/cad/Depiction";
 import DepictionPOD from "biocad/cad/DepictionPOD";
 import { SBOLXGraph } from "sbolgraph";
+import ABInteractionDepiction from "./ABInteractionDepiction";
 
 export default class LayoutPOD {
 
@@ -40,10 +41,19 @@ export default class LayoutPOD {
         })
 
         depictions.forEach((depiction:Depiction) => {
-
             addRecursive(depiction, undefined)
 
         })
+
+        for(let depiction of layout.depictions) {
+            if(depiction instanceof ABInteractionDepiction) {
+                let dOf = depiction._depictionOf
+                if(!dOf) {
+                    throw new Error('depictionOf undefined')
+                }
+                depiction.mapParticipationsToDepictions(dOf)
+            }
+        }
 
         function addRecursive(depiction:Depiction, parent:Depiction|undefined) {
 
