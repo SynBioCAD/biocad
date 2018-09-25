@@ -1105,7 +1105,7 @@ export default class Layout extends Versioned {
         let bbox = this.getBoundingBox()
 
         if(bbox === null)
-            throw new Error('???')
+            return Vec2.fromXY(0, 0)
 
         bbox.topLeft = Vec2.fromXY(0, 0)
         return bbox.size()
@@ -1114,6 +1114,28 @@ export default class Layout extends Versioned {
     getSize():Vec2 {
 
         return this.size
+
+    }
+
+    crop(padding?:Vec2) {
+
+        let bbox = this.getBoundingBox()
+
+        if(!bbox)
+            return
+
+        this.size = bbox.size()
+
+        for(let depiction of this.getRootDepictions()) {
+            depiction.offset = depiction.offset.subtract(bbox.topLeft)
+        }
+
+        if(padding !== undefined) {
+            for (let depiction of this.getRootDepictions()) {
+                depiction.offset = depiction.offset.add(padding)
+            }
+            this.size = this.getBoundingSize().add(padding)
+        }
 
     }
 

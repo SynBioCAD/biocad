@@ -5,6 +5,8 @@
 @import "biocad-circuit-view-minimap.less";
 @import "biocad-sequence-view.less";
 @import "biocad-palette.less";
+@import "pictureframe.less";
+@import "balloon.less";
 
 div.sf-circuit-view-toolbar {
     height: 48px;
@@ -186,4 +188,42 @@ tr.sf-inspector-oneline {
     text-align: center;
 }
 
+
+
+
+
+.sf-loadsaveview-icons {
+    font-weight: lighter;
+    text-align: left;
+    padding: 16px;
+}
+
+.sf-loadsaveview-icons a {
+    cursor: pointer;
+    width: 150px;
+    height: 150px;
+    display: block;
+    position: relative;
+    border-radius: 6px;
+}
+
+.sf-loadsaveview-icons a:hover {
+    background-color: #eee;
+}
+
+.sf-loadsaveview-icons a .fa {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    font-size: x-large;
+}
+
+.sf-loadsaveview-icons a span.icon-text {
+    position: absolute;
+    width: 100%;
+    bottom: 6px;
+    text-align: center;
+    font-size: medium;
+}
 

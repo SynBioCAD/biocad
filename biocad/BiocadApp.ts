@@ -14,6 +14,7 @@ import SourceMode from './mode/source/SourceMode'
 import CircuitMode from './mode/circuit/CircuitMode'
 import SequenceMode from './mode/sequence/SequenceMode'
 import SimulatorMode from './mode/simulator/SimulatorMode'
+import LoadSaveMode from './mode/loadsave/LoadSaveMode'
 
 import Hook from 'jfw/Hook'
 
@@ -89,6 +90,9 @@ export default class BiocadApp extends App
             window['biocad_HEADLESS'] = new Headless(this)
 
         } else {
+
+            if(GlobalConfig.get('biocad.feature.mode.loadsave'))
+                modes.push(new LoadSaveMode(this, false))
 
             if(GlobalConfig.get('biocad.feature.mode.setup'))
                 modes.push(new SetupMode(this, false))

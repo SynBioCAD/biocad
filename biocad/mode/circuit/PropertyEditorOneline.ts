@@ -7,7 +7,6 @@ import { keyupChange } from 'jfw/event'
 export default class PropertyEditorOneline extends PropertyEditor {
 
     title:string
-
     objectURI:string
     predicate:string
 

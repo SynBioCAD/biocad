@@ -1,19 +1,17 @@
 
-import App from '../../BiocadApp'
-
-import SourceView from './SourceView'
-
+import LoadSaveView from './LoadSaveView'
 import Mode from 'jfw/ui/Mode'
 import { VNode, h } from "jfw/vdom";
+import { App } from "jfw";
 
-export default class SequenceViewMode extends Mode {
+export default class LoadSaveMode extends Mode {
 
     constructor(app:App, active:boolean) {
 
         super(
             app,
             active,
-            new SourceView(app),
+            new LoadSaveView(app),
             null,
             null
         )
@@ -21,7 +19,7 @@ export default class SequenceViewMode extends Mode {
     }
 
     getName():VNode {
-        return h('span.fa.fa-file-code', '')
+        return h('span.fa.fa-save', '')
     }
 
 }

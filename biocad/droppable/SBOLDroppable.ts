@@ -35,6 +35,7 @@ export default class SBOLDroppable extends Droppable {
         this.layout.configurate([
             new MarginInstruction(0, 0, 0, 0)
         ])
+        this.layout.size = this.layout.getBoundingSize()
 
         this.thumb = new LayoutThumbnail(app, this.layout)
     }
