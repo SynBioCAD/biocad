@@ -477,7 +477,10 @@ export default class Layout extends Versioned {
 
 
 
+        this.verifyAcyclic()
+
         this.depthSort()
+
     }
 
     startWatchingGraph(updateContext:App) {
@@ -1137,6 +1140,26 @@ export default class Layout extends Versioned {
             this.size = this.getBoundingSize().add(padding)
         }
 
+    }
+
+    verifyAcyclic() {
+
+        for(let d of this.getRootDepictions())
+            check(d, new Set<Depiction>())
+
+        function check(d, visited) {
+            if(visited.has(d)) {
+                throw new Error('Cyclic depiction graph: ' + d.debugName)
+            } else {
+                visited.add(d)
+            }
+
+            check(d, visited)
+
+            for(let child of d.children) {
+                check(child, visited)
+            }
+        }
     }
 
 }

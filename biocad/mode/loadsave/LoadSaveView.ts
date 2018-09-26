@@ -6,6 +6,11 @@ import LayoutThumbnail from 'biocad/cad/LayoutThumbnail';
 import BiocadApp from '../../BiocadApp';
 import Layout from '../../cad/Layout';
 
+import fileDialog = require('file-dialog')
+
+import { click as clickEvent } from 'jfw/event'
+import { SBOLXGraph } from 'sbolgraph';
+
 export default class LoadSaveView extends View {
 
     layout:Layout|undefined
@@ -81,7 +86,8 @@ export default class LoadSaveView extends View {
                     attributes: {
                         'data-balloon-pos': 'right',
                         'data-balloon': 'Load GenBank, FASTA, or SBOL2 files from your computer',
-                    }
+                    },
+                    'ev-click': clickEvent(clickLoad, { view: this })
                 }, [
                     h('span.fa.fa-folder-open', []),
                     h('span.icon-text', ' Load')
@@ -117,3 +123,32 @@ export default class LoadSaveView extends View {
 
     }
 }
+
+async function clickLoad(data)  {
+
+    let view:LoadSaveView = data.view
+
+    let file = await fileDialog()
+
+    if(file && file[0]) {
+
+        let reader = new FileReader()
+
+        reader.onload = async (ev) => {
+
+            if(!ev.target)
+                return
+
+            let app = view.app as BiocadApp
+
+            let g = await SBOLXGraph.loadString(reader.result + '', file[0].type)
+            app.loadGraph(g)
+        }
+
+        reader.readAsText(file[0])
+    }
+
+
+
+}
+
