@@ -42,12 +42,12 @@ export default class LayoutThumbnail extends View {
             SVGDefs.render()
         ]
 
-        this.layout.depictions.forEach((depiction:Depiction) => {
+        for(let depiction of this.layout.depictions) {
 
             if(depiction.isVisible()) {
                 svgElements.push(depiction.render(this))
             }
-        })
+        }
 
         let size:Vec2 = this.layout.getSize()
 

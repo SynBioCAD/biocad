@@ -123,7 +123,7 @@ export default class Inspector extends View {
                 effectiveComponent = dOf.instanceOf
             }
 
-            let onChange = () => {
+            let changeNonRecursive = () => {
                 let layout = this.layoutEditorView.layoutEditor.layout
                 if(effectiveComponent) {
                     for(let d of layout.getDepictionsForUri(effectiveComponent.uri)) {
@@ -144,8 +144,29 @@ export default class Inspector extends View {
                 }
             }
 
-            this.editors.push(new PropertyEditorOneline('Name', new PropertyAccessorString(dOf.uri, Predicates.Dcterms.title, onChange)))
-            this.editors.push(new PropertyEditorOneline('Identifier', new PropertyAccessorString(dOf.uri, Predicates.SBOLX.id, onChange)))
+            let changeRecursive = () => {
+                let layout = this.layoutEditorView.layoutEditor.layout
+                if(effectiveComponent) {
+                    for(let d of layout.getDepictionsForUri(effectiveComponent.uri)) {
+                        d.touchRecursive()
+                    }
+                    let instantiations = effectiveComponent.graph.getInstancesOfComponent(effectiveComponent)
+                    for(let instance of instantiations) {
+                        for(let d of layout.getDepictionsForUri(instance.uri)) {
+                            d.touchRecursive()
+                        }
+                    }
+                } else {
+                    if(dOf) {
+                        for(let d of layout.getDepictionsForUri(dOf.uri)) {
+                            d.touchRecursive()
+                        }
+                    }
+                }
+            }
+
+            this.editors.push(new PropertyEditorOneline('Name', new PropertyAccessorString(dOf.uri, Predicates.Dcterms.title, changeNonRecursive)))
+            this.editors.push(new PropertyEditorOneline('Identifier', new PropertyAccessorString(dOf.uri, Predicates.SBOLX.id, changeNonRecursive)))
 
             if(effectiveComponent) {
 
@@ -155,7 +176,7 @@ export default class Inspector extends View {
             }
 
             if(depiction.parent instanceof BackboneDepiction) {
-                this.editors.push(new PropertyEditorCombo('Strand', new PropertyAccessorStrand(dOf.uri, onChange), strands))
+                this.editors.push(new PropertyEditorCombo('Strand', new PropertyAccessorStrand(dOf.uri, changeRecursive), strands))
             }
             
             if(depiction instanceof ABInteractionDepiction) {
@@ -220,12 +241,11 @@ export default class Inspector extends View {
             }
 
         } else {
-            this.inspecting.forEach((depiction) => {
+            for(let depiction of this.inspecting) {
                 elements.push(h('div.sf-inspector-top', [
                     h('h1', this.inspecting.length + ' parts')
                 ]))
-            })
-
+            }
         }
 
         let tableElements:any[] = []

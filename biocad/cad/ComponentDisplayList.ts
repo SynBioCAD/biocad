@@ -147,12 +147,12 @@ export default class SXComponentDisplayList {
 
             const res:Array<SXLocation> = []
 
-            children.forEach((child:SXIdentified) => {
+            for(let child of children) {
 
                 Array.prototype.push.apply(res, expandChildLocations(child))
                 //Array.prototype.push.apply(res, [ child ])
 
-            })
+            }
 
             return res
         }

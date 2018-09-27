@@ -9,7 +9,7 @@ export default function tileHorizontalStrategy(parent, children, padding) {
     var offset = Vec2.fromXY(padding, padding)
     var maxHeight = -99999
 
-    children.forEach((child) => {
+    for(let child of children) {
 
         child.offset = offset
 
@@ -17,7 +17,7 @@ export default function tileHorizontalStrategy(parent, children, padding) {
 
         maxHeight = Math.max(maxHeight, child.size.y)
 
-    })
+    }
 
     parent.size = Vec2.fromXY(offset.x, padding + maxHeight + padding)
 

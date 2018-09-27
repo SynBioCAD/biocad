@@ -115,9 +115,9 @@ export default class DropOverlay {
 
         let move = () => {
 
-            this.receivers.forEach((receiver:DropReceiver) => {
+            for(let receiver of this.receivers) {
                 receiver.onDroppableMoved(MouseListener.mousePos, droppable)
-            })
+            }
 
             this.app.update()
         }
@@ -195,7 +195,7 @@ function onLeftClick(data) {
 
         let effectivePos = pos.subtract(dropping.getSize().multiplyScalar(0.5))
 
-        overlay.receivers.forEach((receiver:DropReceiver) => {
+        for(let receiver of overlay.receivers) {
 
             const rect:Rect|null = receiver.getDropZone()
 
@@ -210,7 +210,7 @@ function onLeftClick(data) {
 
             }
 
-        })
+        }
 
         overlay.cancelDrop()
 

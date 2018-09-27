@@ -152,11 +152,11 @@ export default class DepictionPOD {
         depiction.scale = Vec2.fromPOD(pod.scale)
         depiction.depictionOf = depictionOf
 
-        pod.children.forEach((childPod:any) => {
+        for(let childPod of pod.children) {
 
             depiction.children.push(DepictionPOD.deserialize(layout, graph, depiction, childPod))
 
-        })
+        }
 
         return depiction
 

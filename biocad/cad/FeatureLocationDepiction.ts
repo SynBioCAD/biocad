@@ -87,13 +87,13 @@ export default class SequenceAnnotationDepiction extends Depiction {
 
         const roles = this.depictionOf.roles
 
-        roles.forEach((role) => {
+        for(let role of roles) {
 
             const shortName = shortNameFromTerm(role)
 
             if(shortName)
                 type = shortName
-        })
+        }
 
         var offset = this.absoluteOffset.multiply(renderContext.layout.gridSize)
         const size = this.size.multiply(renderContext.layout.gridSize)

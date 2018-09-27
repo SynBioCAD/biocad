@@ -19,7 +19,7 @@ export default function renderLineNumbers(sequenceEditor) {
 
     var i = 0
 
-    lines.forEach((line:SequenceEditorLine) => {
+    for(let line of lines) {
 
         const n = i * charsPerRow
 
@@ -33,7 +33,7 @@ export default function renderLineNumbers(sequenceEditor) {
 
         ++ i
 
-    })
+    }
 
     return svgElements
 }

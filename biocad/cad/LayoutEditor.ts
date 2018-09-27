@@ -197,9 +197,9 @@ export default class LayoutEditor extends View {
 
         const intersecting:Depiction[] = this.layout.getDepictionsContainedByRect(rect, true)
 
-        intersecting.forEach((depiction:Depiction) => {
+        for(let depiction of intersecting) {
             this.selectedDepictions.push(new DepictionRef(depiction))
-        })
+        }
 
         this.app.update()
         

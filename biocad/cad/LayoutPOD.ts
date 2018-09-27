@@ -14,13 +14,13 @@ export default class LayoutPOD {
             depictions: []
         }
 
-        layout.depictions.forEach((depiction:Depiction) => {
+        for(let depiction of layout.depictions) {
 
             if(!depiction.parent) {
                 pod.depictions.push(DepictionPOD.serialize(depiction))
             }
 
-        })
+        }
 
         //console.error('**!******** LAYOT SERIALZUIEDDD')
         //console.dir(pod)
@@ -36,14 +36,13 @@ export default class LayoutPOD {
 
         const depictions:Depiction[] = []
 
-        pod.depictions.forEach((depictionPod:any) => {
+        for(let depictionPod of pod.depictions) {
             depictions.push(DepictionPOD.deserialize(layout, graph, undefined, depictionPod))
-        })
+        }
 
-        depictions.forEach((depiction:Depiction) => {
+        for(let depiction of depictions) {
             addRecursive(depiction, undefined)
-
-        })
+        }
 
         for(let depiction of layout.depictions) {
             if(depiction instanceof ABInteractionDepiction) {
@@ -59,9 +58,9 @@ export default class LayoutPOD {
 
             layout.addDepiction(depiction, parent)
 
-            depiction.children.forEach((child:Depiction) => {
+            for(let child of depiction.children) {
                 addRecursive(child, depiction)
-            })
+            }
 
         }
 

@@ -38,7 +38,7 @@ class SVGScrollerWidget {
 
         var svgElements:SVGElement[] = []
 
-        this.entries.forEach((entry:SVGScrollerEntry) => {
+        for(let entry of this.entries) {
 
             const n = svgElements.length
 
@@ -120,7 +120,7 @@ class SVGScrollerWidget {
 
             container.appendChild(svgContainer)
 
-        })
+        }
 
 
         container.style.display = 'inline-block'

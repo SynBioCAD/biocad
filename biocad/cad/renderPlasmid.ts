@@ -54,7 +54,7 @@ export default function renderPlasmid(transform:Matrix, diameter:Vec2, numBp:num
 
     var n = 0
 
-    sortedAnnotations.forEach((annotation) => {
+    for(let annotation of sortedAnnotations) {
 
         var ringN = 0
 
@@ -71,14 +71,14 @@ export default function renderPlasmid(transform:Matrix, diameter:Vec2, numBp:num
 
             var maxHeight = Number.MIN_VALUE
 
-            intersectingRanges.forEach((_range:LinearRange) => {
+            for(let _range of intersectingRanges) {
 
                 const range:LinearRangeWithHeight = _range as LinearRangeWithHeight
 
                 if(range.height > maxHeight)
                     maxHeight = range.height
 
-            })
+            }
 
             contractHeight += maxHeight * 0.5 + ringPadding
 
@@ -170,7 +170,7 @@ export default function renderPlasmid(transform:Matrix, diameter:Vec2, numBp:num
 
         }
 
-    })
+    }
 
 
     const label = svg('text', {

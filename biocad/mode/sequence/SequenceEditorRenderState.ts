@@ -285,9 +285,9 @@ function getAnnotatedRanges(component:SXComponent) {
 
     function addRangesFromComponent(base:number, component:SXComponent) {
 
-        component.sequenceFeatures.forEach((feature:SXSequenceFeature) => {
+        for(let feature of component.sequenceFeatures) {
 
-            feature.locations.forEach((location:SXLocation) => {
+            for(let location of feature.locations) {
 
                 switch(location.objectType) {
 
@@ -310,9 +310,9 @@ function getAnnotatedRanges(component:SXComponent) {
                         break
 
                 }
-            })
+            }
 
-        })
+        }
 
         for(let subComponent of component.subComponents) {
 

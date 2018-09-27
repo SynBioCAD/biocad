@@ -27,7 +27,7 @@ export default function circularStrategy(parent:ComponentDepiction, children:Dep
         new LinearRangeSet()
     ]
 
-    children.forEach((child:Depiction) => {
+    for(let child of children) {
 
         var minStart = 999999
         var maxEnd = -999999
@@ -84,7 +84,7 @@ export default function circularStrategy(parent:ComponentDepiction, children:Dep
 
 
         }
-    })
+    }
 
 
 

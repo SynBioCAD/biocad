@@ -696,14 +696,14 @@ export default class LayoutEditorOverlay extends View {
 
             this.draggingDepictions = []
 
-            selection.forEach((d:Depiction) => {
+            for(let d of selection) {
 
                 this.draggingDepictions.push({
                     depiction: new DepictionRef(d),
                     dragOffset: gridPos.subtract(d.absoluteOffset)
                 })
 
-            })
+            }
 
             this.layoutEditor.pushUndoLevel()
             this.dragging = true

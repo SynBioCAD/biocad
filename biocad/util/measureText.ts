@@ -38,12 +38,12 @@ export default function measureText(text, attr) {
 
     var svgTextNode = document.createElementNS(svg, 'text')
 
-    Object.keys(attr).forEach((attrName) => {
+    for(let attrName of Object.keys(attr)) {
 
         /* TODO: setAttributeNS?
          */
         svgTextNode.setAttribute(attrName, attr[attrName])
-    })
+    }
 
     svgTextNode.appendChild(textNode)
     hiddenSvg.appendChild(svgTextNode)

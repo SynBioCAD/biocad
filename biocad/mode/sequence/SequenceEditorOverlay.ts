@@ -319,7 +319,7 @@ export default class SequenceEditorOverlay extends View {
 
         const o = Vec2.fromXY(offset.x + renderState.marginWidth, offset.y + renderState.paddingTop)
 
-        renderState.annoLabelBBoxes.forEach((bbox:[SXThingWithLocation, Rect]) => {
+        for(let bbox of renderState.annoLabelBBoxes) {
 
             const [ thing, rect ] = bbox
 
@@ -336,7 +336,7 @@ export default class SequenceEditorOverlay extends View {
 
             }
 
-        })
+        }
 
 
 

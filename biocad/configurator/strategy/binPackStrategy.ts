@@ -53,7 +53,7 @@ export default function binPackStrategy(parent:Depiction|null, children:Depictio
     const groups:Set<Group> = new Set()
     const depictionUidToGroup:Map<number, Group> = new Map()
 
-    interactions.forEach((interaction:ABInteractionDepiction) => {
+    for(let interaction of interactions) {
 
         var existingGroupA:Group|undefined = depictionUidToGroup.get(interaction.a.uid)
         var existingGroupB:Group|undefined = depictionUidToGroup.get(interaction.b.uid)
@@ -61,7 +61,7 @@ export default function binPackStrategy(parent:Depiction|null, children:Depictio
         if(existingGroupA !== undefined && existingGroupB !== undefined) {
 
             if(existingGroupA === existingGroupB) {
-                return
+                continue
             }
 
             // Both sides of the interaction already have groups.
@@ -70,13 +70,13 @@ export default function binPackStrategy(parent:Depiction|null, children:Depictio
 
             existingGroupA.mergeFrom(existingGroupB)
 
-            existingGroupB.depictions.forEach((depiction:Depiction) => {
+            for(let depiction of existingGroupB.depictions) {
                 depictionUidToGroup.set(depiction.uid, existingGroupA as Group)
-            })
+            }
 
             existingGroupA.interactions.push(interaction)
 
-            return
+            continue
         }
 
         if(existingGroupA !== undefined) {
@@ -87,7 +87,7 @@ export default function binPackStrategy(parent:Depiction|null, children:Depictio
             depictionUidToGroup.set(interaction.b.uid, existingGroupA)
             existingGroupA.interactions.push(interaction)
 
-            return
+            continue
         }
 
         if(existingGroupB !== undefined) {
@@ -98,7 +98,7 @@ export default function binPackStrategy(parent:Depiction|null, children:Depictio
             depictionUidToGroup.set(interaction.a.uid, existingGroupB)
             existingGroupB.interactions.push(interaction)
 
-            return
+            continue
         }
 
         // Neither side of the interaction already has a group
@@ -113,13 +113,13 @@ export default function binPackStrategy(parent:Depiction|null, children:Depictio
 
         groups.add(newGroup)
 
-    })
+    }
 
 
-    children.forEach((child:Depiction) => {
+    for(let child of children) {
 
         if(child instanceof ABInteractionDepiction)
-            return
+            continue
 
         if(depictionUidToGroup.get(child.uid) === undefined) {
 
@@ -129,7 +129,7 @@ export default function binPackStrategy(parent:Depiction|null, children:Depictio
 
         }
 
-    })
+    }
 
 
 
@@ -139,14 +139,14 @@ export default function binPackStrategy(parent:Depiction|null, children:Depictio
 
     const packer = new GrowingPacker()
 
-    groups.forEach((group:Group) => {
+    for(let group of groups) {
 
         // horizontal tile
         //
         var offset = Vec2.fromXY(0, 0)
         var maxHeight = -99999
 
-        group.depictions.forEach((child) => {
+        for(let child of group.depictions) {
 
             child.offset = offset
 
@@ -154,11 +154,11 @@ export default function binPackStrategy(parent:Depiction|null, children:Depictio
 
             maxHeight = Math.max(maxHeight, child.size.y)
 
-        })
+        }
 
         group.w = offset.x
         group.h = maxHeight
-    })
+    }
 
 
 
@@ -167,9 +167,9 @@ export default function binPackStrategy(parent:Depiction|null, children:Depictio
 
     // interactions
     //
-    groups.forEach((group:Group) => {
+    for(let group of groups) {
 
-        group.interactions.forEach((interaction:ABInteractionDepiction) => {
+        for(let interaction of group.interactions) {
 
             let { a, b } = interactionPoints(interaction)
             
@@ -217,7 +217,7 @@ export default function binPackStrategy(parent:Depiction|null, children:Depictio
             layer.push(range)
 
             interactionToLayer.set(interaction, curLayer)
-        })
+        }
 
         let numAbove = 0
         let numBelow = 0
@@ -241,7 +241,7 @@ export default function binPackStrategy(parent:Depiction|null, children:Depictio
         }
 
 
-    })
+    }
 
     // padding
 
@@ -262,7 +262,7 @@ export default function binPackStrategy(parent:Depiction|null, children:Depictio
         parent.size = Vec2.fromXY(padding + packer.root.w, padding + packer.root.h).max(parent.minSize)
     }
 
-    groupsArr.forEach((group:Group) => {
+    for(let group of groupsArr) {
 
         assert(group.fit)
 
@@ -284,14 +284,14 @@ export default function binPackStrategy(parent:Depiction|null, children:Depictio
             offset = offset.add(Vec2.fromXY(0, INTERACTION_OFFSET))
         }
 
-        group.depictions.forEach((child:Depiction) => {
+        for(let child of group.depictions) {
 
             if(!child.offsetExplicit)
                 child.offset = offset.add(child.offset)
 
-        })
+        }
 
-        group.interactions.forEach((interaction:ABInteractionDepiction) => {
+        for(let interaction of group.interactions) {
 
             interaction.offset = Vec2.fromXY(0, 0) // setWaypoints will update this
 
@@ -328,7 +328,7 @@ export default function binPackStrategy(parent:Depiction|null, children:Depictio
 
 
 
-        })
+        }
 
         /*
         for(let [ interaction, layerN ] of interactionToLayer) {
@@ -360,7 +360,7 @@ export default function binPackStrategy(parent:Depiction|null, children:Depictio
 
         }*/
 
-    })
+    }
 
 }
 

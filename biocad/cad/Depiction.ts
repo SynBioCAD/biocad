@@ -222,13 +222,17 @@ export default abstract class Depiction extends Versioned {
 
     touchRecursive():void {
 
-        this.touch()
+        Versioned.pauseCallbacks()
 
         for(let child of this.children) {
 
             child.touchRecursive()
 
         }
+
+        Versioned.unpauseCallbacks()
+
+        this.touch()
 
     }
 

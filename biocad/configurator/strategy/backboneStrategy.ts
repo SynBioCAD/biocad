@@ -33,7 +33,7 @@ export default function backboneStrategy(_parent:Depiction, children:Depiction[]
 
     }*/
 
-    children.forEach((child) => {
+    for(let child of children) {
 
         const { ascent, descent } = ascentDescent(child)
 
@@ -43,7 +43,7 @@ export default function backboneStrategy(_parent:Depiction, children:Depiction[]
         //console.log('descent of ' + child.depictionOf.displayName + ' is ' + descent)
         //console.log('ascent of ' + child.depictionOf.displayName + ' is ' + ascent)
 
-    })
+    }
 
     //var parentHeight = padding + Math.abs(minAscent) + maxDescent + padding
     var parentHeight = Math.abs(minAscent) + maxDescent
@@ -62,7 +62,7 @@ export default function backboneStrategy(_parent:Depiction, children:Depiction[]
 
     var offsetX = padding
 
-    children.forEach((child) => {
+    for(let child of children) {
 
         const childSize = child.size
 
@@ -76,7 +76,7 @@ export default function backboneStrategy(_parent:Depiction, children:Depiction[]
 
         offsetX += childSize.x + padding
 
-    })
+    }
 
         //console.log('final bb width ' + offsetX)
 

@@ -50,13 +50,13 @@ function configurateSALinear(depiction:FeatureLocationDepiction):void {
 
     const roles:Array<string> = depictionOf.roles
 
-    roles.forEach((role:string) => {
+    for(let role of roles) {
 
         const shortName = shortNameFromTerm(role)
 
         if(shortName)
             type = shortName
-    })
+    }
 
     var backbonePlacement = visbolite.backbonePlacement({
         type: type

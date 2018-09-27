@@ -83,7 +83,6 @@ export default class LayoutEditorContextMenu extends ContextMenu {
                     innerDepiction.opacity = Opacity.Blackbox
                     innerDepiction.touch()
 
-
                     app.closeContextMenu()
 
 

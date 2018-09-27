@@ -22,7 +22,7 @@ export default function renderElements(sequenceEditor) {
 
     const res:VNode[] = []
 
-    lines.forEach((line:SequenceEditorLine) => {
+    for(let line of lines) {
 
         for(var i = 0; i < charsPerRow; ++ i) {
 
@@ -55,7 +55,7 @@ export default function renderElements(sequenceEditor) {
 
         }
 
-    })
+    }
 
     return res
 }
