@@ -22,7 +22,7 @@ import InstructionSet from 'biocad/cad/layout-instruction/InstructionSet';
 
 export default function configurateComponent(depiction:ComponentDepiction, instructions:InstructionSet):void {
 
-    //console.warn('configurating ' + depiction.debugName)
+    console.warn('configurating ' + depiction.debugName)
 
     if(CircularBackboneDepiction.ancestorOf(this)) {
         if(depiction.opacity === Opacity.Whitebox) {
@@ -109,13 +109,13 @@ function configurateBlackboxComponent(depiction:ComponentDepiction):void {
     
     const roles:Array<string> = definition.roles
 
-    roles.forEach((role:string) => {
+    for(let role of roles) {
 
         const shortName = shortNameFromTerm(role)
 
         if(shortName)
             type = shortName
-    })
+    }
 
     var backbonePlacement = visbolite.backbonePlacement({
         type: type

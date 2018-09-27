@@ -14,6 +14,7 @@ import Depiction, { Opacity } from "biocad/cad/Depiction";
 
 import SequenceMode from 'biocad/mode/sequence/SequenceMode'
 import ComponentDepiction from 'biocad/cad/ComponentDepiction';
+import LabelledDepiction from './LabelledDepiction';
 
 export default class LayoutEditorContextMenu extends ContextMenu {
 
@@ -39,6 +40,12 @@ export default class LayoutEditorContextMenu extends ContextMenu {
 
             let depiction = depictions[0]
 
+            let innerDepiction = depiction
+
+            if(depiction instanceof LabelledDepiction) {
+                innerDepiction = depiction.getLabelled()
+            }
+
             items.push(new ContextMenuItem('span.fa.fa-align-justify', 'Edit Sequence', (pos:Vec2) => {
 
                 const seqMode:SequenceMode = app.modes.filter((mode) => mode instanceof SequenceMode)[0] as SequenceMode
@@ -56,12 +63,12 @@ export default class LayoutEditorContextMenu extends ContextMenu {
             }))
 
 
-            if(depiction.opacity === Opacity.Blackbox) {
+            if(innerDepiction.opacity === Opacity.Blackbox) {
 
                 items.push(new ContextMenuItem('span.fa.fa-eye', 'Show Subcomponents', (pos:Vec2) => {
 
-                    depiction.opacity = Opacity.Whitebox
-                    depiction.touch()
+                    innerDepiction.opacity = Opacity.Whitebox
+                    innerDepiction.touch()
 
 
                     app.closeContextMenu()
@@ -73,8 +80,8 @@ export default class LayoutEditorContextMenu extends ContextMenu {
 
                 items.push(new ContextMenuItem('span.fa.fa-eye-slash', 'Hide Subcomponents', (pos:Vec2) => {
 
-                    depiction.opacity = Opacity.Blackbox
-                    depiction.touch()
+                    innerDepiction.opacity = Opacity.Blackbox
+                    innerDepiction.touch()
 
 
                     app.closeContextMenu()

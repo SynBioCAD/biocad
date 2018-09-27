@@ -436,38 +436,40 @@ export default class Layout extends Versioned {
 
                 this.addDepiction(labelled, undefined)
 
-
                 cdDepiction.opacity = opacity
             }
 
             cdDepiction.orientation = Orientation.Forward
             cdDepiction.isExpandable = component.subComponents.length > 0
 
-            var displayList:ComponentDisplayList = ComponentDisplayList.fromComponent(component)
+            if(cdDepiction.opacity === Opacity.Whitebox) {
 
-            for(let backboneGroup of displayList.backboneGroups) {
-                //console.log('BB GROUP LEN ' + backboneGroup.length)
-                this.syncBackbone(preset, backboneGroup, chain, cdDepiction, 1, Orientation.Forward)
-            }
+                var displayList:ComponentDisplayList = ComponentDisplayList.fromComponent(component)
 
-            for(let child of displayList.ungrouped) {
+                for(let backboneGroup of displayList.backboneGroups) {
+                    //console.log('BB GROUP LEN ' + backboneGroup.length)
+                    this.syncBackbone(preset, backboneGroup, chain, cdDepiction, 1, Orientation.Forward)
+                }
 
-                if(! (child instanceof SXSubComponent))
-                    throw new Error('???')
+                for(let child of displayList.ungrouped) {
 
-                let nextChain = chain.extend(child)
+                    if(! (child instanceof SXSubComponent))
+                        throw new Error('???')
 
-                this.syncComponentInstanceDepiction(preset, child as SXSubComponent, nextChain, cdDepiction, 1, Orientation.Forward)
+                    let nextChain = chain.extend(child)
 
-            }
+                    this.syncComponentInstanceDepiction(preset, child as SXSubComponent, nextChain, cdDepiction, 1, Orientation.Forward)
 
-            //console.log(component.displayName + ' has ' + component.interactions.length + ' interactions')
+                }
 
-            for(let interaction of component.interactions) {
+                //console.log(component.displayName + ' has ' + component.interactions.length + ' interactions')
 
-                let nextChain = chain.extend(interaction)
+                for(let interaction of component.interactions) {
 
-                this.createInteractionDepiction(preset, interaction, nextChain, cdDepiction)
+                    let nextChain = chain.extend(interaction)
+
+                    this.createInteractionDepiction(preset, interaction, nextChain, cdDepiction)
+                }
             }
         }
 
@@ -674,31 +676,33 @@ export default class Layout extends Versioned {
         cDepiction.orientation = orientation
         cDepiction.isExpandable = definition.subComponents.length > 0
 
+        if(cDepiction.opacity === Opacity.Whitebox) {
 
-        var displayList:ComponentDisplayList = ComponentDisplayList.fromComponent(component.instanceOf)
+            var displayList:ComponentDisplayList = ComponentDisplayList.fromComponent(component.instanceOf)
 
-        //console.log(displayList.backboneGroups.length + ' bb groups for ' + component.uriChain)
+            //console.log(displayList.backboneGroups.length + ' bb groups for ' + component.uriChain)
 
-        for(let backboneGroup of displayList.backboneGroups) {
-            this.syncBackbone(preset, backboneGroup, chain, cDepiction, nestDepth + 1, orientation)
-        }
+            for(let backboneGroup of displayList.backboneGroups) {
+                this.syncBackbone(preset, backboneGroup, chain, cDepiction, nestDepth + 1, orientation)
+            }
 
-        for(let child of displayList.ungrouped) {
+            for(let child of displayList.ungrouped) {
 
-            if(! (child instanceof SXSubComponent))
-                throw new Error('???')
+                if(! (child instanceof SXSubComponent))
+                    throw new Error('???')
 
-            this.syncComponentInstanceDepiction(preset, child as SXSubComponent, chain, cDepiction, nestDepth + 1, orientation)
+                this.syncComponentInstanceDepiction(preset, child as SXSubComponent, chain, cDepiction, nestDepth + 1, orientation)
 
-        }
+            }
 
-        //console.log(definition.displayName + ' has ' + definition.interactions.length + ' interactions')
+            //console.log(definition.displayName + ' has ' + definition.interactions.length + ' interactions')
 
-        for(let interaction of definition.interactions) {
+            for(let interaction of definition.interactions) {
 
-            let newChain = chain.extend(interaction)
+                let newChain = chain.extend(interaction)
 
-            this.createInteractionDepiction(preset, interaction, newChain, cDepiction)
+                this.createInteractionDepiction(preset, interaction, newChain, cDepiction)
+            }
         }
 
         return cDepiction

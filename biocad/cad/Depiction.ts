@@ -49,6 +49,7 @@ export default abstract class Depiction extends Versioned {
     stamp:number
 
     opacity: Opacity
+
     isExpandable: boolean = true
 
     fade:Fade
