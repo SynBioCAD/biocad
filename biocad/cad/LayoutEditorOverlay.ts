@@ -456,7 +456,7 @@ export default class LayoutEditorOverlay extends View {
                 throw new Error('???')
 
             depiction.offsetExplicit = true
-            depiction.offset = offset.divide(this.layoutEditor.layout.gridSize).round()
+            depiction.offset = offset.divide(this.layoutEditor.layout.gridSize).divideScalar(this.layoutEditor.scaleFactor).round()
 
             layout.configurate([])
 
