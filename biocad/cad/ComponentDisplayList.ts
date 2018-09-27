@@ -106,7 +106,7 @@ export default class SXComponentDisplayList {
         for(let set of Array.from(new Set(sets.values()))) {
 
             if(set.size === 0)
-                return
+                continue
 
             this.backboneGroups.push(expandLocations(Array.from(set).map((uri:string) => {
 
