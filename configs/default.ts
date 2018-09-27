@@ -1,4 +1,4 @@
-{
+export default {
 	"biocad.headless": false,
 	"biocad.feature.ui.modeswitcher": true,
 	"biocad.feature.mode.loadsave": true,
