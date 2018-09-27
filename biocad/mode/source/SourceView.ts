@@ -4,9 +4,12 @@ import { CodeMirrorWidget } from 'jfw/ui/widget'
 import { h, VNode } from 'jfw/vdom'
 import BiocadApp from "biocad/BiocadApp";
 import LayoutPOD from "biocad/cad/LayoutPOD";
+import EncodingSelector, { Encoding } from './EncodingSelector';
+import { convertToSBOL2 } from 'sbolgraph'
 
 export default class SourceView extends View {
 
+    encodingSelector:EncodingSelector
     source:string
 
     constructor(app) {
@@ -14,16 +17,37 @@ export default class SourceView extends View {
         super(app)
 
         this.source = ''
+        this.encodingSelector = new EncodingSelector(app)
+
+        this.encodingSelector.onChangeEncoding = (encoding:Encoding) => {
+            this.updateSerialization()
+        }
     }
 
-    activate() {
+    updateSerialization() {
 
         const app:BiocadApp = this.app as BiocadApp
 
         const graph = app.graph
 
-        this.source = graph.serializeXML()
-        app.update()
+        switch(this.encodingSelector.currentEncoding) {
+            case Encoding.SBOLX:
+                this.source = graph.serializeXML()
+                break
+            case Encoding.SBOL2:
+                let sbol2Graph = convertToSBOL2(graph)
+                this.source = sbol2Graph.serializeXML()
+                break
+        }
+
+        this.update()
+
+    }
+
+    activate() {
+
+        this.updateSerialization()
+
     }
 
     render() {
@@ -56,7 +80,10 @@ export default class SourceView extends View {
 
         return h('div.jfw-main-view-no-sidebar', {
         }, [
-            widget
+            h('div.jfw-flow-ttb', [
+                this.encodingSelector.render(),
+                widget
+            ])
         ])
 
     }

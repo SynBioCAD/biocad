@@ -59,7 +59,6 @@ export default class Layout extends Versioned {
 
     size:Vec2
 
-    app:BiocadApp
     graph:SBOLXGraph
     graphWatcher:Watcher|null
     detailLevel:number
@@ -79,6 +78,12 @@ export default class Layout extends Versioned {
         this.graphWatcher = null
         this.detailLevel = 5
 
+    }
+
+    cleanup() {
+        for(let d of this.depictions) {
+            d.cleanup()
+        }
     }
 
     private detachFromParent(depiction:Depiction) {
@@ -150,6 +155,8 @@ export default class Layout extends Versioned {
             this.addDepiction(child, depiction)
 
         })
+
+        this.verifyAcyclic()
 
         this.depthSort()
     }
@@ -267,6 +274,8 @@ export default class Layout extends Versioned {
         return undefined
     }
 
+    versionChangedCallback:()=>void
+
     onVersionChanged():void {
 
         /* If the version of the layout changes, it means that one of our depictions
@@ -284,6 +293,10 @@ export default class Layout extends Versioned {
         console.log('layout: version changed...')
 
         const instructions:InstructionSet = new InstructionSet([])
+
+        // ideally would just sync the one that changed, but never mind
+        //
+        this.syncAllDepictions(5)
         
         this.depictions.forEach((depiction:Depiction) => {
 
@@ -313,12 +326,19 @@ export default class Layout extends Versioned {
 
                 }
 
+            } else {
+                console.log('layout onVersionChanged: skipping ' + depiction.debugName)
             }
 
         })
+
+        if(this.versionChangedCallback)
+            this.versionChangedCallback()
     }
 
     depthSort():void {
+
+        //this.dump()
 
         /* -> lowest depth first
          */
@@ -348,6 +368,8 @@ export default class Layout extends Versioned {
     }
 
     syncAllDepictions(detailLevel:number): void {
+
+        console.time('syncAllDepictions')
 
         ++ Layout.nextStamp
 
@@ -405,9 +427,11 @@ export default class Layout extends Versioned {
                 const labelled:LabelledDepiction = new LabelledDepiction(this, component, chain, undefined)
 
                 cdDepiction = new ComponentDepiction(this, labelled)
+                cdDepiction.setSameVersionAs(this)
                 labelled.addChild(cdDepiction)
 
                 const label: LabelDepiction = new LabelDepiction(this, labelled)
+                label.setSameVersionAs(this)
                 labelled.addChild(label)
 
                 this.addDepiction(labelled, undefined)
@@ -477,9 +501,11 @@ export default class Layout extends Versioned {
 
 
 
-        this.verifyAcyclic()
+        //this.verifyAcyclic()
 
         this.depthSort()
+
+        console.timeEnd('syncAllDepictions')
 
     }
 
@@ -564,11 +590,14 @@ export default class Layout extends Versioned {
             } else {
 
                 let labelled:LabelledDepiction = new LabelledDepiction(this, containingObject, chain, parent)
+                labelled.setSameVersionAs(this)
 
                 salDepiction = new FeatureLocationDepiction(this, labelled)
+                salDepiction.setSameVersionAs(this)
                 labelled.addChild(salDepiction)
 
                 const label: LabelDepiction = new LabelDepiction(this, labelled)
+                label.setSameVersionAs(this)
                 labelled.addChild(label)
 
                 this.addDepiction(labelled, parent)
@@ -626,11 +655,14 @@ export default class Layout extends Versioned {
         } else {
 
             let labelled: LabelledDepiction = new LabelledDepiction(this, component, chain, parent)
+            labelled.setSameVersionAs(this)
 
             cDepiction = new ComponentDepiction(this, labelled)
+            cDepiction.setSameVersionAs(this)
             labelled.addChild(cDepiction)
 
             const label:LabelDepiction = new LabelDepiction(this, labelled)
+            label.setSameVersionAs(this)
             labelled.addChild(label)
 
             this.addDepiction(labelled, parent)
@@ -710,17 +742,31 @@ export default class Layout extends Versioned {
         var c:ComponentDepiction = parent as ComponentDepiction
 
 
+        let circular:boolean = c.getDefinition().hasType(Specifiers.SBOL2.Type.Circular)
 
-        const backbone:BackboneDepiction =
-                    c.getDefinition().hasType(Specifiers.SBOL2.Type.Circular) ?
-                        new CircularBackboneDepiction(this, parent) :
-                        new BackboneDepiction(this, parent)
+        let backbone:BackboneDepiction|null = null
+
+        for(let child of parent.children) {
+            if(circular && child instanceof CircularBackboneDepiction) {
+                backbone = child
+                break
+            }
+            if(!circular && child instanceof BackboneDepiction) {
+                backbone = child
+                break
+            }
+        }
+
+        if(!backbone) {
+            backbone =
+                circular ?
+                    new CircularBackboneDepiction(this, parent) :
+                    new BackboneDepiction(this, parent)
+            backbone.setSameVersionAs(this)
+            this.addDepiction(backbone, parent)
+        }
 
         backbone.stamp = Layout.nextStamp
-
-        this.addDepiction(backbone, parent)
-
-
 
 
 
@@ -792,8 +838,6 @@ export default class Layout extends Versioned {
             }
 
         })
-
-
     }
 
 
@@ -1144,20 +1188,43 @@ export default class Layout extends Versioned {
 
     verifyAcyclic() {
 
+        //this.dump()
+
         for(let d of this.getRootDepictions())
-            check(d, new Set<Depiction>())
+            check(d, new Set<number>())
 
         function check(d, visited) {
-            if(visited.has(d)) {
+            if(visited.has(d.uid)) {
                 throw new Error('Cyclic depiction graph: ' + d.debugName)
             } else {
-                visited.add(d)
+                visited.add(d.uid)
             }
-
-            check(d, visited)
 
             for(let child of d.children) {
                 check(child, visited)
+
+                let visitedParents = new Set<number>()
+
+                for(let ch = child; ch; ch = ch.parent) {
+                    if(visitedParents.has(ch.uid))
+                        throw new Error('Cyclic ancestry')
+                    else
+                        visitedParents.add(ch.uid)
+                }
+            }
+        }
+    }
+
+    dump() {
+
+        for(let d of this.getRootDepictions()) {
+            dump(d, 0)
+        }
+
+        function dump(d, indent:number) {
+            console.log('      '.slice(5 - indent)  + d.debugName + ' (' + d.children.length + ' children)')
+            for(let child of d.children) {
+                dump(child, indent + 1)
             }
         }
     }

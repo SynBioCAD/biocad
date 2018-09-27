@@ -3,7 +3,7 @@ import { VNode } from 'jfw/vdom'
 
 import { Vec2 } from 'jfw/geom'
 import Layout from 'biocad/cad/Layout'
-import { SXIdentified } from "sbolgraph"
+import { SXIdentified, Watcher } from "sbolgraph"
 import Rect from "jfw/geom/Rect";
 import Versioned from "jfw/Versioned";
 import RenderContext from './RenderContext'
@@ -61,6 +61,8 @@ export default abstract class Depiction extends Versioned {
     _depictionOf:SXIdentified|undefined
     identifiedChain:IdentifiedChain|undefined
 
+    //graphWatcher:Watcher|undefined
+
     constructor(layout:Layout, depictionOf:SXIdentified|undefined, identifiedChain:IdentifiedChain|undefined, parent?:Depiction, uid?:number) {
 
         super()
@@ -72,11 +74,18 @@ export default abstract class Depiction extends Versioned {
         this.opacity = Opacity.Whitebox
         this.parent = parent ? parent : null
         this.children = []
-        this._depictionOf = depictionOf
+        this.depictionOf = depictionOf
         this.offsetExplicit = false
         this.identifiedChain = identifiedChain
     }
 
+    cleanup() {
+        /*
+        if(this.graphWatcher) {
+            this.graphWatcher.unwatch()
+            this.graphWatcher = undefined
+        }*/
+    }
 
     get depictionOf():SXIdentified|undefined {
 
@@ -95,9 +104,19 @@ export default abstract class Depiction extends Versioned {
 
         this._depictionOf = dOf
 
+        /*
+        if(dOf) {
+            if(this.graphWatcher) {
+                this.graphWatcher.unwatch()
+            }
+            this.graphWatcher = dOf.graph.watchSubject(dOf.uri, () => {
+                this.touch()
+            })
+        }*/
     }
 
     getVersionedParent():Versioned|undefined {
+        console.log('gvp')
         return this.parent ? this.parent : this.layout
     }
 
@@ -161,6 +180,8 @@ export default abstract class Depiction extends Versioned {
     }
 
     calcDepth():number {
+
+        //console.log('calcDepth ' + this.debugName)
 
         if(this.children.length === 0)
             return 1

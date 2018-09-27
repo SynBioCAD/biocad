@@ -27,6 +27,10 @@ import LayoutEditorView from '../../cad/LayoutEditorView';
 import ABInteractionDepiction from '../../cad/ABInteractionDepiction';
 import PropertyEditorSiblingComponent from './PropertyEditorSubComponent';
 import ComponentDepiction from '../../cad/ComponentDepiction';
+import BackboneDepiction from '../../cad/BackboneDepiction';
+import PropertyAccessorString from './PropertyAccessorString';
+import PropertyAccessorStrand from './PropertyAccessorStrand';
+import PropertyAccessorURI from './PropertyAccessorURI';
 
 const strands = [
     {
@@ -119,15 +123,39 @@ export default class Inspector extends View {
                 effectiveComponent = dOf.instanceOf
             }
 
-            this.editors.push(new PropertyEditorOneline('Name', dOf.uri, Predicates.Dcterms.title))
-            this.editors.push(new PropertyEditorOneline('Identifier', dOf.uri, Predicates.SBOLX.id))
+            let onChange = () => {
+                let layout = this.layoutEditorView.layoutEditor.layout
+                if(effectiveComponent) {
+                    for(let d of layout.getDepictionsForUri(effectiveComponent.uri)) {
+                        d.touch()
+                    }
+                    let instantiations = effectiveComponent.graph.getInstancesOfComponent(effectiveComponent)
+                    for(let instance of instantiations) {
+                        for(let d of layout.getDepictionsForUri(instance.uri)) {
+                            d.touch()
+                        }
+                    }
+                } else {
+                    if(dOf) {
+                        for(let d of layout.getDepictionsForUri(dOf.uri)) {
+                            d.touch()
+                        }
+                    }
+                }
+            }
+
+            this.editors.push(new PropertyEditorOneline('Name', new PropertyAccessorString(dOf.uri, Predicates.Dcterms.title, onChange)))
+            this.editors.push(new PropertyEditorOneline('Identifier', new PropertyAccessorString(dOf.uri, Predicates.SBOLX.id, onChange)))
 
             if(effectiveComponent) {
 
-                this.editors.push(new PropertyEditorCombo('Type', effectiveComponent.uri, Predicates.SBOLX.type, types))
-                this.editors.push(new PropertyEditorCombo('Strand', effectiveComponent.uri, 'http://biocad.io/terms#strand', strands))
+                this.editors.push(new PropertyEditorCombo('Type', new PropertyAccessorURI(effectiveComponent.uri, Predicates.SBOLX.type), types))
                 //this.editors.push(new PropertyEditorTermSet('Roles', dOf.uri, Predicates.SBOLX.hasRole, strands))
 
+            }
+
+            if(depiction.parent instanceof BackboneDepiction) {
+                this.editors.push(new PropertyEditorCombo('Strand', new PropertyAccessorStrand(dOf.uri, onChange), strands))
             }
             
             if(depiction instanceof ABInteractionDepiction) {

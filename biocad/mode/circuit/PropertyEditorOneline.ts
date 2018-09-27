@@ -3,28 +3,25 @@ import { VNode, h } from 'jfw/vdom'
 import { SBOLXGraph, triple, node } from "sbolgraph";
 import PropertyEditor from "./PropertyEditor";
 import { keyupChange } from 'jfw/event'
+import PropertyAccessor from './PropertyAccessor';
 
 export default class PropertyEditorOneline extends PropertyEditor {
 
     title:string
-    objectURI:string
-    predicate:string
+    accessor:PropertyAccessor
 
-    constructor(title:string, objectURI:string, predicate:string) {
+    constructor(title:string, accessor:PropertyAccessor) {
 
         super()
 
         this.title = title
-        this.objectURI = objectURI
-        this.predicate = predicate
+        this.accessor = accessor
 
     }
 
     render(graph:SBOLXGraph):VNode {
 
-        let value:string|undefined = triple.objectString(
-            graph.matchOne(this.objectURI, this.predicate, null)
-        )
+        let value:string|undefined = this.accessor.get(graph)
 
         return h('tr.sf-inspector-oneline', [
             h('td', this.title),
@@ -45,7 +42,6 @@ function onChange(data:any) {
 
     console.log(data.value)
 
-    graph.removeMatches(editor.objectURI, editor.predicate, null)
-    graph.insert(editor.objectURI, editor.predicate, node.createStringNode(data.value))
+    editor.accessor.set(graph, data.value)
 
 }

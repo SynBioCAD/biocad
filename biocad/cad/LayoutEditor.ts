@@ -66,6 +66,8 @@ export default class LayoutEditor extends View {
         this.onNewGraph = new Hook<SBOLXGraph>()
 
         this.layout = layout
+        this.layout.versionChangedCallback = () => this.app.update()
+
         this.interactive = true
         this.overlay = new LayoutEditorOverlay(this)
         this.overlaySubtree = new SubTree(this.overlay)
@@ -276,7 +278,10 @@ export default class LayoutEditor extends View {
         if(this.proposedLayout === null)
             throw new Error('???')
 
+        this.layout.cleanup()
         this.layout = this.proposedLayout
+        this.layout.versionChangedCallback = () => this.app.update()
+
         this.proposedLayout = null
 
         this.onNewGraph.fire(this.layout.graph)
@@ -287,7 +292,9 @@ export default class LayoutEditor extends View {
 
     immediatelyReplaceLayout(layout:Layout):void {
 
+        this.layout.cleanup()
         this.layout = layout
+        this.layout.versionChangedCallback = () => this.app.update()
 
         this.onNewGraph.fire(this.layout.graph)
 

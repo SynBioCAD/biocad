@@ -58,7 +58,7 @@ export default class PropertyEditorSubComponent extends PropertyEditor {
 
 function onChange(data:any) {
 
-    let editor:PropertyEditorCombo = data.editor
+    let editor:PropertyEditorSubComponent = data.editor
     let graph:SBOLXGraph = data.graph
 
     console.log(data.value)
