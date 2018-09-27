@@ -638,6 +638,7 @@ export default class LayoutEditorOverlay extends View {
                     if(tOf instanceof SXComponent) {
                         // from component to component
                         wrapper = fOf.wrap()
+                        wrapper.setBoolProperty('http://biocad.io/terms/untitled', true)
                         wrapper.createSubComponent(tOf)
                         let scA = wrapper.subComponents[0]
                         let scB = wrapper.subComponents[1]
