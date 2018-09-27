@@ -130,6 +130,8 @@ function configurateBlackboxComponent(depiction:ComponentDepiction):void {
 
         })[backbonePlacement]
 
+        console.log('bb placement ' + backbonePlacement)
+
     }
 
 

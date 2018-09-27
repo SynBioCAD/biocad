@@ -276,6 +276,10 @@ export default class Layout extends Versioned {
         return undefined
     }
 
+    getVersionedChildren():Versioned[] {
+        return this.depictions
+    }
+
     versionChangedCallback:()=>void
 
     onVersionChanged():void {

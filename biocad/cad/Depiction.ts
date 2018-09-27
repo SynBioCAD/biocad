@@ -121,6 +121,10 @@ export default abstract class Depiction extends Versioned {
         return this.parent ? this.parent : this.layout
     }
 
+    getVersionedChildren():Versioned[] {
+        return this.children as Versioned[]
+    }
+
     onVersionChanged() {
     }
 
@@ -218,24 +222,6 @@ export default abstract class Depiction extends Versioned {
 
         this.touch()
     }
-
-
-    touchRecursive():void {
-
-        Versioned.pauseCallbacks()
-
-        for(let child of this.children) {
-
-            child.touchRecursive()
-
-        }
-
-        Versioned.unpauseCallbacks()
-
-        this.touch()
-
-    }
-
 
     addChild(child:Depiction) {
         
