@@ -61,7 +61,7 @@ export default class LayoutEditorContextMenu extends ContextMenu {
                 items.push(new ContextMenuItem('span.fa.fa-eye', 'Show Subcomponents', (pos:Vec2) => {
 
                     depiction.opacity = Opacity.Whitebox
-                    depiction.touchRecursive()
+                    depiction.touch()
 
 
                     app.closeContextMenu()
@@ -74,7 +74,7 @@ export default class LayoutEditorContextMenu extends ContextMenu {
                 items.push(new ContextMenuItem('span.fa.fa-eye-slash', 'Hide Subcomponents', (pos:Vec2) => {
 
                     depiction.opacity = Opacity.Blackbox
-                    depiction.touchRecursive()
+                    depiction.touch()
 
 
                     app.closeContextMenu()
