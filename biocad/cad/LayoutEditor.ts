@@ -80,6 +80,10 @@ export default class LayoutEditor extends View {
     }
 
 
+    cleanup() {
+        this.overlay.cleanup()
+    }
+
     pushUndoLevel():void {
 
         const serialized = LayoutPOD.serialize(this.layout)

@@ -86,8 +86,11 @@ export default class LayoutEditorOverlay extends View {
 
         const app:BiocadApp = this.app as BiocadApp
         app.dropOverlay.addReceiver(this)
-        // TODO removing rdeiver?
 
+    }
+
+    cleanup() {
+        (this.app as BiocadApp).dropOverlay.removeReceiver(this)
     }
 
 

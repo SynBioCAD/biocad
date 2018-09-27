@@ -26,6 +26,9 @@ export default class CircuitView extends LayoutEditorView {
         this.layout.size = this.layout.getBoundingSize().add(Vec2.fromXY(2, 2)).max(this.layout.size)
         this.layout.startWatchingGraph(this.app)
 
+        if(this.layoutEditor)
+            this.layoutEditor.cleanup()
+
         this.layoutEditor = new LayoutEditor(app, this.layout)
     
         this.layoutEditor.onSelectDepictions.listen((depictions:Depiction[]) => {
