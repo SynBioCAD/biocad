@@ -869,7 +869,10 @@ export default class Layout extends Versioned {
 
         fixedChildren = fixedChildren.sort((a:SXIdentified, b:SXIdentified) => {
 
-            return start(a) - start(b)
+            if(orientation === Orientation.Forward)
+                return start(a) - start(b)
+            else
+                return start(b) - start(a)
 
             function start(child:SXIdentified):number {
 

@@ -8,6 +8,7 @@ import LayoutPOD from 'biocad/cad/LayoutPOD'
 import LayoutEditor from 'biocad/cad/LayoutEditor'
 import Depiction from 'biocad/cad/Depiction'
 import { SBOLXGraph } from 'sbolgraph';
+import { Vec2 } from 'jfw/geom'
 
 export default class CircuitView extends LayoutEditorView {
 
@@ -22,6 +23,7 @@ export default class CircuitView extends LayoutEditorView {
         this.layout = new Layout(app.graph)
         this.layout.syncAllDepictions(5)
         this.layout.configurate([])
+        this.layout.size = this.layout.getBoundingSize().add(Vec2.fromXY(2, 2)).max(this.layout.size)
         this.layout.startWatchingGraph(this.app)
 
         this.layoutEditor = new LayoutEditor(app, this.layout)

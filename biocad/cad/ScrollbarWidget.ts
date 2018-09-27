@@ -3,8 +3,7 @@
 import { h, main, diff, patch, create, VNode } from 'jfw/vdom'
 
 import RenderContext from './RenderContext'
-import { Vec2 } from "jfw/geom";
-import Rect from "jfw/geom/Rect";
+import { Vec2, Rect } from "jfw/geom";
 
 import { drag as dragHandler } from 'jfw/event'
 import Layout from "biocad/cad/Layout";
@@ -77,9 +76,11 @@ export default class ScrollbarWidget {
             let bbox = renderContext.layout.getBoundingBox()
 
             if(bbox) {
+                bbox = new Rect(Vec2.fromXY(0, 0), bbox.bottomRight)
+
                 let designSize = bbox.size().multiply(renderContext.layout.gridSize)
 
-                const fitFactors = this.viewportSize.divide(designSize)
+                const fitFactors = this.viewportSize.subtractScalar(scrollbarThickness + 16).divide(designSize)
 
                 renderContext.scaleFactor = Math.min(fitFactors.x, fitFactors.y, 1.0)
             

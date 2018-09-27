@@ -18,7 +18,7 @@ export default class PropertyAccessorStrand extends PropertyAccessor {
         let scOrSeqFeature = graph.uriToFacade(this.object)
 
         if(! (scOrSeqFeature instanceof SXThingWithLocation))
-            throw new Error('???')
+            return
 
         scOrSeqFeature.setOrientation(value)
 
@@ -30,7 +30,7 @@ export default class PropertyAccessorStrand extends PropertyAccessor {
         let scOrSeqFeature = graph.uriToFacade(this.object)
 
         if(! (scOrSeqFeature instanceof SXThingWithLocation))
-            throw new Error('???')
+            return ''
 
         return scOrSeqFeature.getOrientation() || ''
     }
