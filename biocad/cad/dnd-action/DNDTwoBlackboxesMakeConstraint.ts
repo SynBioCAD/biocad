@@ -6,6 +6,7 @@ import Layout from "biocad/cad/Layout";
 import DND, { DNDResult } from "./DND";
 import LabelledDepiction from "../LabelledDepiction";
 import ComponentDepiction from "../ComponentDepiction";
+import IdentifiedChain from "../../IdentifiedChain";
 
 // Allows a blackbox ComponentD to be dragged onto another blackbox ComponentD to form a constraint
 
@@ -71,11 +72,18 @@ export default class DNDTwoBlackboxesMakeConstraint extends DND {
                 existingDepictionInNewLayout = newLayout.getDepictionForUid(sourceDepiction.uid)
             }
 
+            let chain = new IdentifiedChain()
+
+            if (intersecting && intersecting.parent && intersecting.parent.identifiedChain) {
+                chain = intersecting.parent.identifiedChain
+            }
+
             if(theirDOf instanceof SXComponent) {
 
                 // Joining with a component. wrap it and use createAfter
 
                 let wrapper:SXComponent = theirDOf.wrap()
+                chain = chain.extend(wrapper)
 
                 wrapper.setBoolProperty('http://biocad.io/terms/untitled', true)
 
@@ -90,16 +98,20 @@ export default class DNDTwoBlackboxesMakeConstraint extends DND {
 
                     newSc = scInWrapper.createAfter(ourDOf)
 
+                    chain = chain.extend(newSc)
+
                     if(existingDepictionInNewLayout) {
-                        newLayout.changeDepictionOf(existingDepictionInNewLayout, newSc)
+                        newLayout.changeDepictionOf(existingDepictionInNewLayout, newSc, chain)
                     }
 
                 } else if(ourDOf instanceof SXSubComponent) {
 
                     newSc = scInWrapper.createAfter(ourDOf.instanceOf)
 
+                    chain = chain.extend(newSc)
+
                     if(existingDepictionInNewLayout) {
-                        newLayout.changeDepictionOf(existingDepictionInNewLayout, newSc)
+                        newLayout.changeDepictionOf(existingDepictionInNewLayout, newSc, chain)
                     }
 
                     ourDOf.destroy()
@@ -148,17 +160,19 @@ export default class DNDTwoBlackboxesMakeConstraint extends DND {
                 if(ourDOf instanceof SXComponent) {
 
                     newSc = theirDOf.createAfter(ourDOf)
+                    chain = chain.extend(newSc)
 
                     if(existingDepictionInNewLayout) {
-                        newLayout.changeDepictionOf(existingDepictionInNewLayout, newSc)
+                        newLayout.changeDepictionOf(existingDepictionInNewLayout, newSc, chain)
                     }
 
                 } else if(ourDOf instanceof SXSubComponent) {
 
                     newSc = theirDOf.createAfter(ourDOf.instanceOf)
+                    chain = chain.extend(newSc)
 
                     if(existingDepictionInNewLayout) {
-                        newLayout.changeDepictionOf(existingDepictionInNewLayout, newSc)
+                        newLayout.changeDepictionOf(existingDepictionInNewLayout, newSc, chain)
                     }
 
                     ourDOf.destroy()

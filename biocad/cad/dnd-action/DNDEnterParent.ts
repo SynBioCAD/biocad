@@ -91,9 +91,13 @@ export default class DNDEnterParent extends DND {
                     newParentC = intersectingInNewLayoutDOf.instanceOf
                 } else if(intersectingInNewLayoutDOf instanceof SXComponent) {
                     newParentC = intersectingInNewLayoutDOf
+                } else {
+                    throw new Error('???')
                 }
 
-                if(newParentC === undefined) {
+                let chain = intersectingInNewLayout.identifiedChain
+
+                if(chain === undefined) {
                     throw new Error('???')
                 }
 
@@ -117,7 +121,7 @@ export default class DNDEnterParent extends DND {
                     let sc = newParentC.createSubComponent(dOf.instanceOf)
 
                     if(existingDInNewLayout) {
-                        newLayout.changeDepictionOf(existingDInNewLayout, sc)
+                        newLayout.changeDepictionOf(existingDInNewLayout, sc, chain.extend(sc))
                     }
 
                     dOf.destroy()
@@ -130,7 +134,7 @@ export default class DNDEnterParent extends DND {
                     let sc = newParentC.createSubComponent(dOf)
 
                     if(existingDInNewLayout) {
-                        newLayout.changeDepictionOf(existingDInNewLayout, sc)
+                        newLayout.changeDepictionOf(existingDInNewLayout, sc, chain.extend(sc))
                     }
                 }
 

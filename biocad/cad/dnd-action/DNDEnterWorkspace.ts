@@ -6,6 +6,7 @@ import Layout from "biocad/cad/Layout";
 import DND, { DNDResult } from "./DND";
 import LabelledDepiction from "../LabelledDepiction";
 import ComponentDepiction from "../ComponentDepiction";
+import IdentifiedChain from "../../IdentifiedChain";
 
 // Allows a ComponentD to be dragged from its parent and become a root in the workspace
 
@@ -60,11 +61,11 @@ export default class DNDEnterWorkspace extends DND {
             }
 
             // become a depictionof the definition
-            newLayout.changeDepictionOf(dInNewLayout, dOf.instanceOf)
+            newLayout.changeDepictionOf(dInNewLayout, dOf.instanceOf, new IdentifiedChain().extend(dOf))
 
             dOf.destroy()
 
-            console.log('targetbbox topLeft ' + targetBBox.topLeft)
+            console.log('targetbbox topLeft ' + targetBBox.topLeft + ' for ' + dInNewLayout.uid)
 
             dInNewLayout.offsetExplicit = true
             dInNewLayout.offset = targetBBox.topLeft

@@ -161,7 +161,7 @@ export default class Layout extends Versioned {
         this.depthSort()
     }
 
-    changeDepictionOf(depiction:Depiction, newDepictionOf:SXIdentified) {
+    changeDepictionOf(depiction:Depiction, newDepictionOf:SXIdentified, newChain:IdentifiedChain) {
 
         if(depiction.depictionOf !== undefined) {
 
@@ -196,6 +196,8 @@ export default class Layout extends Versioned {
 
 
         depiction._depictionOf = newDepictionOf
+
+        depiction.identifiedChain = newChain
 
     }
 
