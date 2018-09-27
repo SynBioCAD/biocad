@@ -345,6 +345,7 @@ export default class LayoutEditorOverlay extends View {
 
         var debug:any = []
 
+        /*
         if(this.proposingResult) {
 
             console.log('pr')
@@ -369,7 +370,7 @@ export default class LayoutEditorOverlay extends View {
             }
         } else {
             console.log('npr')
-        }
+        }*/
 
         const afterRender = (realNode:Element) => {
             this.afterRender(realNode)
