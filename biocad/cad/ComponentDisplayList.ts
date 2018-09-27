@@ -27,7 +27,18 @@ export default class SXComponentDisplayList {
          */
         const saSet:Set<string> = new Set()
 
-        cd.subComponents.forEach((sc:SXSubComponent) => {
+        for(let sc of cd.subComponents) {
+            //console.log(sc)
+
+            if(sc.locations.length > 0) {
+
+                saSet.add(sc.uri)
+                visited.add(sc.uri)
+
+            }
+        }
+
+        for(let sc of cd.sequenceFeatures) {
 
             //console.log(sc)
 
@@ -38,20 +49,7 @@ export default class SXComponentDisplayList {
 
             }
 
-        })
-
-        cd.sequenceFeatures.forEach((sc:SXSequenceFeature) => {
-
-            //console.log(sc)
-
-            if(sc.locations.length > 0) {
-
-                saSet.add(sc.uri)
-                visited.add(sc.uri)
-
-            }
-
-        })
+        }
 
 
         const sets:Set<Set<string>> = new Set()
@@ -62,7 +60,7 @@ export default class SXComponentDisplayList {
 
         /* now we need to group together things linked by constraints
          */
-        cd.sequenceConstraints.forEach((sc:SXSequenceConstraint) => {
+        for(let sc of cd.sequenceConstraints) {
 
            let firstSet:Set<string>|null = null
 
@@ -100,12 +98,12 @@ export default class SXComponentDisplayList {
 
            }
                
-        })
+        }
 
 
         this.backboneGroups = []
 
-        Array.from(new Set(sets.values())).forEach((set:Set<string>) => {
+        for(let set of Array.from(new Set(sets.values()))) {
 
             if(set.size === 0)
                 return
@@ -123,7 +121,7 @@ export default class SXComponentDisplayList {
 
             })))
         
-        })
+        }
         
 
         /* we need to expand SCs and features to all their locations

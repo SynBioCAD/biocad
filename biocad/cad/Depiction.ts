@@ -223,11 +223,11 @@ export default abstract class Depiction extends Versioned {
 
         this.touch()
 
-        this.children.forEach((child:Depiction) => {
+        for(let child of this.children) {
 
             child.touchRecursive()
 
-        })
+        }
 
     }
 

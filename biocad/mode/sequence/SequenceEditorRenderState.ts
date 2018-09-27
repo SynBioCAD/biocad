@@ -171,14 +171,14 @@ export default class SequenceEditorRenderState {
             this.lines.push(line)
         }
         
-        this.lines.forEach((line:SequenceEditorLine) => {
+        for(let line of this.lines) {
 
             if(!this.allLinesBBox)
                 this.allLinesBBox = line.bbox
             else
                 this.allLinesBBox = this.allLinesBBox.surround(line.bbox)
 
-        })
+        }
 
         if(!this.allLinesBBox) {
             this.allLinesBBox = new Rect()
@@ -314,9 +314,9 @@ function getAnnotatedRanges(component:SXComponent) {
 
         })
 
-        component.subComponents.forEach((subComponent:SXSubComponent) => {
+        for(let subComponent of component.subComponents) {
 
-            subComponent.locations.forEach((location:SXLocation) => {
+            for(let location of subComponent.locations) {
 
                 switch(location.objectType) {
 
@@ -339,9 +339,9 @@ function getAnnotatedRanges(component:SXComponent) {
                         break
 
                 }
-            })
+            }
 
-        })
+        }
     }
 
     /* longest annotations first (those go closest to the elements)

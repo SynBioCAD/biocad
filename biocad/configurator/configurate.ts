@@ -32,7 +32,7 @@ export default function configurate(layout:Layout, instructions:InstructionSet) 
     let marginT = 1
     let marginB = 1
 
-    instructions.instructions.forEach((instruction:Instruction) => {
+    for(let instruction of instructions.instructions) {
 
         if(instruction instanceof ReplaceInstruction) {
 
@@ -46,7 +46,7 @@ export default function configurate(layout:Layout, instructions:InstructionSet) 
             }
 
             if(!toReplace.offsetExplicit)
-                return
+                continue
 
             toReplace.offsetExplicit = false
 
@@ -65,11 +65,11 @@ export default function configurate(layout:Layout, instructions:InstructionSet) 
 
         }
 
-    })
+    }
 
     //console.warn(layout.depictions.length + ' TO CONFIGURATE!!!!!')
 
-    layout.depictions.forEach((depiction) => {
+    for(let depiction of layout.depictions) {
 
         //console.warn('CONFIGURATE!!!!! ' + depiction.debugName)
 
@@ -95,7 +95,7 @@ export default function configurate(layout:Layout, instructions:InstructionSet) 
 
         }
 
-    })
+    }
 
     //console.log('Positioning roots...')
 

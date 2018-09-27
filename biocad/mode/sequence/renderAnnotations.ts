@@ -46,11 +46,11 @@ export default function renderAnnotations(sequenceEditor) {
 
 
 
-    rangeTree.nodes.forEach((node:LinearRangeTreeNode) => {
+    for(let node of rangeTree.nodes) {
 
         renderNode(node, 0)
 
-    })
+    }
 
     function renderNode(node:LinearRangeTreeNode, indent:number) {
 
@@ -150,17 +150,17 @@ export default function renderAnnotations(sequenceEditor) {
                 labelsPerLine[line.seqOffset] ?
                     labelsPerLine[line.seqOffset] + 1 : 1
 
-            node.children.forEach((node:LinearRangeTreeNode) => {
+            for(let subnode of node.children) {
 
-                renderNode(node, indent + 1)
+                renderNode(subnode, indent + 1)
 
-            })
+            }
         }
     }
 
 
 
-    lines.forEach((line:SequenceEditorLine) => {
+    for(let line of lines) {
 
         for(var ringN:number = 0; ringN < line.annoRings.length; ++ ringN) {
 
@@ -199,7 +199,7 @@ export default function renderAnnotations(sequenceEditor) {
 
         }
 
-    })
+    }
 
 
     return svgElements

@@ -150,11 +150,11 @@ export default class Layout extends Versioned {
         if(parent !== undefined)
             parent.addChild(depiction)
 
-        depiction.children.forEach((child:Depiction) => {
+        for(let child of depiction.children) {
 
             this.addDepiction(child, depiction)
 
-        })
+        }
 
         this.verifyAcyclic()
 
@@ -300,7 +300,7 @@ export default class Layout extends Versioned {
         //
         this.syncAllDepictions(5)
         
-        this.depictions.forEach((depiction:Depiction) => {
+        for(let depiction of this.depictions) {
 
             if(depiction.isSameVersionAs(this)) {
 
@@ -328,11 +328,9 @@ export default class Layout extends Versioned {
 
                 }
 
-            } else {
-                console.log('layout onVersionChanged: skipping ' + depiction.debugName)
-            }
+            } 
 
-        })
+        }
 
         if(this.versionChangedCallback)
             this.versionChangedCallback()
@@ -389,7 +387,7 @@ export default class Layout extends Versioned {
         //console.log('Layout: I have ' + rootComponents.length + ' root component(s)')
         //console.dir(rootComponents)
 
-        rootComponents.forEach((component:SXComponent) => {
+        for(let component of rootComponents) {
 
             let chain = new IdentifiedChain()
             chain = chain.extend(component)
@@ -447,12 +445,12 @@ export default class Layout extends Versioned {
 
             var displayList:ComponentDisplayList = ComponentDisplayList.fromComponent(component)
 
-            displayList.backboneGroups.forEach((backboneGroup:Array<SXIdentified>) => {
+            for(let backboneGroup of displayList.backboneGroups) {
                 //console.log('BB GROUP LEN ' + backboneGroup.length)
                 this.syncBackbone(preset, backboneGroup, chain, cdDepiction, 1, Orientation.Forward)
-            })
+            }
 
-            displayList.ungrouped.forEach((child:SXIdentified) => {
+            for(let child of displayList.ungrouped) {
 
                 if(! (child instanceof SXSubComponent))
                     throw new Error('???')
@@ -461,17 +459,17 @@ export default class Layout extends Versioned {
 
                 this.syncComponentInstanceDepiction(preset, child as SXSubComponent, nextChain, cdDepiction, 1, Orientation.Forward)
 
-            })
+            }
 
             //console.log(component.displayName + ' has ' + component.interactions.length + ' interactions')
 
-            component.interactions.forEach((interaction:SXInteraction) => {
+            for(let interaction of component.interactions) {
 
                 let nextChain = chain.extend(interaction)
 
                 this.createInteractionDepiction(preset, interaction, nextChain, cdDepiction)
-            })
-        })
+            }
+        }
 
 
 
@@ -681,27 +679,27 @@ export default class Layout extends Versioned {
 
         //console.log(displayList.backboneGroups.length + ' bb groups for ' + component.uriChain)
 
-        displayList.backboneGroups.forEach((backboneGroup:Array<SXIdentified>) => {
+        for(let backboneGroup of displayList.backboneGroups) {
             this.syncBackbone(preset, backboneGroup, chain, cDepiction, nestDepth + 1, orientation)
-        })
+        }
 
-        displayList.ungrouped.forEach((child:SXIdentified) => {
+        for(let child of displayList.ungrouped) {
 
             if(! (child instanceof SXSubComponent))
                 throw new Error('???')
 
             this.syncComponentInstanceDepiction(preset, child as SXSubComponent, chain, cDepiction, nestDepth + 1, orientation)
 
-        })
+        }
 
         //console.log(definition.displayName + ' has ' + definition.interactions.length + ' interactions')
 
-        definition.interactions.forEach((interaction:SXInteraction) => {
+        for(let interaction of definition.interactions) {
 
             let newChain = chain.extend(interaction)
 
             this.createInteractionDepiction(preset, interaction, newChain, cDepiction)
-        })
+        }
 
         return cDepiction
     }
@@ -778,7 +776,7 @@ export default class Layout extends Versioned {
 
             //console.log('BB FOR ' + parent.depictionOf.uriChain + ' HAS ' + children.length + ' CHILDREN')
 
-        children.forEach((child:SXIdentified) => {
+        for(let child of children) {
 
             var effectiveThing:SXIdentified|undefined = undefined
             
@@ -839,7 +837,7 @@ export default class Layout extends Versioned {
             
             }
 
-        })
+        }
     }
 
 
@@ -888,16 +886,11 @@ export default class Layout extends Versioned {
 
                 } else if(child instanceof SXSubComponent) {
 
-                    child.locations.forEach((location:SXLocation) => {
-
+                    for(let location of child.locations) {
                         if(location.isFixed()) {
-
                             locations.push(location)
-
                         }
-
-                    })
-                                
+                    }
 
                 } else {
 
@@ -908,7 +901,7 @@ export default class Layout extends Versioned {
                 var minStart = 999999
                 //var maxEnd = -999999
 
-                locations.forEach((location) => {
+                for(let location of locations) {
 
                     if(location instanceof SXRange) {
 
@@ -922,7 +915,7 @@ export default class Layout extends Versioned {
                     }
 
 
-                })
+                }
 
                 return minStart
             }
@@ -970,9 +963,9 @@ export default class Layout extends Versioned {
 
         const doneDepictions:Set<SXIdentified> = new Set()
 
-        constraintChildren.forEach((child:SXIdentified) => {
+        for(let child of constraintChildren) {
             positionConstraintChild(child)
-        })
+        }
 
         function positionConstraintChild(child:SXIdentified):void {
 
@@ -1025,9 +1018,9 @@ export default class Layout extends Versioned {
 
                 if(otherChildren.length === 0) {
 
-                    childrenMatchingComponent(constraintChildren, constraint.object).forEach((otherChild:SXIdentified) => {
+                    for(let otherChild of childrenMatchingComponent(constraintChildren, constraint.object)) {
                         positionConstraintChild(otherChild)
-                    })
+                    }
 
                     otherChildren = childrenMatchingComponent(resultChildren, constraint.object)
 
