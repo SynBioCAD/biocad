@@ -17,6 +17,8 @@ import { SBOLXCompliantURIs } from "sbolgraph"
 import BrowseSBHDialog, { BrowseSBHDialogOptions } from "biocad/dialog/BrowseSBHDialog";
 import { SearchQuery } from "sbolgraph"
 
+import { FinalizeEvent } from 'biocad/DropOverlay'
+
 export default class PartsListView extends View {
 
     app:App
@@ -63,7 +65,7 @@ export default class PartsListView extends View {
             var glyphSvgColor = visbolite.render(glyphInfoColor)
 
             return h('div.sf-plv-entry', {
-                'ev-click': clickEvent(clickPart, { app: app, part: part }),
+                'ev-mousedown': clickEvent(mousedownPart, { app: app, part: part }),
                 'ev-contextmenu': contextMenuEvent(clickSearch, { app: app, part: part })
             }, [
                 /*svg('svg', {
@@ -119,7 +121,9 @@ export default class PartsListView extends View {
 }
 
 
-function clickPart(data:any) {
+function mousedownPart(data:any) {
+
+    console.log('foomd')
 
     const app:BiocadApp = data.app
     const part = data.part
@@ -141,6 +145,7 @@ function clickPart(data:any) {
     })
 
     const droppable:SBOLDroppable = new SBOLDroppable(app, graph, uri)
+    app.dropOverlay.setFinalizeEvent(FinalizeEvent.MouseUp)
     app.dropOverlay.startDropping(droppable)
 
 }

@@ -19,6 +19,11 @@ import SBOLDroppable from "biocad/droppable/SBOLDroppable";
 
 import DropReceiver from './DropReceiver'
 
+export enum FinalizeEvent {
+    MouseDown,
+    MouseUp
+}
+
 export default class DropOverlay {
 
     private currentDroppable:Droppable|null
@@ -29,6 +34,10 @@ export default class DropOverlay {
 
     hidden:boolean
 
+    startTime:number
+
+    finalizeEvent:FinalizeEvent
+
     constructor(app:BiocadApp) {
 
         this.app = app
@@ -36,6 +45,8 @@ export default class DropOverlay {
         this.receivers = []
 
         this.hidden = false
+
+        this.finalizeEvent = FinalizeEvent.MouseDown
     }
 
     addReceiver(receiver:DropReceiver) {
@@ -97,7 +108,8 @@ export default class DropOverlay {
 
             attr.style['cursor'] = 'none'
             attr['ev-contextmenu'] = contextMenuEvent(onRightClick, { overlay: this })
-            attr['ev-click'] = clickEvent(onLeftClick, { overlay: this })
+            attr['ev-mousedown'] = clickEvent(onMouseDown, { overlay: this })
+            attr['ev-mouseup'] = clickEvent(onMouseUp, { overlay: this })
         } else {
             attr.style['pointer-events'] = 'none'
         }
@@ -109,11 +121,17 @@ export default class DropOverlay {
 
         assert(!this.currentDroppable)
 
+        this.startTime = new Date().getTime()
+
         this.unhide()
 
         this.currentDroppable = droppable
 
+        let hasMoved = false
+
         let move = () => {
+
+            hasMoved = true
 
             for(let receiver of this.receivers) {
                 receiver.onDroppableMoved(MouseListener.mousePos, droppable)
@@ -129,7 +147,6 @@ export default class DropOverlay {
         })
 
         move()
-
     }
 
     cancelDrop():void {
@@ -165,6 +182,11 @@ export default class DropOverlay {
 
     }
 
+    setFinalizeEvent(finalizeEvent:FinalizeEvent) {
+        console.log('finalizeEvent' + finalizeEvent)
+        this.finalizeEvent = finalizeEvent
+    }
+
 
 }
 
@@ -178,8 +200,33 @@ function onRightClick(data) {
 
 }
 
+function onMouseUp(data) {
 
-function onLeftClick(data) {
+    const overlay:DropOverlay = data.overlay
+
+    let t = new Date().getTime()
+
+    if((t - overlay.startTime) > 500) {
+
+        if(overlay.finalizeEvent === FinalizeEvent.MouseUp) {
+            drop(data)
+        }
+    } else {
+
+        overlay.finalizeEvent = FinalizeEvent.MouseDown
+    }
+}
+
+function onMouseDown(data) {
+
+    const overlay:DropOverlay = data.overlay
+
+    if(overlay.finalizeEvent === FinalizeEvent.MouseDown) {
+        drop(data)
+    }
+}
+
+function drop(data) {
 
     const pos:Vec2 = Vec2.fromXY(data.x, data.y)
 
