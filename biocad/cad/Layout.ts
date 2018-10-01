@@ -74,7 +74,13 @@ export default class Layout extends Versioned {
         this.identifiedChainToDepiction = new Map<string, Depiction>()
         this.uidToDepiction = new Map<number, Depiction>()
         this.gridSize = Vec2.fromXY(16, 16)
-        this.size = Vec2.fromXY(window.innerWidth, window.innerHeight).divide(this.gridSize)
+
+        if(typeof window !== 'undefined') {
+            this.size = Vec2.fromXY(window.innerWidth, window.innerHeight).divide(this.gridSize)
+        } else {
+            this.size = Vec2.fromXY(16, 16)
+        }
+
         this.graphWatcher = null
         this.detailLevel = 5
 

@@ -1,5 +1,7 @@
 
-import { Rect } from 'jfw/geom'
+import { Rect, Vec2 } from 'jfw/geom'
+
+import stringPixelWidth = require('string-pixel-width')
 
 var svg = 'http://www.w3.org/2000/svg'
 
@@ -17,6 +19,15 @@ export default function measureText(text, attr) {
     if(cache[cacheKey] !== undefined) {
         return cache[cacheKey]
     }
+
+    if(typeof document !== 'undefined') {
+        return (cache[cacheKey] = measureTextBrowser(text, attr))
+    } else {
+        return (cache[cacheKey] = measureTextNode(text, attr))
+    }
+}
+
+function measureTextBrowser(text, attr) {
 
     if(hiddenSvg === null) {
 
@@ -58,10 +69,17 @@ export default function measureText(text, attr) {
 
     //console.log('text "' + text + '" measured as ' + rect.size())
 
-    cache[cacheKey] = rect.size()
-
     return rect.size()
 }
 
+function measureTextNode(text, attr) {
+
+    // this library completely ignores kerning and thus is inevitably going to
+    // be incorrect, but it's a best effort for now.
+    //
+    return Vec2.fromXY(stringPixelWidth(text, {
+        size: 10
+    }), 10)
+}
 
 

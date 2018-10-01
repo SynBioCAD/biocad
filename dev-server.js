@@ -24,8 +24,9 @@ var memfs = new MemoryFS()
 var fs = require('fs')
 
 compiler.watch({
-    //aggregateTimeout: 300,
-    //poll: false
+    aggregateTimeout: 300,
+    poll: true,
+    ignored: /node_modules/
 }, function(err, stats) {
 
     if(err)
@@ -44,6 +45,22 @@ compiler.watch({
 
     if (statsObj.warnings.length > 0) {
         console.log(statsObj.warnings.join('\n'))
+    }
+
+    var local = 'bundle_cli.js'
+
+    var localFilename = path.join.apply(path, [
+	    __dirname,
+	    'dist',
+        local
+   ])
+
+    if(memfs.existsSync(localFilename)) {
+        console.log('writing local bundle ' + localFilename + ' to disk')
+        fs.writeFileSync(local, memfs.readFileSync(localFilename).toString())
+        fs.writeFileSync(local + '.map', memfs.readFileSync(localFilename + '.map').toString())
+    } else {
+        console.warn('local bundle filename ' + localFilename + ' was not written')
     }
 
 })

@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:prov="http://www.w3.org/ns/prov#" xmlns:sbol="http://sbols.org/v2#" xmlns:xsd="http://www.w3.org/2001/XMLSchema#dateTime/" xmlns:synbiohub="http://synbiohub.org#" xmlns:sbh="http://wiki.synbiohub.org/wiki/Terms/synbiohub#" xmlns:sybio="http://www.sybio.ncl.ac.uk#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xmlns:ncbi="http://www.ncbi.nlm.nih.gov#" xmlns:igem="http://wiki.synbiohub.org/wiki/Terms/igem#" xmlns:genbank="http://www.ncbi.nlm.nih.gov/genbank#" xmlns:gbconv="http://sbols.org/genBankConversion#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:obo="http://purl.obolibrary.org/obo/">
+  <sbol:ComponentDefinition rdf:about="https://synbiohub.org/public/igem/BBa_K104001/1">
+    <sbol:persistentIdentity rdf:resource="https://synbiohub.org/public/igem/BBa_K104001"/>
+    <sbol:displayId>BBa_K104001</sbol:displayId>
+    <sbol:version>1</sbol:version>
+    <prov:wasDerivedFrom rdf:resource="http://parts.igem.org/Part:BBa_K104001"/>
+    <prov:wasGeneratedBy rdf:resource="https://synbiohub.org/public/igem/igem2sbol/1"/>
+    <dcterms:title>Subtilin P</dcterms:title>
+    <dcterms:description>Sensor for small peptide Subtilin</dcterms:description>
+    <dcterms:created>2008-10-23T11:00:00Z</dcterms:created>
+    <dcterms:modified>2015-06-09T09:00:20Z</dcterms:modified>
+    <sbh:mutableProvenance>The two component system, its promoter and RBS&apos;s, and the pSpaS promoter sequence are all derived from the genome of Bacillus subtilis ATCC 6633.</sbh:mutableProvenance>
+    <sbh:topLevel rdf:resource="https://synbiohub.org/public/igem/BBa_K104001/1"/>
+    <sbh:ownedBy rdf:resource="https://synbiohub.org/user/james"/>
+    <sbh:ownedBy rdf:resource="https://synbiohub.org/user/myers"/>
+    <sbh:mutableDescription>This part encodes a two-component system that can be used to sense the level of a small lantibiotic peptide called subtilin. It belongs to a series of parts that can be used to sense quorum sensing peptides from Gram positive organisms. In the Newcastle 2008 iGEM entry it was used a &apos;proof of concept&apos; brick to test whether a peptide produced by one organism could be sensed by a different organism. 
+
+The part contains two orfs arranged in an operon, SpaK and SpaR, that are driven by their native RBSs and the promoter PspaRK. Downstream of the SpaRK operon is terminator followed by a RBS and a promoter PspaS.
+
+In response to subtilin, the sensor kinase SpaK will phosphorylate, and hence activate, the response regulator SpaR. The phosphorylated SpaR protein activates the PspaS promoter driving the expression of any downstream genes. In this brick there are no ORF&apos;s downstream of PspaS but the brick has been tested with gfp and mcherry by the Newcastle 2008 team.</sbh:mutableDescription>
+    <igem:discontinued>false</igem:discontinued>
+    <igem:dominant>false</igem:dominant>
+    <igem:experience rdf:resource="http://wiki.synbiohub.org/wiki/Terms/igem#experience/Works"/>
+    <igem:group_u_list>_237_</igem:group_u_list>
+    <igem:m_user_id>4206</igem:m_user_id>
+    <igem:owner_id>2652</igem:owner_id>
+    <igem:owning_group_id>9</igem:owning_group_id>
+    <igem:sampleStatus>Not in stock</igem:sampleStatus>
+    <igem:status rdf:resource="http://wiki.synbiohub.org/wiki/Terms/igem#status/Unavailable"/>
+    <sbh:bookmark>false</sbh:bookmark>
+    <sbh:mutableNotes>A terminator was included after the spaRK to prevent read through. The native SpaRK promoter is controlled by the sigma factor sigma-H and induced at the end of exponential phase. The regulation by sigma-H was left unmodified.</sbh:mutableNotes>
+    <sbh:star>false</sbh:star>
+    <dc:creator>The Newcastle 2008 iGEM team</dc:creator>
+    <sbol:type rdf:resource="http://www.biopax.org/release/biopax-level3.owl#DnaRegion"/>
+    <sbol:role rdf:resource="http://wiki.synbiohub.org/wiki/Terms/igem#partType/Signalling"/>
+    <sbol:role rdf:resource="http://identifiers.org/so/SO:0000804"/>
+    <sbol:sequenceAnnotation>
+      <sbol:SequenceAnnotation rdf:about="https://synbiohub.org/public/igem/BBa_K104001/annotation1986985/1">
+        <sbol:persistentIdentity rdf:resource="https://synbiohub.org/public/igem/BBa_K104001/annotation1986985"/>
+        <sbol:displayId>annotation1986985</sbol:displayId>
+        <sbol:version>1</sbol:version>
+        <dcterms:title>Prom_spaRK</dcterms:title>
+        <sbh:topLevel rdf:resource="https://synbiohub.org/public/igem/BBa_K104001/1"/>
+        <sbol:location>
+          <sbol:Range rdf:about="https://synbiohub.org/public/igem/BBa_K104001/annotation1986985/range1986985/1">
+            <sbol:persistentIdentity rdf:resource="https://synbiohub.org/public/igem/BBa_K104001/annotation1986985/range1986985"/>
+            <sbol:displayId>range1986985</sbol:displayId>
+            <sbol:version>1</sbol:version>
+            <sbh:topLevel rdf:resource="https://synbiohub.org/public/igem/BBa_K104001/1"/>
+            <igem:direction rdf:resource="http://wiki.synbiohub.org/wiki/Terms/igem#direction/forward"/>
+            <sbol:start>7</sbol:start>
+            <sbol:end>123</sbol:end>
+            <sbol:orientation rdf:resource="http://sbols.org/v2#inline"/>
+          </sbol:Range>
+        </sbol:location>
+        <sbol:role rdf:resource="http://identifiers.org/so/SO:0000167"/>
+        <sbol:role rdf:resource="http://wiki.synbiohub.org/wiki/Terms/igem#feature/promoter"/>
+      </sbol:SequenceAnnotation>
+    </sbol:sequenceAnnotation>
+    <sbol:sequenceAnnotation>
+      <sbol:SequenceAnnotation rdf:about="https://synbiohub.org/public/igem/BBa_K104001/annotation1999035/1">
+        <sbol:persistentIdentity rdf:resource="https://synbiohub.org/public/igem/BBa_K104001/annotation1999035"/>
+        <sbol:displayId>annotation1999035</sbol:displayId>
+        <sbol:version>1</sbol:version>
+        <dcterms:title>RBS_spaR</dcterms:title>
+        <sbh:topLevel rdf:resource="https://synbiohub.org/public/igem/BBa_K104001/1"/>
+        <sbol:location>
+          <sbol:Range rdf:about="https://synbiohub.org/public/igem/BBa_K104001/annotation1999035/range1999035/1">
+            <sbol:persistentIdentity rdf:resource="https://synbiohub.org/public/igem/BBa_K104001/annotation1999035/range1999035"/>
+            <sbol:displayId>range1999035</sbol:displayId>
+            <sbol:version>1</sbol:version>
+            <sbh:topLevel rdf:resource="https://synbiohub.org/public/igem/BBa_K104001/1"/>
+            <igem:direction rdf:resource="http://wiki.synbiohub.org/wiki/Terms/igem#direction/forward"/>
+            <sbol:start>124</sbol:start>
+            <sbol:end>132</sbol:end>
+            <sbol:orientation rdf:resource="http://sbols.org/v2#inline"/>
+          </sbol:Range>
+        </sbol:location>
+        <sbol:role rdf:resource="http://wiki.synbiohub.org/wiki/Terms/igem#feature/rbs"/>
+        <sbol:role rdf:resource="http://identifiers.org/so/SO:0000139"/>
+      </sbol:SequenceAnnotation>
+    </sbol:sequenceAnnotation>
+    <sbol:sequenceAnnotation>
+      <sbol:SequenceAnnotation rdf:about="https://synbiohub.org/public/igem/BBa_K104001/annotation1999036/1">
+        <sbol:persistentIdentity rdf:resource="https://synbiohub.org/public/igem/BBa_K104001/annotation1999036"/>
+        <sbol:displayId>annotation1999036</sbol:displayId>
+        <sbol:version>1</sbol:version>
+        <dcterms:title>spaR</dcterms:title>
+        <sbh:topLevel rdf:resource="https://synbiohub.org/public/igem/BBa_K104001/1"/>
+        <sbol:location>
+          <sbol:Range rdf:about="https://synbiohub.org/public/igem/BBa_K104001/annotation1999036/range1999036/1">
+            <sbol:persistentIdentity rdf:resource="https://synbiohub.org/public/igem/BBa_K104001/annotation1999036/range1999036"/>
+            <sbol:displayId>range1999036</sbol:displayId>
+            <sbol:version>1</sbol:version>
+            <sbh:topLevel rdf:resource="https://synbiohub.org/public/igem/BBa_K104001/1"/>
+            <igem:direction rdf:resource="http://wiki.synbiohub.org/wiki/Terms/igem#direction/forward"/>
+            <sbol:start>137</sbol:start>
+            <sbol:end>799</sbol:end>
+            <sbol:orientation rdf:resource="http://sbols.org/v2#inline"/>
+          </sbol:Range>
+        </sbol:location>
+        <sbol:role rdf:resource="http://wiki.synbiohub.org/wiki/Terms/igem#feature/cds"/>
+        <sbol:role rdf:resource="http://identifiers.org/so/SO:0000316"/>
+      </sbol:SequenceAnnotation>
+    </sbol:sequenceAnnotation>
+    <sbol:sequenceAnnotation>
+      <sbol:SequenceAnnotation rdf:about="https://synbiohub.org/public/igem/BBa_K104001/annotation1999038/1">
+        <sbol:persistentIdentity rdf:resource="https://synbiohub.org/public/igem/BBa_K104001/annotation1999038"/>
+        <sbol:displayId>annotation1999038</sbol:displayId>
+        <sbol:version>1</sbol:version>
+        <dcterms:title>spaK</dcterms:title>
+        <sbh:topLevel rdf:resource="https://synbiohub.org/public/igem/BBa_K104001/1"/>
+        <sbol:location>
+          <sbol:Range rdf:about="https://synbiohub.org/public/igem/BBa_K104001/annotation1999038/range1999038/1">
+            <sbol:persistentIdentity rdf:resource="https://synbiohub.org/public/igem/BBa_K104001/annotation1999038/range1999038"/>
+            <sbol:displayId>range1999038</sbol:displayId>
+            <sbol:version>1</sbol:version>
+            <sbh:topLevel rdf:resource="https://synbiohub.org/public/igem/BBa_K104001/1"/>
+            <igem:direction rdf:resource="http://wiki.synbiohub.org/wiki/Terms/igem#direction/forward"/>
+            <sbol:start>772</sbol:start>
+            <sbol:end>1953</sbol:end>
+            <sbol:orientation rdf:resource="http://sbols.org/v2#inline"/>
+          </sbol:Range>
+        </sbol:location>
+        <sbol:role rdf:resource="http://wiki.synbiohub.org/wiki/Terms/igem#feature/cds"/>
+        <sbol:role rdf:resource="http://identifiers.org/so/SO:0000316"/>
+      </sbol:SequenceAnnotation>
+    </sbol:sequenceAnnotation>
+    <sbol:sequenceAnnotation>
+      <sbol:SequenceAnnotation rdf:about="https://synbiohub.org/public/igem/BBa_K104001/annotation1999037/1">
+        <sbol:persistentIdentity rdf:resource="https://synbiohub.org/public/igem/BBa_K104001/annotation1999037"/>
+        <sbol:displayId>annotation1999037</sbol:displayId>
+        <sbol:version>1</sbol:version>
+        <dcterms:title>RBS_spaK</dcterms:title>
+        <sbh:topLevel rdf:resource="https://synbiohub.org/public/igem/BBa_K104001/1"/>
+        <sbol:location>
+          <sbol:Range rdf:about="https://synbiohub.org/public/igem/BBa_K104001/annotation1999037/range1999037/1">
+            <sbol:persistentIdentity rdf:resource="https://synbiohub.org/public/igem/BBa_K104001/annotation1999037/range1999037"/>
+            <sbol:displayId>range1999037</sbol:displayId>
+            <sbol:version>1</sbol:version>
+            <sbh:topLevel rdf:resource="https://synbiohub.org/public/igem/BBa_K104001/1"/>
+            <igem:direction rdf:resource="http://wiki.synbiohub.org/wiki/Terms/igem#direction/forward"/>
+            <sbol:start>772</sbol:start>
+            <sbol:end>780</sbol:end>
+            <sbol:orientation rdf:resource="http://sbols.org/v2#inline"/>
+          </sbol:Range>
+        </sbol:location>
+        <sbol:role rdf:resource="http://identifiers.org/so/SO:0000139"/>
+        <sbol:role rdf:resource="http://wiki.synbiohub.org/wiki/Terms/igem#feature/rbs"/>
+      </sbol:SequenceAnnotation>
+    </sbol:sequenceAnnotation>
+    <sbol:sequenceAnnotation>
+      <sbol:SequenceAnnotation rdf:about="https://synbiohub.org/public/igem/BBa_K104001/annotation1999039/1">
+        <sbol:persistentIdentity rdf:resource="https://synbiohub.org/public/igem/BBa_K104001/annotation1999039"/>
+        <sbol:displayId>annotation1999039</sbol:displayId>
+        <sbol:version>1</sbol:version>
+        <dcterms:title>ter_rrn0</dcterms:title>
+        <sbh:topLevel rdf:resource="https://synbiohub.org/public/igem/BBa_K104001/1"/>
+        <sbol:location>
+          <sbol:Range rdf:about="https://synbiohub.org/public/igem/BBa_K104001/annotation1999039/range1999039/1">
+            <sbol:persistentIdentity rdf:resource="https://synbiohub.org/public/igem/BBa_K104001/annotation1999039/range1999039"/>
+            <sbol:displayId>range1999039</sbol:displayId>
+            <sbol:version>1</sbol:version>
+            <sbh:topLevel rdf:resource="https://synbiohub.org/public/igem/BBa_K104001/1"/>
+            <igem:direction rdf:resource="http://wiki.synbiohub.org/wiki/Terms/igem#direction/forward"/>
+            <sbol:start>1939</sbol:start>
+            <sbol:end>1957</sbol:end>
+            <sbol:orientation rdf:resource="http://sbols.org/v2#inline"/>
+          </sbol:Range>
+        </sbol:location>
+        <sbol:role rdf:resource="http://identifiers.org/so/SO:0000313"/>
+        <sbol:role rdf:resource="http://wiki.synbiohub.org/wiki/Terms/igem#feature/stem_loop"/>
+      </sbol:SequenceAnnotation>
+    </sbol:sequenceAnnotation>
+    <sbol:sequenceAnnotation>
+      <sbol:SequenceAnnotation rdf:about="https://synbiohub.org/public/igem/BBa_K104001/annotation1999040/1">
+        <sbol:persistentIdentity rdf:resource="https://synbiohub.org/public/igem/BBa_K104001/annotation1999040"/>
+        <sbol:displayId>annotation1999040</sbol:displayId>
+        <sbol:version>1</sbol:version>
+        <dcterms:title>Prom_spaS</dcterms:title>
+        <sbh:topLevel rdf:resource="https://synbiohub.org/public/igem/BBa_K104001/1"/>
+        <sbol:location>
+          <sbol:Range rdf:about="https://synbiohub.org/public/igem/BBa_K104001/annotation1999040/range1999040/1">
+            <sbol:persistentIdentity rdf:resource="https://synbiohub.org/public/igem/BBa_K104001/annotation1999040/range1999040"/>
+            <sbol:displayId>range1999040</sbol:displayId>
+            <sbol:version>1</sbol:version>
+            <sbh:topLevel rdf:resource="https://synbiohub.org/public/igem/BBa_K104001/1"/>
+            <igem:direction rdf:resource="http://wiki.synbiohub.org/wiki/Terms/igem#direction/forward"/>
+            <sbol:start>2043</sbol:start>
+            <sbol:end>2120</sbol:end>
+            <sbol:orientation rdf:resource="http://sbols.org/v2#inline"/>
+          </sbol:Range>
+        </sbol:location>
+        <sbol:role rdf:resource="http://identifiers.org/so/SO:0000167"/>
+        <sbol:role rdf:resource="http://wiki.synbiohub.org/wiki/Terms/igem#feature/promoter"/>
+      </sbol:SequenceAnnotation>
+    </sbol:sequenceAnnotation>
+    <sbol:sequence rdf:resource="https://synbiohub.org/public/igem/BBa_K104001_sequence/1"/>
+  </sbol:ComponentDefinition>
+  <sbol:Sequence rdf:about="https://synbiohub.org/public/igem/BBa_K104001_sequence/1">
+    <sbol:persistentIdentity rdf:resource="https://synbiohub.org/public/igem/BBa_K104001_sequence"/>
+    <sbol:displayId>BBa_K104001_sequence</sbol:displayId>
+    <sbol:version>1</sbol:version>
+    <prov:wasDerivedFrom rdf:resource="http://parts.igem.org/Part:BBa_K104001"/>
+    <prov:wasGeneratedBy rdf:resource="https://synbiohub.org/public/igem/igem2sbol/1"/>
+    <sbh:topLevel rdf:resource="https://synbiohub.org/public/igem/BBa_K104001_sequence/1"/>
+    <sbh:ownedBy rdf:resource="https://synbiohub.org/user/james"/>
+    <sbh:ownedBy rdf:resource="https://synbiohub.org/user/myers"/>
+    <sbol:elements>ctagagatccgcatgaaataaattcaggggtattgatgatggtttttggtataatatgtacaatcattgccagtcttatatggtttagtaaatgggaaggcagaaaaacgtttgaatagtatgagggggccgggaaatggcaaaaatccttgctgtcgatgatgaaaaagatattcttgtactgatacaaaatattttgcgccgtgaccagcatcaagttgacattttagatcatgttcatggacagccgcctgatgtatttcaaggatatgatttaattttgttagatgtgatgatgccggatattgacggttttgagttatgtaaacagatacggcctttggttgattgtcccattttattcctcacagctaaaacggaagaggaagcgatagtaaaaggcctcattaccggcggagatgattatattacaaagccgttcggcgttagagagcttagtgccagagtgaatgctcacttaagaagagaacggagagataaacatcaatcgaagagagtgatctccggttttttatttcattttgatagtaaagaagtatttatcaataacaacaaactcaacctaacaaaaaatgaatataaaatctgtgaatttttagctcaacacaaagggagaactttttcgagagaacaaatttacgaggagatatatggattagaggggaatgctttgtattcaacaattactgaatttattcgaacgattcgaaaaaaatgtaaagagcataatgcagatcccattaaaacggtatggggcgttgggtacaaatgggaataggttttaagggccggaaaacgcttcttagagaactggtaaagtatatggtgaccctatgtattagcttggtcgtacttgctctgctatatatatttataaatacgattgcaatgaatacaggtttctcacacccagcgaattataatgaacgagaagcggaaaaacttgcgccgaagctggaaaccatcgacaaagtaactgccgatatgattcctgatacaatgtcatatgccattcttaacaaagaaacaaaacaaaaaacagctggaactattaaagaaaaagacctacagctggtaaaaaagaagattgaaaaaaaaccatatgtcaattataagcaaaaaggctatttggttatagaaagaaacaatgaatattgtgttttgcaatattcattgcgtgccgatttcagttcgcctttactaagaaaataccttcctaattatgaattaacgagtatttgtattttgattatcttgctcattatagttatctctattataacaacttactttgcgaatagattaagaaaacattttgagacattgaacgtaatcactcgatatataaaagagcaaaatttgcaattcactcccgaatttacacatattaaggaatttgatgatgtgattgactcgttgattgaaatgagagatgctctccagtcctctcttgaggctctgtggcgtttagaaaaaaacaagaaagaacaaataggtgctttggcacatgagatcaagattccgatcaccattattaaggggaatgctgaattactcagcttgtcaatgcaaaacgaagaacaagctgagtatacaaagtatattcttggagcaggaaatcaaattgaacagtatatttatcagctgattcatctttcgaaaacggaggatgccttaacgattcatttggagaaagcatctgtagatgagttgacagaaactctagtgaaagatatatccgcctataaaggaaataaaaatataaacatttcgttcaaaaaagaaaatctaatgaaagaagcgaaaatagactggcaattgttacatagggcattattgaatattttaacaaatgcagttgattatacaccggaaggcggcaccgtctcggtacatgcagaatcgattctgagatattttatttttttgtaataaaggacgccgccaagccagcttaaacccagctcaatgagctgggttttttgtttgttaaaaatgaagaagaaactgtgaagcgtattgatcttaaaaaaaggaaaaaattgataaaatcttgatatttgtctgttactatttaggtattgaaaggaggtgaccacct</sbol:elements>
+    <sbol:encoding rdf:resource="http://www.chem.qmul.ac.uk/iubmb/misc/naseq.html"/>
+  </sbol:Sequence>
+  <prov:Activity rdf:about="https://synbiohub.org/public/igem/igem2sbol/1">
+    <sbol:persistentIdentity rdf:resource="https://synbiohub.org/public/igem/igem2sbol"/>
+    <sbol:displayId>igem2sbol</sbol:displayId>
+    <sbol:version>1</sbol:version>
+    <dcterms:title>iGEM to SBOL conversion</dcterms:title>
+    <dcterms:description>Conversion of the iGEM parts registry to SBOL2.1</dcterms:description>
+    <sbh:topLevel rdf:resource="https://synbiohub.org/public/igem/igem2sbol/1"/>
+    <sbh:ownedBy rdf:resource="https://synbiohub.org/user/james"/>
+    <sbh:ownedBy rdf:resource="https://synbiohub.org/user/myers"/>
+    <dc:creator>James Alastair McLaughlin</dc:creator>
+    <dc:creator>Chris J. Myers</dc:creator>
+    <prov:endedAtTime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2017-03-06T15:00:00.000Z</prov:endedAtTime>
+  </prov:Activity>
+</rdf:RDF>
