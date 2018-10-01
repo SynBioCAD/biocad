@@ -74,12 +74,19 @@ function measureTextBrowser(text, attr) {
 
 function measureTextNode(text, attr) {
 
+    let pt = parseInt(attr['font-size'].split('pt')[0])
+
     // this library completely ignores kerning and thus is inevitably going to
-    // be incorrect, but it's a best effort for now.
+    // be incorrect, but it's a best effort for now and kinda works after some
+    // magic number tweaking.
+    //
+    // TODO find a way to measure text in nodejs. freetype?
     //
     return Vec2.fromXY(stringPixelWidth(text, {
-        size: 10
-    }), 10)
+        //font: attr['font-family'],
+        font: 'verdana',
+        size: pt
+    }) * 1.2, pt * 1.5)
 }
 
 

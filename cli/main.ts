@@ -2,6 +2,7 @@
 import Layout from 'biocad/cad/Layout'
 import ImageRenderer from 'biocad/cad/ImageRenderer'
 import { SBOLXGraph } from 'sbolgraph'
+import { Vec2 } from 'jfw/geom'
 
 let fs = require('fs')
 
@@ -19,6 +20,7 @@ async function main() {
 
         layout.syncAllDepictions(5)
         layout.configurate([])
+        layout.size = layout.getBoundingSize().add(Vec2.fromXY(1, 1))
 
         let renderer = new ImageRenderer(layout)
 
