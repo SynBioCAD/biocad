@@ -225,6 +225,9 @@ export default class SequenceEditorRenderState {
         if(elementOffset >= this.elements.length)
             return -1
 
+        if(elementOffset < 0)
+            return 0
+
         return elementOffset
     }
 
