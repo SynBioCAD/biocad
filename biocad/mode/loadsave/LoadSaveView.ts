@@ -11,6 +11,8 @@ import fileDialog = require('file-dialog')
 import { click as clickEvent } from 'jfw/event'
 import { SBOLXGraph } from 'sbolgraph';
 
+import ImageRenderer from 'biocad/cad/ImageRenderer'
+
 export default class LoadSaveView extends View {
 
     layout:Layout|undefined
@@ -48,28 +50,30 @@ export default class LoadSaveView extends View {
 
             elements.push(h('div', {
                 style: {
-                    display: 'inline-block'
+                    'display': 'inline-block',
+                    'padding-top': '16px'
                 }
             }, [
                 h('div.pictureframe', {
                     style: {
                         width: 'calc(8vmin + ' + size.x + 'px)',
-                        height: 'calc(8vmin + ' + size.y + 'px)',
-                        position: 'absolute',
-                        left: '50%',
-                        top: '50%',
-                        transform: 'translateX(-50%) translateY(-50%)',
+                        height: 'calc(8vmin + ' + size.y + 'px)'
                     }
                 }, [
                     this.thumb.render()
+                ]),
+                h('div.sf-loadsaveview-links', [
+                    h('br'),
+                    h('a', {
+                        'ev-click': clickEvent(clickDownloadSVG, { view: this })
+                    }, 'Download image as SVG'),
+                    h('br'),
+                    h('a', {
+                        'ev-click': clickEvent(clickDownloadPPTX, { view: this })
+                    }, 'Download image as PowerPoint')
                 ])
             ]))
 
-            elements.push(h('br'))
-
-            elements.push()
-        } else {
-            elements.push(h('div'))
         }
 
         return h('div.jfw-flow-grow.jfw-flow-ltr', {
@@ -151,4 +155,62 @@ async function clickLoad(data)  {
 
 
 }
+
+async function clickDownloadSVG(data) {
+
+    let view:LoadSaveView = data.view
+
+    if(!view.layout)    
+        return
+
+    let renderer = new ImageRenderer(view.layout)
+
+    let svg = renderer.renderToSVGString()
+
+    let blob = new Blob([ svg ], {
+        type: 'image/svg+xml'
+    })
+
+    downloadBlob('biocad.svg', blob)
+
+}
+
+async function clickDownloadPPTX(data) {
+
+    let view:LoadSaveView = data.view
+
+    if(!view.layout)    
+        return
+
+    let renderer = new ImageRenderer(view.layout)
+
+    let pptx:ArrayBuffer = await renderer.renderToPPTX()
+
+    let blob = new Blob([ new Uint8Array(pptx) ], {
+        type: 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+    })
+
+    downloadBlob('biocad.pptx', blob)
+
+
+}
+
+function downloadBlob(name:string, blob:Blob) {
+
+    let url = window.URL.createObjectURL(blob)
+
+    let a = document.createElement('a')
+    a.style.display = 'none'
+
+    document.body.appendChild(a)
+
+    a.href = url
+    a.download = name
+    a.click()
+
+    window.URL.revokeObjectURL(url)
+
+    document.body.removeChild(a)
+}
+
 
