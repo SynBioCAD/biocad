@@ -5358,7 +5358,7 @@ readers do not read off random characters that represent icons */
   height: 80px;
   background-image: url('../img/synform.svg');
   background-position: right 10px bottom 10px;
-  background-size: auto calc(48px);
+  background-size: auto calc(80px * 0.6);
   background-repeat: no-repeat;
 }
 .jfw-topbar-container {
@@ -5957,7 +5957,7 @@ div.sf-sequence-view-toolbar-bottom > div {
   padding-right: 30px;
 }
 .jfw-main-view.sf-sequence-view {
-  height: calc(100% -  -32px);
+  height: calc(100% -  48px - 80px);
 }
 .jfw-main-view.sf-sequence-view .sf-sequence-editor {
   width: 100%;
@@ -6090,7 +6090,6 @@ div.sf-sequence-view-toolbar-bottom > div {
   border-top-color: #ddd;
   box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.25) inset, 0 5px 10px 5px rgba(0, 0, 0, 0.25);
   box-sizing: border-box;
-  display: inline-block;
   padding: 8vmin;
   position: relative;
   text-align: center;
@@ -6149,7 +6148,7 @@ button[data-balloon] {
   border-radius: 4px;
   color: #fff;
   content: attr(data-balloon);
-  padding: .5em 1em;
+  padding: 0.5em 1em;
   position: absolute;
   white-space: nowrap;
   z-index: 10;
@@ -6534,7 +6533,7 @@ div.sf-circuit-view-toolbar {
   padding-left: 10px;
 }
 .sf-caret {
-  animation: blinker 1.0s linear infinite;
+  animation: blinker 1s linear infinite;
 }
 @keyframes blinker {
   50% {
@@ -6686,6 +6685,13 @@ table.sf-inspector tr.sf-inspector-twolines-value {
   bottom: 6px;
   text-align: center;
   font-size: medium;
+}
+.sf-loadsaveview-links {
+  display: inline-block;
+}
+.sf-loadsaveview-links a {
+  font-size: large;
+  color: #00a4e4;
 }
 .sf-encoding-selector {
   display: flex;
