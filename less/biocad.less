@@ -250,3 +250,42 @@ tr.sf-inspector-oneline {
 .sf-encoding-selector > div.active {
     background-color: green;
 }
+
+
+
+.addremove-item {
+    color: black;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 8px;
+    padding: 4px;
+    text-transform: uppercase;
+    font-variant: small-caps;
+    font-size: 8pt;
+    font-weight: bold;
+    display: inline;
+    cursor: pointer;
+}
+
+.addremove-remove {
+    display: none;
+}
+
+.addremove-item:hover {
+    background-color: rgba(255, 0, 0, 0.5);
+    color: white;
+}
+
+.addremove-item:hover .addremove-remove {
+    display: inline;
+    color: red;
+}
+
+.addremove-add {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.addremove-add:hover {
+    color: green;
+    cursor: pointer;
+}
+

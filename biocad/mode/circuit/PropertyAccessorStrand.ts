@@ -2,7 +2,7 @@
 import PropertyAccessor from "./PropertyAccessor";
 import { triple, SBOLXGraph, node, SXSubComponent, SXSequenceFeature, SXThingWithLocation } from 'sbolgraph'
 
-export default class PropertyAccessorStrand extends PropertyAccessor {
+export default class PropertyAccessorStrand extends PropertyAccessor<string> {
 
     object:string
     onChange:undefined|(()=>void)

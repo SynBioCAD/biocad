@@ -1,7 +1,7 @@
 import PropertyAccessor from "./PropertyAccessor";
 import { triple, SBOLXGraph, node } from 'sbolgraph'
 
-export default class PropertyAccessorSimple extends PropertyAccessor {
+export default class PropertyAccessorSimple extends PropertyAccessor<string> {
 
     object:string
     predicate:string

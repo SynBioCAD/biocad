@@ -9,9 +9,9 @@ export default class PropertyEditorCombo extends PropertyEditor {
 
     title:string
     options:{name:string, uri:string}[]
-    accessor:PropertyAccessor
+    accessor:PropertyAccessor<string>
 
-    constructor(title:string, accessor:PropertyAccessor, options:{name:string, uri:string}[]) {
+    constructor(title:string, accessor:PropertyAccessor<string>, options:{name:string, uri:string}[]) {
 
         super()
 

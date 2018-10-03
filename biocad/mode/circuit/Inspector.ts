@@ -23,6 +23,7 @@ import DepictionRef from 'biocad/cad/DepictionRef';
 import PropertyEditorOneline from './PropertyEditorOneline';
 import PropertyEditorTermSet from './PropertyEditorTermSet';
 import PropertyEditorCombo from './PropertyEditorCombo';
+import PropertyEditorInteractionParticipants from './PropertyEditorInteractionParticipants'
 import LayoutEditorView from '../../cad/LayoutEditorView';
 import ABInteractionDepiction from '../../cad/ABInteractionDepiction';
 import PropertyEditorSiblingComponent from './PropertyEditorSubComponent';
@@ -31,6 +32,11 @@ import BackboneDepiction from '../../cad/BackboneDepiction';
 import PropertyAccessorString from './PropertyAccessorString';
 import PropertyAccessorStrand from './PropertyAccessorStrand';
 import PropertyAccessorURI from './PropertyAccessorURI';
+import PropertyAccessorURISet from './PropertyAccessorURISet';
+
+import { Prefixes } from 'bioterms'
+
+import so from 'data/sequence-ontology'
 
 const strands = [
     {
@@ -171,6 +177,7 @@ export default class Inspector extends View {
             if(effectiveComponent) {
 
                 this.editors.push(new PropertyEditorCombo('Type', new PropertyAccessorURI(effectiveComponent.uri, Predicates.SBOLX.type), types))
+                this.editors.push(new PropertyEditorTermSet(this.app as BiocadApp, 'Roles', new PropertyAccessorURISet(effectiveComponent.uri, Predicates.SBOLX.hasRole), Prefixes.sequenceOntologyIdentifiersOrg, so, 'SO:0001411'))
                 //this.editors.push(new PropertyEditorTermSet('Roles', dOf.uri, Predicates.SBOLX.hasRole, strands))
 
             }
@@ -186,9 +193,8 @@ export default class Inspector extends View {
                     throw new Error('???')
                 }
 
-                for(let participation of interaction.participations) {
-                    this.editors.push(new PropertyEditorSiblingComponent('Participant', interaction.containingModule.uri, participation.uri, Predicates.SBOLX.participant))
-                }
+                //this.editors.push(new PropertyEditorSiblingComponent('Participant', interaction.containingModule.uri, participation.uri, Predicates.SBOLX.participant))
+                this.editors.push(new PropertyEditorInteractionParticipants(this.app as BiocadApp, interaction.uri))
             }
         }
 

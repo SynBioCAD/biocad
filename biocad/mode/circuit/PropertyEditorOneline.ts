@@ -8,9 +8,9 @@ import PropertyAccessor from './PropertyAccessor';
 export default class PropertyEditorOneline extends PropertyEditor {
 
     title:string
-    accessor:PropertyAccessor
+    accessor:PropertyAccessor<string>
 
-    constructor(title:string, accessor:PropertyAccessor) {
+    constructor(title:string, accessor:PropertyAccessor<string>) {
 
         super()
 
