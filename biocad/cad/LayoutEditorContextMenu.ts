@@ -1,6 +1,6 @@
 import  LayoutEditor  from 'biocad/cad/LayoutEditor';
 import { Specifiers } from 'bioterms';
-import { SBOLXCompliantURIs, SXComponent } from "sbolgraph"
+import { SXComponent } from "sbolgraph"
 import { Predicates, Types } from 'bioterms';
 import BiocadApp from 'biocad/BiocadApp';
 

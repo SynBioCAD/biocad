@@ -20,7 +20,7 @@ import { SBOLXGraph } from "sbolgraph";
 import BiocadApp from "biocad/BiocadApp";
 
 import { node as graphNode } from "sbolgraph"
-import { SBOLXCompliantURIs, SXComponent, SXSequence } from "sbolgraph"
+import { SXComponent, SXSequence } from "sbolgraph"
 
 export class CreateComponentDialogDefaults {
 
@@ -89,6 +89,9 @@ export default class CreateComponentDialog extends Dialog {
         const graph:SBOLXGraph = app.graph
 
 
+        // TODO
+        //
+        /*
         const cdUri:string = graph.generateURI('http://dummyprefix/' + this.identifierBox.getValue() + '$n?$/1')
 
         graph.insertProperties(cdUri, {
@@ -113,11 +116,11 @@ export default class CreateComponentDialog extends Dialog {
         })
 
 
-
         const cd = new SXComponent(graph, cdUri)
         cd.setSequence(new SXSequence(graph, seqUri))
 
 
+*/
 
         app.closeDialog(this)
 

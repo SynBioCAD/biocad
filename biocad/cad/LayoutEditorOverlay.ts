@@ -18,7 +18,7 @@ import BiocadApp from "biocad/BiocadApp";
 import Droppable from "biocad/droppable/Droppable";
 import SBOLDroppable from "biocad/droppable/SBOLDroppable";
 
-import { SBOLXGraph, SXComponent, SBOLXCopier, SXSubComponent } from "sbolgraph"
+import { SBOLXGraph, SXComponent, SXSubComponent } from "sbolgraph"
 import LayoutEditorContextMenu from "biocad/cad/LayoutEditorContextMenu";
 import DepictionPOD from "biocad/cad/DepictionPOD";
 import BackboneDepiction from 'biocad/cad/BackboneDepiction';
@@ -37,6 +37,8 @@ import DNDEnterWorkspace from "./dnd-action/DNDEnterWorkspace";
 import DNDEnterParent from "./dnd-action/DNDEnterParent";
 import ABInteractionDepiction from "./ABInteractionDepiction";
 import DepictionRef from "./DepictionRef";
+
+import copySBOL from 'biocad/util/copySBOL'
 
 export default class LayoutEditorOverlay extends View {
 
@@ -444,7 +446,10 @@ export default class LayoutEditorOverlay extends View {
 
             const droppable:SBOLDroppable = _droppable as SBOLDroppable
 
-            const newUri:string = SBOLXCopier.copy(droppable.graph, app.graph, droppable.uri, 'http://fooprefix/')
+            let newTopLevels = copySBOL(droppable.graph, app.graph, 'http://fooprefix/')
+
+            // TODO
+            const newUri:string = newTopLevels[0].uri
 
             const layout:Layout = this.layoutEditor.layout
 

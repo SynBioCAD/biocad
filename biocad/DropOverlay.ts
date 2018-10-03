@@ -2,7 +2,7 @@
 import { SXIdentified } from "sbolgraph"
 
 import { h, VNode } from "jfw/vdom";
-import { SBOLXGraph, SBOLXCopier } from "sbolgraph"
+import { SBOLXGraph } from "sbolgraph"
 import Layout from "biocad/cad/Layout";
 import LayoutThumbnail from "biocad/cad/LayoutThumbnail";
 import BiocadApp from "biocad/BiocadApp";

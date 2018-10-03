@@ -13,7 +13,6 @@ import { Specifiers, Predicates, Types } from "bioterms";
 
 import { node as graphNode } from "sbolgraph"
 import SBOLDroppable from "biocad/droppable/SBOLDroppable";
-import { SBOLXCompliantURIs } from "sbolgraph"
 import BrowseSBHDialog, { BrowseSBHDialogOptions } from "biocad/dialog/BrowseSBHDialog";
 import { SearchQuery } from "sbolgraph"
 
@@ -130,21 +129,13 @@ function mousedownPart(data:any) {
 
     const graph:SBOLXGraph = new SBOLXGraph([])
 
-    const uri:string = app.graph.generateURI('http://dummy/' + part.shortName + '$n$/1')
+    let component = graph.createComponent('http://dummyprefix/', part.shortName, '1')
+    component.addRole(part.soTerm)
+    component.addType(part.typeUri)
 
     //console.log('uri is ' + uri)
 
-    graph.insertProperties(uri, {
-        [Predicates.a]: graphNode.createUriNode(Types.SBOLX.Component),
-        [Predicates.SBOLX.id]: graphNode.createStringNode(SBOLXCompliantURIs.getId(uri)),
-        [Predicates.Dcterms.title]: graphNode.createStringNode(SBOLXCompliantURIs.getId(uri)),
-        [Predicates.SBOLX.persistentIdentity]: graphNode.createUriNode(SBOLXCompliantURIs.getPersistentIdentity(uri)),
-        [Predicates.SBOLX.version]: graphNode.createStringNode(SBOLXCompliantURIs.getVersion(uri)),
-        [Predicates.SBOLX.type]: graphNode.createUriNode(part.typeUri),
-        [Predicates.SBOLX.hasRole]: graphNode.createUriNode(part.soTerm)
-    })
-
-    const droppable:SBOLDroppable = new SBOLDroppable(app, graph, uri)
+    const droppable:SBOLDroppable = new SBOLDroppable(app, graph, component.uri)
     app.dropOverlay.setFinalizeEvent(FinalizeEvent.MouseUp)
     app.dropOverlay.startDropping(droppable)
 
