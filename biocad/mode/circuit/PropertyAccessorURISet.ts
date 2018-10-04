@@ -6,11 +6,13 @@ export default class PropertyAccessorURISet extends PropertyAccessor<string[]> {
 
     object:string
     predicate:string
+    onChange:undefined|(()=>void)
 
-    constructor(object:string, predicate:string) {
+    constructor(object:string, predicate:string, onChange?:()=>void) {
         super()
         this.object = object
         this.predicate = predicate
+        this.onChange = onChange
     }
 
     set(graph:SBOLXGraph, values:string[]) {
@@ -19,6 +21,9 @@ export default class PropertyAccessorURISet extends PropertyAccessor<string[]> {
 
         for(let value of values)
             graph.insert(this.object, this.predicate, node.createUriNode(value))
+
+        if(this.onChange)
+            this.onChange()
     }
 
     get(graph:SBOLXGraph):string[] {

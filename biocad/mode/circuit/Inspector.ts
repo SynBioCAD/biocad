@@ -177,7 +177,7 @@ export default class Inspector extends View {
             if(effectiveComponent) {
 
                 this.editors.push(new PropertyEditorCombo('Type', new PropertyAccessorURI(effectiveComponent.uri, Predicates.SBOLX.type), types))
-                this.editors.push(new PropertyEditorTermSet(this.app as BiocadApp, 'Roles', new PropertyAccessorURISet(effectiveComponent.uri, Predicates.SBOLX.hasRole), Prefixes.sequenceOntologyIdentifiersOrg, so, 'SO:0000110'))
+                this.editors.push(new PropertyEditorTermSet(this.app as BiocadApp, 'Roles', new PropertyAccessorURISet(effectiveComponent.uri, Predicates.SBOLX.hasRole, changeNonRecursive), Prefixes.sequenceOntologyIdentifiersOrg, so, 'SO:0000110'))
                 //this.editors.push(new PropertyEditorTermSet('Roles', dOf.uri, Predicates.SBOLX.hasRole, strands))
 
             }

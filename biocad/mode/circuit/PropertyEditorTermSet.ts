@@ -38,11 +38,11 @@ export default class PropertyEditorTermSet extends PropertyEditor {
         return h('tr.sf-inspector-oneline', [
             h('td', this.title),
             h('span.addremove', uris.map((uri) => {
-                return h('span.addremove-item', [
-                    h('span.addremove-remove.fa.fa-times-circle', {
-                        'ev-click': clickEvent(clickRemove, { editor: this, graph, uri })
-                    }),
-                    this.ontology[this.uriToTerm(uri)].name
+                return h('span.addremove-item', {
+                    'ev-click': clickEvent(clickRemove, { editor: this, graph, uri })
+                }, [
+                    h('span.addremove-remove.fa.fa-times-circle'),
+                    ' ' + this.ontology[this.uriToTerm(uri)].name
                 ])
             }).concat([
                 h('span.addremove-add.fa.fa-plus-circle', {
@@ -87,7 +87,7 @@ async function clickChoose(data) {
 function clickRemove(data) {
 
     let editor:PropertyEditorTermSet = data.editor
-    let uri:string = data.role
+    let uri:string = data.uri
 
     let graph:SBOLXGraph = data.graph
 
@@ -97,6 +97,8 @@ function clickRemove(data) {
 
     if(idx !== -1) {
         cur.splice(idx, 1)
+    } else {
+        console.warn('term ' + uri + ' not found in set ' + JSON.stringify(cur))
     }
 
     editor.accessor.set(graph, cur)
