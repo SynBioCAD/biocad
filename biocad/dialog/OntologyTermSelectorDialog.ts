@@ -2,6 +2,7 @@
 import { Dialog, DialogOptions } from 'jfw/ui/dialog'
 import OntologyTreeView from 'biocad/view/OntologyTreeView'
 import { App } from 'jfw'
+import { h } from 'jfw/vdom'
 
 export default class OntologyTermSelectorDialog extends Dialog {
 
@@ -12,10 +13,19 @@ export default class OntologyTermSelectorDialog extends Dialog {
         super(app, opts)
 
         this.treeView = new OntologyTreeView(app, this, ontology, rootTermID)
+        this.treeView.setSearchable(true)
     }
 
     getContentView() {
-        return this.treeView.render()
+        return h('div', {
+            style: {
+                'overflow-x': 'hidden',
+                'overflow-y': 'visible',
+                'max-height': '500px'
+            }
+        }, [
+            this.treeView.render()
+        ])
     }
 
 
