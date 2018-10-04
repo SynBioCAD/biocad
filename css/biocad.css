@@ -6558,26 +6558,13 @@ div.sf-circuit-view-toolbar {
   background-color: #BBF;
   border-radius: 10px;
 }
-div.sf-inspector-container {
-  margin-left: 4px;
-  width: calc(100% - 8px);
-  overflow: hidden;
-}
 table.sf-inspector {
-  margin: 0;
-  padding: 0;
-  border-collapse: collapse;
   color: black;
-  width: 100%;
 }
 table.sf-inspector tr {
-  margin: 0;
-  padding: 0;
   border: none;
 }
 table.sf-inspector td {
-  padding: 4px;
-  margin: 0;
   border: none;
 }
 table.sf-inspector tr:nth-child(even) td {
@@ -6589,15 +6576,13 @@ table.sf-inspector tr:nth-child(odd) td {
 table.sf-inspector tr.sf-inspector-oneline {
   border-bottom: 2px solid #555;
 }
-table.sf-inspector tr.sf-inspector-oneline td {
-  background-color: white;
-}
 table.sf-inspector tr.sf-inspector-oneline td:first-child {
   font-variant: small-caps;
   text-transform: uppercase;
   font-size: 9pt;
   font-weight: bold;
   background-color: #DDD;
+  padding: 4px;
 }
 table.sf-inspector tr.sf-inspector-oneline td:nth-child(2) {
   box-shadow: inset 10px 0px 10px -10px rgba(0, 0, 0, 0.05);
@@ -6705,4 +6690,38 @@ table.sf-inspector tr.sf-inspector-twolines-value {
 }
 .sf-encoding-selector > div.active {
   background-color: green;
+}
+.addremove-item {
+  margin-right: 4px;
+}
+.addremove-item,
+.addremove-add {
+  color: black;
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 8px;
+  padding: 4px;
+  text-transform: uppercase;
+  font-variant: small-caps;
+  font-size: 8pt;
+  font-weight: bold;
+  display: inline;
+  cursor: pointer;
+}
+.addremove-remove {
+  display: none;
+}
+.addremove-item:hover {
+  background-color: rgba(255, 0, 0, 0.5);
+  color: white;
+}
+.addremove-item:hover .addremove-remove {
+  display: inline;
+  color: red;
+}
+.addremove-add {
+  color: black;
+}
+.addremove-add:hover {
+  background-color: #00FF00;
+  cursor: pointer;
 }
