@@ -45,9 +45,11 @@ export default class PropertyEditorTermSet extends PropertyEditor {
                     ' ' + this.ontology[this.uriToTerm(uri)].name
                 ])
             }).concat([
-                h('span.addremove-add.fa.fa-plus-circle', {
+                h('span.addremove-add', {
                     'ev-click': clickEvent(clickChoose, { editor: this, graph })
-                })
+                }, [
+                    h('span.fa.fa-plus')
+                ])
             ]))
         ])
     }

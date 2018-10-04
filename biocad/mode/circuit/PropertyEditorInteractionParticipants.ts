@@ -59,9 +59,11 @@ export default class PropertyEditorInteractionParticipants extends PropertyEdito
                     sbo[uriToTerm(role)].name
                 ])
             }).concat([
-                h('span.addremove-add.fa.fa-plus-circle', {
+                h('span.addremove-add', {
                     'ev-click': clickEvent(clickChooseRole, { editor, participation })
-                })
+                }, [
+                    h('span.fa.fa-plus')
+                ])
             ]))
         }
 

@@ -63,29 +63,17 @@ div.sf-circuit-view-toolbar {
 
 
 div.sf-inspector-container {
-    margin-left: 4px;
-    width:calc(~"100% - 8px");
-    overflow: hidden;
-
 }
+
 table.sf-inspector {
-    margin:0;
-    padding:0;
-    border-collapse:collapse;
-    color:black;
-    width: 100%;
+    color: black;
 }
 
 table.sf-inspector tr {
-    margin:0;
-    padding:0;
     border:none;
 }
 
 table.sf-inspector td {
-    margin:0;
-    padding:4px;
-    margin:0;
     border:none;
 }
 
@@ -102,7 +90,6 @@ table.sf-inspector tr.sf-inspector-oneline {
 }
 
 table.sf-inspector tr.sf-inspector-oneline td {
-    background-color: white;
 }
 
 table.sf-inspector tr.sf-inspector-oneline td:first-child {
@@ -111,6 +98,7 @@ table.sf-inspector tr.sf-inspector-oneline td:first-child {
     font-size: 9pt;
     font-weight: bold;
     background-color: #DDD;
+    padding: 4px;
 }
 
 table.sf-inspector tr.sf-inspector-oneline td:nth-child(2) {
@@ -252,8 +240,11 @@ tr.sf-inspector-oneline {
 }
 
 
-
 .addremove-item {
+    margin-right: 4px;
+}
+
+.addremove-item,.addremove-add {
     color: black;
     background-color: rgba(255, 255, 255, 0.5);
     border-radius: 8px;
@@ -281,11 +272,11 @@ tr.sf-inspector-oneline {
 }
 
 .addremove-add {
-    color: rgba(255, 255, 255, 0.5);
+    color: black;
 }
 
 .addremove-add:hover {
-    color: green;
+    background-color: #00FF00;
     cursor: pointer;
 }
 
