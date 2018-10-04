@@ -10,6 +10,7 @@ import fileDialog = require('file-dialog')
 
 import { click as clickEvent } from 'jfw/event'
 import { SBOLXGraph } from 'sbolgraph';
+import { convertToSBOL2 } from 'sbolgraph'
 
 import ImageRenderer from 'biocad/cad/ImageRenderer'
 
@@ -100,8 +101,9 @@ export default class LoadSaveView extends View {
                 h('a', {
                     attributes: {
                         'data-balloon-pos': 'right',
-                        'data-balloon': 'Save your design to your computer as SBOL2 to load again later',
-                    }
+                        'data-balloon': 'Save your design to your computer to load again later',
+                    },
+                    'ev-click': clickEvent(clickSave, { view: this })
                 }, [
                     h('span.fa.fa-save', []),
                     h('span.icon-text', ' Save')
@@ -110,8 +112,9 @@ export default class LoadSaveView extends View {
                 h('a', {
                     attributes: {
                         'data-balloon-pos': 'right',
-                        'data-balloon': 'Export your design as Microsoft® PowerPoint or SVG',
-                    }
+                        'data-balloon': 'Export your design as SBOL2 to use in other software',
+                    },
+                    'ev-click': clickEvent(clickExport, { view: this })
                 }, [
                     h('span.fa.fa-file-export', []),
                     h('span.icon-text', ' Export')
@@ -155,6 +158,42 @@ async function clickLoad(data)  {
 
 
 }
+
+async function clickSave(data)  {
+
+
+    console.log('click save')
+
+    let view:LoadSaveView = data.view
+
+    let graph = (view.app as BiocadApp).graph
+
+    let xml = graph.serializeXML()
+
+    let blob = new Blob([ xml ], {
+        type: 'application/rdf+xml'
+    })
+
+    downloadBlob('biocad_sbolx.xml', blob)
+}
+
+async function clickExport(data)  {
+
+    let view:LoadSaveView = data.view
+
+    let graph = (view.app as BiocadApp).graph
+
+    let xml = convertToSBOL2(graph).serializeXML()
+
+    let blob = new Blob([ xml ], {
+        type: 'application/rdf+xml'
+    })
+
+    downloadBlob('biocad_sbol2.xml', blob)
+
+}
+
+
 
 async function clickDownloadSVG(data) {
 
