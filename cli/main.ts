@@ -12,9 +12,14 @@ async function main() {
 
     for(let file of fs.readdirSync('testfiles')) {
 
+        if(!file.endsWith('.xml') || file.endsWith('_sbolx.xml'))
+            continue
+
         let path = 'testfiles/' + file
 
         let graph = await SBOLXGraph.loadString(fs.readFileSync(path) + '', 'application/rdf+xml')
+
+        fs.writeFileSync('testfiles/' + file + '_sbolx.xml', graph.serializeXML())
 
         let layout = new Layout(graph)
 
@@ -26,7 +31,7 @@ async function main() {
 
         let svg = renderer.renderToSVGString()
 
-        fs.writeFileSync(file + '.svg', svg)
+        fs.writeFileSync('testfiles/' + file + '.svg', svg)
     }
 
 }
