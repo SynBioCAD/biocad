@@ -42,7 +42,7 @@ export default class PropertyEditorTermSet extends PropertyEditor {
                     'ev-click': clickEvent(clickRemove, { editor: this, graph, uri })
                 }, [
                     h('span.addremove-remove.fa.fa-times-circle'),
-                    ' ' + this.ontology[this.uriToTerm(uri)].name
+                    ' ' + (this.ontology[this.uriToTerm(uri)] || { 'name': 'unknown' }).name
                 ])
             }).concat([
                 h('span.addremove-add', {

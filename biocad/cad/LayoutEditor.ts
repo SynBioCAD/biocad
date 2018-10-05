@@ -164,7 +164,7 @@ export default class LayoutEditor extends View {
                     height: 'calc(100% - ' + this.scrollbarSize + 'px)',
                 }
             }, [
-                this.debugLog.render()
+                //this.debugLog.render()
             ]),
             svg('svg', {
                 'class': 'sf-circuit-view-overlay',
