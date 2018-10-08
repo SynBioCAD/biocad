@@ -342,19 +342,22 @@ export default class SequenceEditorOverlay extends View {
 
         const elementOffset = renderState.offsetToElementOffset(offset, true)
 
-        this.mousePos = offset
+        if(elementOffset !== -1) {
 
-        if(elementOffset >= 0) {
-            this.hoverCaretPos = elementOffset
-        } else {
-            this.hoverCaretPos = null
-        }
+            this.mousePos = offset
 
-        this.sequenceEditor.onHoverPosChanged(this.hoverCaretPos)
+            if(elementOffset >= 0) {
+                this.hoverCaretPos = elementOffset
+            } else {
+                this.hoverCaretPos = null
+            }
 
-        if(this.selecting) {
-            this.selectionEnd = elementOffset
-            //this.sequenceEditor.onSelectionChanged(this.getSelection())
+            this.sequenceEditor.onHoverPosChanged(this.hoverCaretPos)
+
+            if(this.selecting) {
+                this.selectionEnd = elementOffset
+                //this.sequenceEditor.onSelectionChanged(this.getSelection())
+            }
         }
 
         this.update()

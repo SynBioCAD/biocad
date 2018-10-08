@@ -222,7 +222,7 @@ export default class SequenceEditorRenderState {
 
         const elementOffset = line.seqOffset + Math.floor((offset.x - this.lines[found].bbox.topLeft.x) / this.charSize)
 
-        if(elementOffset >= this.elements.length)
+        if(elementOffset > this.elements.length)
             return -1
 
         if(elementOffset < 0)

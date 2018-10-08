@@ -177,22 +177,26 @@ export default function renderAnnotations(sequenceEditor) {
 
                 const intersection:LinearRange|null = range.intersection(seqRange)
 
-                if(intersection === null)
-                    throw new Error('???')
+                if(intersection !== null) {
 
-                const start:number = intersection.start - line.seqOffset
-                const end:number = intersection.end - line.seqOffset
- 
-                const y:number = line.bbox.topLeft.y + renderState.charSize + renderState.paddingBetweenStrands + renderState.charSize + renderState.annotationOffset + (ringN * renderState.annotationHeight)
+                    const start:number = intersection.start - line.seqOffset
+                    const end:number = intersection.end - line.seqOffset
+    
+                    const y:number = line.bbox.topLeft.y + renderState.charSize + renderState.paddingBetweenStrands + renderState.charSize + renderState.annotationOffset + (ringN * renderState.annotationHeight)
 
-                svgElements.push(svg('line', {
-                    x1: line.bbox.topLeft.x + (start * renderState.charSize),
-                    y1: y + annotationHeight / 2,
-                    x2: line.bbox.topLeft.x + (end * renderState.charSize),
-                    y2: y + annotationHeight / 2,
-                    stroke: rangeColors[range.thing.uri],
-                    'stroke-width': annotationHeight + 'px'
-                }))
+                    svgElements.push(svg('line', {
+                        x1: line.bbox.topLeft.x + (start * renderState.charSize),
+                        y1: y + annotationHeight / 2,
+                        x2: line.bbox.topLeft.x + (end * renderState.charSize),
+                        y2: y + annotationHeight / 2,
+                        stroke: rangeColors[range.thing.uri],
+                        'stroke-width': annotationHeight + 'px'
+                    }))
+                } else {
+                    console.warn('intersection was null')
+                    console.dir(range)
+                    console.dir(seqRange)
+                }
 
             })
 
