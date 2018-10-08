@@ -48,8 +48,8 @@ export default class InspectComponentDialog extends TabbedDialog {
             sequenceView.readOnly = true
 
             this.setTabs([
-                new Tab('Visual', new InspectComponentThumbnailView(app, this.component) , false),
-                new Tab('Sequence', sequenceView, true)
+                new Tab('Visual', new InspectComponentThumbnailView(app, this.component) , true),
+                new Tab('Sequence', sequenceView, false)
             ])
 
         })
