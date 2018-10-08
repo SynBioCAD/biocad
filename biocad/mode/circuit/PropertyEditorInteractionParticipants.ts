@@ -34,7 +34,7 @@ export default class PropertyEditorInteractionParticipants extends PropertyEdito
         return h('tr', interaction.participations.map((participation:SXParticipation) => {
             return h('span', [
                 h('span', [
-                    renderComponentSelector()
+                    renderComponentSelector(participation)
                 ]),
                 h('span', [
                     renderRoleSelector(participation)
@@ -42,9 +42,12 @@ export default class PropertyEditorInteractionParticipants extends PropertyEdito
             ])
         }))
 
-        function renderComponentSelector() {
+        function renderComponentSelector(participation:SXParticipation) {
+            let participant = participation.participant
             return h('select', component.subComponents.map((subComponent) => {
-                return h('option', subComponent.displayName)
+                return h('option', {
+                    selected: participant && participant.uri === subComponent.uri
+                }, subComponent.displayName)
             }))
         }
 
@@ -52,11 +55,11 @@ export default class PropertyEditorInteractionParticipants extends PropertyEdito
         //
         function renderRoleSelector(participation) {
             return h('span.addremove', participation.roles.map((role) => {
-                return h('span.addremove-item', [
-                    h('span.addremove-remove.fa.fa-times-circle', {
+                return h('span.addremove-item', {
                         'ev-click': clickEvent(clickRemoveRole, { editor, participation, role })
-                    }),
-                    sbo[uriToTerm(role)].name
+                }, [
+                    h('span.addremove-remove.fa.fa-times-circle'),
+                    ' ' + sbo[uriToTerm(role)].name
                 ])
             }).concat([
                 h('span.addremove-add', {

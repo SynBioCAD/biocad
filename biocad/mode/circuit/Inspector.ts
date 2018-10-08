@@ -37,6 +37,7 @@ import PropertyAccessorURISet from './PropertyAccessorURISet';
 import { Prefixes } from 'bioterms'
 
 import so from 'data/sequence-ontology'
+import systemsBiologyOntology from 'data/systems-biology-ontology';
 
 const strands = [
     {
@@ -192,6 +193,8 @@ export default class Inspector extends View {
                 if(! (interaction instanceof SXInteraction)) {
                     throw new Error('???')
                 }
+
+                this.editors.push(new PropertyEditorTermSet(this.app as BiocadApp, 'Roles', new PropertyAccessorURISet(interaction.uri, Predicates.SBOLX.type, changeNonRecursive), Prefixes.sbo, systemsBiologyOntology, 'SBO:0000231'))
 
                 //this.editors.push(new PropertyEditorSiblingComponent('Participant', interaction.containingModule.uri, participation.uri, Predicates.SBOLX.participant))
                 this.editors.push(new PropertyEditorInteractionParticipants(this.app as BiocadApp, interaction.uri))
