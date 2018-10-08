@@ -116,8 +116,8 @@ export default class Layout extends Versioned {
 
         this.detachFromParent(depiction)
 
+        parent.addChild(depiction)
         depiction.parent = parent
-        parent.children.push(depiction)
 
     }
 
@@ -513,7 +513,7 @@ export default class Layout extends Versioned {
 
 
 
-        //this.verifyAcyclic()
+        this.verifyAcyclic()
 
         this.depthSort()
 
@@ -701,7 +701,9 @@ export default class Layout extends Versioned {
                 if(! (child instanceof SXSubComponent))
                     throw new Error('???')
 
-                this.syncComponentInstanceDepiction(preset, child as SXSubComponent, chain, cDepiction, nestDepth + 1, orientation)
+                let nextChain = chain.extend(child)
+
+                this.syncComponentInstanceDepiction(preset, child as SXSubComponent, nextChain, cDepiction, nestDepth + 1, orientation)
 
             }
 
@@ -1202,12 +1204,13 @@ export default class Layout extends Versioned {
 
         //this.dump()
 
-        for(let d of this.getRootDepictions())
+        for(let d of this.depictions)
             check(d, new Set<number>())
 
         function check(d, visited) {
             if(visited.has(d.uid)) {
-                throw new Error('Cyclic depiction graph: ' + d.debugName)
+                console.error(d.debugName + ' is an ancestor of itself')
+                throw new Error('Cyclic depiction graph')
             } else {
                 visited.add(d.uid)
             }

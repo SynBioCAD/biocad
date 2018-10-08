@@ -186,7 +186,7 @@ export default abstract class Depiction extends Versioned {
 
     calcDepth():number {
 
-        //console.log('calcDepth ' + this.debugName)
+        ///console.log('calcDepth ' + this.uid + ' ' + this.constructor.name + ' ' + (this.depictionOf ? this.depictionOf.uri : '?'))
 
         if(this.children.length === 0)
             return 1
@@ -224,6 +224,12 @@ export default abstract class Depiction extends Versioned {
     }
 
     addChild(child:Depiction) {
+
+        for(let p:Depiction|null = this; p; p = p.parent) {
+            if(p === child) {
+                throw new Error('addChild: ' + child.debugName + ' is an ancestor of ' + this.debugName)
+            }
+        }
         
         for(var i = 0; i < this.children.length; ++ i) {
             if(this.children[i] === child) {
@@ -265,6 +271,14 @@ export default abstract class Depiction extends Versioned {
     }
 
     get debugName() {
+        return this.safeGetDebugName(0)
+    }
+
+    private safeGetDebugName(recursionDepth:number)  {
+
+        if(recursionDepth > 5) {
+            return '<recursed too deep>'
+        }
 
         let s = this.constructor.name
 
@@ -273,13 +287,15 @@ export default abstract class Depiction extends Versioned {
 
         s += '#' + this.uid
 
-        if(this.parent)
-            s += ' <child of: ' + this.parent.debugName + '> '
+        if(this.parent) {
+            s += ' <child of: ' + this.parent.safeGetDebugName(recursionDepth + 1) + '> '
+        }
 
         if(!s)
             s = '<depiction>'
 
         return s
+
     }
 
 
