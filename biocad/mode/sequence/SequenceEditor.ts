@@ -114,16 +114,20 @@ export default class SequenceEditor extends View {
 
         svgElements.push(this.bodySubTree.render())
 
-        return h('div.sf-sequence-editor', {
-        }, [
-            this.toolbar.render(),
+        let elems:VNode[] = [
             h('div.sf-sequence-editor-svgs', [
                 svg('svg', {
                     'class': 'sf-sequence-editor-svg'
                 }, svgElements),
                 this.overlay.render()
             ])
-        ])
+        ]
+
+        if(this.showTopToolbar) {
+            elems.unshift( this.toolbar.render())
+        }
+        return h('div.sf-sequence-editor', {
+        }, elems)
     }
 
 
