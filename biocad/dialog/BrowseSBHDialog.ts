@@ -80,8 +80,12 @@ function clickResult(data) {
 
     var element = data.target
 
-    while(element.tagName.toLowerCase() !== 'tr')
+    while(!element.tagName || element.tagName.toLowerCase() !== 'tr') {
         element = element.parentNode
+
+        if(!element)
+            return
+    }
 
     const uri = element.dataset['uri']
 
