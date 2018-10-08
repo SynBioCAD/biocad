@@ -35,7 +35,7 @@ import DNDTwoBlackboxesMakeConstraint from "./dnd-action/DNDTwoBlackboxesMakeCon
 import DNDMoveInWorkspace from "./dnd-action/DNDMoveInWorkspace";
 import DNDEnterWorkspace from "./dnd-action/DNDEnterWorkspace";
 import DNDEnterParent from "./dnd-action/DNDEnterParent";
-import ABInteractionDepiction from "./ABInteractionDepiction";
+import InteractionDepiction from "./InteractionDepiction";
 import DepictionRef from "./DepictionRef";
 
 import copySBOL from 'biocad/util/copySBOL'

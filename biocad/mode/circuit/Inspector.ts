@@ -25,7 +25,7 @@ import PropertyEditorTermSet from './PropertyEditorTermSet';
 import PropertyEditorCombo from './PropertyEditorCombo';
 import PropertyEditorInteractionParticipants from './PropertyEditorInteractionParticipants'
 import LayoutEditorView from '../../cad/LayoutEditorView';
-import ABInteractionDepiction from '../../cad/ABInteractionDepiction';
+import InteractionDepiction from '../../cad/InteractionDepiction';
 import PropertyEditorSiblingComponent from './PropertyEditorSubComponent';
 import ComponentDepiction from '../../cad/ComponentDepiction';
 import BackboneDepiction from '../../cad/BackboneDepiction';
@@ -187,17 +187,21 @@ export default class Inspector extends View {
                 this.editors.push(new PropertyEditorCombo('Strand', new PropertyAccessorStrand(dOf.uri, changeRecursive), strands))
             }
             
-            if(depiction instanceof ABInteractionDepiction) {
+            if(depiction instanceof InteractionDepiction) {
                 let interaction = depiction.depictionOf
 
                 if(! (interaction instanceof SXInteraction)) {
                     throw new Error('???')
                 }
 
+                let changeInteraction = () => {
+                    depiction.touch()
+                }
+
                 this.editors.push(new PropertyEditorTermSet(this.app as BiocadApp, 'Roles', new PropertyAccessorURISet(interaction.uri, Predicates.SBOLX.type, changeNonRecursive), Prefixes.sbo, systemsBiologyOntology, 'SBO:0000231'))
 
                 //this.editors.push(new PropertyEditorSiblingComponent('Participant', interaction.containingModule.uri, participation.uri, Predicates.SBOLX.participant))
-                this.editors.push(new PropertyEditorInteractionParticipants(this.app as BiocadApp, interaction.uri))
+                this.editors.push(new PropertyEditorInteractionParticipants(this.app as BiocadApp, interaction.uri, changeInteraction))
             }
         }
 

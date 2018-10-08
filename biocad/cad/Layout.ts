@@ -33,7 +33,6 @@ import FeatureLocationDepiction from "biocad/cad/FeatureLocationDepiction";
 import assert from 'power-assert'
 import ComponentDisplayList from "biocad/cad/ComponentDisplayList";
 import { Watcher, SXIdentified, SXSequenceConstraint, SXLocation, SXOrientedLocation, SXInteraction } from "sbolgraph"
-import InteractionDepictionFactory from './InteractionDepictionFactory'
 import InteractionDepiction from './InteractionDepiction'
 import BiocadApp from 'biocad/BiocadApp';
 import App from 'jfw/App';
@@ -736,7 +735,7 @@ export default class Layout extends Versioned {
 
         } else {
 
-            iDepiction = InteractionDepictionFactory.fromInteraction(this, interaction, chain, parent)
+            iDepiction = new InteractionDepiction(this, interaction, chain, parent)
 
             if(iDepiction)
                 this.addDepiction(iDepiction, parent)

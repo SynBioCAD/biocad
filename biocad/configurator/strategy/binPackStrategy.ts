@@ -5,7 +5,7 @@ import GrowingPacker from './binPack'
 import assert from 'power-assert'
 
 import { Vec2, LinearRange } from 'jfw/geom'
-import ABInteractionDepiction from "biocad/cad/ABInteractionDepiction";
+import InteractionDepiction from "biocad/cad/InteractionDepiction";
 import LinearRangeSet from "jfw/geom/LinearRangeSet";
 import ComponentDepiction from "biocad/cad/ComponentDepiction";
 
@@ -17,7 +17,7 @@ const INTERACTION_OFFSET:number = 1
 class Group {
 
     depictions:Depiction[]
-    interactions:ABInteractionDepiction[]
+    interactions:InteractionDepiction[]
 
 
     // for binpack
@@ -47,13 +47,15 @@ class Group {
 
 export default function binPackStrategy(parent:Depiction|null, children:Depiction[], padding:number) {
 
-    const interactions:ABInteractionDepiction[] = children.filter(
-        (depiction:Depiction) => depiction instanceof ABInteractionDepiction) as ABInteractionDepiction[]
+    const interactions:InteractionDepiction[] = children.filter(
+        (depiction:Depiction) => depiction instanceof InteractionDepiction) as InteractionDepiction[]
 
     const groups:Set<Group> = new Set()
     const depictionUidToGroup:Map<number, Group> = new Map()
 
     for(let interaction of interactions) {
+
+        interaction.mapParticipationsToDepictions()
 
         var existingGroupA:Group|undefined = depictionUidToGroup.get(interaction.a.uid)
         var existingGroupB:Group|undefined = depictionUidToGroup.get(interaction.b.uid)
@@ -118,7 +120,7 @@ export default function binPackStrategy(parent:Depiction|null, children:Depictio
 
     for(let child of children) {
 
-        if(child instanceof ABInteractionDepiction)
+        if(child instanceof InteractionDepiction)
             continue
 
         if(depictionUidToGroup.get(child.uid) === undefined) {
@@ -162,7 +164,7 @@ export default function binPackStrategy(parent:Depiction|null, children:Depictio
 
 
 
-    let interactionToLayer:Map<ABInteractionDepiction, number> = new Map()
+    let interactionToLayer:Map<InteractionDepiction, number> = new Map()
 
 
     // interactions
@@ -365,7 +367,7 @@ export default function binPackStrategy(parent:Depiction|null, children:Depictio
 }
 
 
-function interactionPoints(interaction:ABInteractionDepiction) {
+function interactionPoints(interaction:InteractionDepiction) {
 
     let bboxA = interaction.a.boundingBox
     let bboxB = interaction.b.boundingBox

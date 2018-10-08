@@ -1,7 +1,7 @@
 
 import PropertyEditor from './PropertyEditor'
-import { SXParticipation } from 'sbolgraph'
-import { click as clickEvent } from 'jfw/event'
+import { SXParticipation, SXSubComponent } from 'sbolgraph'
+import { click as clickEvent, change as changeEvent } from 'jfw/event'
 import BiocadApp from 'biocad/BiocadApp'
 import OntologyTermSelectorDialog from 'biocad/dialog/OntologyTermSelectorDialog'
 import sbo from 'data/systems-biology-ontology'
@@ -12,11 +12,13 @@ export default class PropertyEditorInteractionParticipants extends PropertyEdito
 
     app:BiocadApp
     interactionURI:string
+    onChange:undefined|(()=>void)
 
-    constructor(app:BiocadApp, interactionURI:string) {
+    constructor(app:BiocadApp, interactionURI:string, onChange?:()=>void) {
         super()
         this.interactionURI = interactionURI
         this.app = app
+        this.onChange = onChange
     }
 
     render(graph:SBOLXGraph) {
@@ -44,9 +46,12 @@ export default class PropertyEditorInteractionParticipants extends PropertyEdito
 
         function renderComponentSelector(participation:SXParticipation) {
             let participant = participation.participant
-            return h('select', component.subComponents.map((subComponent) => {
+            return h('select', {
+                'ev-change': changeEvent(changeParticipant, { editor, participation })
+             },  component.subComponents.map((subComponent) => {
                 return h('option', {
-                    selected: participant && participant.uri === subComponent.uri
+                    selected: participant && participant.uri === subComponent.uri,
+                    value: subComponent.uri
                 }, subComponent.displayName)
             }))
         }
@@ -97,6 +102,53 @@ function clickRemoveRole(data) {
     participation.removeRole(role)
 
 }
+
+function changeParticipant(data) {
+
+    let editor:PropertyEditorInteractionParticipants = data.editor
+    let participation:SXParticipation = data.participation
+    let interaction = participation.interaction
+    let graph = participation.graph
+
+    if(!interaction) {
+        console.warn('interaction was null?')
+        return
+    }
+
+    let newParticipantURI = data.value
+    let newParticipant = graph.uriToFacade(newParticipantURI)
+
+    if(!newParticipant) {
+        console.warn('new participant was null?')
+        return
+    }
+
+    let otherParticipations = interaction.participations.filter((other) => {
+        return other.uri !== participation.uri
+    })
+
+    for(let other of otherParticipations) {
+
+        let otherParticipant = other.participant
+
+        if(!otherParticipant)
+            continue
+
+        if(otherParticipant.uri === newParticipantURI) {
+
+            // replace the other one with our old one
+
+            other.participant = participation.participant
+            break
+        }
+    }
+
+    participation.participant = newParticipant as SXSubComponent
+
+    if(editor.onChange)
+        editor.onChange()
+}
+
 
 function uriToTerm(uri:string):string {
     return uri.split('/').pop() as string

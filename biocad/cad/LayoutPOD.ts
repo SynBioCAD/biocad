@@ -3,7 +3,7 @@ import Layout from "biocad/cad/Layout";
 import Depiction from "biocad/cad/Depiction";
 import DepictionPOD from "biocad/cad/DepictionPOD";
 import { SBOLXGraph, SXInteraction } from "sbolgraph";
-import ABInteractionDepiction from "./ABInteractionDepiction";
+import InteractionDepiction from "./InteractionDepiction";
 
 export default class LayoutPOD {
 
@@ -45,12 +45,11 @@ export default class LayoutPOD {
         }
 
         for(let depiction of layout.depictions) {
-            if(depiction instanceof ABInteractionDepiction) {
+            if(depiction instanceof InteractionDepiction) {
                 let dOf = depiction._depictionOf
                 if(!dOf || ! (dOf instanceof SXInteraction)) {
                     throw new Error('bad depictionOf')
                 }
-                depiction.mapParticipationsToDepictions(dOf)
             }
         }
 

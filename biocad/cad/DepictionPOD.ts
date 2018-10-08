@@ -11,7 +11,7 @@ import { SXIdentified } from "sbolgraph"
 import Vec2 from "jfw/geom/Vec2";
 import BackboneDepiction from "biocad/cad/BackboneDepiction";
 import CircularBackboneDepiction from 'biocad/cad/CircularBackboneDepiction';
-import ABInteractionDepiction from './ABInteractionDepiction';
+import InteractionDepiction from './InteractionDepiction';
 import LabelledDepiction from 'biocad/cad/LabelledDepiction';
 import IdentifiedChain from 'biocad/IdentifiedChain';
 
@@ -49,9 +49,9 @@ export default class DepictionPOD {
 
             type = 'BackboneDepiction'
 
-        } else if(depiction instanceof ABInteractionDepiction) {
+        } else if(depiction instanceof InteractionDepiction) {
 
-            type = 'ABInteractionDepiction'
+            type = 'InteractionDepiction'
 
         } else {
 
@@ -117,7 +117,7 @@ export default class DepictionPOD {
 
             depiction = new BackboneDepiction(layout, parent, pod.uid)
 
-        } else if(pod['class'] === 'ABInteractionDepiction') {
+        } else if(pod['class'] === 'InteractionDepiction') {
 
             if(depictionOf === undefined)
                 throw new Error('abid must have a depictionOf')
@@ -126,7 +126,7 @@ export default class DepictionPOD {
                 throw new Error('abid must have a parent')
             }
 
-            depiction = new ABInteractionDepiction(layout, depictionOf as SXInteraction, IdentifiedChain.fromString(graph, pod.identifiedChain), parent, pod.uid)
+            depiction = new InteractionDepiction(layout, depictionOf as SXInteraction, IdentifiedChain.fromString(graph, pod.identifiedChain), parent, pod.uid)
 
         } else if(pod['class'] === 'FeatureLocationDepiction') {
 
