@@ -3,7 +3,7 @@ import { VNode } from 'jfw/vdom'
 
 import { Vec2 } from 'jfw/geom'
 import Layout from 'biocad/cad/Layout'
-import { SXIdentified, Watcher } from "sbolgraph"
+import { SXIdentified, Watcher, SXLocation, SXSubComponent } from "sbolgraph"
 import Rect from "jfw/geom/Rect";
 import Versioned from "jfw/Versioned";
 import RenderContext from './RenderContext'
@@ -307,6 +307,33 @@ export default abstract class Depiction extends Versioned {
             child.setFade(fade)
         }
 
+    }
+
+    // delete along with associated sbol
+    hardDelete() {
+
+        let dOf = this.depictionOf
+
+        if (!dOf)
+            return
+
+        let graph = dOf.graph
+
+        if(dOf instanceof SXSubComponent) {
+
+            let def = dOf.instanceOf
+
+            if(def) {
+
+                let instantiations = graph.getInstancesOfComponent(def)
+
+                if(instantiations.length === 1) {
+                    def.destroy()
+                }
+            }
+        }
+
+        dOf.destroy()
     }
 
 }

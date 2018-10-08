@@ -240,12 +240,9 @@ export default class Layout extends Versioned {
                 this.uriToDepictions.delete(depiction.depictionOf.uri)
             }
 
-            if(!depiction.identifiedChain) {
-                throw new Error('???')
+            if(depiction.identifiedChain) {
+                this.identifiedChainToDepiction.delete(depiction.identifiedChain.stringify())
             }
-
-            this.identifiedChainToDepiction.delete(depiction.identifiedChain.stringify())
-
         }
 
         this.uidToDepiction.delete(depiction.uid)

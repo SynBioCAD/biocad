@@ -1,6 +1,6 @@
 import  LayoutEditor  from 'biocad/cad/LayoutEditor';
 import { Specifiers } from 'bioterms';
-import { SXComponent } from "sbolgraph"
+import { SXComponent, SXSubComponent } from "sbolgraph"
 import { Predicates, Types } from 'bioterms';
 import BiocadApp from 'biocad/BiocadApp';
 
@@ -46,6 +46,8 @@ export default class LayoutEditorContextMenu extends ContextMenu {
                 innerDepiction = depiction.getLabelled()
             }
 
+            let dOf = innerDepiction.depictionOf
+
             items.push(new ContextMenuItem('span.fa.fa-align-justify', 'Edit Sequence', (pos:Vec2) => {
 
                 const seqMode:SequenceMode = app.modes.filter((mode) => mode instanceof SequenceMode)[0] as SequenceMode
@@ -87,7 +89,41 @@ export default class LayoutEditorContextMenu extends ContextMenu {
 
 
                 }))
+            }
 
+
+            if(dOf instanceof SXComponent) {
+                if(dOf.containedObjects.length > 0) {
+
+                    items.push(new ContextMenuItem('span.fa.fa-object-ungroup', 'Break apart Module', (pos:Vec2) => {
+
+                        layoutEditor.deselectAll()
+
+                        ;(dOf as SXComponent).dissolve()
+
+                        innerDepiction.touch()
+
+                        app.closeContextMenu()
+
+                    }))
+                }
+            } else if(dOf instanceof SXSubComponent) {
+
+                let def = dOf.instanceOf
+
+                if(def.containedObjects.length > 0) {
+
+                    items.push(new ContextMenuItem('span.fa.fa-object-ungroup', 'Break apart Module', (pos:Vec2) => {
+
+                        layoutEditor.deselectAll()
+
+                        ;(dOf as SXSubComponent).dissolve()
+                        innerDepiction.touch()
+
+                        app.closeContextMenu()
+
+                    }))
+                }
             }
 
             items.push(new ContextMenuItem('span.fa.fa-link', 'Create Interaction', (pos:Vec2) => {
@@ -155,6 +191,23 @@ export default class LayoutEditorContextMenu extends ContextMenu {
 
         }
         
+        if(depictions.length >= 1) {
+
+            items.push(new ContextMenuItem('span.fa.fa-trash', 'Delete', (pos: Vec2) => {
+
+                for(let d of depictions) {
+                    d.hardDelete()
+                }
+
+                layoutEditor.layout.syncAllDepictions(5)
+                layoutEditor.layout.configurate([])
+
+                app.closeContextMenu()
+
+            }))
+
+        }
+
         super(pos, items)
 
     }
