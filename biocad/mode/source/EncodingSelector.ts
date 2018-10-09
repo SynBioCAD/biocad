@@ -6,7 +6,9 @@ import { click as clickEvent } from 'jfw/event'
 
 export enum Encoding {
     SBOLX,
-    SBOL2
+    SBOLXGraph,
+    SBOL2,
+    SBOL2Graph
 }
 
 let encodingNames:string[] =
