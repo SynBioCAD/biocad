@@ -5358,7 +5358,7 @@ readers do not read off random characters that represent icons */
   height: 80px;
   background-image: url('../img/synform.svg');
   background-position: right 10px bottom 10px;
-  background-size: auto calc(80px * 0.6);
+  background-size: auto calc(48px);
   background-repeat: no-repeat;
 }
 .jfw-topbar-container {
@@ -5957,7 +5957,7 @@ div.sf-sequence-view-toolbar-bottom > div {
   padding-right: 30px;
 }
 .jfw-main-view.sf-sequence-view {
-  height: calc(100% -  48px - 80px);
+  height: calc(100% -  -32px);
 }
 .jfw-main-view.sf-sequence-view .sf-sequence-editor {
   width: 100%;
@@ -6148,7 +6148,7 @@ button[data-balloon] {
   border-radius: 4px;
   color: #fff;
   content: attr(data-balloon);
-  padding: 0.5em 1em;
+  padding: .5em 1em;
   position: absolute;
   white-space: nowrap;
   z-index: 10;
@@ -6533,7 +6533,7 @@ div.sf-circuit-view-toolbar {
   padding-left: 10px;
 }
 .sf-caret {
-  animation: blinker 1s linear infinite;
+  animation: blinker 1.0s linear infinite;
 }
 @keyframes blinker {
   50% {
@@ -6706,6 +6706,7 @@ table.sf-inspector tr.sf-inspector-twolines-value {
   font-weight: bold;
   display: inline;
   cursor: pointer;
+  white-space: nowrap;
 }
 .addremove-remove {
   display: none;
@@ -6724,4 +6725,10 @@ table.sf-inspector tr.sf-inspector-twolines-value {
 .addremove-add:hover {
   background-color: #00FF00;
   cursor: pointer;
+}
+.sf-inspector-interactionparticipant {
+  background-color: #00a4e4;
+  border-radius: 4px;
+  color: white;
+  padding: 4px;
 }
