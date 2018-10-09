@@ -15,6 +15,7 @@ export default class InteractionDepiction extends Depiction {
 
     a:Depiction
     b:Depiction
+    ambiguousDirection:boolean
 
     private waypoints:Vec2[]
 
@@ -73,7 +74,9 @@ export default class InteractionDepiction extends Depiction {
             }
 
             if(i == 2) {
-                throw new Error('cant map participation roles to anything i can work with')
+                console.warn('cant map participation roles to anything i can work with')
+                this.ambiguousDirection = true
+                break
             }
 
             // try the other way around
@@ -119,18 +122,20 @@ export default class InteractionDepiction extends Depiction {
 
         let absOffset = this.absoluteOffset
 
-        var arrowhead = ArrowheadType.Fork
+        var arrowhead = ArrowheadType.None
 
-        let dOf = this.depictionOf
+        if(!this.ambiguousDirection) {
+            let dOf = this.depictionOf
 
-        if(dOf instanceof SXInteraction) {
+            if(dOf instanceof SXInteraction) {
 
-            let types = dOf.types
+                let types = dOf.types
 
-            if(types.indexOf(Specifiers.SBO.Inhibition) !== -1) {
-                arrowhead = ArrowheadType.Line
-            } else if(types.indexOf(Specifiers.SBO.Stimulation) !== -1) {
-                arrowhead = ArrowheadType.Fork
+                if(types.indexOf(Specifiers.SBO.Inhibition) !== -1) {
+                    arrowhead = ArrowheadType.Line
+                } else if(types.indexOf(Specifiers.SBO.Stimulation) !== -1) {
+                    arrowhead = ArrowheadType.Fork
+                }
             }
         }
 

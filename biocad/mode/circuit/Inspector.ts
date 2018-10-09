@@ -196,6 +196,7 @@ export default class Inspector extends View {
 
                 let changeInteraction = () => {
                     depiction.touch()
+                    this.update()
                 }
 
                 this.editors.push(new PropertyEditorTermSet(this.app as BiocadApp, 'Roles', new PropertyAccessorURISet(interaction.uri, Predicates.SBOLX.type, changeNonRecursive), Prefixes.sbo, systemsBiologyOntology, 'SBO:0000231'))

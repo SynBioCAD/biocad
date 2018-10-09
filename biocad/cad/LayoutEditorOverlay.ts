@@ -157,7 +157,8 @@ export default class LayoutEditorOverlay extends View {
         let bboxSize = bbox.size()
 
         if(! (depiction instanceof LabelledDepiction)) {
-            throw new Error('???')
+            // interaction for instance, cannot be resized
+            return
         }
 
         let labelled = depiction.getLabelled()

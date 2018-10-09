@@ -33,20 +33,27 @@ export default class PropertyEditorInteractionParticipants extends PropertyEdito
 
         let editor = this
 
-        return h('tr', interaction.participations.map((participation:SXParticipation) => {
-            return h('span', [
-                h('span', [
-                    renderComponentSelector(participation)
-                ]),
-                h('span', [
-                    renderRoleSelector(participation)
-                ]),
+        return interaction.participations.map((participation:SXParticipation) => {
+            return h('tr', [
+                h('td', {
+                    colSpan: 2
+                }, [
+                    h('div.sf-inspector-interactionparticipant', [
+                        h('span', [
+                            renderComponentSelector(participation)
+                        ]),
+                        h('br'),
+                        h('span', [
+                            renderRoleSelector(participation)
+                        ])
+                    ])
+                ])
             ])
-        }))
+        })
 
         function renderComponentSelector(participation:SXParticipation) {
             let participant = participation.participant
-            return h('select', {
+            return h('select.jfw-select', {
                 'ev-change': changeEvent(changeParticipant, { editor, participation })
              },  component.subComponents.map((subComponent) => {
                 return h('option', {
@@ -89,6 +96,9 @@ async function clickChooseRole(data) {
 
     if(term !== null) {
         participation.addRole(term)
+
+        if(editor.onChange)
+            editor.onChange()
     }
 
 }
@@ -100,6 +110,10 @@ function clickRemoveRole(data) {
     let role:string = data.role
 
     participation.removeRole(role)
+
+    if (editor.onChange)
+        editor.onChange()
+
 
 }
 
