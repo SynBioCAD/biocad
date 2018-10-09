@@ -1,4 +1,4 @@
-import { SXIdentified } from "sbolgraph";
+import { SXIdentified, SXComponent, SXSubComponent, SXLocation, SXSequenceFeature } from "sbolgraph";
 
 import Layout from 'biocad/cad/Layout';
 
@@ -201,16 +201,42 @@ export default class LabelDepiction extends Depiction {
 
         const transform = Matrix.translation(this.absoluteOffset.multiply(this.layout.gridSize))
 
+        let dOf = labelFor.depictionOf
 
-        let name = labelFor.depictionOf.displayName
+        let name = dOf.displayName
 
         let italic = false
 
-        // TODO italic CDSs too
-
-        if(labelFor.depictionOf.getBoolProperty('http://biocad.io/terms/untitled') === true) {
+        if(dOf.getBoolProperty('http://biocad.io/terms/untitled') === true) {
             name = 'Untitled part'
             italic = true
+        }
+
+        if(dOf instanceof SXComponent) {
+            if(dOf.hasRole(Specifiers.SBOLX.Role.CDS)) {
+                italic = true
+            }
+        }
+
+        if(dOf instanceof SXSubComponent) {
+            let def = dOf.instanceOf
+            if(def.hasRole(Specifiers.SBOLX.Role.CDS)) {
+                italic = true
+            }
+        }
+
+        if(dOf instanceof SXLocation) {
+            let container = dOf.containingObject
+            if(container instanceof SXSequenceFeature) {
+                if (container.hasRole(Specifiers.SBOLX.Role.CDS)) {
+                    italic = true
+                }
+            }
+            if(container instanceof SXSubComponent) {
+                if (container.hasRole(Specifiers.SBOLX.Role.CDS)) {
+                    italic = true
+                }
+            }
         }
 
         if(this.fade === Fade.Full) {
