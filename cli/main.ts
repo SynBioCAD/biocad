@@ -4,22 +4,37 @@ import ImageRenderer from 'biocad/cad/ImageRenderer'
 import { SBOLXGraph } from 'sbolgraph'
 import { Vec2 } from 'jfw/geom'
 
-let fs = require('fs')
+import fs = require('fs')
 
 main()
 
 async function main() {
 
-    for(let file of fs.readdirSync('testfiles')) {
+    let f = process.argv.slice(2).join(' ')
 
-        if(!file.endsWith('.xml') || file.endsWith('_sbolx.xml'))
-            continue
+    if(f) {
 
-        let path = 'testfiles/' + file
+        await doFile(f)
+
+    } else {
+
+        for(let file of fs.readdirSync('testfiles')) {
+
+            if(!file.endsWith('.xml') || file.endsWith('_sbolx.xml'))
+                continue
+
+            let path = 'testfiles/' + file
+
+            await doFile(path)
+        }
+
+    }
+
+    async function doFile(path) {
 
         let graph = await SBOLXGraph.loadString(fs.readFileSync(path) + '', 'application/rdf+xml')
 
-        fs.writeFileSync('testfiles/' + file + '_sbolx.xml', graph.serializeXML())
+        //fs.writeFileSync('testfiles/' + file + '_sbolx.xml', graph.serializeXML())
 
         let layout = new Layout(graph)
 
@@ -31,7 +46,7 @@ async function main() {
 
         let svg = renderer.renderToSVGString()
 
-        fs.writeFileSync('testfiles/' + file + '.svg', svg)
+        fs.writeFileSync(path + '.svg', svg)
     }
 
 }

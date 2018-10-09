@@ -8,6 +8,7 @@ import { Vec2, LinearRange } from 'jfw/geom'
 import InteractionDepiction from "biocad/cad/InteractionDepiction";
 import LinearRangeSet from "jfw/geom/LinearRangeSet";
 import ComponentDepiction from "biocad/cad/ComponentDepiction";
+import BackboneDepiction from '../../cad/BackboneDepiction';
 
 
 const INTERACTION_HEIGHT:number = 1
@@ -62,8 +63,18 @@ export default function binPackStrategy(parent:Depiction|null, children:Depictio
             continue
         }
 
-        var existingGroupA:Group|undefined = depictionUidToGroup.get(interaction.a.uid)
-        var existingGroupB:Group|undefined = depictionUidToGroup.get(interaction.b.uid)
+        let effectiveA = interaction.a
+        let effectiveB = interaction.b
+
+        if(effectiveA.parent instanceof BackboneDepiction) {
+            effectiveA = effectiveA.parent
+        }
+        if(effectiveB.parent instanceof BackboneDepiction) {
+            effectiveB = effectiveB.parent
+        }
+
+        var existingGroupA:Group|undefined = depictionUidToGroup.get(effectiveA.uid)
+        var existingGroupB:Group|undefined = depictionUidToGroup.get(effectiveB.uid)
 
         if(existingGroupA !== undefined && existingGroupB !== undefined) {
 
@@ -90,8 +101,8 @@ export default function binPackStrategy(parent:Depiction|null, children:Depictio
 
             // The A side of the interaction already has a group but B doesn't
 
-            existingGroupA.depictions.push(interaction.b)
-            depictionUidToGroup.set(interaction.b.uid, existingGroupA)
+            existingGroupA.depictions.push(effectiveB)
+            depictionUidToGroup.set(effectiveB.uid, existingGroupA)
             existingGroupA.interactions.push(interaction)
 
             continue
@@ -101,8 +112,8 @@ export default function binPackStrategy(parent:Depiction|null, children:Depictio
 
             // The B side of the interaction already has a group but A doesn't
 
-            existingGroupB.depictions.push(interaction.a)
-            depictionUidToGroup.set(interaction.a.uid, existingGroupB)
+            existingGroupB.depictions.push(effectiveA)
+            depictionUidToGroup.set(effectiveA.uid, existingGroupB)
             existingGroupB.interactions.push(interaction)
 
             continue
@@ -111,12 +122,16 @@ export default function binPackStrategy(parent:Depiction|null, children:Depictio
         // Neither side of the interaction already has a group
 
         const newGroup:Group = new Group()
-        newGroup.depictions.push(interaction.a)
-        newGroup.depictions.push(interaction.b)
+
+        newGroup.depictions.push(effectiveA)
+
+        if(effectiveA !== effectiveB)
+            newGroup.depictions.push(effectiveB)
+
         newGroup.interactions.push(interaction)
 
-        depictionUidToGroup.set(interaction.a.uid, newGroup)
-        depictionUidToGroup.set(interaction.b.uid, newGroup)
+        depictionUidToGroup.set(effectiveA.uid, newGroup)
+        depictionUidToGroup.set(effectiveB.uid, newGroup)
 
         groups.add(newGroup)
 
@@ -140,6 +155,8 @@ export default function binPackStrategy(parent:Depiction|null, children:Depictio
 
 
 
+    console.log('binPackStrategy: created ' + groups.size + ' group(s) for ' + (parent ? parent.debugName : '<anonymous>'))
+
 
 
 
@@ -154,6 +171,9 @@ export default function binPackStrategy(parent:Depiction|null, children:Depictio
         var maxHeight = -99999
 
         for(let child of group.depictions) {
+
+            console.log('Child ' + child.debugName + ' has size ' + child.size)
+            console.log('Placing at ' + offset)
 
             child.offset = offset
 
@@ -182,7 +202,6 @@ export default function binPackStrategy(parent:Depiction|null, children:Depictio
             
 
             // TODO the -1 and a +1 are a hack because we don't have intersectsOrTouchesRange
-            // fix it you lazy shit
             const range:LinearRange = new LinearRange(a.x - 1, b.x + 1)
 
 
@@ -377,6 +396,13 @@ function interactionPoints(interaction:InteractionDepiction) {
     let bboxA = interaction.a.boundingBox
     let bboxB = interaction.b.boundingBox
 
+    if(interaction.a.parent instanceof BackboneDepiction) {
+        bboxA.topLeft = bboxA.topLeft.add(interaction.a.parent.offset)
+    }
+    if(interaction.b.parent instanceof BackboneDepiction) {
+        bboxB.topLeft = bboxB.topLeft.add(interaction.b.parent.offset)
+    }
+
     var xA, xB
 
     if (bboxA.center().x > bboxB.center().x) {
@@ -413,8 +439,8 @@ function interactionPoints(interaction:InteractionDepiction) {
     }
 
 
-    var yA = interaction.a.boundingBox.topLeft.y - INTERACTION_OFFSET
-    var yB = interaction.b.boundingBox.topLeft.y - INTERACTION_OFFSET
+    var yA = bboxA.topLeft.y - INTERACTION_OFFSET
+    var yB = bboxB.topLeft.y - INTERACTION_OFFSET
     //var yA = bboxA.topLeft.y
     //var yB = bboxB.topLeft.y
 
