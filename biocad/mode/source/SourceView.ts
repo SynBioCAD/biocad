@@ -5,7 +5,7 @@ import { h, VNode } from 'jfw/vdom'
 import BiocadApp from "biocad/BiocadApp";
 import LayoutPOD from "biocad/cad/LayoutPOD";
 import EncodingSelector, { Encoding } from './EncodingSelector';
-import { convertToSBOL2 } from 'sbolgraph'
+import { SBOL2Graph } from 'sbolgraph';
 
 export default class SourceView extends View {
 
@@ -24,7 +24,7 @@ export default class SourceView extends View {
         }
     }
 
-    updateSerialization() {
+    async updateSerialization() {
 
         const app:BiocadApp = this.app as BiocadApp
 
@@ -35,7 +35,8 @@ export default class SourceView extends View {
                 this.source = graph.serializeXML()
                 break
             case Encoding.SBOL2:
-                let sbol2Graph = convertToSBOL2(graph)
+                let sbol2Graph = new SBOL2Graph()
+                await sbol2Graph.loadString(graph.serializeXML())
                 this.source = sbol2Graph.serializeXML()
                 break
         }

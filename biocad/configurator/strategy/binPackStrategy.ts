@@ -57,6 +57,11 @@ export default function binPackStrategy(parent:Depiction|null, children:Depictio
 
         interaction.mapParticipationsToDepictions()
 
+        if(!interaction.a || !interaction.b) {
+            // Can't deal with this just yet
+            continue
+        }
+
         var existingGroupA:Group|undefined = depictionUidToGroup.get(interaction.a.uid)
         var existingGroupB:Group|undefined = depictionUidToGroup.get(interaction.b.uid)
 

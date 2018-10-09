@@ -113,6 +113,10 @@ export default class InteractionDepiction extends Depiction {
 
     render(renderContext:RenderContext):VNode {
 
+        if(this.waypoints.length === 0) {
+            return svg('g')
+        }
+
         let absOffset = this.absoluteOffset
 
         var arrowhead = ArrowheadType.Fork
