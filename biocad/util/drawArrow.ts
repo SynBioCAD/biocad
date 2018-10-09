@@ -3,9 +3,11 @@ import { Vec2, Line } from 'jfw/geom'
 import { svg } from 'jfw/vdom'
 
 export enum ArrowheadType {
+    None,
     Fork,
     FilledTriangle,
-    UnfilledTriangle
+    UnfilledTriangle,
+    Line
 }
 
 
@@ -46,6 +48,9 @@ export default function drawArrow(waypoints:Vec2[], head:ArrowheadType, color:st
     )
 
     switch(head) {
+        case ArrowheadType.None:
+            break
+
         case ArrowheadType.Fork:
 
             d.push('M' + finalPoint.toPathString())
@@ -54,6 +59,19 @@ export default function drawArrow(waypoints:Vec2[], head:ArrowheadType, color:st
             d.push('L' + forkEndBottom.toPathString())
 
             break
+
+        case ArrowheadType.Line:
+
+            let headLineStart = finalPoint.add(
+                invLineDirection.rightPerpendicular.multiplyScalar(arrowheadWidth * 0.5)
+            )
+            let headLineEnd = finalPoint.add(
+                invLineDirection.leftPerpendicular.multiplyScalar(arrowheadWidth * 0.5)
+            )
+            d.push('M' + headLineStart.toPathString())
+            d.push('L' + headLineEnd.toPathString())
+            break
+
         default:
             throw new Error('unknown arrowhead type')
     }

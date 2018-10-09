@@ -120,6 +120,20 @@ export default class InteractionDepiction extends Depiction {
         let absOffset = this.absoluteOffset
 
         var arrowhead = ArrowheadType.Fork
+
+        let dOf = this.depictionOf
+
+        if(dOf instanceof SXInteraction) {
+
+            let types = dOf.types
+
+            if(types.indexOf(Specifiers.SBO.Inhibition) !== -1) {
+                arrowhead = ArrowheadType.Line
+            } else if(types.indexOf(Specifiers.SBO.Stimulation) !== -1) {
+                arrowhead = ArrowheadType.Fork
+            }
+        }
+
         var color = 'green'
 
         /*
