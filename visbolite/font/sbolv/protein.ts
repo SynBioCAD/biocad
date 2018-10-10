@@ -44,7 +44,7 @@ function renderGlyph(renderOpts) {
 
     ].join('');
  
-    var fill = renderOpts.color || 'blue'
+    var fill = renderOpts.color || '#ff66cc'
 
     if(renderOpts.fill === false) {
 

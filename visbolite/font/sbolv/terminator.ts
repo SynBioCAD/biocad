@@ -35,7 +35,7 @@ function renderGlyph(renderOpts) {
 
         svg('path', {
             'd': path,
-            'stroke': renderOpts.color || '#c23b22',
+            'stroke': renderOpts.color || '#ff5050',
             'stroke-width': renderOpts.thickness || '5px',
             'stroke-linejoin': 'round',
             'fill': 'none',
