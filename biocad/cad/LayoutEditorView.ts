@@ -65,6 +65,25 @@ export default abstract class LayoutEditorView extends View {
 
         elements.push(this.layoutEditor.render())
 
+
+        elements.push(
+            h('div', {
+                style: {
+                    position: 'fixed',
+                    right: '8px',
+                    bottom: '8px',
+                    'z-index': '99999'
+                }
+            }, [
+                h('a', {
+                    style: {
+                        color: 'white',
+                    },
+                    href: 'https://github.com/ngbiocad/biocad/issues'
+                }, 'Report an Issue')
+            ])
+        )
+
         return h('div.jfw-flow-grow.jfw-flow-ttb', {
         }, elements)
     }
