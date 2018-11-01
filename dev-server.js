@@ -25,7 +25,7 @@ var fs = require('fs')
 
 compiler.watch({
     aggregateTimeout: 300,
-    poll: true,
+    //poll: true,
     ignored: /node_modules/
 }, function(err, stats) {
 
