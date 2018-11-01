@@ -17,8 +17,8 @@ const INTERACTION_OFFSET:number = 1
 
 class Group {
 
-    depictions:Depiction[]
-    interactions:InteractionDepiction[]
+    depictions:Set<Depiction>
+    interactions:Set<InteractionDepiction>
 
 
     // for binpack
@@ -30,8 +30,8 @@ class Group {
     fixed:boolean
     
     constructor() {
-        this.depictions = []
-        this.interactions = []
+        this.depictions = new Set()
+        this.interactions = new Set()
         this.interactionLayers = new Map()
         this.w = 0
         this.h = 0
@@ -39,14 +39,88 @@ class Group {
     }
 
     mergeFrom(otherGroup:Group) {
-        // TODO
+
+        for(let d of otherGroup.depictions)
+            this.depictions.add(d)
+
+        for(let i of otherGroup.interactions)
+            this.interactions.add(i)
     }
 
     interactionLayers:Map<number, LinearRangeSet>
-
+    numInteractionsAbove:number
+    numInteractionsBelow:number
 }
 
 export default function binPackStrategy(parent:Depiction|null, children:Depiction[], padding:number) {
+
+    let groups = createInteractionGroups(parent, children)
+
+    horizontallyTileGroups(groups, padding)
+
+    const packer = new GrowingPacker()
+
+    let interactionToLayer = createABInteractionLayers(groups)
+
+    // padding
+    for(let group of groups) {
+        group.h += padding
+    }
+
+    // binpack all groups
+
+    groups.sort((a, b) => {
+        return Math.max(b.w, b.h) - Math.max(a.w, a.h)
+    })
+
+    packer.fit(groups)
+
+    if(parent) {
+        parent.size = Vec2.fromXY(padding + packer.root.w, padding + packer.root.h).max(parent.minSize)
+    }
+
+    for(let group of groups) {
+
+        let numAbove = 0
+        let numBelow = 0
+
+        for(let layerN of group.interactionLayers.keys()) {
+
+            if(layerN < 0) {
+                ++ numAbove
+            }
+
+        }
+
+        group.numInteractionsAbove = numAbove
+        group.numInteractionsBelow = 0
+    }
+
+    for(let group of groups) {
+
+        assert(group.fit)
+
+        let groupOffset = Vec2.fromXY(padding + group.fit.x, padding + group.fit.y)
+
+        groupOffset = groupOffset.add(Vec2.fromXY(0, INTERACTION_HEIGHT * group.numInteractionsAbove))
+
+        if(group.numInteractionsAbove > 0) {
+            groupOffset = groupOffset.add(Vec2.fromXY(0, INTERACTION_OFFSET))
+        }
+
+        for(let child of group.depictions) {
+
+            if(!child.offsetExplicit)
+                child.offset = groupOffset.add(child.offset)
+
+        }
+
+    }
+
+    routeABInteractions(groups, interactionToLayer, padding)
+}
+
+function createInteractionGroups(parent:Depiction|null, children:Depiction[]):Group[] {
 
     const interactions:InteractionDepiction[] = children.filter(
         (depiction:Depiction) => depiction instanceof InteractionDepiction) as InteractionDepiction[]
@@ -54,90 +128,88 @@ export default function binPackStrategy(parent:Depiction|null, children:Depictio
     const groups:Set<Group> = new Set()
     const depictionUidToGroup:Map<number, Group> = new Map()
 
+    // Any two things that interact with each other must be in the same group
     for(let interaction of interactions) {
 
         interaction.mapParticipationsToDepictions()
 
-        if(!interaction.a || !interaction.b) {
-            // Can't deal with this just yet
-            continue
-        }
+        // if the depiction is in a backbone, it's the backbone we need to position
+        // (we can't move the backbone's children because they are laid out as part of the
+        // backbone and don't belong to us)
+        let effectiveParticipantDepictions = interaction.participantDepictions.map((d) => {
+            if(d.parent instanceof BackboneDepiction) {
+                return d.parent
+            } else {
+                return d
+            }
+        })
 
-        let effectiveA = interaction.a
-        let effectiveB = interaction.b
 
-        if(effectiveA.parent instanceof BackboneDepiction) {
-            effectiveA = effectiveA.parent
-        }
-        if(effectiveB.parent instanceof BackboneDepiction) {
-            effectiveB = effectiveB.parent
-        }
+        // are any of the depictions in this interaction already in groups?
+        //
+        let participantGroups:Group[] = []
 
-        var existingGroupA:Group|undefined = depictionUidToGroup.get(effectiveA.uid)
-        var existingGroupB:Group|undefined = depictionUidToGroup.get(effectiveB.uid)
+        for(let participantDepiction of effectiveParticipantDepictions) {
 
-        if(existingGroupA !== undefined && existingGroupB !== undefined) {
+            let effectiveDepiction = participantDepiction
 
-            if(existingGroupA === existingGroupB) {
-                continue
+            if(effectiveDepiction.parent instanceof BackboneDepiction) {
+                effectiveDepiction = effectiveDepiction.parent
             }
 
-            // Both sides of the interaction already have groups.
+            let existingGroup:Group|undefined = depictionUidToGroup.get(effectiveDepiction.uid)
 
-            groups.delete(existingGroupB)
+            if(existingGroup && participantGroups.indexOf(existingGroup) === -1) {
+                participantGroups.push(existingGroup)
+            }
+        }
 
-            existingGroupA.mergeFrom(existingGroupB)
+        if(participantGroups.length === 0) {
 
-            for(let depiction of existingGroupB.depictions) {
-                depictionUidToGroup.set(depiction.uid, existingGroupA as Group)
+            // None of our participants has a group yet. let's make one and place
+            // all of our participants in it.
+            //
+            let newGroup:Group = new Group()
+
+            for (let participantDepiction of effectiveParticipantDepictions) {
+                newGroup.depictions.add(participantDepiction)
+                depictionUidToGroup.set(participantDepiction.uid, newGroup)
             }
 
-            existingGroupA.interactions.push(interaction)
+            newGroup.interactions.add(interaction)
 
-            continue
+            groups.add(newGroup)
+
+        } else {
+
+            // One or more of our participants already had a group.
+            // 1) merge all the groups together
+            // 2) put all of our participants in it
+            //
+            let destGroup = participantGroups[0]
+
+            for(let n:number = 1; n < participantGroups.length; ++ n) {
+
+                let otherGroup = participantGroups[n]
+
+                for(let d of otherGroup.depictions)
+                    depictionUidToGroup.set(d.uid, destGroup)
+
+                destGroup.mergeFrom(otherGroup)
+
+                for (let participantDepiction of effectiveParticipantDepictions) {
+                    destGroup.depictions.add(participantDepiction)
+                }
+            }
         }
-
-        if(existingGroupA !== undefined) {
-
-            // The A side of the interaction already has a group but B doesn't
-
-            existingGroupA.depictions.push(effectiveB)
-            depictionUidToGroup.set(effectiveB.uid, existingGroupA)
-            existingGroupA.interactions.push(interaction)
-
-            continue
-        }
-
-        if(existingGroupB !== undefined) {
-
-            // The B side of the interaction already has a group but A doesn't
-
-            existingGroupB.depictions.push(effectiveA)
-            depictionUidToGroup.set(effectiveA.uid, existingGroupB)
-            existingGroupB.interactions.push(interaction)
-
-            continue
-        }
-
-        // Neither side of the interaction already has a group
-
-        const newGroup:Group = new Group()
-
-        newGroup.depictions.push(effectiveA)
-
-        if(effectiveA !== effectiveB)
-            newGroup.depictions.push(effectiveB)
-
-        newGroup.interactions.push(interaction)
-
-        depictionUidToGroup.set(effectiveA.uid, newGroup)
-        depictionUidToGroup.set(effectiveB.uid, newGroup)
-
-        groups.add(newGroup)
 
     }
 
 
+    // finally, there may be depictions that didn't get placed into a group
+    // because they weren't involved in any interactions. put each of these
+    // into its own group.
+    //
     for(let child of children) {
 
         if(child instanceof InteractionDepiction)
@@ -146,22 +218,19 @@ export default function binPackStrategy(parent:Depiction|null, children:Depictio
         if(depictionUidToGroup.get(child.uid) === undefined) {
 
             const orphanGroup = new Group()
-            orphanGroup.depictions.push(child)
+            orphanGroup.depictions.add(child)
             groups.add(orphanGroup)
 
         }
 
     }
 
-
-
     console.log('binPackStrategy: created ' + groups.size + ' group(s) for ' + (parent ? parent.debugName : '<anonymous>'))
 
+    return Array.from(groups)
+}
 
-
-
-
-    const packer = new GrowingPacker()
+function horizontallyTileGroups(groups:Group[], padding:number) {
 
     for(let group of groups) {
 
@@ -186,19 +255,25 @@ export default function binPackStrategy(parent:Depiction|null, children:Depictio
         group.w = offset.x
         group.h = maxHeight
     }
+}
 
 
+// Make space for the layers of A->B interactions in each group
+//
+function createABInteractionLayers(groups:Group[]):Map<InteractionDepiction, number> {
 
     let interactionToLayer:Map<InteractionDepiction, number> = new Map()
 
-
-    // interactions
-    //
     for(let group of groups) {
 
         for(let interaction of group.interactions) {
 
-            let { a, b } = interactionPoints(interaction)
+            // only interested in interactions with exactly 2 participants
+            //
+            if(interaction.participantDepictions.length !== 2)
+                continue
+
+            let { a, b } = horizPoints(interaction.participantDepictions[0], interaction.participantDepictions[1])
             
 
             // TODO the -1 and a +1 are a hack because we don't have intersectsOrTouchesRange
@@ -207,8 +282,8 @@ export default function binPackStrategy(parent:Depiction|null, children:Depictio
 
             var layerDir:number
 
-            if(interaction.a instanceof ComponentDepiction &&
-                    interaction.a.orientation === Orientation.Reverse) {
+            if(interaction.participantDepictions[0] instanceof ComponentDepiction &&
+                    (interaction.participantDepictions[0] as ComponentDepiction).orientation === Orientation.Reverse) {
 
                 layerDir = 1
 
@@ -265,59 +340,21 @@ export default function binPackStrategy(parent:Depiction|null, children:Depictio
         if(numBelow > 0) {
             group.h += INTERACTION_OFFSET
         }
-
-
     }
 
-    // padding
+    return interactionToLayer
+}
+
+function routeABInteractions(groups:Group[], interactionToLayer:Map<InteractionDepiction,number>, padding:number) {
 
     for(let group of groups) {
-        group.h += padding
-    }
-
-    var groupsArr:Array<Group> = Array.from(groups)
-
-    groupsArr.sort((a, b) => {
-        return Math.max(b.w, b.h) - Math.max(a.w, a.h)
-    })
-
-    packer.fit(groupsArr)
-
-
-    if(parent) {
-        parent.size = Vec2.fromXY(padding + packer.root.w, padding + packer.root.h).max(parent.minSize)
-    }
-
-    for(let group of groupsArr) {
-
-        assert(group.fit)
-
-        var offset = Vec2.fromXY(padding + group.fit.x, padding + group.fit.y)
-
-        let numAbove = 0
-        let numBelow = 0
-
-        for(let layerN of group.interactionLayers.keys()) {
-
-            if(layerN < 0) {
-                ++ numAbove
-                offset = offset.add(Vec2.fromXY(0, INTERACTION_HEIGHT))
-            }
-
-        }
-
-        if(numAbove > 0) {
-            offset = offset.add(Vec2.fromXY(0, INTERACTION_OFFSET))
-        }
-
-        for(let child of group.depictions) {
-
-            if(!child.offsetExplicit)
-                child.offset = offset.add(child.offset)
-
-        }
 
         for(let interaction of group.interactions) {
+
+            // only interested in interactions with exactly 2 participants
+            //
+            if(interaction.participantDepictions.length !== 2)
+                continue
 
             interaction.offset = Vec2.fromXY(0, 0) // setWaypoints will update this
 
@@ -327,7 +364,7 @@ export default function binPackStrategy(parent:Depiction|null, children:Depictio
                 throw new Error('???')
             }
 
-            let { a, b } = interactionPoints(interaction)
+            let { a, b } = horizPoints(interaction.participantDepictions[0], interaction.participantDepictions[1])
 
             if(layerN < 0) {
 
@@ -340,7 +377,7 @@ export default function binPackStrategy(parent:Depiction|null, children:Depictio
 
             } else {
 
-                let y = numBelow - layerN
+                let y = group.numInteractionsBelow - layerN
 
                 interaction.setWaypoints([
                     Vec2.fromXY(a.x, group.h - y - INTERACTION_HEIGHT + 0.2),
@@ -351,56 +388,20 @@ export default function binPackStrategy(parent:Depiction|null, children:Depictio
 
 
             }
-
-
-
         }
-
-        /*
-        for(let [ interaction, layerN ] of interactionToLayer) {
-
-            let { a, b } = interactionPoints(interaction)
-
-            if(layerN < 0) {
-
-                interaction.setWaypoints([
-                    Vec2.fromXY(a.x, a.y),
-                    Vec2.fromXY(a.x, a.y - INTERACTION_HEIGHT * (- layerN)),
-                    Vec2.fromXY(b.x, b.y - INTERACTION_HEIGHT * (- layerN)),
-                    Vec2.fromXY(b.x, b.y),
-                ])
-
-            } else {
-
-                let y = numBelow - layerN
-
-                interaction.setWaypoints([
-                    Vec2.fromXY(a.x, group.h - y - INTERACTION_HEIGHT + 0.2),
-                    Vec2.fromXY(a.x, group.h - y),
-                    Vec2.fromXY(b.x, group.h - y),
-                    Vec2.fromXY(b.x, group.h - y - INTERACTION_HEIGHT + 0.2),
-                ])
-
-
-            }
-
-        }*/
-
     }
-
 }
 
+function horizPoints(a:Depiction, b:Depiction) {
 
-function interactionPoints(interaction:InteractionDepiction) {
+    let bboxA = a.boundingBox
+    let bboxB = b.boundingBox
 
-    let bboxA = interaction.a.boundingBox
-    let bboxB = interaction.b.boundingBox
-
-    if(interaction.a.parent instanceof BackboneDepiction) {
-        bboxA.topLeft = bboxA.topLeft.add(interaction.a.parent.offset)
+    if(a.parent instanceof BackboneDepiction) {
+        bboxA.topLeft = bboxA.topLeft.add(a.parent.offset)
     }
-    if(interaction.b.parent instanceof BackboneDepiction) {
-        bboxB.topLeft = bboxB.topLeft.add(interaction.b.parent.offset)
+    if(b.parent instanceof BackboneDepiction) {
+        bboxB.topLeft = bboxB.topLeft.add(b.parent.offset)
     }
 
     var xA, xB
@@ -409,13 +410,13 @@ function interactionPoints(interaction:InteractionDepiction) {
 
         // A right of B
 
-        if(interaction.a.opacity === Opacity.Blackbox) {
+        if(a.opacity === Opacity.Blackbox) {
             xA = bboxA.topLeft.x + (bboxA.width() / 2)
         } else {
             xA = bboxA.topLeft.x + (bboxA.width() / 4) * 1
         }
 
-        if(interaction.b.opacity === Opacity.Blackbox) {
+        if(b.opacity === Opacity.Blackbox) {
             xB = bboxB.topLeft.x + (bboxB.width() / 2)
         } else {
             xB = bboxB.topLeft.x + (bboxB.width() / 4) * 3
@@ -425,13 +426,13 @@ function interactionPoints(interaction:InteractionDepiction) {
 
         // A left of B
 
-        if(interaction.a.opacity === Opacity.Blackbox) {
+        if(a.opacity === Opacity.Blackbox) {
             xA = bboxA.topLeft.x + (bboxA.width() / 2)
         } else {
             xA = bboxA.topLeft.x + (bboxA.width() / 4) * 3
         }
 
-        if(interaction.b.opacity === Opacity.Blackbox) {
+        if(b.opacity === Opacity.Blackbox) {
             xB = bboxB.topLeft.x + (bboxB.width() / 2)
         } else {
             xB = bboxB.topLeft.x + (bboxB.width() / 4) * 1
