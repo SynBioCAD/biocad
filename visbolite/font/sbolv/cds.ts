@@ -32,7 +32,7 @@ function renderGlyph(renderOpts) {
 
     ].join('');
  
-    var fill = renderOpts.color || 'rgb(119, 158, 203)'
+    var fill = renderOpts.color || '#779ECB'
 
     if(renderOpts.fill === false) {
 
