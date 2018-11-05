@@ -100,6 +100,12 @@ export default class LayoutEditor extends View {
             return
         }
 
+        console.warn('Performing undo')
+        console.warn('Old state')
+        console.dir(JSON.stringify(LayoutPOD.serialize(this.layout)))
+        console.warn('New state')
+        console.dir(JSON.stringify(this.undoLevels[this.undoLevels.length - 1]))
+
         this.layout = LayoutPOD.deserialize(this.layout.graph, this.undoLevels[this.undoLevels.length - 1])
         this.undoLevels.pop()
         this.update()

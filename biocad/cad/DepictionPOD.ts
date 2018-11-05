@@ -28,6 +28,7 @@ export default class DepictionPOD {
             type = 'ComponentDepiction'
 
             additionalProps['orientation'] = (depiction as ComponentDepiction).orientation
+            additionalProps['backbonePlacement'] = (depiction as ComponentDepiction).backbonePlacement
 
         } else if(depiction instanceof LabelDepiction) {
 
@@ -48,6 +49,8 @@ export default class DepictionPOD {
         } else if(depiction instanceof BackboneDepiction) {
 
             type = 'BackboneDepiction'
+            
+            additionalProps['backboneY'] = (depiction as BackboneDepiction).backboneY
 
         } else if(depiction instanceof InteractionDepiction) {
 
@@ -88,6 +91,7 @@ export default class DepictionPOD {
             depiction = new ComponentDepiction(layout, parent, pod.uid)
 
             ;(depiction as ComponentDepiction).orientation = pod.orientation
+            ;(depiction as ComponentDepiction).backbonePlacement = pod.backbonePlacement
 
         } else if(pod['class'] === 'LabelledDepiction') {
 
@@ -116,6 +120,8 @@ export default class DepictionPOD {
             }
 
             depiction = new BackboneDepiction(layout, parent, pod.uid)
+
+            ;(depiction as BackboneDepiction).backboneY = pod.backboneY
 
         } else if(pod['class'] === 'InteractionDepiction') {
 
