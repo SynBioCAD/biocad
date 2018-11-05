@@ -172,7 +172,18 @@ export default class Inspector extends View {
                 }
             }
 
-            this.editors.push(new PropertyEditorOneline('Name', new PropertyAccessorString(dOf.uri, Predicates.Dcterms.title, changeNonRecursive)))
+            function changeName() {
+
+                if(effectiveComponent) {
+                    effectiveComponent.deleteProperty('http://biocad.io/terms/untitled')
+                } else if(dOf) {
+                    dOf.deleteProperty('http://biocad.io/terms/untitled')
+                }
+
+                changeNonRecursive()
+            }
+
+            this.editors.push(new PropertyEditorOneline('Name', new PropertyAccessorString(dOf.uri, Predicates.Dcterms.title, changeName)))
             this.editors.push(new PropertyEditorOneline('Identifier', new PropertyAccessorString(dOf.uri, Predicates.SBOLX.id, changeNonRecursive)))
 
             if(effectiveComponent) {
