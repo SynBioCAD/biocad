@@ -26,6 +26,19 @@ export default class IdentifiedChain {
 
     }
 
+    containsIdentified(identified:SXIdentified):boolean {
+        return this.containsURI(identified.uri)
+    }
+
+    containsURI(uri:string):boolean {
+        for(let id of this.identifieds) {
+            if(id.uri === uri)
+                return true
+        }
+        return false
+    }
+
+
     stringify():string {
         return this.identifieds.map((id) => id.uri).join(';')
     }

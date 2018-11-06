@@ -14,7 +14,8 @@ export default class DNDEnterParent extends DND {
         sourceLayout:Layout, sourceGraph:SBOLXGraph,
         targetLayout:Layout, targetGraph:SBOLXGraph,
         sourceDepiction:Depiction,
-        targetBBox:Rect):DNDResult|null {
+        targetBBox:Rect,
+        ignoreURIs:string[]):DNDResult|null {
 
             let intersectingDs = targetLayout.getDepictionsIntersectingRect(targetBBox, false)
 
@@ -25,6 +26,16 @@ export default class DNDEnterParent extends DND {
             }
 
             for(let intersecting of intersectingDs) {
+
+                let ignored = false
+                for(let uri of ignoreURIs) {
+                    if(intersecting.identifiedChain && intersecting.identifiedChain.containsURI(uri)) {
+                        ignored = true
+                        break
+                    }
+                }
+                if(ignored)
+                    continue
 
                 if(intersecting.isDescendentOf(sourceDepiction)) {
                     continue // Can't become a parent of our child

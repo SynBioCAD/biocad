@@ -375,6 +375,14 @@ export default class Layout extends Versioned {
 
     syncAllDepictions(detailLevel:number): void {
 
+        let graph:SBOLXGraph = this.graph
+        let rootComponents:Array<SXComponent> = graph.rootComponents
+
+        this.syncDepictions(detailLevel, rootComponents.map((c) => c.uri))
+    }
+
+    syncDepictions(detailLevel:number, URIs:string[]): void {
+
         console.time('syncAllDepictions')
 
         ++ Layout.nextStamp
@@ -388,12 +396,21 @@ export default class Layout extends Versioned {
 
         const preset:DetailPreset = levelToPreset(detailLevel)
 
-        const rootComponents:Array<SXComponent> = graph.rootComponents
+        let components:Array<SXComponent> = []
+
+        for(let uri of URIs) {
+
+            let c = graph.uriToFacade(uri)
+
+            if(c instanceof SXComponent) {
+                components.push(c)
+            }
+        }
 
         //console.log('Layout: I have ' + rootComponents.length + ' root component(s)')
         //console.dir(rootComponents)
 
-        for(let component of rootComponents) {
+        for(let component of components) {
 
             let chain = new IdentifiedChain()
             chain = chain.extend(component)

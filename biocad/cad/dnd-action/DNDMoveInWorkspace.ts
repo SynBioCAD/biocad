@@ -19,7 +19,8 @@ export default class DNDMoveInWorkspace extends DND {
         sourceLayout:Layout, sourceGraph:SBOLXGraph,
         targetLayout:Layout, targetGraph:SBOLXGraph,
         sourceDepiction:Depiction,
-        targetBBox:Rect):DNDResult|null {
+        targetBBox:Rect,
+        ignoreURIs:string[]):DNDResult|null {
 
             if(sourceLayout !== targetLayout)
                 return null

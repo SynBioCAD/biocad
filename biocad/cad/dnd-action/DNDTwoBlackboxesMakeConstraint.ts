@@ -16,7 +16,8 @@ export default class DNDTwoBlackboxesMakeConstraint extends DND {
         sourceLayout:Layout, sourceGraph:SBOLXGraph,
         targetLayout:Layout, targetGraph:SBOLXGraph,
         sourceDepiction:Depiction,
-        targetBBox:Rect):DNDResult|null {
+        targetBBox:Rect,
+        ignoreURIs:string[]):DNDResult|null {
 
         if(! (sourceDepiction instanceof LabelledDepiction))
             return null
@@ -39,6 +40,16 @@ export default class DNDTwoBlackboxesMakeConstraint extends DND {
                 continue
 
             if(! (intersecting instanceof LabelledDepiction))
+                continue
+
+            let ignored = false
+            for (let uri of ignoreURIs) {
+                if (intersecting.identifiedChain && intersecting.identifiedChain.containsURI(uri)) {
+                    ignored = true
+                    break
+                }
+            }
+            if (ignored)
                 continue
 
             let otherLabelled = intersecting.getLabelled()

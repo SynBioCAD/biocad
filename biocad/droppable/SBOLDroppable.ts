@@ -17,21 +17,27 @@ import MarginInstruction from "../cad/layout-instruction/MarginInstruction";
 export default class SBOLDroppable extends Droppable {
 
     graph:SBOLXGraph
-    uri:string
-
+    topLevelURIs:string[]|undefined
+    ignoreForDndOps:string[]|undefined
 
     layout:Layout
     thumb:LayoutThumbnail
 
-    constructor(app:BiocadApp, graph:SBOLXGraph, uri:string) {
+    constructor(app:BiocadApp, graph:SBOLXGraph, topLevelURIs?:string[], ignoreForDndOps?:string[]) {
 
         super()
 
         this.graph = graph
-        this.uri = uri
+        this.topLevelURIs = topLevelURIs
+        this.ignoreForDndOps = ignoreForDndOps
 
         this.layout = new Layout(graph)
-        this.layout.syncAllDepictions(5)
+
+        if(this.topLevelURIs)
+            this.layout.syncDepictions(5, this.topLevelURIs)
+        else
+            this.layout.syncAllDepictions(5)
+
         this.layout.configurate([
             new MarginInstruction(0, 0, 0, 0)
         ])
@@ -52,6 +58,7 @@ export default class SBOLDroppable extends Droppable {
 
     }
 
+    /*
     finalizeDrop(newGraph:SBOLXGraph, depiction:Depiction):void {
 
         newGraph.addAll(this.graph)
@@ -104,5 +111,5 @@ export default class SBOLDroppable extends Droppable {
         }
 
 
-    }
+    }*/
 }

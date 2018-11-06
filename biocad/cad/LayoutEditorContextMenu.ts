@@ -15,6 +15,7 @@ import Depiction, { Opacity } from "biocad/cad/Depiction";
 import SequenceMode from 'biocad/mode/sequence/SequenceMode'
 import ComponentDepiction from 'biocad/cad/ComponentDepiction';
 import LabelledDepiction from './LabelledDepiction';
+import SBOLDroppable from 'biocad/droppable/SBOLDroppable';
 
 export default class LayoutEditorContextMenu extends ContextMenu {
 
@@ -130,6 +131,20 @@ export default class LayoutEditorContextMenu extends ContextMenu {
 
                 layoutEditor.overlay.proposingConnectionFrom = depiction
                 layoutEditor.overlay.update()
+
+                app.closeContextMenu()
+
+            }))
+
+            items.push(new ContextMenuItem('span.fa.fa-clone', 'Duplicate', (pos:Vec2) => {
+
+                if(dOf instanceof SXComponent) {
+
+                    let newGraph:SBOLXGraph = app.graph.clone()
+
+                    let droppable:SBOLDroppable = new SBOLDroppable(app, newGraph, [ dOf.uri ], [ dOf.uri ])
+                    app.dropOverlay.startDropping(droppable)
+                }
 
                 app.closeContextMenu()
 
