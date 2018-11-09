@@ -21,6 +21,8 @@ import { Dialog } from "jfw/ui/dialog";
 import { App } from "jfw";
 import { SXSequence } from "sbolgraph"
 
+import getReverseComplementSequenceString = require('ve-sequence-utils/src/getReverseComplementSequenceString')
+
 export default class SequenceEditor extends View {
 
     component:SXComponent|null
@@ -141,6 +143,31 @@ export default class SequenceEditor extends View {
 
     getSelection() {
         return this.overlay.getSelection()
+    }
+
+    getSelectionElements():string|null {
+
+        let selection = this.getSelection()
+
+        if(selection === null)
+            return null
+
+        let sequence = this.sequence
+
+        if(sequence === null)
+            return null
+
+        let elements = sequence.elements
+
+        if(elements === undefined)
+            return null
+
+        if(selection.end < selection.start) {
+            return getReverseComplementSequenceString(elements.substring(selection.end, selection.start))
+        } else {
+            return elements.substring(selection.start, selection.end)
+        }
+
     }
 
     /**** functions below are called by the overlay
