@@ -86,29 +86,33 @@ export default class LayoutEditor extends View {
 
     pushUndoLevel():void {
 
-        const serialized = LayoutPOD.serialize(this.layout)
+        console.time('push undo level')
 
-        this.undoLevels.push(serialized)
+        let layout = LayoutPOD.serialize(this.layout)
+        let graph = this.layout.graph.serializeXML() // TODO: use a faster serialization?
+
+        this.undoLevels.push({ layout, graph })
 
         ;(this.app as BiocadApp).saveState()
+
+        console.timeEnd('push undo level')
     }
 
-    popUndoLevel():void {
+    async popUndoLevel() {
 
         if(this.undoLevels.length === 0) {
             console.warn('nothing to undo')
             return
         }
 
-        console.warn('Performing undo')
-        console.warn('Old state')
-        console.dir(JSON.stringify(LayoutPOD.serialize(this.layout)))
-        console.warn('New state')
-        console.dir(JSON.stringify(this.undoLevels[this.undoLevels.length - 1]))
+        let oldState = this.undoLevels[this.undoLevels.length - 1]
 
-        this.layout = LayoutPOD.deserialize(this.layout.graph, this.undoLevels[this.undoLevels.length - 1])
+        let newGraph = await SBOLXGraph.loadString(oldState.graph, 'application/rdf+xml')
+
+        let layout = LayoutPOD.deserialize(newGraph, oldState.layout)
         this.undoLevels.pop()
-        this.update()
+
+        this.immediatelyReplaceLayout(layout)
     }
 
     render():VNode {
