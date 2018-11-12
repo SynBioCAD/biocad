@@ -93,7 +93,7 @@ export default class DNDTwoBlackboxesMakeConstraint extends DND {
 
                 // Joining with a component. wrap it and use createAfter
 
-                let wrapper:SXComponent = theirDOf.wrap()
+                let wrapper:SXComponent = theirDOf.wrap('untitled')
                 chain = chain.extend(wrapper)
 
                 wrapper.setBoolProperty('http://biocad.io/terms/untitled', true)

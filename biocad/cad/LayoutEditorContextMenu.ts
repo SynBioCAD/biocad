@@ -178,7 +178,7 @@ export default class LayoutEditorContextMenu extends ContextMenu {
 
                 if(dOf.length > 0) {
 
-                    let wrapper = dOf[0].wrap()
+                    let wrapper = dOf[0].wrap('untitled')
 
                     for(let i = 1; i < dOf.length; ++ i) {
                         wrapper.createSubComponent(dOf[i])
