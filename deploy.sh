@@ -4,7 +4,7 @@ rm -rf deploy
 
 git clone git@github.com:ngbiocad/biocad.git -b gh-pages deploy
 
-node ./node_modules/webpack/bin/webpack.js 
+node ./node_modules/webpack/bin/webpack.js --config webpack_browser.config.js
 
 rm -rf deploy/*
 echo "biocad.io" >> deploy/CNAME
