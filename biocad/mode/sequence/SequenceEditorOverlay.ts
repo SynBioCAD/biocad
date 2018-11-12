@@ -309,8 +309,11 @@ export default class SequenceEditorOverlay extends View {
 
     onMousemove(offset) {
 
-        const renderState = this.sequenceEditor.currentRenderState
 
+        this.mousePos = offset
+
+
+        const renderState = this.sequenceEditor.currentRenderState
 
         renderState.annoHoverUris.clear()
 
@@ -339,17 +342,14 @@ export default class SequenceEditorOverlay extends View {
         }
 
 
+        this.hoverCaretPos = null
 
         const elementOffset = renderState.offsetToElementOffset(offset, true)
 
         if(elementOffset !== -1) {
 
-            this.mousePos = offset
-
             if(elementOffset >= 0) {
                 this.hoverCaretPos = elementOffset
-            } else {
-                this.hoverCaretPos = null
             }
 
             this.sequenceEditor.onHoverPosChanged(this.hoverCaretPos)
