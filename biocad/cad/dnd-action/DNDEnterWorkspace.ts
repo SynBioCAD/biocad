@@ -20,7 +20,8 @@ export default class DNDEnterWorkspace extends DND {
         sourceLayout:Layout, sourceGraph:SBOLXGraph,
         targetLayout:Layout, targetGraph:SBOLXGraph,
         sourceDepiction:Depiction,
-        targetBBox:Rect):DNDResult|null {
+        targetBBox:Rect,
+        ignoreURIs:string[]):DNDResult|null {
 
             if(sourceLayout !== targetLayout)
                 return null
@@ -60,18 +61,27 @@ export default class DNDEnterWorkspace extends DND {
                 throw new Error('???')
             }
 
-            // become a depictionof the definition
-            newLayout.changeDepictionOf(dInNewLayout, dOf.instanceOf, new IdentifiedChain().extend(dOf))
+            // Currently, we're a depictionOf a subcomponent.
+            // As we're moving to the workspace area, we need to become a depictionOf the component itself.
+            // Rather than letting syncAllDepictions create the new depiction, change the existing depiction
+            // manually using changeDepictionOf.
+            // This is necesary because:
+            //  - if this component is instantiated as a subcomponent elsewhere, sync won't bother making a
+            //    depiction of the definition
+            //  - we want to preserve the dragging state of this depiction. if a new depiction was created it
+            //    would no longer be being dragged.
+            //
+            newLayout.changeDepictionOf(dInNewLayout, dOf.instanceOf, new IdentifiedChain().extend(dOf.instanceOf))
 
             dOf.destroy()
 
             console.log('targetbbox topLeft ' + targetBBox.topLeft + ' for ' + dInNewLayout.uid)
 
-            dInNewLayout.offsetExplicit = true
-            dInNewLayout.offset = targetBBox.topLeft
-
             newLayout.syncAllDepictions(5)
             newLayout.configurate([])
+
+            dInNewLayout.offsetExplicit = true
+            dInNewLayout.offset = parent.absoluteOffset.add(targetBBox.topLeft)
 
             return { newLayout, newGraph }
         }

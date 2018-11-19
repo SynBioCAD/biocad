@@ -12,7 +12,7 @@
 
 var MemoryFS = require("memory-fs")
 var webpack = require('webpack')
-var config = require('./webpack.config')
+var config = require('./webpack_browser.config')
 var compiler = webpack(config)
 var express = require('express')
 var mime = require('mime')
@@ -25,7 +25,7 @@ var fs = require('fs')
 
 compiler.watch({
     aggregateTimeout: 300,
-    poll: true,
+    //poll: true,
     ignored: /node_modules/
 }, function(err, stats) {
 

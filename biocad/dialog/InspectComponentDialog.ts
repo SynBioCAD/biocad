@@ -84,7 +84,7 @@ function clickInsert(data) {
 
     const app:BiocadApp = dialog.app as BiocadApp
 
-    const droppable:SBOLDroppable = new SBOLDroppable(app, component.graph, component.uri)
+    const droppable:SBOLDroppable = new SBOLDroppable(app, component.graph, [ component.uri ])
 
     app.dropOverlay.startDropping(droppable)
 

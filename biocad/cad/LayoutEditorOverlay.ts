@@ -448,7 +448,7 @@ export default class LayoutEditorOverlay extends View {
 
             const droppable:SBOLDroppable = _droppable as SBOLDroppable
 
-            let newTopLevels = copySBOL(droppable.graph, app.graph, 'http://fooprefix/')
+            let newTopLevels = copySBOL(droppable.graph, app.graph, 'http://fooprefix/', droppable.topLevelURIs)
 
             // TODO
             const newUri:string = newTopLevels[0].uri
@@ -505,7 +505,8 @@ export default class LayoutEditorOverlay extends View {
                         this.layoutEditor.layout,
                         this.layoutEditor.layout.graph, 
                         draggingDepiction,
-                        newRect)
+                        newRect,
+                        [])
 
                 if(result) {
 
@@ -579,7 +580,8 @@ export default class LayoutEditorOverlay extends View {
                     this.layoutEditor.layout,
                     this.layoutEditor.layout.graph, 
                     _droppable.layout.getRootDepictions()[0],
-                    rect)
+                    rect,
+                    droppable.ignoreForDndOps || [])
 
             if(result) {
 

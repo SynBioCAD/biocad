@@ -168,37 +168,39 @@ export default class Layout extends Versioned {
 
     changeDepictionOf(depiction:Depiction, newDepictionOf:SXIdentified, newChain:IdentifiedChain) {
 
-        if(depiction.depictionOf !== undefined) {
+        if(depiction._depictionOf === undefined)
+            throw new Error('???')
 
-            const utd:Depiction[]|undefined = this.uriToDepictions.get(depiction.depictionOf.uri)
+        const utd:Depiction[]|undefined = this.uriToDepictions.get(depiction._depictionOf.uri)
 
-            if(utd !== undefined) {
-                for(var i = 0; i < utd.length; ++ i) {
-                    if(utd[i] === depiction) {
-                        utd.splice(i, 1)
-                        break
-                    }
-                }
-                if (utd.length === 0) {
-                    this.uriToDepictions.delete(depiction.depictionOf.uri)
+        if(utd !== undefined) {
+            for(var i = 0; i < utd.length; ++ i) {
+                if(utd[i] === depiction) {
+                    utd.splice(i, 1)
+                    break
                 }
             }
-
-            if(!depiction.identifiedChain) {
-                throw new Error('???')
+            if (utd.length === 0) {
+                this.uriToDepictions.delete(depiction._depictionOf.uri)
             }
-
-            this.identifiedChainToDepiction.delete(depiction.identifiedChain.stringify())
         }
 
+        if(!depiction.identifiedChain) {
+            throw new Error('???')
+        }
 
-        const utd = this.uriToDepictions.get(newDepictionOf.uri)
+        this.identifiedChainToDepiction.delete(depiction.identifiedChain.stringify())
 
-        if (!utd)
+
+        const newUtd = this.uriToDepictions.get(newDepictionOf.uri)
+
+        if (!newUtd)
             this.uriToDepictions.set(newDepictionOf.uri, [depiction])
         else
-            utd.push(depiction)
+            newUtd.push(depiction)
 
+
+        this.identifiedChainToDepiction.set(newChain.stringify(), depiction)
 
         depiction._depictionOf = newDepictionOf
 
@@ -375,6 +377,14 @@ export default class Layout extends Versioned {
 
     syncAllDepictions(detailLevel:number): void {
 
+        let graph:SBOLXGraph = this.graph
+        let rootComponents:Array<SXComponent> = graph.rootComponents
+
+        this.syncDepictions(detailLevel, rootComponents.map((c) => c.uri))
+    }
+
+    syncDepictions(detailLevel:number, URIs:string[]): void {
+
         console.time('syncAllDepictions')
 
         ++ Layout.nextStamp
@@ -388,12 +398,21 @@ export default class Layout extends Versioned {
 
         const preset:DetailPreset = levelToPreset(detailLevel)
 
-        const rootComponents:Array<SXComponent> = graph.rootComponents
+        let components:Array<SXComponent> = []
+
+        for(let uri of URIs) {
+
+            let c = graph.uriToFacade(uri)
+
+            if(c instanceof SXComponent) {
+                components.push(c)
+            }
+        }
 
         //console.log('Layout: I have ' + rootComponents.length + ' root component(s)')
         //console.dir(rootComponents)
 
-        for(let component of rootComponents) {
+        for(let component of components) {
 
             let chain = new IdentifiedChain()
             chain = chain.extend(component)
@@ -406,7 +425,7 @@ export default class Layout extends Versioned {
 
             if(depiction !== undefined) {
 
-                //console.log(component.uri + ' found in depictionMap')
+                console.log(component.uri + ' found in depictionMap; uid ' + depiction.uid)
 
                 assert(depiction instanceof LabelledDepiction)
 
@@ -428,7 +447,7 @@ export default class Layout extends Versioned {
 
             } else {
 
-                //console.log(component.uri + ' not found in depictionMap')
+                console.log(component.uri + ' not found in depictionMap')
 
                 const labelled:LabelledDepiction = new LabelledDepiction(this, component, chain, undefined)
 

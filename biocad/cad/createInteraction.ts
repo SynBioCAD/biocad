@@ -17,7 +17,7 @@ export default function createInteraction(layoutEditor:LayoutEditor, from:Depict
     if(fOf instanceof SXComponent) {
         if(tOf instanceof SXComponent) {
             // from component to component
-            wrapper = fOf.wrap()
+            wrapper = fOf.wrap('untitled')
             wrapper.setBoolProperty('http://biocad.io/terms/untitled', true)
             wrapper.createSubComponent(tOf)
             let scA = wrapper.subComponents[0]

@@ -135,7 +135,7 @@ function mousedownPart(data:any) {
 
     //console.log('uri is ' + uri)
 
-    const droppable:SBOLDroppable = new SBOLDroppable(app, graph, component.uri)
+    const droppable:SBOLDroppable = new SBOLDroppable(app, graph, [ component.uri ])
     app.dropOverlay.setFinalizeEvent(FinalizeEvent.MouseUp)
     app.dropOverlay.startDropping(droppable)
 
