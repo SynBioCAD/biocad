@@ -7,7 +7,8 @@ export enum ArrowheadType {
     Fork,
     FilledTriangle,
     UnfilledTriangle,
-    Line
+    Line,
+    Diamond
 }
 
 
@@ -47,9 +48,18 @@ export default function drawArrow(waypoints:Vec2[], head:ArrowheadType, color:st
         invLineDirection.leftPerpendicular.multiplyScalar(arrowheadWidth * 0.5)
     )
 
+    let diamondTop = arrowheadOrigin.add(
+        invLineDirection.multiplyScalar(arrowheadHeight)
+    )
+
     switch(head) {
         case ArrowheadType.None:
-            break
+            return svg('path', {
+                d: d.join(''),
+                'stroke': color,
+                'stroke-width': thickness,
+                'fill': 'none'
+            })
 
         case ArrowheadType.Fork:
 
@@ -58,7 +68,12 @@ export default function drawArrow(waypoints:Vec2[], head:ArrowheadType, color:st
             d.push('M' + finalPoint.toPathString())
             d.push('L' + forkEndBottom.toPathString())
 
-            break
+            return svg('path', {
+                d: d.join(''),
+                'stroke': color,
+                'stroke-width': thickness,
+                'fill': 'none'
+            })
 
         case ArrowheadType.Line:
 
@@ -70,17 +85,53 @@ export default function drawArrow(waypoints:Vec2[], head:ArrowheadType, color:st
             )
             d.push('M' + headLineStart.toPathString())
             d.push('L' + headLineEnd.toPathString())
-            break
+
+            return svg('path', {
+                d: d.join(''),
+                'stroke': color,
+                'stroke-width': thickness,
+                'fill': 'none'
+            })
+
+        case ArrowheadType.FilledTriangle:
+
+            return svg('g', [
+                svg('path', {
+                    d: d.join(''),
+                    'stroke': color,
+                    'stroke-width': thickness,
+                    'fill': 'none'
+                }),
+                svg('path', {
+                    d: 'M' + finalPoint.toPathString() +
+                        'L' + forkEndTop.toPathString() +
+                        'L' + forkEndBottom.toPathString() +
+                        'Z',
+                    'fill': color
+                })
+            ])
+
+        case ArrowheadType.Diamond:
+
+            return svg('g', [
+                svg('path', {
+                    d: d.join(''),
+                    'stroke': color,
+                    'stroke-width': thickness,
+                    'fill': 'none'
+                }),
+                svg('path', {
+                    d: 'M' + finalPoint.toPathString() +
+                        'L' + forkEndTop.toPathString() +
+                        'L' + diamondTop.toPathString() +
+                        'L' + forkEndBottom.toPathString() +
+                        'Z',
+                    'fill': color
+                })
+            ])
 
         default:
             throw new Error('unknown arrowhead type')
     }
-
-    return svg('path', {
-        d: d.join(''),
-        'stroke': color,
-        'stroke-width': thickness,
-        'fill': 'none'
-    })
 
 }

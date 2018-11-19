@@ -62,6 +62,8 @@ export default class InteractionDepiction extends Depiction {
                     break
                 } else if (a.hasRole(Specifiers.SBO.Stimulator) && b.hasRole(Specifiers.SBO.Promoter)) {
                     break
+                } else if (a.hasRole(Specifiers.SBO.Modifier)) {
+                    break
                 } else if (b.hasRole(Specifiers.SBO.Product)) {
                     break
                 }
@@ -156,6 +158,10 @@ export default class InteractionDepiction extends Depiction {
                         arrowhead = ArrowheadType.Line
                     } else if(types.indexOf(Specifiers.SBO.Stimulation) !== -1) {
                         arrowhead = ArrowheadType.Fork
+                    } else if(types.indexOf(Specifiers.SBO.Control) !== -1) {
+                        arrowhead = ArrowheadType.Diamond
+                    } else if(types.indexOf(Specifiers.SBO.GeneticProduction) !== -1) {
+                        arrowhead = ArrowheadType.FilledTriangle
                     }
                 }
             }

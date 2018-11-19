@@ -56,6 +56,12 @@ export default function binPackStrategy(parent:Depiction|null, children:Depictio
 
     let groups = createInteractionGroups(parent, children)
 
+    console.log('binPackStrategy: Created ' + groups.length + ' interaction group(s)')
+
+    for(let group of groups) {
+        console.log('Group has ' + group.depictions.size + ' depictions and ' + group.interactions.size + ' interactions')
+    }
+
     horizontallyTileGroups(groups, padding)
 
     const packer = new GrowingPacker()
@@ -131,6 +137,8 @@ function createInteractionGroups(parent:Depiction|null, children:Depiction[]):Gr
     // Any two things that interact with each other must be in the same group
     for(let interaction of interactions) {
 
+        console.log('binPackStrategy: Processing interaction, ' + groups.size + ' groups so far')
+
         interaction.mapParticipationsToDepictions()
 
         // if the depiction is in a backbone, it's the backbone we need to position
@@ -151,13 +159,7 @@ function createInteractionGroups(parent:Depiction|null, children:Depiction[]):Gr
 
         for(let participantDepiction of effectiveParticipantDepictions) {
 
-            let effectiveDepiction = participantDepiction
-
-            if(effectiveDepiction.parent instanceof BackboneDepiction) {
-                effectiveDepiction = effectiveDepiction.parent
-            }
-
-            let existingGroup:Group|undefined = depictionUidToGroup.get(effectiveDepiction.uid)
+            let existingGroup:Group|undefined = depictionUidToGroup.get(participantDepiction.uid)
 
             if(existingGroup && participantGroups.indexOf(existingGroup) === -1) {
                 participantGroups.push(existingGroup)
@@ -183,7 +185,7 @@ function createInteractionGroups(parent:Depiction|null, children:Depiction[]):Gr
         } else {
 
             // One or more of our participants already had a group.
-            // 1) merge all the groups together
+            // 1) merge all the groups together (if there are more than one)
             // 2) put all of our participants in it
             //
             let destGroup = participantGroups[0]
@@ -196,10 +198,13 @@ function createInteractionGroups(parent:Depiction|null, children:Depiction[]):Gr
                     depictionUidToGroup.set(d.uid, destGroup)
 
                 destGroup.mergeFrom(otherGroup)
+            }
 
-                for (let participantDepiction of effectiveParticipantDepictions) {
-                    destGroup.depictions.add(participantDepiction)
-                }
+            destGroup.interactions.add(interaction)
+
+            for (let participantDepiction of effectiveParticipantDepictions) {
+                destGroup.depictions.add(participantDepiction)
+                depictionUidToGroup.set(participantDepiction.uid, destGroup)
             }
         }
 
@@ -215,11 +220,21 @@ function createInteractionGroups(parent:Depiction|null, children:Depiction[]):Gr
         if(child instanceof InteractionDepiction)
             continue
 
-        if(depictionUidToGroup.get(child.uid) === undefined) {
+        let effectiveChild = child
+
+        if(child.parent instanceof BackboneDepiction) {
+            effectiveChild = child.parent
+        }
+
+        if(depictionUidToGroup.get(effectiveChild.uid) === undefined) {
+
+            console.log('binPackStrategy: ' + child.debugName + ' is orphaned')
 
             const orphanGroup = new Group()
             orphanGroup.depictions.add(child)
             groups.add(orphanGroup)
+
+            depictionUidToGroup.set(effectiveChild.uid, orphanGroup)
 
         }
 

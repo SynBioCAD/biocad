@@ -16,6 +16,12 @@ import IdentifiedLinearRange from "biocad/mode/sequence/IdentifiedLinearRange";
 import binarysearch = require('binarysearch')
 
 
+/* Once the sequence editor has been rendered, we need to know where everything
+ * was drawn so that e.g. a cursor position can be mapped to a position in the
+ * sequence.
+ * 
+ * This class was supposed to keep track of that, but became rather unruly.
+ */
 export default class SequenceEditorRenderState {
 
     component:SXComponent
