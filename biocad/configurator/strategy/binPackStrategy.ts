@@ -9,6 +9,8 @@ import InteractionDepiction from "biocad/cad/InteractionDepiction";
 import LinearRangeSet from "jfw/geom/LinearRangeSet";
 import ComponentDepiction from "biocad/cad/ComponentDepiction";
 import BackboneDepiction from '../../cad/BackboneDepiction';
+import { reverse } from 'dns';
+import LabelledDepiction from 'biocad/cad/LabelledDepiction';
 
 
 const INTERACTION_HEIGHT:number = 1
@@ -94,12 +96,14 @@ export default function binPackStrategy(parent:Depiction|null, children:Depictio
 
             if(layerN < 0) {
                 ++ numAbove
+            } else {
+                ++ numBelow
             }
 
         }
 
         group.numInteractionsAbove = numAbove
-        group.numInteractionsBelow = 0
+        group.numInteractionsBelow = numBelow
     }
 
     for(let group of groups) {
@@ -297,15 +301,10 @@ function createABInteractionLayers(groups:Group[]):Map<InteractionDepiction, num
 
             var layerDir:number
 
-            if(interaction.participantDepictions[0] instanceof ComponentDepiction &&
-                    (interaction.participantDepictions[0] as ComponentDepiction).orientation === Orientation.Reverse) {
-
+            if(shouldReverse(interaction)) {
                 layerDir = 1
-
             } else {
-
                 layerDir = -1
-
             }
 
 
@@ -358,6 +357,25 @@ function createABInteractionLayers(groups:Group[]):Map<InteractionDepiction, num
     }
 
     return interactionToLayer
+
+    function shouldReverse(interaction:InteractionDepiction) {
+
+        for(let participant of interaction.participantDepictions) {
+
+            if(participant instanceof LabelledDepiction) {
+                participant = participant.getLabelled()
+            }
+
+            if(participant instanceof ComponentDepiction) {
+                if(participant.orientation === Orientation.Reverse) {
+                    return true
+                }
+            }
+
+        }
+
+        return false
+    }
 }
 
 function routeABInteractions(groups:Group[], interactionToLayer:Map<InteractionDepiction,number>, padding:number) {
@@ -392,13 +410,13 @@ function routeABInteractions(groups:Group[], interactionToLayer:Map<InteractionD
 
             } else {
 
-                let y = group.numInteractionsBelow - layerN
+                let y = group.h - INTERACTION_OFFSET - (group.numInteractionsBelow * INTERACTION_HEIGHT)
 
                 interaction.setWaypoints([
-                    Vec2.fromXY(a.x, group.h - y - INTERACTION_HEIGHT + 0.2),
-                    Vec2.fromXY(a.x, group.h - y),
-                    Vec2.fromXY(b.x, group.h - y),
-                    Vec2.fromXY(b.x, group.h - y - INTERACTION_HEIGHT + 0.2),
+                    Vec2.fromXY(a.x, y),
+                    Vec2.fromXY(a.x, y + INTERACTION_HEIGHT * layerN),
+                    Vec2.fromXY(b.x, y + INTERACTION_HEIGHT * layerN),
+                    Vec2.fromXY(b.x, y),
                 ])
 
 
