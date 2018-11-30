@@ -35,7 +35,7 @@ export default class ImageRenderer implements RenderContext {
 
         let svg = this.renderToSVGString()
 
-        let r = await fetch('http://api.biocad.io/util/svg2pptx', {
+        let r = await fetch('https://api.biocad.io/util/svg2pptx', {
             method: 'POST',
             mode: 'cors',
             cache: 'no-cache',
