@@ -4,7 +4,7 @@ import Depiction from "biocad/cad/Depiction";
 import Layout from "biocad/cad/Layout";
 import { svg, VNode } from "jfw/vdom";
 import { SXInteraction, SXParticipation, SXSubComponent } from "sbolgraph";
-import { Specifiers } from 'bioterms'
+import { Specifiers, Prefixes } from 'bioterms'
 import { assert } from 'power-assert'
 import { Vec2, Rect } from "jfw/geom";
 import RenderContext from './RenderContext'
@@ -161,6 +161,10 @@ export default class InteractionDepiction extends Depiction {
                     } else if(types.indexOf(Specifiers.SBO.Control) !== -1) {
                         arrowhead = ArrowheadType.Diamond
                     } else if(types.indexOf(Specifiers.SBO.GeneticProduction) !== -1) {
+                        arrowhead = ArrowheadType.FilledTriangle
+                    } else if(types.indexOf(Prefixes.sbo + 'SBO:0000183') !== -1) { // transcription
+                        arrowhead = ArrowheadType.FilledTriangle
+                    } else if(types.indexOf(Prefixes.sbo + 'SBO:0000184') !== -1) { // translation
                         arrowhead = ArrowheadType.FilledTriangle
                     }
                 }
