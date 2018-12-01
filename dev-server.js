@@ -12,7 +12,7 @@
 
 var MemoryFS = require("memory-fs")
 var webpack = require('webpack')
-var config = require('./webpack_browser.config')
+var config = require(process.argv.slice(2).join(' '))
 var compiler = webpack(config)
 var express = require('express')
 var mime = require('mime')
@@ -72,13 +72,6 @@ var server = express()
 server.use(function(req, res, next) {
 
     console.log('req ' + req.path)
-
-    if(req.path === '/config') {
-        console.log('> sending config json')
-        res.header('content-type', 'application/json')
-        res.send(fs.readFileSync('./configs/default.json').toString())
-        return
-    }
 
     if(req.path === '/css/biocad.css') {
 
