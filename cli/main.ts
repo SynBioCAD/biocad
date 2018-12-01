@@ -5,6 +5,7 @@ import { SBOLXGraph } from 'sbolgraph'
 import { Vec2 } from 'jfw/geom'
 
 import fs = require('fs')
+import LayoutPOD from 'biocad/cad/LayoutPOD';
 
 main()
 
@@ -47,6 +48,8 @@ async function main() {
         let svg = renderer.renderToSVGString()
 
         fs.writeFileSync(path + '.svg', svg)
+
+        fs.writeFileSync(path + '_layout.json', JSON.stringify(LayoutPOD.serialize(layout), null, 2))
     }
 
 }
