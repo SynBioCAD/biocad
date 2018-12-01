@@ -1165,7 +1165,7 @@ export default class Layout extends Versioned {
             const depiction = this.depictions[i]
 
             if(depiction.parent)
-                return boundingBox
+                continue
 
             if(!boundingBox)
                 boundingBox = depiction.boundingBox
