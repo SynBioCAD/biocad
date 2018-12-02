@@ -148,7 +148,7 @@ function createInteractionGroups(parent:Depiction|null, children:Depiction[]):Gr
         // if the depiction is in a backbone, it's the backbone we need to position
         // (we can't move the backbone's children because they are laid out as part of the
         // backbone and don't belong to us)
-        let effectiveParticipantDepictions = interaction.participantDepictions.map((d) => {
+        let effectiveParticipantDepictions = interaction.getAllIncludedDepictions().map((d) => {
             if(d.parent instanceof BackboneDepiction) {
                 return d.parent
             } else {
@@ -281,18 +281,25 @@ function horizontallyTileGroups(groups:Group[], padding:number) {
 //
 function createABInteractionLayers(groups:Group[]):Map<InteractionDepiction, number> {
 
+    let takenPoints:Map<Depiction, LinearRangeSet> = new Map() // for horizPoints
+
     let interactionToLayer:Map<InteractionDepiction, number> = new Map()
 
     for(let group of groups) {
 
         for(let interaction of group.interactions) {
 
-            // only interested in interactions with exactly 2 participants
+            // only interested in simple A->B interactions
             //
-            if(interaction.participantDepictions.length !== 2)
+            if(! (
+                interaction.sourceDepictions.length === 1 &&
+                interaction.destDepictions.length === 1 &&
+                interaction.otherDepictions.length === 0
+            )) {
                 continue
+            }
 
-            let { a, b } = horizPoints(interaction.participantDepictions[0], interaction.participantDepictions[1])
+            let { a, b } = horizPoints(takenPoints, interaction.sourceDepictions[0], interaction.destDepictions[0])
             
 
             // TODO the -1 and a +1 are a hack because we don't have intersectsOrTouchesRange
@@ -360,7 +367,7 @@ function createABInteractionLayers(groups:Group[]):Map<InteractionDepiction, num
 
     function shouldReverse(interaction:InteractionDepiction) {
 
-        for(let participant of interaction.participantDepictions) {
+        for(let participant of interaction.getAllIncludedDepictions()) {
 
             if(participant instanceof LabelledDepiction) {
                 participant = participant.getLabelled()
@@ -380,14 +387,21 @@ function createABInteractionLayers(groups:Group[]):Map<InteractionDepiction, num
 
 function routeABInteractions(groups:Group[], interactionToLayer:Map<InteractionDepiction,number>, padding:number) {
 
+    let takenPoints:Map<Depiction, LinearRangeSet> = new Map() // for horizPoints
+
     for(let group of groups) {
 
         for(let interaction of group.interactions) {
 
-            // only interested in interactions with exactly 2 participants
+            // only interested in simple A->B interactions
             //
-            if(interaction.participantDepictions.length !== 2)
+            if(! (
+                interaction.sourceDepictions.length === 1 &&
+                interaction.destDepictions.length === 1 &&
+                interaction.otherDepictions.length === 0
+            )) {
                 continue
+            }
 
             interaction.offset = Vec2.fromXY(0, 0) // setWaypoints will update this
 
@@ -397,7 +411,7 @@ function routeABInteractions(groups:Group[], interactionToLayer:Map<InteractionD
                 throw new Error('???')
             }
 
-            let { a, b } = horizPoints(interaction.participantDepictions[0], interaction.participantDepictions[1])
+            let { a, b } = horizPoints(takenPoints, interaction.sourceDepictions[0], interaction.destDepictions[0])
 
             if(layerN < 0) {
 
@@ -423,9 +437,24 @@ function routeABInteractions(groups:Group[], interactionToLayer:Map<InteractionD
             }
         }
     }
+
 }
 
-function horizPoints(a:Depiction, b:Depiction) {
+function horizPoints(takenPoints:Map<Depiction, LinearRangeSet>, a:Depiction, b:Depiction) {
+
+    let takenA = takenPoints.get(a)
+
+    if(!takenA) {
+        takenA = new LinearRangeSet()
+        takenPoints.set(a, takenA)
+    }
+
+    let takenB = takenPoints.get(b)
+
+    if(!takenB) {
+        takenB = new LinearRangeSet()
+        takenPoints.set(b, takenA)
+    }
 
     let bboxA = a.boundingBox
     let bboxB = b.boundingBox
@@ -455,6 +484,14 @@ function horizPoints(a:Depiction, b:Depiction) {
             xB = bboxB.topLeft.x + (bboxB.width() / 4) * 3
         }
 
+        while(takenA.intersectsRange(new LinearRange(xA - 0.5, xA + 0.5))) {
+            ++ xA
+        }
+
+        while(takenB.intersectsRange(new LinearRange(xB - 0.5, xB + 0.5))) {
+            -- xB
+        }
+
     } else {
 
         // A left of B
@@ -470,8 +507,18 @@ function horizPoints(a:Depiction, b:Depiction) {
         } else {
             xB = bboxB.topLeft.x + (bboxB.width() / 4) * 1
         }
+
+        while(takenA.intersectsRange(new LinearRange(xA - 0.5, xA + 0.5))) {
+            -- xA
+        }
+
+        while(takenB.intersectsRange(new LinearRange(xB - 0.5, xB + 0.5))) {
+            ++ xB
+        }
     }
 
+    takenA.push(new LinearRange(xA - 0.5, xA + 0.5))
+    takenB.push(new LinearRange(xB - 0.5, xB + 0.5))
 
     var yA = bboxA.topLeft.y - INTERACTION_OFFSET
     var yB = bboxB.topLeft.y - INTERACTION_OFFSET
