@@ -7,17 +7,16 @@ import { Vec2 } from 'jfw/geom'
 import fs = require('fs')
 import LayoutPOD from 'biocad/cad/LayoutPOD';
 
-main()
+import minimist = require('minimist')
 
-async function main() {
+import express = require('express')
+import bodyParser = require('body-parser')
 
-    let f = process.argv.slice(2).join(' ')
+main(minimist(process.argv.slice(2)))
 
-    if(f) {
+async function main(argv) {
 
-        await doFile(f)
-
-    } else {
+    if(argv._[0] === 'testall') {
 
         for(let file of fs.readdirSync('testfiles')) {
 
@@ -29,7 +28,40 @@ async function main() {
             await doFile(path)
         }
 
+    } else if(argv._[0] === 'test') {
+
+        let f = process.argv.slice(2).join(' ')
+
+        await doFile(f)
+
+    } else if(argv._[0] === 'server') {
+
+        let server = express()
+        server.use(bodyParser.text({
+            type: '*/*',
+            limit: '1mb'
+        }))
+
+        server.use(async (req, res, next) => {
+
+            let graph = await SBOLXGraph.loadString(req.body, 'application/rdf+xml')
+
+            let layout = new Layout(graph)
+
+            layout.syncAllDepictions(5)
+            layout.configurate([])
+            layout.size = layout.getBoundingSize().add(Vec2.fromXY(1, 1))
+
+            let renderer = new ImageRenderer(layout)
+            let svg = renderer.renderToSVGString()
+
+            res.header('content-type', 'image/svg+xml')
+            res.send(svg)
+        })
+
+        server.listen(argv.port)
     }
+
 
     async function doFile(path) {
 

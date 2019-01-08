@@ -1,10 +1,12 @@
 
 
 var path = require('path')
+var nodeExternals = require('webpack-node-externals');
 
 module.exports = {
     entry: "./cli/main.ts",
     target: 'node',
+    externals: [nodeExternals()],
     output: {
         filename: "bundle_cli.js",
         path: __dirname + "/dist"
