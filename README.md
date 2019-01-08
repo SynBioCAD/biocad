@@ -8,29 +8,25 @@ Things you can do so far:
 
 Many more features are planned.  Watch this space!
 
-Usage
----
+# Usage
 
 ngBioCAD can run in several different configurations.
 
-Local webapp
-===
+## Local webapp
 
     yarn install
     node dev-server.js webpack_browser.config.js
 
 Then load `http://localhost:9999/index.html` in a Web browser
 
-Local offline
-===
+## Local offline
 
     yarn install
     node dev-server.js webpack_nodejs.config.js
     
 Then run `node bundle_cli.js testall` to test all examples in testfiles
 
-Web service
-===
+## Web service
 
 As a Web service, ngBioCAD accepts POSTed SBOL/GenBank files and returns SVG.
 
