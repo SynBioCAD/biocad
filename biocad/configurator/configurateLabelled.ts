@@ -39,7 +39,7 @@ export default function configurateLabelled(labelled:LabelledDepiction, instruct
 
             const foo:Vec2 = depiction.size.add(Vec2.fromXY(overflowRight, 0))
 
-            console.warn('depiction ' + depiction.debugName + ' changing size from ' + depiction.size + ' to ' + foo + ' to accommodate for label')
+            dogsole.warn('depiction ' + depiction.debugName + ' changing size from ' + depiction.size + ' to ' + foo + ' to accommodate for label')
 
             depiction.size = depiction.size.add(Vec2.fromXY(overflowRight, 0))
         }

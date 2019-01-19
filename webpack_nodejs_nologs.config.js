@@ -36,6 +36,9 @@ module.exports = {
                 test: /\.ts$/,
                 use: [
                     {
+                        loader: path.resolve(__dirname, './webpack_remove_logs.js')
+                    },
+                    {
                         loader: "awesome-typescript-loader" // 1
                     }
                 ]
