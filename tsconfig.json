@@ -10,8 +10,8 @@
         "strictNullChecks": true,
         "allowJs": true,
         "paths": {
-            "jfw/*": [ "./node_modules/jfw/dist/jfw/*" ],
-            "jfw": [ "./node_modules/jfw/dist/jfw" ]
+            "jfw/*": [ "./node_modules/@biocad/jfw/dist/jfw/*" ],
+            "jfw": [ "./node_modules/@biocad/jfw/dist/jfw" ]
         }
     },
     "include": [

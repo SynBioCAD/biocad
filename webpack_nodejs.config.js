@@ -20,7 +20,7 @@ module.exports = {
         extensions: [".ts", ".js", ".json"],
 
         alias: {
-            jfw: path.resolve(__dirname, 'node_modules/jfw/dist/jfw'),
+            jfw: path.resolve(__dirname, 'node_modules/@biocad/jfw/dist/jfw'),
             data: path.resolve(__dirname, 'data'),
             featurecreep: path.resolve(__dirname, 'featurecreep'),
             visbolite: path.resolve(__dirname, 'visbolite'),

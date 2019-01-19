@@ -123,7 +123,7 @@ export default class PartSummaryView extends View {
         if(part instanceof SXComponent) {
 
             app.setMode(app.modes.filter((mode) => mode instanceof CircuitMode)[0])
-            app.dropOverlay.startDropping(new SBOLDroppable(app, this.graph, part.uri))
+            app.dropOverlay.startDropping(new SBOLDroppable(app, this.graph, [ part.uri ]))
 
         }
 

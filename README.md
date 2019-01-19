@@ -34,4 +34,5 @@ First follow the local offline instructions, then run:
 
     node bundle_cli.js server --port 8080
 
+Or use the provided Dockerfile.
 
