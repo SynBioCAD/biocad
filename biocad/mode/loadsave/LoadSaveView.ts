@@ -13,10 +13,13 @@ import { SBOLXGraph, SBOL2Graph } from 'sbolgraph';
 
 import ImageRenderer from 'biocad/cad/ImageRenderer'
 
+import SBOLConverterValidator from 'biocad/util/SBOLConverterValidator'
+
 export default class LoadSaveView extends View {
 
     layout:Layout|undefined
     thumb:LayoutThumbnail|undefined
+    section:string
 
     constructor(app) {
 
@@ -39,47 +42,146 @@ export default class LoadSaveView extends View {
             this.thumb = new LayoutThumbnail(app, this.layout)
         }
 
+        if(this.thumb && this.layout) {
+            this.section = 'picture'
+        }
+
     }
 
     render():VNode {
 
         let elements:VNode[] = []
 
-        if(this.thumb && this.layout) {
-            let size = this.layout.getSize().multiply(this.layout.gridSize)
+        switch(this.section) {
+            case 'picture':
+                if(this.thumb && this.layout) {
+                    let size = this.layout.getSize().multiply(this.layout.gridSize)
 
-            elements.push(h('div', {
-                style: {
-                    'display': 'inline-block',
-                    'padding-top': '16px'
+                    elements.push(h('div', {
+                        style: {
+                            'display': 'inline-block',
+                            'padding-top': '16px'
+                        }
+                    }, [
+                        h('div.pictureframe', {
+                            style: {
+                                width: 'calc(8vmin + ' + size.x + 'px)',
+                                height: 'calc(8vmin + ' + size.y + 'px)'
+                            }
+                        }, [
+                            this.thumb.render()
+                        ]),
+                        h('div.sf-loadsaveview-links', [
+                            h('br'),
+                            h('a', {
+                                'ev-click': clickEvent(clickDownloadSVG, { view: this })
+                            }, 'Download image as SVG'),
+                            h('br'),
+                            h('a', {
+                                'ev-click': clickEvent(clickDownloadPPTX, { view: this })
+                            }, 'Download image as PowerPoint')
+                        ])
+                    ]))
+
                 }
-            }, [
-                h('div.pictureframe', {
-                    style: {
-                        width: 'calc(8vmin + ' + size.x + 'px)',
-                        height: 'calc(8vmin + ' + size.y + 'px)'
-                    }
-                }, [
-                    this.thumb.render()
-                ]),
-                h('div.sf-loadsaveview-links', [
-                    h('br'),
-                    h('a', {
-                        'ev-click': clickEvent(clickDownloadSVG, { view: this })
-                    }, 'Download image as SVG'),
-                    h('br'),
-                    h('a', {
-                        'ev-click': clickEvent(clickDownloadPPTX, { view: this })
-                    }, 'Download image as PowerPoint')
-                ])
-            ]))
+                break
 
+            case 'export':
+
+                elements.push(h('div.sf-loadsaveview-exportoption', {
+                }, [
+                    h('a', {
+                    'ev-click': clickEvent(clickExportBiocad, { view: this })
+                    }, [
+                        h('span.fa.fa-download'),
+                        ' Save as a .biocad file'
+                    ]),
+                    h('div.spacer'),
+                    h('div.good', [
+                        h('span.fa.fa-check'),
+                        ' Sequences, annotations, hierarchy, and interactions will be saved'
+                    ]),
+                    h('div.warn', [
+                        h('span.fa.fa-exclamation-triangle'),
+                        ' Will not be compatible with software other than biocad.io'
+                    ])
+
+                ]))
+
+                elements.push(h('div.sf-loadsaveview-exportoption', {
+                }, [
+                    h('a', {
+                    'ev-click': clickEvent(clickExportSBOL2, { view: this })
+                    }, [
+                        h('span.fa.fa-download'),
+                        ' Export as SBOL2'
+                    ]),
+                    h('div.spacer'),
+                    h('div.good', [
+                        h('span.fa.fa-check'),
+                        ' Sequences, annotations, hierarchy, and interactions will be saved'
+                    ]),
+                    h('div.warn', [
+                        h('span.fa.fa-exclamation-triangle'),
+                        ' May differ visually if re-imported to biocad.io'
+                    ])
+
+                ]))
+
+                elements.push(h('div.sf-loadsaveview-exportoption', {
+                }, [
+                    h('a', {
+                    'ev-click': clickEvent(clickExportGenBank, { view: this })
+                    }, [
+                        h('span.fa.fa-download'),
+                        ' Export as GenBank'
+                    ]),
+                    h('div.spacer'),
+                    h('div.good', [
+                        h('span.fa.fa-check'),
+                        ' Sequences and annotations will be saved'
+                    ]),
+                    h('div.bad', [
+                        h('span.fa.fa-times'),
+                        ' Hierarchy and interactions will be lost'
+                    ])
+                ]))
+
+                elements.push(h('div.sf-loadsaveview-exportoption', {
+                }, [
+                    h('a', {
+                    'ev-click': clickEvent(clickExportFASTA, { view: this })
+                    }, [
+                        h('span.fa.fa-download'),
+                        ' Export as FASTA'
+                    ]),
+                    h('div.spacer'),
+                    h('div.good', [
+                        h('span.fa.fa-check'),
+                        ' Sequences will be saved'
+                    ]),
+                    h('div.bad', [
+                        h('span.fa.fa-times'),
+                        ' Annotations, hierarchy, and interactions will be lost'
+                    ])
+                ]))
+
+
+                break
         }
+
 
         return h('div.jfw-flow-grow.jfw-flow-ltr', {
         }, [
             h('div.sf-loadsaveview-icons', {
             }, [
+                h('a' + (this.section === 'picture' ? '.active' : ''), {
+                    'ev-click': clickEvent(clickTakePicture, { view: this })
+                }, [
+                    h('span.fa.fa-image', []),
+                    h('span.icon-text', 'Take a Picture')
+                ]),
+                h('br'),
                 h('a', {
                 }, [
                     h('span.fa.fa-plus', []),
@@ -89,29 +191,18 @@ export default class LoadSaveView extends View {
                 h('a', {
                     attributes: {
                         'data-balloon-pos': 'right',
-                        'data-balloon': 'Load GenBank, FASTA, or SBOL2 files from your computer',
+                        'data-balloon': 'Import GenBank, FASTA, or SBOL2 files from your computer',
                     },
-                    'ev-click': clickEvent(clickLoad, { view: this })
+                    'ev-click': clickEvent(clickImport, { view: this })
                 }, [
                     h('span.fa.fa-folder-open', []),
-                    h('span.icon-text', ' Load')
+                    h('span.icon-text', ' Import')
                 ]),
                 h('br'),
-                h('a', {
+                h('a' + (this.section === 'export' ? '.active' : ''), {
                     attributes: {
                         'data-balloon-pos': 'right',
-                        'data-balloon': 'Save your design to your computer to load again later',
-                    },
-                    'ev-click': clickEvent(clickSave, { view: this })
-                }, [
-                    h('span.fa.fa-save', []),
-                    h('span.icon-text', ' Save')
-                ]),
-                h('br'),
-                h('a', {
-                    attributes: {
-                        'data-balloon-pos': 'right',
-                        'data-balloon': 'Export your design as SBOL2 to use in other software',
+                        'data-balloon': 'Export your design to load later, or to use in other software',
                     },
                     'ev-click': clickEvent(clickExport, { view: this })
                 }, [
@@ -130,7 +221,15 @@ export default class LoadSaveView extends View {
     }
 }
 
-async function clickLoad(data)  {
+async function clickTakePicture(data)  {
+
+    let view:LoadSaveView = data.view
+
+    view.section = 'picture'
+    view.update()
+}
+
+async function clickImport(data)  {
 
     let view:LoadSaveView = data.view
 
@@ -158,8 +257,31 @@ async function clickLoad(data)  {
 
 }
 
-async function clickSave(data)  {
+async function clickExport(data)  {
 
+    let view:LoadSaveView = data.view
+
+    view.section = 'export'
+    view.update()
+
+    /*
+    let graph = (view.app as BiocadApp).graph
+
+    let graph2 = new SBOL2Graph()
+    
+    await graph2.loadString(graph.serializeXML())
+
+    let xml = graph2.serializeXML()
+
+    let blob = new Blob([ xml ], {
+        type: 'application/rdf+xml'
+    })
+
+    downloadBlob('biocad_sbol2.xml', blob)*/
+
+}
+
+async function clickExportBiocad(data)  {
 
     console.log('click save')
 
@@ -173,10 +295,11 @@ async function clickSave(data)  {
         type: 'application/rdf+xml'
     })
 
-    downloadBlob('biocad_sbolx.xml', blob)
+    downloadBlob('export.biocad', blob)
 }
 
-async function clickExport(data)  {
+
+async function clickExportSBOL2(data)  {
 
     let view:LoadSaveView = data.view
 
@@ -193,10 +316,37 @@ async function clickExport(data)  {
     })
 
     downloadBlob('biocad_sbol2.xml', blob)
-
 }
 
+async function clickExportGenBank(data)  {
 
+    let view:LoadSaveView = data.view
+
+    let graph = (view.app as BiocadApp).graph
+
+    let gb = await SBOLConverterValidator.sxToGenbank(graph)
+
+    let blob = new Blob([ gb ], {
+        type: 'text/plain'
+    })
+
+    downloadBlob('biocad.gb', blob)
+}
+
+async function clickExportFASTA(data)  {
+
+    let view:LoadSaveView = data.view
+
+    let graph = (view.app as BiocadApp).graph
+
+    let gb = await SBOLConverterValidator.sxToFASTA(graph)
+
+    let blob = new Blob([ gb ], {
+        type: 'text/plain'
+    })
+
+    downloadBlob('biocad.fasta', blob)
+}
 
 async function clickDownloadSVG(data) {
 

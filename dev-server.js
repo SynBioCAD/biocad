@@ -25,7 +25,7 @@ var fs = require('fs')
 
 compiler.watch({
     aggregateTimeout: 300,
-    //poll: true,
+    poll: true,
     ignored: /node_modules/
 }, function(err, stats) {
 
@@ -78,7 +78,7 @@ server.use(function(req, res, next) {
         console.log('> sending css')
 
         const lessOpts = {
-            paths: [ __dirname + '/less', __dirname + '/node_modules/jfw/less' ],
+            paths: [ __dirname + '/less', __dirname + '/node_modules/@biocad/jfw/less' ],
             filename: 'biocad.less'
         }
 
