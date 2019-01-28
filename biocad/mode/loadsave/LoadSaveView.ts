@@ -324,13 +324,17 @@ async function clickExportGenBank(data)  {
 
     let graph = (view.app as BiocadApp).graph
 
-    let gb = await SBOLConverterValidator.sxToGenbank(graph)
+    try {
+        let gb = await SBOLConverterValidator.sxToGenbank(graph)
+        let blob = new Blob([ gb ], {
+            type: 'text/plain'
+        })
 
-    let blob = new Blob([ gb ], {
-        type: 'text/plain'
-    })
+        downloadBlob('biocad.gb', blob)
+    } catch(e) {
+        (view.app as BiocadApp).popupMessage('GenBank conversion failed', e)
+    }
 
-    downloadBlob('biocad.gb', blob)
 }
 
 async function clickExportFASTA(data)  {
@@ -339,13 +343,17 @@ async function clickExportFASTA(data)  {
 
     let graph = (view.app as BiocadApp).graph
 
-    let gb = await SBOLConverterValidator.sxToFASTA(graph)
+    try {
+        let gb = await SBOLConverterValidator.sxToFASTA(graph)
+        let blob = new Blob([ gb ], {
+            type: 'text/plain'
+        })
 
-    let blob = new Blob([ gb ], {
-        type: 'text/plain'
-    })
+        downloadBlob('biocad.fasta', blob)
+    } catch(e) {
+        (view.app as BiocadApp).popupMessage('FASTA conversion failed', e)
+    }
 
-    downloadBlob('biocad.fasta', blob)
 }
 
 async function clickDownloadSVG(data) {

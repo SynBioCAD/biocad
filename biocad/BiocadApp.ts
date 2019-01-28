@@ -28,6 +28,8 @@ import Headless from "biocad/Headless";
 import UData from 'jfw/udata/UData';
 import InitUData from 'biocad/InitUData';
 import GlobalConfig from 'jfw/GlobalConfig';
+import PopupMessageDialog from './dialog/PopupMessageDialog';
+import { DialogOptions } from '@biocad/jfw/dist/jfw/ui/dialog';
 
 console.log('BiocadApp.ts')
 
@@ -165,6 +167,12 @@ export default class BiocadApp extends App
     onFileDrop(files:File[]) {
 
         console.log('biocad: onFileDrop')
+
+    }
+
+    popupMessage(title:string, message:any) {
+
+        this.openDialog(new PopupMessageDialog(this, title, message, new DialogOptions()))
 
     }
 

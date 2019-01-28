@@ -21,10 +21,10 @@ export default class SBOLConverterValidator {
                     'check_completeness': false,
                     'check_best_practices': false,
                     'fail_on_first_error': false,
-                    'provide_detailed_stack_trace': true,
-                    'subset_uri': '',
+                    'provide_detailed_stack_trace': false,
+                    'subset_uri': false,
                     'uri_prefix': 'http://biocad.io/',
-                    'version': '',
+                    'version': false,
                     'insert_type': false,
                     'main_file_name': 'main file',
                     'diff_file_name': 'comparison file',
@@ -35,13 +35,15 @@ export default class SBOLConverterValidator {
             })
         })
 
-        console.dir(res)
+        let r = await res.json()
 
-        if(!res['output_file']) {
-            throw new Error(JSON.stringify(res))
+        console.dir(r)
+
+        if(r.errors && r.errors.length > 0) {
+            throw new Error(JSON.stringify(r.errors))
         }
 
-        return res['output_file']
+        return r['result']
     }
 
     static async sxToFASTA(g:SBOLXGraph) {
@@ -62,10 +64,10 @@ export default class SBOLConverterValidator {
                     'check_completeness': false,
                     'check_best_practices': false,
                     'fail_on_first_error': false,
-                    'provide_detailed_stack_trace': true,
-                    'subset_uri': '',
+                    'provide_detailed_stack_trace': false,
+                    'subset_uri': false,
                     'uri_prefix': 'http://biocad.io/',
-                    'version': '',
+                    'version': false,
                     'insert_type': false,
                     'main_file_name': 'main file',
                     'diff_file_name': 'comparison file',
@@ -76,13 +78,15 @@ export default class SBOLConverterValidator {
             })
         })
 
-        console.dir(res)
+        let r = await res.json()
 
-        if(!res['output_file']) {
-            throw new Error(JSON.stringify(res))
+        console.dir(r)
+
+        if(r.errors && r.errors.length > 0) {
+            throw new Error(JSON.stringify(r.errors))
         }
 
-        return res['output_file']
+        return r['result']
     }
 
 }
