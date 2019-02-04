@@ -9,7 +9,9 @@
     "request": "browser-request"
   },
   "scripts": {
-    "dev": "node ./dev-server"
+    "dev": "node ./dev-server",
+    "prepare": "tsc -d -p ./ --outDir dist/",
+    "prepublishOnly": "tsc -d -p ./ --outDir dist/"
   },
   "dependencies": {
     "@biocad/jfw": "^0.3.1",
