@@ -1,25 +1,22 @@
 
-import { Dialog } from 'jfw/ui/dialog'
-import { DialogOptions } from 'jfw/ui/dialog'
+import { Dialog, DialogOptions } from 'jfw/ui/dialog'
 import { h } from 'jfw/vdom'
 
 export default class PopupMessageDialog extends Dialog {
 
-    message:string
+    message:any
 
-    constructor(app, title:string, message:string, opts:DialogOptions) {
+    constructor(app, title:string, message:any, opts:DialogOptions) {
 
         super(app, opts)
 
-        this.setTitle(title)
-
         this.message = message
-
+        this.setTitle(title)
     }
 
     getContentView() {
 
-        return h('div', this.message)
+        return h('div', this.message.toString())
 
     }
 }
