@@ -2,7 +2,7 @@
   "name": "@biocad/biocad",
   "version": "0.1.0",
   "description": "",
-  "main": "main.js",
+  "main": "dist/index.js",
   "author": "James Alastair McLaughlin <j.a.mclaughlin@ncl.ac.uk>",
   "license": "BSD-2-Clause",
   "browser": {
