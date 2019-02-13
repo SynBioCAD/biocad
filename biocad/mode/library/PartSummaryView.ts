@@ -68,7 +68,7 @@ export default class PartSummaryView extends View {
 
         } else {
 
-            const type:string = this.graph.getType(this.uri)
+            const type:string|undefined = this.graph.getType(this.uri)
 
             elements.push(this.renderComponent())
         }

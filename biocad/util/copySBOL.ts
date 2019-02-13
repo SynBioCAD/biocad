@@ -18,7 +18,10 @@ export default function copySBOL(graphA:SBOLXGraph, graphB:SBOLXGraph, newURIPre
     // TODO: setCompliantIdentity is expensive; only do it when a good URI has been found
 
     for(let topLevel of topLevels) {
-        let curID = topLevel.id
+        let curID:string|undefined = topLevel.id
+        if(curID === undefined) {
+            curID = 'anon'
+        }
         let n = 1
         while(graphB.hasMatch(topLevel.uri, null, null)) {
             ++ n

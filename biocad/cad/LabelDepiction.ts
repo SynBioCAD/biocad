@@ -213,28 +213,28 @@ export default class LabelDepiction extends Depiction {
         }
 
         if(dOf instanceof SXComponent) {
-            if(dOf.hasRole(Specifiers.SBOLX.Role.CDS)) {
+            if(dOf.hasRole(Specifiers.SO.CDS)) {
                 italic = true
             }
         } else if(dOf instanceof SXSubComponent) {
             let def = dOf.instanceOf
-            if(def.hasRole(Specifiers.SBOLX.Role.CDS)) {
+            if(def.hasRole(Specifiers.SO.CDS)) {
                 italic = true
             }
         } else if(dOf instanceof SXSequenceFeature) {
-            if (dOf.hasRole(Specifiers.SBOLX.Role.CDS)) {
+            if (dOf.hasRole(Specifiers.SO.CDS)) {
                 italic = true
             }
         } else if(dOf instanceof SXLocation) {
             let container = dOf.containingObject
             if(container instanceof SXSequenceFeature) {
-                if (container.hasRole(Specifiers.SBOLX.Role.CDS)) {
+                if (container.hasRole(Specifiers.SO.CDS)) {
                     italic = true
                 }
             }
             if(container instanceof SXSubComponent) {
                 let def = container.instanceOf
-                if (def.hasRole(Specifiers.SBOLX.Role.CDS)) {
+                if (def.hasRole(Specifiers.SO.CDS)) {
                     italic = true
                 }
             }

@@ -10,7 +10,7 @@ const parts = [
     {
         shortName: 'cds',
         longName: 'Coding Sequence',
-        soTerm: Specifiers.SBOL2.Role.CDS,
+        soTerm: Specifiers.SO.CDS,
         typeUri: Specifiers.SBOL2.Type.DNA,
         defaultLength: 128,
         defaultHeight: 32
@@ -19,7 +19,7 @@ const parts = [
     {
         shortName: 'promoter',
         longName: 'Promoter',
-        soTerm: Specifiers.SBOL2.Role.Promoter,
+        soTerm: Specifiers.SO.Promoter,
         typeUri: Specifiers.SBOL2.Type.DNA,
         defaultLength: 2,
         defaultHeight: 2
@@ -28,7 +28,7 @@ const parts = [
     {
         shortName: 'rbs',
         longName: 'Ribosome Binding Site',
-        soTerm: Specifiers.SBOL2.Role.RBS,
+        soTerm: Specifiers.SO.RBS,
         typeUri: Specifiers.SBOL2.Type.DNA,
         defaultLength: 2,
         defaultHeight: 2
@@ -37,7 +37,7 @@ const parts = [
     {
         shortName: 'restriction_site',
         longName: 'Restriction Site',
-        soTerm: Specifiers.SBOL2.Role.RestrictionSite,
+        soTerm: Specifiers.SO.RestrictionSite,
         typeUri: Specifiers.SBOL2.Type.DNA,
         defaultLength: 2,
         defaultHeight: 2
@@ -54,7 +54,7 @@ const parts = [
     {
         shortName: 'terminator',
         longName: 'Terminator',
-        soTerm: Specifiers.SBOL2.Role.Terminator,
+        soTerm: Specifiers.SO.Terminator,
         typeUri: Specifiers.SBOL2.Type.DNA,
         defaultLength: 2,
         defaultHeight: 2
@@ -64,7 +64,7 @@ const parts = [
         shortName: 'user_defined',
         longName: 'User Defined Part',
         typeUri: Specifiers.SBOL2.Type.DNA,
-        soTerm: Specifiers.SBOL2.Role.EngineeredRegion,
+        soTerm: Specifiers.SO.EngineeredRegion,
         defaultLength: 2,
         defaultHeight: 2
     },
@@ -72,7 +72,7 @@ const parts = [
     {
         shortName: 'origin_of_replication',
         longName: 'Origin of Replication',
-        soTerm: Specifiers.SBOL2.Role.OriginOfReplication,
+        soTerm: Specifiers.SO.OriginOfReplication,
         typeUri: Specifiers.SBOL2.Type.DNA,
         defaultLength: 2,
         defaultHeight: 2
@@ -81,7 +81,7 @@ const parts = [
     {
         shortName: 'origin_of_transfer',
         longName: 'Origin of Transfer',
-        soTerm: Specifiers.SBOL2.Role.OriginOfTransfer,
+        soTerm: Specifiers.SO.OriginOfTransfer,
         typeUri: Specifiers.SBOL2.Type.DNA,
         defaultLength: 2,
         defaultHeight: 2
@@ -226,7 +226,7 @@ const parts = [
     {
         shortName: 'localization-tag-reversible',
         longName: 'Localization, Retained',
-        soTerm: Specifiers.SBOL2.Role.EngineeredRegion,
+        soTerm: Specifiers.SO.EngineeredRegion,
         typeUri: Specifiers.SBOL2.Type.Protein,
         defaultLength: 128,
         defaultHeight: 32
@@ -234,7 +234,7 @@ const parts = [
     {
         shortName: 'localization-tag-irreversible',
         longName: 'Localization, Cleaved',
-        soTerm: Specifiers.SBOL2.Role.EngineeredRegion,
+        soTerm: Specifiers.SO.EngineeredRegion,
         typeUri: Specifiers.SBOL2.Type.Protein,
         defaultLength: 128,
         defaultHeight: 32
@@ -242,7 +242,7 @@ const parts = [
        {
         shortName: 'biochemical-tag',
         longName: 'Biochemical Tag',
-        soTerm: Specifiers.SBOL2.Role.EngineeredRegion,
+        soTerm: Specifiers.SO.EngineeredRegion,
         typeUri: Specifiers.SBOL2.Type.Protein,
         defaultLength: 128,
         defaultHeight: 32
@@ -290,7 +290,7 @@ const parts = [
     {
         shortName: 'defined-region',
         longName: 'Structured Region',
-        soTerm: Specifiers.SBOL2.Role.EngineeredRegion,
+        soTerm: Specifiers.SO.EngineeredRegion,
         typeUri: Specifiers.SBOL2.Type.Protein,
         defaultLength: 128,
         defaultHeight: 32
@@ -298,7 +298,7 @@ const parts = [
     {
         shortName: 'membrane-static',
         longName: 'Membrane',
-        soTerm: Specifiers.SBOL2.Role.EngineeredRegion,
+        soTerm: Specifiers.SO.EngineeredRegion,
         typeUri: Specifiers.SBOL2.Type.Protein,
         defaultLength: 128,
         defaultHeight: 32
@@ -306,7 +306,7 @@ const parts = [
     {
         shortName: 'linker',
         longName: 'Omitted Region',
-        soTerm: Specifiers.SBOL2.Role.EngineeredRegion,
+        soTerm: Specifiers.SO.EngineeredRegion,
         typeUri: Specifiers.SBOL2.Type.Protein,
         defaultLength: 128,
         defaultHeight: 32
@@ -314,7 +314,7 @@ const parts = [
     {
         shortName: 'stability-element',
         longName: 'Stability Element',
-        soTerm: Specifiers.SBOL2.Role.EngineeredRegion,
+        soTerm: Specifiers.SO.EngineeredRegion,
         typeUri: Specifiers.SBOL2.Type.Protein,
         defaultLength: 128,
         defaultHeight: 32

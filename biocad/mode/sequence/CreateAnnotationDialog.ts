@@ -47,7 +47,7 @@ export default class CreateAnnotationDialog extends Dialog {
         this.startInput = new TextInput(this, opts.annoStart)
         this.endInput = new TextInput(this, opts.annoEnd)
         this.labelInput = new TextInput(this, 'Untitled Annotation')
-        this.roleInput = new Combo(this, roles, Specifiers.SBOL2.Role.CDS)
+        this.roleInput = new Combo(this, roles, Specifiers.SO.CDS)
 
         this.saveButton = new Button(this)
         this.saveButton.setText('Save')

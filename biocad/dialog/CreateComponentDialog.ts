@@ -29,7 +29,7 @@ export class CreateComponentDialogDefaults {
     name:string = ''
     identifier:string = ''
     type:string = Specifiers.SBOL2.Type.DNA
-    role:string = Specifiers.SBOL2.Role.CDS
+    role:string = Specifiers.SO.CDS
     uri:string = ''
 
 }
