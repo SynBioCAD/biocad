@@ -327,6 +327,8 @@ export function shortNameFromTerm(uri:string) {
 
     return soToGlyphType('SO:' + uri.split('SO:')[1])
                 || soToGlyphType('GO:' + uri.split('GO:')[1]) 
+                || soToGlyphType('SO:' + uri.split('SO_')[1]) 
+                || soToGlyphType('GO:' + uri.split('GO_')[1]) 
                 || ''
 }
 
