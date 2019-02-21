@@ -24,6 +24,7 @@ import RenderContext from './RenderContext'
 import { SXRange, Watcher } from "sbolgraph";
 import CircularBackboneDepiction from 'biocad/cad/CircularBackboneDepiction';
 import BackboneDepiction from 'biocad/cad/BackboneDepiction';
+import { LinearRange } from 'jfw/geom'
 
 import extend = require('xtend')
 import IdentifiedChain from '../IdentifiedChain';
@@ -31,6 +32,8 @@ import IdentifiedChain from '../IdentifiedChain';
 export default class ComponentDepiction extends Depiction {
 
     orientation: Orientation
+    range:LinearRange|undefined
+
     location: SXIdentified|null
     backbonePlacement:string
 

@@ -2,7 +2,7 @@
 
 import assert from 'power-assert'
 
-import { Vec2 } from 'jfw/geom'
+import { Vec2, LinearRangeSet } from 'jfw/geom'
 
 import { Specifiers } from 'bioterms'
 import Depiction, { Orientation } from "biocad/cad/Depiction";
@@ -10,6 +10,9 @@ import ComponentDepiction from "biocad/cad/ComponentDepiction";
 import { SXSequenceFeature, SXRange, SXSubComponent, SXSequenceConstraint, SXIdentified } from "sbolgraph"
 import Layout from "biocad/cad/Layout";
 import BackboneDepiction from '../../cad/BackboneDepiction';
+import FeatureLocationDepiction from 'biocad/cad/FeatureLocationDepiction';
+import LabelledDepiction from 'biocad/cad/LabelledDepiction';
+import BackboneGroupDepiction from 'biocad/cad/BackboneGroupDepiction';
 
 export default function backboneStrategy(_parent:Depiction, children:Depiction[], padding) {
 
@@ -59,10 +62,21 @@ export default function backboneStrategy(_parent:Depiction, children:Depiction[]
     //const backboneY = padding + Math.abs(minAscent)
     const backboneY = Math.abs(minAscent)
 
-
-    var offsetX = padding
-
     for(let child of children) {
+
+        if(!(child instanceof LabelledDepiction)) {
+            throw new Error('bb child has wrong type (not labelled)')
+        }
+
+        let effectiveChild = child.getLabelled()
+
+        if(!(effectiveChild instanceof ComponentDepiction) && !(effectiveChild instanceof FeatureLocationDepiction)) {
+            throw new Error('bb child has wrong type (not cd or sa)')
+        }
+
+        if(!effectiveChild.range) {
+            throw new Error('bb child has no range')
+        }
 
         const childSize = child.size
 
@@ -70,18 +84,23 @@ export default function backboneStrategy(_parent:Depiction, children:Depiction[]
 
         //const { ascent, descent } = ascentDescent(child)
 
-        const childOffset = Vec2.fromXY(offsetX, backboneY - child.getAnchorY())
+        const childOffset = Vec2.fromXY(effectiveChild.range.normalise().start, backboneY - child.getAnchorY())
 
         child.offset = childOffset
-
-        offsetX += childSize.x + padding
-
     }
 
         //console.log('final bb width ' + offsetX)
 
-    parent.size = Vec2.fromXY(offsetX, parentHeight)
+    
+    let group = parent.parent
+    if (!(group instanceof BackboneGroupDepiction)) {
+        throw new Error('backbone not in a group?')
+    }
+
+    parent.size = Vec2.fromXY(group.backboneLength, parentHeight)
     parent.backboneY = backboneY
+
+    console.log('Backbone length: ' + group.backboneLength)
 
     //console.error('BACKBONE (ANCHOR) Y IS ' + parent.backboneY + ' FOR ' + parent.debugName)
 }

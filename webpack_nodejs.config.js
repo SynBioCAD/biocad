@@ -4,6 +4,7 @@ var path = require('path')
 var nodeExternals = require('webpack-node-externals');
 
 module.exports = {
+    mode: 'development',
     entry: "./cli/main.ts",
     target: 'node',
     externals: [nodeExternals()],

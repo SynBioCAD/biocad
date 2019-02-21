@@ -35,6 +35,12 @@ export default class LabelledDepiction extends Depiction {
             'stroke-width': '2px'
         })*/
 
+        let label = this.getLabel()
+        let labelled = this.getLabelled()
+
+        // good morning!
+        // draw a line between them
+
         return []
 
     }

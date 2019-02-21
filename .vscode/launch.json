@@ -2,6 +2,17 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "type": "node",
+            "request": "launch",
+            "name": "biocad testall",
+            "program": "${workspaceFolder}/bundle_cli.js",
+            "cwd": "${workspaceRoot}",
+            "protocol": "inspector",
+            "args": [
+                "testall"
+            ]
+        },
+        {
             "type": "chrome",
             "request": "launch",
             "name": "Launch Chrome against localhost",
@@ -31,6 +42,6 @@
             "args": ["-r", "tsconfig-paths/register", "${relativeFile}"],
             "cwd": "${workspaceRoot}",
             "protocol": "inspector"
-        },
+        }
     ]
 }

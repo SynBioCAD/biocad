@@ -14,6 +14,7 @@ import CircularBackboneDepiction from 'biocad/cad/CircularBackboneDepiction';
 import InteractionDepiction from './InteractionDepiction';
 import LabelledDepiction from 'biocad/cad/LabelledDepiction';
 import IdentifiedChain from 'biocad/IdentifiedChain';
+import BackboneGroupDepiction from './BackboneGroupDepiction';
 
 export default class DepictionPOD {
 
@@ -46,11 +47,20 @@ export default class DepictionPOD {
 
             type = 'CircularBackboneDepiction'
 
+            additionalProps['backboneIndex'] = (depiction as BackboneDepiction).backboneIndex
+
         } else if(depiction instanceof BackboneDepiction) {
 
             type = 'BackboneDepiction'
             
             additionalProps['backboneY'] = (depiction as BackboneDepiction).backboneY
+            additionalProps['backboneIndex'] = (depiction as BackboneDepiction).backboneIndex
+
+        } else if(depiction instanceof BackboneGroupDepiction) {
+
+            type = 'BackboneGroupDepiction'
+
+            additionalProps['backboneLength'] = (depiction as BackboneGroupDepiction).backboneLength
 
         } else if(depiction instanceof InteractionDepiction) {
 
@@ -111,7 +121,7 @@ export default class DepictionPOD {
                 throw new Error('backbone must have a parent')
             }
 
-            depiction = new CircularBackboneDepiction(layout, parent, pod.uid)
+            depiction = new CircularBackboneDepiction(layout, pod.backboneIndex, parent, pod.uid)
 
         } else if(pod['class'] === 'BackboneDepiction') {
 
@@ -119,9 +129,15 @@ export default class DepictionPOD {
                 throw new Error('backbone must have a parent')
             }
 
-            depiction = new BackboneDepiction(layout, parent, pod.uid)
+            depiction = new BackboneDepiction(layout, pod.backboneIndex, parent, pod.uid)
 
             ;(depiction as BackboneDepiction).backboneY = pod.backboneY
+
+        } else if(pod['class'] === 'BackboneGroupDepiction') {
+
+            depiction = new BackboneGroupDepiction(layout, parent, pod.uid)
+
+            ;(depiction as BackboneGroupDepiction).backboneLength = pod.backboneLength
 
         } else if(pod['class'] === 'InteractionDepiction') {
 

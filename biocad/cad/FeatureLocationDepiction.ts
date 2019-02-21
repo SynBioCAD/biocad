@@ -24,10 +24,12 @@ import RenderContext from './RenderContext'
 import { SXRange, SXLocation } from "sbolgraph"
 import CircularBackboneDepiction from 'biocad/cad/CircularBackboneDepiction';
 import IdentifiedChain from '../IdentifiedChain';
+import { LinearRange } from 'jfw/geom'
 
-export default class SequenceAnnotationDepiction extends Depiction {
+export default class FeatureLocationDepiction extends Depiction {
 
     orientation: Orientation
+    range: LinearRange
     location: SXIdentified|null
     backbonePlacement:string
 

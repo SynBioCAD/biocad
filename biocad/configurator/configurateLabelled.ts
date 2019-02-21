@@ -2,8 +2,10 @@
 import LabelledDepiction from "biocad/cad/LabelledDepiction";
 import InstructionSet from "biocad/cad/layout-instruction/InstructionSet";
 import LabelDepiction from "../cad/LabelDepiction";
-import Depiction from "biocad/cad/Depiction";
+import Depiction, { Orientation } from "biocad/cad/Depiction";
 import { Vec2 } from "jfw/geom";
+import ComponentDepiction from "biocad/cad/ComponentDepiction";
+import FeatureLocationDepiction from "biocad/cad/FeatureLocationDepiction";
 
 export default function configurateLabelled(labelled:LabelledDepiction, instructions:InstructionSet) {
 
@@ -11,7 +13,23 @@ export default function configurateLabelled(labelled:LabelledDepiction, instruct
     let label = labelled.getLabel()
     let thing = labelled.getLabelled()
 
-    thing.offset = Vec2.fromXY(0, label.height)
+
+    let reverse:boolean = false
+
+    if (thing instanceof ComponentDepiction || thing instanceof FeatureLocationDepiction) {
+        if(thing.orientation === Orientation.Reverse) {
+            reverse = true
+        }
+    }
+
+
+    if(reverse) { 
+        thing.offset = Vec2.fromXY(0, 0)
+        label.offset = Vec2.fromXY(0, thing.height)
+    } else {
+        thing.offset = Vec2.fromXY(0, label.height)
+        label.offset = Vec2.fromXY(0, 0)
+    }
 
     labelled.size = Vec2.fromXY(
         Math.max(label.size.x, thing.size.x),

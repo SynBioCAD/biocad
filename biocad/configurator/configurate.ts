@@ -9,12 +9,14 @@ import Layout from 'biocad/cad/Layout'
 import Depiction from 'biocad/cad/Depiction'
 import ComponentDepiction from 'biocad/cad/ComponentDepiction'
 import FeatureLocationDepiction from 'biocad/cad/FeatureLocationDepiction'
+import BackboneGroupDepiction from 'biocad/cad/BackboneGroupDepiction'
 
 import configurateComponent from './configurateComponent'
 import configurateFeatureLocation from './configurateFeatureLocation'
 import configurateLabel from './configurateLabel'
 import configurateLabelled from './configurateLabelled'
 import configurateBackbone from './configurateBackbone'
+import configurateBackboneGroup from './configurateBackboneGroup'
 import BackboneDepiction from "biocad/cad/BackboneDepiction";
 import InstructionSet from 'biocad/cad/layout-instruction/InstructionSet';
 import { SXIdentified } from 'sbolgraph';
@@ -67,32 +69,20 @@ export default function configurate(layout:Layout, instructions:InstructionSet) 
 
     }
 
-    //console.warn(layout.depictions.length + ' TO CONFIGURATE!!!!!')
-
     for(let depiction of layout.depictions) {
 
-        //console.warn('CONFIGURATE!!!!! ' + depiction.debugName)
-
         if(depiction instanceof ComponentDepiction) {
-
-            configurateComponent(depiction as ComponentDepiction, instructions)
-
+            configurateComponent(depiction, instructions)
         } else if(depiction instanceof FeatureLocationDepiction) {
-
-            configurateFeatureLocation(depiction as FeatureLocationDepiction, instructions)
-
+            configurateFeatureLocation(depiction, instructions)
         } else if(depiction instanceof LabelDepiction) {
-
-            configurateLabel(depiction as LabelDepiction, instructions)
-
+            configurateLabel(depiction, instructions)
         } else if(depiction instanceof LabelledDepiction) {
-
-            configurateLabelled(depiction as LabelledDepiction, instructions)
-
+            configurateLabelled(depiction, instructions)
         } else if(depiction instanceof BackboneDepiction) {
-
-            configurateBackbone(depiction as BackboneDepiction, instructions)
-
+            configurateBackbone(depiction, instructions)
+        } else if(depiction instanceof BackboneGroupDepiction) {
+            configurateBackboneGroup(depiction, instructions)
         }
 
     }

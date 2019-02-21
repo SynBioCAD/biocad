@@ -31,9 +31,9 @@ export default class CircularBackboneDepiction extends BackboneDepiction {
     orientation: Orientation
     location: SXIdentified|null
 
-    constructor(layout:Layout, parent?:Depiction, uid?:number) {
+    constructor(layout:Layout, backboneIndex:number, parent?:Depiction, uid?:number) {
 
-        super(layout, parent, uid)
+        super(layout, backboneIndex, parent, uid)
 
         this.orientation = Orientation.Forward
     }

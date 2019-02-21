@@ -30,7 +30,7 @@ async function main(argv) {
 
     } else if(argv._[0] === 'test') {
 
-        let f = process.argv.slice(2).join(' ')
+        let f = process.argv.slice(3).join(' ')
 
         await doFile(f)
 
@@ -60,6 +60,9 @@ async function main(argv) {
         })
 
         server.listen(argv.port)
+
+    } else {
+        console.error('command line option required')
     }
 
 

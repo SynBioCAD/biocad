@@ -18,7 +18,7 @@ import BackboneDepiction from './BackboneDepiction'
 
 import { Specifiers } from 'bioterms'
 
-import { Vec2, Rect } from 'jfw/geom'
+import { Vec2, Rect, LinearRange } from 'jfw/geom'
 
 import configurateLayout from 'biocad/configurator/configurate'
 import LabelDepiction from "biocad/cad/LabelDepiction";
@@ -31,7 +31,7 @@ import LayoutPOD from "biocad/cad/LayoutPOD";
 import FeatureLocationDepiction from "biocad/cad/FeatureLocationDepiction";
 
 import assert from 'power-assert'
-import ComponentDisplayList from "biocad/cad/ComponentDisplayList";
+import ComponentDisplayList, { BackboneGroup, Backbone } from "biocad/cad/ComponentDisplayList";
 import { Watcher, SXIdentified, SXSequenceConstraint, SXLocation, SXOrientedLocation, SXInteraction } from "sbolgraph"
 import InteractionDepiction from './InteractionDepiction'
 import BiocadApp from 'biocad/BiocadApp';
@@ -41,6 +41,7 @@ import Instruction from 'biocad/cad/layout-instruction/Instruction';
 import InstructionSet from 'biocad/cad/layout-instruction/InstructionSet';
 import LabelledDepiction from './LabelledDepiction';
 import IdentifiedChain from '../IdentifiedChain';
+import BackboneGroupDepiction from './BackboneGroupDepiction';
 
 
 export default class Layout extends Versioned {
@@ -473,7 +474,7 @@ export default class Layout extends Versioned {
 
                 for(let backboneGroup of displayList.backboneGroups) {
                     //console.log('BB GROUP LEN ' + backboneGroup.length)
-                    this.syncBackbone(preset, backboneGroup, chain, cdDepiction, 1, Orientation.Forward)
+                    this.syncBackboneGroup(preset, backboneGroup, chain, cdDepiction, 1, Orientation.Forward)
                 }
 
                 for(let child of displayList.ungrouped) {
@@ -483,7 +484,7 @@ export default class Layout extends Versioned {
 
                     let nextChain = chain.extend(child)
 
-                    this.syncComponentInstanceDepiction(preset, child as SXSubComponent, nextChain, cdDepiction, 1, Orientation.Forward)
+                    this.syncComponentInstanceDepiction(preset, child as SXSubComponent, nextChain, cdDepiction, 1, Orientation.Forward, null)
 
                 }
 
@@ -560,7 +561,7 @@ export default class Layout extends Versioned {
 
     }
 
-    private syncSequenceAnnotationDepiction(preset:DetailPreset, location:SXLocation, chain:IdentifiedChain, parent:Depiction, nestDepth:number, orientation:Orientation) {
+    private syncSequenceAnnotationDepiction(preset:DetailPreset, location:SXLocation, chain:IdentifiedChain, parent:Depiction, nestDepth:number, orientation:Orientation, range:LinearRange) {
 
         //const sequenceAnnotation:SXSequenceFeature = location.containingSequenceFeature
 
@@ -590,7 +591,7 @@ export default class Layout extends Versioned {
 
         if(containingObject instanceof SXSubComponent) {
 
-            const cDepiction:ComponentDepiction = this.syncComponentInstanceDepiction(preset, containingObject as SXSubComponent, chain, parent, nestDepth, nestedOrientation)
+            const cDepiction:ComponentDepiction = this.syncComponentInstanceDepiction(preset, containingObject as SXSubComponent, chain, parent, nestDepth, nestedOrientation, range)
             cDepiction.location = location
 
         } else if(containingObject instanceof SXSequenceFeature) {
@@ -636,7 +637,10 @@ export default class Layout extends Versioned {
             salDepiction.location = location
 
             salDepiction.depictionOf = containingObject as SXSequenceFeature
+
             salDepiction.orientation = nestedOrientation
+            salDepiction.range = range
+
             salDepiction.isExpandable = false
 
         } else {
@@ -647,7 +651,7 @@ export default class Layout extends Versioned {
 
     }
 
-    private syncComponentInstanceDepiction(preset:DetailPreset, component:SXSubComponent, chain:IdentifiedChain, parent:Depiction, nestDepth:number, orientation:Orientation):ComponentDepiction {
+    private syncComponentInstanceDepiction(preset:DetailPreset, component:SXSubComponent, chain:IdentifiedChain, parent:Depiction, nestDepth:number, orientation:Orientation, range:LinearRange|null):ComponentDepiction {
 
         if(!component.instanceOf)
             throw new Error('Component has no definition')
@@ -699,6 +703,10 @@ export default class Layout extends Versioned {
         }
 
         cDepiction.orientation = orientation
+
+        if(range)
+            cDepiction.range = range
+
         cDepiction.isExpandable = definition.subComponents.length > 0
 
         if(cDepiction.opacity === Opacity.Whitebox) {
@@ -708,7 +716,7 @@ export default class Layout extends Versioned {
             //console.log(displayList.backboneGroups.length + ' bb groups for ' + component.uriChain)
 
             for(let backboneGroup of displayList.backboneGroups) {
-                this.syncBackbone(preset, backboneGroup, chain, cDepiction, nestDepth + 1, orientation)
+                this.syncBackboneGroup(preset, backboneGroup, chain, cDepiction, nestDepth + 1, orientation)
             }
 
             for(let child of displayList.ungrouped) {
@@ -718,7 +726,7 @@ export default class Layout extends Versioned {
 
                 let nextChain = chain.extend(child)
 
-                this.syncComponentInstanceDepiction(preset, child as SXSubComponent, nextChain, cDepiction, nestDepth + 1, orientation)
+                this.syncComponentInstanceDepiction(preset, child as SXSubComponent, nextChain, cDepiction, nestDepth + 1, orientation, null)
 
             }
 
@@ -759,349 +767,81 @@ export default class Layout extends Versioned {
     }
 
 
-    private syncBackbone(preset:DetailPreset, children:Array<SXIdentified>, chain:IdentifiedChain, parent:Depiction, nestDepth:number, orientation:Orientation):void {
+    private syncBackboneGroup(preset:DetailPreset, dlGroup:BackboneGroup, chain:IdentifiedChain, parent:Depiction, nestDepth:number, orientation:Orientation):void {
 
-        console.log('sync backbone children ', children.map((child) => child.uri).join(' '))
-
-
-        // parent is a cd, c, or fc
+        // parent is a depiction of an SXComponent or SXSubComponent (i.e., a ComponentDepiction)
 
         if(! (parent instanceof ComponentDepiction)) {
             throw new Error('???')
         }
 
-        var c:ComponentDepiction = parent as ComponentDepiction
+        let group:BackboneGroupDepiction|null = null
+        let bestGroupScore = -1
 
+        for(let child of parent.children) {
+            if(child instanceof BackboneGroupDepiction) {
+                let score = child.closenessScoreToDisplayList(dlGroup) 
+                if(score > bestGroupScore) {
+                    group = child
+                    bestGroupScore = score
+                }
+            }
+        }
+
+        if(!group) {
+            group = new BackboneGroupDepiction(this, parent)
+            group.setSameVersionAs(this)
+            this.addDepiction(group, parent)
+        }
+
+        group.stamp = Layout.nextStamp
+
+        group.backboneLength = dlGroup.backboneLength
+
+        var c:ComponentDepiction = parent as ComponentDepiction
 
         let circular:boolean = c.getDefinition().hasType(Specifiers.SBOL2.Type.Circular)
 
-        let backbone:BackboneDepiction|null = null
+        let backbones:Map<Backbone,BackboneDepiction> = new Map()
 
-        for(let child of parent.children) {
-            if(circular && child instanceof CircularBackboneDepiction) {
-                backbone = child
-                break
+        for(let [ backboneIndex, dlBackbone ] of dlGroup.backbones) {
+
+            let backbone = group.getBackboneForIndex(backboneIndex)
+
+            if(!backbone) {
+                backbone =
+                    circular ?
+                        new CircularBackboneDepiction(this, backboneIndex, parent) :
+                        new BackboneDepiction(this, backboneIndex, parent)
+                backbone.setSameVersionAs(this)
+                this.addDepiction(backbone, group)
             }
-            if(!circular && child instanceof BackboneDepiction) {
-                backbone = child
-                break
-            }
+
+            backbones.set(dlBackbone, backbone)
+            backbone.stamp = Layout.nextStamp
         }
 
-        if(!backbone) {
-            backbone =
-                circular ?
-                    new CircularBackboneDepiction(this, parent) :
-                    new BackboneDepiction(this, parent)
-            backbone.setSameVersionAs(this)
-            this.addDepiction(backbone, parent)
-        }
+        for(let [ dlBackbone, backbone ] of backbones) {
 
-        backbone.stamp = Layout.nextStamp
+            for(let child of dlBackbone.children) {
 
+                let { object, range } = child
 
+                let newChain = chain.extend(object)
 
-        children = this.sortBackboneChildren(children, orientation)
-
-
-
-            //console.log('BB FOR ' + parent.depictionOf.uriChain + ' HAS ' + children.length + ' CHILDREN')
-
-        for(let child of children) {
-
-            var effectiveThing:SXIdentified|undefined = undefined
-            
-            /*
-            if(child instanceof SXLocation) {
-                
-                effectiveThing = (child as SXLocation).containingObject
-
-            } else {
-
-                effectiveThing = child
-
-            }*/
-            
-            effectiveThing = child
-
-            if(effectiveThing === undefined) {
-                throw new Error('???')
-            }
-
-            let newChain = chain.extend(effectiveThing)
-
-            if(effectiveThing instanceof SXSubComponent) {
-
-                console.error('SYNCING CI DEPCT')
-
-                this.syncComponentInstanceDepiction(preset, effectiveThing as SXSubComponent, newChain, backbone, nestDepth + 1, orientation)
-
-
-            } else if(effectiveThing instanceof SXSequenceFeature) {
-
-                console.error('SYNCING SEQFEATURE DEPCT')
-
-                /*
-                var nestedOrientation: Orientation
-
-                if (child instanceof OrientedLocation) {
-
-                    nestedOrientation = (child as OrientedLocation).orientation ===
-                        Specifiers.SBOL2.Orientation.ReverseComplement ?
-                        reverse(orientation) : orientation
-
+                if(object instanceof SXSubComponent) {
+                    this.syncComponentInstanceDepiction(preset, object, newChain, backbone, nestDepth + 1, orientation, range)
+                } else if (object instanceof SXLocation) {
+                    this.syncSequenceAnnotationDepiction(preset, object, newChain, backbone, nestDepth + 1, orientation, range)
                 } else {
-
-                    nestedOrientation = orientation
-
-                }*/
-
-            } else if(effectiveThing instanceof SXLocation) {
-
-                console.error('SYNCING LOC DEPCT')
-
-                this.syncSequenceAnnotationDepiction(preset, effectiveThing, newChain, backbone, nestDepth + 1, orientation)
-
-            } else {
-
-                throw new Error('???')
-            
-            }
-
-        }
-    }
-
-
-    private sortBackboneChildren(children:Array<SXIdentified>, orientation:Orientation):Array<SXIdentified> {
-
-        //console.log('sorting ' + children.length + ' children')
-
-        var fixedChildren:Array<SXIdentified> = children.filter((child:SXIdentified) => {
-
-            if(child instanceof SXSubComponent) {
-
-                const componentInstance:SXSubComponent = child as SXSubComponent
-
-                if (componentInstance.hasFixedLocation())
-                    return true
-            }
-
-            if(child instanceof SXLocation) {
-
-                return (child as SXLocation).isFixed()
-
-            }
-
-            return false
-
-        })
-
-        //console.error(fixedChildren.length + ' fixed children')
-
-        fixedChildren = fixedChildren.sort((a:SXIdentified, b:SXIdentified) => {
-
-            if(orientation === Orientation.Forward)
-                return start(a) - start(b)
-            else
-                return start(b) - start(a)
-
-            function start(child:SXIdentified):number {
-
-                const locations:Array<SXLocation> = []
-
-                if(child instanceof SXLocation) {
-
-                    if((child as SXLocation).isFixed()) {
-                        locations.push(child as SXLocation)
-                    }
-
-                } else if(child instanceof SXSubComponent) {
-
-                    for(let location of child.locations) {
-                        if(location.isFixed()) {
-                            locations.push(location)
-                        }
-                    }
-
-                } else {
-
                     throw new Error('???')
-                
-                }
-
-                var minStart = 999999
-                //var maxEnd = -999999
-
-                for(let location of locations) {
-
-                    if(location instanceof SXRange) {
-
-                        const range:SXRange = location as SXRange
-
-                        if (range.start === undefined)
-                            throw new Error('???')
-
-                        minStart = Math.min(range.start, minStart)
-                        //maxEnd = Math.max(location.end, maxEnd)
-                    }
-
-
-                }
-
-                return minStart
-            }
-        
-        })
-
-
-        var resultChildren:Array<SXIdentified> = fixedChildren.slice(0)
-
-
-        /* now for those mucky "constraint" children
-        * also includes children with no fixed locations AND no constraints
-        */
-
-
-        var constraintChildren:Array<SXIdentified> = children.filter((child:SXIdentified) => {
-
-            return fixedChildren.indexOf(child) === -1
-
-        })
-
-
-        function childrenMatchingComponent(children:Array<SXIdentified>, component:SXSubComponent):Array<SXIdentified> {
-
-            return children.filter((child:SXIdentified) => {
-
-                if(child instanceof SXLocation) {
-
-                    const location:SXLocation = child as SXLocation
-
-                    const containingObject:SXIdentified|undefined = location.containingObject
-
-                    return containingObject && containingObject.uri === component.uri
-
-                } else if(child instanceof SXSubComponent) {
-
-                    return child.uri === component.uri
-
-                }
-
-            })
-
-        }
-        
-
-        const doneDepictions:Set<SXIdentified> = new Set()
-
-        for(let child of constraintChildren) {
-            positionConstraintChild(child)
-        }
-
-        function positionConstraintChild(child:SXIdentified):void {
-
-            if(doneDepictions.has(child))
-                return
-
-
-
-            var c:SXSubComponent|undefined = undefined
-
-
-            // might be a location!
-
-            if(child instanceof SXLocation) {
-
-                const cc:SXIdentified|undefined = (child as SXLocation).containingObject
-
-                if(cc === undefined)
-                    throw new Error('????')
-
-                if(! (cc instanceof SXSubComponent))
-                    throw new Error('????')
-
-                c = cc
-
-            } else if(child instanceof SXSubComponent) {
-
-                c = child as SXSubComponent
-
-            } else {
-
-                throw new Error('???')
-
-            }
-
-
-            const constraints:Array<SXSequenceConstraint> = c.sequenceConstraints
-
-            if(constraints.length === 0) {
-                resultChildren.push(child)
-                doneDepictions.add(child)
-                return
-            }
-
-            for(var i = 0; i < constraints.length; ++ i) {
-
-                const constraint:SXSequenceConstraint = constraints[i]
-
-                let otherChildren:Array<SXIdentified> = childrenMatchingComponent(resultChildren, constraint.object)
-
-                if(otherChildren.length === 0) {
-
-                    for(let otherChild of childrenMatchingComponent(constraintChildren, constraint.object)) {
-                        positionConstraintChild(otherChild)
-                    }
-
-                    otherChildren = childrenMatchingComponent(resultChildren, constraint.object)
-
-                    if(otherChildren.length === 0) {
-
-                        throw new Error('Cannot find object of constraint: ' + constraint.object.uri + ' for subject ' + constraint.subject.uri)
-
-                    }
-                }
-
-                if(constraint.restriction === Specifiers.SBOLX.SequenceConstraint.Precedes) {
-
-                    for(var j:number = 0; j < resultChildren.length; ++ j) {
-
-                        if(otherChildren.indexOf(resultChildren[j]) !== -1) {
-
-                            resultChildren.splice(j, 0, child)
-                            doneDepictions.add(child)
-
-                            break
-
-                        }
-                    }
-
-
                 }
 
             }
-        }
-
-        function reverse(orientation: Orientation): Orientation {
-
-            return orientation === Orientation.Forward ?
-                Orientation.Reverse :
-                Orientation.Forward
 
         }
-
-
-        //console.log('original children length ' + children.length)
-        //console.log('result children length ' + resultChildren.length)
-
-        return resultChildren
-
 
     }
-
-
-
-
 
     getIntersectingDepictions(pos:Vec2, bSelectableOnly:boolean):Depiction[] {
 

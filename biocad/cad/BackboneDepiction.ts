@@ -5,7 +5,7 @@ import Depiction, { Opacity, Orientation, Fade }  from './Depiction'
 
 import { VNode, svg } from 'jfw/vdom'
 
-import { Matrix, Vec2 } from 'jfw/geom'
+import { Matrix, Vec2, LinearRangeSet } from 'jfw/geom'
 
 import {
     SXIdentified,
@@ -26,6 +26,7 @@ import { SXRange, Watcher } from "sbolgraph";
 
 import extend = require('xtend')
 import IdentifiedChain from '../IdentifiedChain';
+import { Backbone } from './ComponentDisplayList';
 
 export default class BackboneDepiction extends Depiction {
 
@@ -33,15 +34,19 @@ export default class BackboneDepiction extends Depiction {
     location: SXIdentified|null
     backboneY:number
 
-    constructor(layout:Layout, parent?:Depiction, uid?:number) {
+    backboneIndex:number
+
+    constructor(layout:Layout, backboneIndex:number, parent?:Depiction, uid?:number) {
 
         super(layout, undefined, undefined, parent, uid)
 
         this.orientation = Orientation.Forward
+        this.backboneIndex = backboneIndex
     }
 
     render(renderContext:RenderContext):VNode {
 
+        /*
         const offset = this.absoluteOffset.multiply(renderContext.layout.gridSize)
         const size = this.size.multiply(renderContext.layout.gridSize)
 
@@ -66,11 +71,6 @@ export default class BackboneDepiction extends Depiction {
         return svg('g', extend(svgAttr, {
             transform: transform.toSVGString()
         }), [
-            /*svg('rect', {
-                fill: 'rgba(255, 0, 0, 0.3)',
-                width: size.x,
-                height: size.y
-            }),*/
             svg('line', {
                 x1: 0,
                 y1: anchorY,
@@ -79,8 +79,9 @@ export default class BackboneDepiction extends Depiction {
                 stroke: 'black',
                 'stroke-width': '2px'
             })
-        ])
+        ])*/
 
+        return svg('g', [])
 
     }
 
@@ -110,6 +111,22 @@ export default class BackboneDepiction extends Depiction {
 
     getAnchorY():number {
         return this.backboneY
+    }
+
+    closenessScoreToDisplayList(dlBackbone:Backbone) {
+
+        let score = 0
+
+        for(let dlChild of dlBackbone.children) {
+            for(let child of this.children) {
+                let dOf = child.depictionOf
+                if(dOf && dlChild.object.uri === dOf.uri) {
+                    ++ score
+                }
+            }
+        }
+
+        return score
     }
 
 }
