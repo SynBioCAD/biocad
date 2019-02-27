@@ -31,7 +31,7 @@ import LayoutPOD from "biocad/cad/LayoutPOD";
 import FeatureLocationDepiction from "biocad/cad/FeatureLocationDepiction";
 
 import assert from 'power-assert'
-import ComponentDisplayList, { BackboneGroup, Backbone } from "biocad/cad/ComponentDisplayList";
+import ComponentDisplayList, { BackboneGroup, Backbone, BackboneChild, OmittedSpace } from "biocad/cad/ComponentDisplayList";
 import { Watcher, SXIdentified, SXSequenceConstraint, SXLocation, SXOrientedLocation, SXInteraction } from "sbolgraph"
 import InteractionDepiction from './InteractionDepiction'
 import BiocadApp from 'biocad/BiocadApp';
@@ -470,7 +470,7 @@ export default class Layout extends Versioned {
 
             if(cdDepiction.opacity === Opacity.Whitebox) {
 
-                var displayList:ComponentDisplayList = ComponentDisplayList.fromComponent(component)
+                var displayList:ComponentDisplayList = ComponentDisplayList.fromComponent(component, { omitEmptySpace: true })
 
                 for(let backboneGroup of displayList.backboneGroups) {
                     //console.log('BB GROUP LEN ' + backboneGroup.length)
@@ -711,7 +711,7 @@ export default class Layout extends Versioned {
 
         if(cDepiction.opacity === Opacity.Whitebox) {
 
-            var displayList:ComponentDisplayList = ComponentDisplayList.fromComponent(component.instanceOf)
+            var displayList:ComponentDisplayList = ComponentDisplayList.fromComponent(component.instanceOf, { omitEmptySpace: true })
 
             //console.log(displayList.backboneGroups.length + ' bb groups for ' + component.uriChain)
 
@@ -797,6 +797,7 @@ export default class Layout extends Versioned {
         group.stamp = Layout.nextStamp
 
         group.backboneLength = dlGroup.backboneLength
+        group.locationsOfOmittedRegions = dlGroup.locationsOfOmittedRegions
 
         var c:ComponentDepiction = parent as ComponentDepiction
 
@@ -825,7 +826,12 @@ export default class Layout extends Versioned {
 
             for(let child of dlBackbone.children) {
 
-                let { object, range } = child
+                let { object, range, forward } = child
+
+                /*
+                if(!forward) {
+                    orientation = reverse(orientation)
+                }*/
 
                 let newChain = chain.extend(object)
 

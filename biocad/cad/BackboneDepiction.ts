@@ -26,7 +26,7 @@ import { SXRange, Watcher } from "sbolgraph";
 
 import extend = require('xtend')
 import IdentifiedChain from '../IdentifiedChain';
-import { Backbone } from './ComponentDisplayList';
+import { Backbone, BackboneChild } from './ComponentDisplayList';
 
 export default class BackboneDepiction extends Depiction {
 
@@ -118,6 +118,9 @@ export default class BackboneDepiction extends Depiction {
         let score = 0
 
         for(let dlChild of dlBackbone.children) {
+            if(! (dlChild instanceof BackboneChild)) {
+                continue
+            }
             for(let child of this.children) {
                 let dOf = child.depictionOf
                 if(dOf && dlChild.object.uri === dOf.uri) {

@@ -35,14 +35,29 @@ export default class LabelledDepiction extends Depiction {
             'stroke-width': '2px'
         })*/
 
+
+        /*
+
+        let offset = this.absoluteOffset
+
         let label = this.getLabel()
         let labelled = this.getLabelled()
 
-        // good morning!
-        // draw a line between them
+        let points = label.boundingBox.closestEdgeMidPointsBetweenThisAnd(labelled.boundingBox)
+
+        let pA = offset.add(points.pointA).multiply(this.layout.gridSize)
+        let pB = offset.add(points.pointB).multiply(this.layout.gridSize)
+
+        return svg('line', {
+            x1: pA.x,
+            y1: pA.y,
+            x2: pB.x,
+            y2: pB.y,
+            stroke: 'black',
+            fill: 'none'
+        })*/
 
         return []
-
     }
 
     getLabel():LabelDepiction {

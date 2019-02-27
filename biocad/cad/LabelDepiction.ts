@@ -35,7 +35,7 @@ export default class LabelDepiction extends Depiction {
 
         this.attr = {
             'font-family': 'sans-serif',
-            'font-size': (layout.gridSize.x) + 'pt'
+            'font-size': (layout.gridSize.x * 0.6) + 'pt'
         }
     }
 

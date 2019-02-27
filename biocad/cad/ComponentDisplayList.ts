@@ -7,19 +7,25 @@ import { Specifiers } from "bioterms";
 let bpToGridScale = 0.02
 let minGridWidth = 2
 
-export interface BackboneGroup {
+export class BackboneGroup {
     backbones:Map<number,Backbone>
     backboneLength:number
+    locationsOfOmittedRegions:LinearRangeSet
 }
 
-export interface Backbone {
+export class Backbone {
     children:BackboneChild[]
     rangesUsed:LinearRangeSet
 }
 
-export interface BackboneChild {
+export class BackboneChild {
     object:SXIdentified
     range:LinearRange
+    forward:boolean
+}
+
+export interface DisplayListOpts {
+    omitEmptySpace:boolean
 }
 
 export default class ComponentDisplayList {
@@ -29,15 +35,15 @@ export default class ComponentDisplayList {
     ungrouped:Array<SXIdentified>
 
 
-    static fromComponent(SXComponent:SXComponent):ComponentDisplayList {
+    static fromComponent(SXComponent:SXComponent, opts:DisplayListOpts):ComponentDisplayList {
 
-        return new ComponentDisplayList(SXComponent)
+        return new ComponentDisplayList(SXComponent, opts)
 
     }
 
 
 
-    private constructor(cd:SXComponent) {
+    private constructor(cd:SXComponent, opts:DisplayListOpts) {
         
 
         const visited:Set<string> = new Set()
@@ -184,12 +190,14 @@ export default class ComponentDisplayList {
                 backboneLength = cd.sequence.elements.length * bpToGridScale
             }
 
-            let group = {
-                backbones: new Map<number, Backbone>(),
-                backboneLength: backboneLength
-            }
+            let group = new BackboneGroup()
+            group.backbones = new Map<number, Backbone>()
+            group.backboneLength = backboneLength
+            group.locationsOfOmittedRegions = new LinearRangeSet()
 
-            let backboneForRange = (range:LinearRange):Backbone => {
+            let allRangesUsed = new LinearRangeSet()
+
+            let backboneForRange = (range:LinearRange, forward:boolean):Backbone => {
 
                 let n = 0
 
@@ -198,19 +206,18 @@ export default class ComponentDisplayList {
                     let backbone = group.backbones.get(n)
 
                     if(!backbone) {
-                        backbone = {
-                            children: [],
-                            rangesUsed: new LinearRangeSet()
-                        }
+                        backbone = new Backbone()
+                        backbone.children = []
+                        backbone.rangesUsed = new LinearRangeSet()
                         group.backbones.set(n, backbone)
                     }
 
-                    if(!backbone.rangesUsed.intersectsRange(range.normalise())) {
+                    if(!backbone.rangesUsed.intersectsRange(range)) {
                         return backbone
                     }
 
                     // move upwards for forward annotations, downwards for reverse
-                    if(range.start < range.end)
+                    if(forward)
                         -- n
                     else
                         ++ n
@@ -218,17 +225,21 @@ export default class ComponentDisplayList {
 
             }
 
-            let place = (object:SXIdentified, range:LinearRange) => {
+            let place = (object:SXIdentified, range:LinearRange, forward:boolean) => {
 
                 if(uriToPositionedChild.has(object.uri)) {
                     throw new Error('attempted to position object twice')
                 }
 
-                let backbone = backboneForRange(range)
+                let backbone = backboneForRange(range, forward)
 
-                backbone.rangesUsed.push(range.normalise())
+                backbone.rangesUsed.push(new LinearRange(range.start, range.end))
+                allRangesUsed.push(new LinearRange(range.start, range.end))
 
-                let child = { object, range }
+                let child = new BackboneChild()
+                child.object = object
+                child.range = range
+                child.forward = forward
 
                 backbone.children.push(child)
                 uriToPositionedChild.set(object.uri, child)
@@ -243,13 +254,11 @@ export default class ComponentDisplayList {
                     }
                     let start = element.start * bpToGridScale
                     let end = Math.max(element.end ? element.end * bpToGridScale : 0, start + minGridWidth)
-                    if(element.orientation === Specifiers.SBOLX.Orientation.ReverseComplement) {
-                        let tmp = end
-                        end = start
-                        start = tmp
-                    }
-                    let range = new LinearRange(start, end)
-                    place(element, range)
+                    let forward = element.orientation !== Specifiers.SBOLX.Orientation.ReverseComplement
+
+                    let range = new LinearRange(start, end).normalise()
+
+                    place(element, range, forward)
                 }
             }
 
@@ -282,12 +291,13 @@ export default class ComponentDisplayList {
                             if(!sRange)
                                 throw new Error('???')
                             
-                            if(positionedS.range.start < positionedS.range.end) {
-                                // forward; place o AFTER s because s precedes o
-                                place(o, new LinearRange(positionedS.range.end, positionedS.range.end + width))
+                            // place o AFTER s because s precedes o
+                            if(positionedS.forward) {
+                                // forward; place o to the right of s
+                                place(o, new LinearRange(positionedS.range.end, positionedS.range.end + width), true)
                             } else {
-                                // reverse; place o AFTER s because s precedes o
-                                place(o, new LinearRange(positionedS.range.end, positionedS.range.end - width))
+                                // reverse; place o to the left of s
+                                place(o, new LinearRange(positionedS.range.start - width, positionedS.range.start), false)
                             }
                             doneSomething = true
                         }
@@ -307,12 +317,13 @@ export default class ComponentDisplayList {
                             if(!sRange)
                                 throw new Error('???')
 
-                            if(positionedO.range.start < positionedO.range.end) {
-                                // forward; place s BEFORE o because s precedes o
-                                place(s, new LinearRange(positionedO.range.start - width, positionedO.range.start))
+                            // place s BEFORE o because s precedes o
+                            if(positionedO.forward) {
+                                // forward; place s to the left of o
+                                place(s, new LinearRange(positionedO.range.start - width, positionedO.range.start), true)
                             } else {
-                                // reverse; place s BEFORE o because s precedes o
-                                place(s, new LinearRange(positionedO.range.start + width, positionedO.range.start))
+                                // reverse; place s to the right of o
+                                place(s, new LinearRange(positionedO.range.end, positionedO.range.end + width), false)
                             }
 
                             doneSomething = true
@@ -373,7 +384,7 @@ export default class ComponentDisplayList {
                 width = Math.max(width, minGridWidth)
 
                 // TODO: orientation - would come from the location
-                place(element, new LinearRange(x, x + width))
+                place(element, new LinearRange(x, x + width), true)
 
                 x = x + width
             }
@@ -385,7 +396,77 @@ export default class ComponentDisplayList {
                 })
             }
 
-            group.backboneLength = Math.max(group.backboneLength)
+            //group.backboneLength = Math.max(group.backboneLength)
+
+            allRangesUsed = allRangesUsed.sort()
+
+            if(opts.omitEmptySpace) {
+
+                console.log('allRangesUsed', allRangesUsed)
+                console.log('flattened', allRangesUsed.flatten())
+                console.log('inverted', allRangesUsed.flatten().invert())
+
+
+                let rangesBetween = allRangesUsed.flatten().invert()
+
+                rangesBetween.push(new LinearRange(allRangesUsed.ranges[allRangesUsed.ranges.length-1].end, group.backboneLength))
+                rangesBetween.push(new LinearRange(0, allRangesUsed.ranges[0].start))
+
+                rangesBetween.ranges = rangesBetween.ranges.filter((range) => {
+                    return range.end - range.start > 2
+                })
+
+                rangesBetween = rangesBetween.sort().flatten()
+
+                let entireBackboneRange = new LinearRange(0, group.backboneLength)
+
+                let rangesToDelete = rangesBetween.ranges.slice(0)
+
+                while(rangesToDelete.length > 0) {
+
+                    let rangeToDelete = rangesToDelete[0]
+                    rangesToDelete.splice(0, 1)
+
+                    deleteRange(rangesBetween.ranges, rangeToDelete)
+                    deleteRange(allRangesUsed.ranges, rangeToDelete)
+
+                    for(let backbone of group.backbones.values()) {
+                        deleteRange(backbone.rangesUsed.ranges, rangeToDelete)
+                        deleteRange(backbone.children.map((child) => child.range), rangeToDelete)
+                    }
+
+                    deleteRange([entireBackboneRange], rangeToDelete)
+                    deleteRange(group.locationsOfOmittedRegions.ranges, rangeToDelete)
+
+                    for(let backbone of group.backbones.values()) {
+                        group.locationsOfOmittedRegions.push(new LinearRange(rangeToDelete.start, rangeToDelete.start + 1))
+                    }
+                }
+
+                group.backboneLength = entireBackboneRange.end - entireBackboneRange.start
+
+
+                console.log('chopped', allRangesUsed.sort())
+
+                function deleteRange(ranges:LinearRange[], rangeToDelete:LinearRange) {
+                    let len = rangeToDelete.end - rangeToDelete.start
+                    for(let i = 0; i < ranges.length;) {
+                        let range = ranges[i]
+                        let newRange = range.chop(rangeToDelete, 1)
+                        //console.log(range, 'chop', rangeToDelete, 'makes', newRange)
+                        if(!newRange) {
+                            ranges.splice(i, 1)
+                            continue
+                        } else {
+                            range.start = newRange.start
+                            range.end = newRange.end
+                            ++ i
+                            continue
+                        }
+                    }
+                }
+            }
+
 
             this.backboneGroups.push(group)
 

@@ -3,7 +3,7 @@ import Depiction from "./Depiction";
 import { VNode, svg } from 'jfw/vdom'
 import RenderContext from "./RenderContext";
 import Layout from "./Layout";
-import { Vec2 } from 'jfw/geom'
+import { Vec2, LinearRangeSet } from 'jfw/geom'
 import { BackboneGroup, Backbone } from "./ComponentDisplayList";
 import BackboneDepiction from "./BackboneDepiction";
 
@@ -12,6 +12,8 @@ export default class BackboneGroupDepiction extends Depiction {
     static extensionLength:number = 3
 
     backboneLength:number
+
+    locationsOfOmittedRegions:LinearRangeSet
 
     constructor(layout:Layout, parent?:Depiction, uid?:number) {
 
@@ -90,7 +92,22 @@ export default class BackboneGroupDepiction extends Depiction {
                     'stroke-width': '2px'
                 })
             )
+
+            this.locationsOfOmittedRegions.forEach((range) => {
+                let from = offset.add(Vec2.fromXY(bbStart.x + range.start, bbStart.y)).multiply(renderContext.layout.gridSize)
+                let to = offset.add(Vec2.fromXY(bbStart.x + range.end, bbStart.y)).multiply(renderContext.layout.gridSize)
+                elements.push(svg('line', {
+                    x1: from.x,
+                    y1: from.y,
+                    x2: to.x,
+                    y2: to.y,
+                    stroke: 'red',
+                    'stroke-width': '3px',
+                    fill: 'none'
+                }))
+            })
         }
+
 
 
         return svg('g', elements)
