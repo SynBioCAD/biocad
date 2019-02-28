@@ -8,7 +8,7 @@ function createGeometry(size) {
 
     return {
         centerPoint: centerPoint,
-        radius: Vec2.fromXY(size.x / 2, size.y / 2)
+        radius: Vec2.fromXY(size.x / 2, size.y /2)
     };
 }
 
@@ -29,7 +29,7 @@ function renderGlyph(renderOpts) {
 export default {
 
     render: renderGlyph,
-    backbonePlacement: 'mid',
+    backbonePlacement: 'top',
     scale: Vec2.fromXY(0.4, 0.4)
 }
 

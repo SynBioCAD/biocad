@@ -5,8 +5,6 @@ import { svg } from 'jfw/vdom'
 function createGeometry(size) {
 
     return {
-        width: size.x,
-        height: size.y
     }
 }
 
@@ -14,23 +12,17 @@ function renderGlyph(renderOpts) {
 
     var geom = createGeometry(renderOpts.size)
 
-    var fill = renderOpts.color || 'blue'
+    let size = renderOpts.size
 
-    if(renderOpts.fill === false) {
-
-        fill = 'none'
-
-    } else {
-
-        if(renderOpts.fill !== undefined)
-            fill = renderOpts.fill
-    }
-
-    return svg('rect', {
-        stroke: renderOpts.border ? 'black' : 'none',
-        fill: fill,
-        width: geom.width,
-        height: geom.height
+    return svg('path', {
+        stroke: renderOpts.color || '#ffd700',
+        'stroke-width': size.y,
+        'stroke-dasharray': '2 2',
+        fill: 'none',
+        d: [
+            'M' + Vec2.fromXY(0, size.y / 2).toPathString(),
+            'L' + Vec2.fromXY(size.x, size.y / 2).toPathString()
+        ].join(''),
     });
 }
 
@@ -39,7 +31,7 @@ export default {
     render: renderGlyph,
     backbonePlacement: 'top',
     isContainer: true,
-    scale: Vec2.fromXY(1.0, 0.5)
+    scale: Vec2.fromXY(1.0, 0.2)
     
 }
 
