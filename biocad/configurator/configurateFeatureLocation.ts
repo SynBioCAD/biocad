@@ -79,7 +79,7 @@ function configurateSALinear(depiction:FeatureLocationDepiction):void {
 
     depiction.size = Vec2.fromXY(w, 2).max(depiction.minSize)
 
-    depiction.scale = visbolite.glyphScaleFromType(type)
+    depiction.size = depiction.size.multiply(visbolite.glyphScaleFromType(type)) 
 
     depiction.backbonePlacement = backbonePlacement
 

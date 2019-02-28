@@ -139,8 +139,8 @@ function configurateBlackboxComponent(depiction:ComponentDepiction):void {
     let w = depiction.range ? (depiction.range.end - depiction.range.start) : 2
 
     depiction.size = Vec2.fromXY(w, 2).max(depiction.minSize)
+    depiction.size = depiction.size.multiply(  visbolite.glyphScaleFromType(type) )
 
-    depiction.scale = visbolite.glyphScaleFromType(type)
     depiction.backbonePlacement = backbonePlacement
 }
 

@@ -107,10 +107,9 @@ export default function backboneStrategy(_parent:Depiction, children:Depiction[]
         let y = labelFor.offset.y
 
         if(labelFor.orientation === Orientation.Reverse) {
-            y += labelFor.size.y * labelFor.scale.y
+            y += labelFor.size.y
         } else {
             y -= h
-            y += labelFor.size.y - (labelFor.size.y * labelFor.scale.y)
         }
 
         child.offset = Vec2.fromXY(x, y)
