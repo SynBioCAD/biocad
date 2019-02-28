@@ -438,9 +438,7 @@ export default class ComponentDisplayList {
                     deleteRange([entireBackboneRange], rangeToDelete)
                     deleteRange(group.locationsOfOmittedRegions.ranges, rangeToDelete)
 
-                    for(let backbone of group.backbones.values()) {
-                        group.locationsOfOmittedRegions.push(new LinearRange(rangeToDelete.start, rangeToDelete.start + 1))
-                    }
+                    group.locationsOfOmittedRegions.push(new LinearRange(rangeToDelete.start, rangeToDelete.start + 1))
                 }
 
                 group.backboneLength = entireBackboneRange.end - entireBackboneRange.start

@@ -25,7 +25,7 @@ export default class BackboneGroupDepiction extends Depiction {
 
         let offset = this.absoluteOffset
 
-        let leftOrigin:Vec2 = Vec2.fromXY(offset.x + 1, offset.y)
+        let leftOrigin:Vec2 = Vec2.fromXY(offset.x, offset.y)
 
         for(let backbone of this.children) {
             if(! (backbone instanceof BackboneDepiction)) {
@@ -39,16 +39,63 @@ export default class BackboneGroupDepiction extends Depiction {
 
         let elements:VNode[] = []
 
-        elements.push(svg('path', {
-            d: [
-                'M' + Vec2.fromXY(offset.x, leftOrigin.y).multiply(renderContext.layout.gridSize).toPathString(),
-                'L' + Vec2.fromXY(offset.x, leftOrigin.y).add(Vec2.fromXY(this.size.x, 0)).multiply(renderContext.layout.gridSize).toPathString()
-            ].join(''),
-            stroke: 'black',
-            fill: 'none',
-            'stroke-width': '2px'
-        }))
 
+        let drawSingleBackbone = (start:Vec2, startWithExtension:Vec2, end:Vec2) => {
+
+            let drawSolidLine = (start:Vec2, end:Vec2) => {
+                elements.push(
+                    svg('path', {
+                        d: [
+                            'M' + start.multiply(renderContext.layout.gridSize).toPathString(),
+                            'L' + end.multiply(renderContext.layout.gridSize).toPathString()
+                        ].join(''),
+                        stroke: 'black',
+                        fill: 'none',
+                        'stroke-width': '2px'
+                    })
+                )
+            }
+
+            let drawDottedLine = (start:Vec2, end:Vec2) => {
+                elements.push(
+                    svg('path', {
+                        d: [
+                            'M' + start.multiply(renderContext.layout.gridSize).toPathString(),
+                            'L' + end.multiply(renderContext.layout.gridSize).toPathString()
+                        ].join(''),
+                        stroke: 'black',
+                        fill: 'none',
+                        'stroke-width': '2px',
+                        'stroke-dasharray': '2 2'
+                    })
+                )
+            }
+
+
+            let omitted = this.locationsOfOmittedRegions.sort().ranges
+
+            console.dir(omitted)
+
+            if(omitted.length === 0) {
+                drawSolidLine(startWithExtension, end)
+                return
+            }
+
+
+            let cur = startWithExtension
+
+            for(let i = 0; i < omitted.length; ++ i) {
+                let omittedStart = start.add(Vec2.fromXY(omitted[i].start, 0))
+                drawSolidLine(cur, omittedStart)
+                let omittedEnd = start.add(Vec2.fromXY(omitted[i].end, 0))
+                drawDottedLine(omittedStart, omittedEnd)
+                cur = omittedEnd
+            }
+
+            drawSolidLine(cur, end)
+        }
+
+        drawSingleBackbone(leftOrigin.add(Vec2.fromXY(BackboneGroupDepiction.extensionLength, 0)), leftOrigin, Vec2.fromXY(leftOrigin.x + this.size.x, leftOrigin.y))
 
         for(let backbone of this.children) {
             if(! (backbone instanceof BackboneDepiction)) {
@@ -81,31 +128,7 @@ export default class BackboneGroupDepiction extends Depiction {
                 })
             )
 
-            elements.push(
-                svg('path', {
-                    d: [
-                        'M' + point.multiply(renderContext.layout.gridSize).toPathString(),
-                        'L' + end.multiply(renderContext.layout.gridSize).toPathString()
-                    ].join(''),
-                    stroke: 'black',
-                    fill: 'none',
-                    'stroke-width': '2px'
-                })
-            )
-
-            this.locationsOfOmittedRegions.forEach((range) => {
-                let from = offset.add(Vec2.fromXY(bbStart.x + range.start, bbStart.y)).multiply(renderContext.layout.gridSize)
-                let to = offset.add(Vec2.fromXY(bbStart.x + range.end, bbStart.y)).multiply(renderContext.layout.gridSize)
-                elements.push(svg('line', {
-                    x1: from.x,
-                    y1: from.y,
-                    x2: to.x,
-                    y2: to.y,
-                    stroke: 'red',
-                    'stroke-width': '3px',
-                    fill: 'none'
-                }))
-            })
+            drawSingleBackbone(point, point, end)
         }
 
 
