@@ -54,8 +54,6 @@ export default abstract class Depiction extends Versioned {
 
     fade:Fade
 
-    scale: Vec2 = Vec2.fromXY(1.0, 1.0)
-
     parent: Depiction|null
     children: Array<Depiction>
 

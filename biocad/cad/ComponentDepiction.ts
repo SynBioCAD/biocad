@@ -149,17 +149,14 @@ export default class ComponentDepiction extends Depiction {
         var offset = this.absoluteOffset.multiply(renderContext.layout.gridSize)
         const size = this.size.multiply(renderContext.layout.gridSize)
 
-        const scale = this.scale
         const anchorY = this.getAnchorY() * renderContext.layout.gridSize.y
 
-        const renderSize = size.multiply(scale)
-
-        const anchorYScaled = renderSize.y * (anchorY / size.y)
+        const anchorYScaled = size.y * (anchorY / size.y)
 
         offset = offset.add(
             Vec2.fromXY(
-                (size.x - renderSize.x) / 2,
-                (size.y - renderSize.y) * (anchorY / size.y)
+                (size.x - size.x) / 2,
+                (size.y - size.y) * (anchorY / size.y)
             )
         )
 
@@ -168,7 +165,7 @@ export default class ComponentDepiction extends Depiction {
         transform = transform.multiply(Matrix.translation(offset))
 
         if(orientation === Orientation.Reverse) {
-            transform = transform.rotate(180, Vec2.fromXY(renderSize.x * 0.5, renderSize.y * 0.5))
+            transform = transform.rotate(180, Vec2.fromXY(size.x * 0.5, size.y * 0.5))
         }
 
              
@@ -186,7 +183,7 @@ export default class ComponentDepiction extends Depiction {
         return svg('g', attr, [
             visbolite.render({
                 type: type,
-                size: renderSize
+                size: size
             })
         ])
 

@@ -6,7 +6,7 @@ import { VNode } from 'jfw/vdom';
 
 import Depiction, { Opacity, Orientation, Fade } from 'biocad/cad/Depiction';
 
-import { Matrix, Vec2 } from 'jfw/geom'
+import { Matrix, Vec2, Line } from 'jfw/geom'
 
 import { svg } from 'jfw/vdom'
 
@@ -24,6 +24,7 @@ import visbolite from 'visbolite'
 import CircularBackboneDepiction from 'biocad/cad/CircularBackboneDepiction';
 import LabelledDepiction from "./LabelledDepiction";
 import IdentifiedChain from "biocad/IdentifiedChain";
+import drawArrow, { ArrowheadType } from "biocad/util/drawArrow";
 
 export default class LabelDepiction extends Depiction {
 
@@ -236,7 +237,7 @@ export default class LabelDepiction extends Depiction {
             svgAttr['opacity'] = '0.5'
         }
 
-        return svg('text', extend(svgAttr, {
+        let svgText = svg('text', extend(svgAttr, {
 
             transform: transform.toSVGString(),
             'text-anchor': 'start',
@@ -254,6 +255,47 @@ export default class LabelDepiction extends Depiction {
             ' ',
             name
         ])
+
+        let distance = this.boundingBox.distanceToRect(this.labelFor.boundingBox)
+
+        if(distance > 2) {
+
+            if(!this.parent) {
+                throw new Error('???')
+            }
+
+            let direction = this.boundingBox.center().direction(this.labelFor.boundingBox.center())
+
+            let from = this.boundingBox.edgePointForDirectionVector(direction)
+            let to = this.labelFor.boundingBox.edgePointForDirectionVector(Vec2.fromScalar(0.0).subtract(direction))
+
+            console.log('dir from to', direction, from, to)
+
+            let line = new Line(from, to)
+
+            let a = this.parent.absoluteOffset.add(line.a).multiply(this.layout.gridSize)
+            let b = this.parent.absoluteOffset.add(line.b).multiply(this.layout.gridSize)
+
+            let svgArrow = svg('path', {
+                d: [
+                    'M' + a.toPathString(),
+                    'L' + b.toPathString()
+                ].join(''),
+                stroke: 'black',
+                'stroke-width': '1px'
+            })
+
+            return svg('g', [
+                svgText,
+                svgArrow
+            ])
+
+        } else {
+
+            return svgText
+
+        }
+
     }
 
     renderThumb(size:Vec2):VNode {

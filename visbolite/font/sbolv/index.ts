@@ -67,7 +67,7 @@ let glyphs = {
     insulator,
     mature_transcript_region,
     operator,
-    origin_of_replication,
+    //origin_of_replication,
     origin_of_transfer,
     poly_a,
     promoter,

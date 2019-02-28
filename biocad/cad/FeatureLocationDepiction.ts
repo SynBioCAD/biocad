@@ -127,7 +127,7 @@ export default class FeatureLocationDepiction extends Depiction {
         }, [
             visbolite.render({
                 type: type,
-                size: renderSize
+                size: size
             })
         ])
 
