@@ -15,7 +15,7 @@ function renderGlyph(renderOpts) {
     let size = renderOpts.size
 
     return svg('path', {
-        stroke: renderOpts.color || '#ffd700',
+        stroke: renderOpts.color || '#779ECB',
         'stroke-width': size.y,
         'stroke-dasharray': '2 2',
         fill: 'none',

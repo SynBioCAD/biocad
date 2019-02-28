@@ -87,47 +87,7 @@ export default function backboneStrategy(_parent:Depiction, children:Depiction[]
         child.offset = childOffset
     }
 
-    let labelLayers: Map<number, { ranges:LinearRangeSet, height:number }> = new Map()
-    let labelToLayer: Map<LabelDepiction, number> = new Map()
-
-    let layerMin = -1
-    let layerMax = 1
-
-    // -1 1 -2 2 -3 3
-    let placeRange = (range:LinearRange, orientation:Orientation) => {
-
-        let n = orientation === Orientation.Reverse ? 1 : -1
-        let flip = false
-
-        for (;;) {
-
-            let layer = labelLayers.get(n)
-
-            if(!layer) {
-                layer = { ranges: new LinearRangeSet(), height: 0 }
-                labelLayers.set(n, layer)
-            }
-
-            if(!layer.ranges.intersectsRange(range)) {
-                layer.ranges.push(range)
-                return { layerN: n, layer: layer }
-            }
-
-
-            flip = !flip
-
-            if(flip) {
-                n = -n
-            } else {
-                if (orientation === Orientation.Reverse)
-                    ++ n
-                else
-                    -- n
-            }
-        }
-    }
-
-    // 2. assign labels to layers
+    // 2. set initial label positions
 
     for(let child of children) {
 
@@ -146,50 +106,40 @@ export default function backboneStrategy(_parent:Depiction, children:Depiction[]
         let x = labelFor.offset.x
         let y = labelFor.offset.y
 
-        let { layer, layerN } = placeRange(new LinearRange(x, x + w), labelFor.orientation)
+        if(labelFor.orientation === Orientation.Reverse) {
+            y += labelFor.size.y * labelFor.scale.y
+        } else {
+            y -= h
+            y += labelFor.size.y - (labelFor.size.y * labelFor.scale.y)
+        }
 
-        layer.height = Math.max(layer.height, h)
-
-        labelToLayer.set(child, layerN)
+        child.offset = Vec2.fromXY(x, y)
     }
 
-    // 3. position labels
-    for(let [ label, layerN ] of labelToLayer) {
 
-        let labelFor = label.labelFor
+    // 3. fix label overlaps
+    for(let child of children) {
+
+        if(! (child instanceof LabelDepiction)) {
+            continue
+        }
+
+        let labelFor = child.labelFor
 
         if(! (labelFor instanceof ComponentDepiction || labelFor instanceof FeatureLocationDepiction)) {
             throw new Error('???')
         }
 
-        let w = label.size.x
-        let h = label.size.y
-        let x = labelFor.offset.x
-        let y = labelFor.offset.y
-
-        if(layerN < 0) {
-            for(let n = -1; n >= layerN /* INCLUDING our layer */; -- n) {
-                let layer = labelLayers.get(n)
-                if(!layer) {
-                    throw new Error(n + ' not found for layerN ' + layerN)
-                }
-                y -= layer.height
-            }
-        } else {
-            y += labelFor.size.y
-            for(let n = 1; n <= layerN - 1 /* not including our layer */; ++ n) {
-                let layer = labelLayers.get(n)
-                if(!layer) {
-                    throw new Error(n + ' not found for layerN ' + layerN)
-                }
-                y += layer.height
+        while(child.hasOverlappingSiblings()) {
+            if(labelFor.orientation === Orientation.Reverse) {
+                child.offset = Vec2.fromXY(child.offset.x, child.offset.y + 1)
+            } else {
+                child.offset = Vec2.fromXY(child.offset.x, child.offset.y - 1)
             }
         }
 
-        label.offset = Vec2.fromXY(x, y)
     }
 
-        //console.log('final bb width ' + offsetX)
 
     
     let group = backbone.parent

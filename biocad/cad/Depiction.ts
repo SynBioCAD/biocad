@@ -285,6 +285,40 @@ export default abstract class Depiction extends Versioned {
         return false
     }
 
+    getOverlappingSiblings():Depiction[] {
+
+        if(!this.parent)
+            return []
+
+        let s:Depiction[] = []
+
+        for(let child of this.parent.children) {
+            if(child === this)
+                continue
+            if(child.boundingBox.intersects(this.boundingBox)) {
+                s.push(child)
+            }
+        }
+
+        return s
+    }
+
+    hasOverlappingSiblings():boolean {
+
+        if(!this.parent)
+            return false
+
+        for(let child of this.parent.children) {
+            if(child === this)
+                continue
+            if(child.boundingBox.intersects(this.boundingBox)) {
+                return true
+            }
+        }
+
+        return false
+    }
+
     get debugName() {
         return this.safeGetDebugName(0)
     }
