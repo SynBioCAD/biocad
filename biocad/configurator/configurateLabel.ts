@@ -17,18 +17,7 @@ import LabelledDepiction from "biocad/cad/LabelledDepiction";
 
 export default function configurateLabel(label:LabelDepiction, instructions:InstructionSet) {
 
-    if(!label.parent) {
-        throw new Error('label must have parent')
-    }
-
-    if(! (label.parent instanceof LabelledDepiction)) {
-        throw new Error('label not child of labelled?')
-    }
-
-    //console.warn('configurating LABEL for ' + label.parent.debugName)
-
-    const labelled: LabelledDepiction = label.parent as LabelledDepiction
-    const labelFor: Depiction = labelled.getLabelled()
+    const labelFor: Depiction = label.labelFor
     const depictionOf: SXIdentified | undefined = labelFor.depictionOf
 
     if(depictionOf === undefined) {

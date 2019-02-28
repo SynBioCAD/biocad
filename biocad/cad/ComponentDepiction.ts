@@ -37,9 +37,9 @@ export default class ComponentDepiction extends Depiction {
     location: SXIdentified|null
     backbonePlacement:string
 
-    constructor(layout:Layout, parent?:Depiction, uid?:number) {
+    constructor(layout:Layout, depictionOf:SXIdentified|undefined, identifiedChain:IdentifiedChain|undefined, parent?:Depiction, uid?:number) {
 
-        super(layout, undefined, undefined, parent, uid)
+        super(layout, depictionOf, identifiedChain, parent, uid)
 
         this.orientation = Orientation.Forward
     }

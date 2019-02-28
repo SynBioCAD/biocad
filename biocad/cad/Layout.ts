@@ -452,7 +452,7 @@ export default class Layout extends Versioned {
 
                 const labelled:LabelledDepiction = new LabelledDepiction(this, component, chain, undefined)
 
-                cdDepiction = new ComponentDepiction(this, labelled)
+                cdDepiction = new ComponentDepiction(this, undefined, undefined, labelled)
                 cdDepiction.setSameVersionAs(this)
                 labelled.addChild(cdDepiction)
 
@@ -561,7 +561,7 @@ export default class Layout extends Versioned {
 
     }
 
-    private syncSequenceAnnotationDepiction(preset:DetailPreset, location:SXLocation, chain:IdentifiedChain, parent:Depiction, nestDepth:number, orientation:Orientation, range:LinearRange) {
+    private syncSequenceAnnotationDepiction(preset:DetailPreset, location:SXLocation, chain:IdentifiedChain, parent:BackboneDepiction, nestDepth:number, orientation:Orientation, range:LinearRange) {
 
         //const sequenceAnnotation:SXSequenceFeature = location.containingSequenceFeature
 
@@ -594,6 +594,8 @@ export default class Layout extends Versioned {
             const cDepiction:ComponentDepiction = this.syncComponentInstanceDepiction(preset, containingObject as SXSubComponent, chain, parent, nestDepth, nestedOrientation, range)
             cDepiction.location = location
 
+            return cDepiction
+
         } else if(containingObject instanceof SXSequenceFeature) {
 
             var depiction:Depiction|undefined = this.identifiedChainToDepiction.get(chain.stringify())
@@ -601,37 +603,22 @@ export default class Layout extends Versioned {
 
             if(depiction !== undefined) {
 
-                assert(depiction instanceof LabelledDepiction)
+                assert(depiction instanceof FeatureLocationDepiction)
 
                 depiction.stamp = Layout.nextStamp
-                ;(depiction as LabelledDepiction).getLabel().stamp = Layout.nextStamp
-                ;(depiction as LabelledDepiction).getLabelled().stamp = Layout.nextStamp
     
-                let thingThatIsLabelled = (depiction as LabelledDepiction).getLabelled()
-    
-                assert(thingThatIsLabelled instanceof FeatureLocationDepiction)
-    
-                salDepiction = thingThatIsLabelled as FeatureLocationDepiction
+                salDepiction = depiction as FeatureLocationDepiction
     
                 this.attachToParent(depiction, parent)
 
             } else {
 
-                let labelled:LabelledDepiction = new LabelledDepiction(this, containingObject, chain, parent)
-                labelled.setSameVersionAs(this)
-
-                salDepiction = new FeatureLocationDepiction(this, labelled)
+                depiction = salDepiction = new FeatureLocationDepiction(this, containingObject, chain, parent)
                 salDepiction.setSameVersionAs(this)
-                labelled.addChild(salDepiction)
 
-                const label: LabelDepiction = new LabelDepiction(this, labelled)
-                label.setSameVersionAs(this)
-                labelled.addChild(label)
-
-                this.addDepiction(labelled, parent)
+                this.addDepiction(depiction, parent)
 
                 salDepiction.opacity = Opacity.Blackbox
-
             }
 
             salDepiction.location = location
@@ -642,6 +629,8 @@ export default class Layout extends Versioned {
             salDepiction.range = range
 
             salDepiction.isExpandable = false
+
+            return salDepiction
 
         } else {
 
@@ -669,34 +658,57 @@ export default class Layout extends Versioned {
 
         if(depiction !== undefined) {
 
-            assert(depiction instanceof LabelledDepiction)
-
             depiction.stamp = Layout.nextStamp
-            ;(depiction as LabelledDepiction).getLabel().stamp = Layout.nextStamp
-            ;(depiction as LabelledDepiction).getLabelled().stamp = Layout.nextStamp
 
-            let thingThatIsLabelled = (depiction as LabelledDepiction).getLabelled()
+            if(parent instanceof BackboneDepiction) {
 
-            assert(thingThatIsLabelled instanceof ComponentDepiction)
+                assert(depiction instanceof ComponentDepiction)
 
-            cDepiction = thingThatIsLabelled as ComponentDepiction
+                cDepiction = depiction as ComponentDepiction
 
-            this.attachToParent(depiction, parent)
+                this.attachToParent(depiction, parent)
+
+            } else {
+
+                assert(depiction instanceof LabelledDepiction)
+
+                ;(depiction as LabelledDepiction).getLabel().stamp = Layout.nextStamp
+                ;(depiction as LabelledDepiction).getLabelled().stamp = Layout.nextStamp
+
+                let thingThatIsLabelled = (depiction as LabelledDepiction).getLabelled()
+
+                assert(thingThatIsLabelled instanceof ComponentDepiction)
+
+                cDepiction = thingThatIsLabelled as ComponentDepiction
+
+                this.attachToParent(depiction, parent)
+            }
 
         } else {
 
-            let labelled: LabelledDepiction = new LabelledDepiction(this, component, chain, parent)
-            labelled.setSameVersionAs(this)
+            if(parent instanceof BackboneDepiction) {
 
-            cDepiction = new ComponentDepiction(this, labelled)
-            cDepiction.setSameVersionAs(this)
-            labelled.addChild(cDepiction)
+                cDepiction = new ComponentDepiction(this, component, chain, parent)
+                cDepiction.setSameVersionAs(this)
 
-            const label:LabelDepiction = new LabelDepiction(this, labelled)
-            label.setSameVersionAs(this)
-            labelled.addChild(label)
+                this.addDepiction(cDepiction, parent)
 
-            this.addDepiction(labelled, parent)
+            } else {
+
+                let labelled: LabelledDepiction = new LabelledDepiction(this, component, chain, parent)
+                labelled.setSameVersionAs(this)
+
+                cDepiction = new ComponentDepiction(this, undefined, undefined, labelled)
+                cDepiction.setSameVersionAs(this)
+                labelled.addChild(cDepiction)
+
+                const label:LabelDepiction = new LabelDepiction(this, labelled)
+                label.setSameVersionAs(this)
+                labelled.addChild(label)
+
+                this.addDepiction(labelled, parent)
+
+            }
 
             cDepiction.opacity = opacity
 
@@ -835,18 +847,46 @@ export default class Layout extends Versioned {
 
                 let newChain = chain.extend(object)
 
+                var obj
+
                 if(object instanceof SXSubComponent) {
-                    this.syncComponentInstanceDepiction(preset, object, newChain, backbone, nestDepth + 1, orientation, range)
+                    obj = this.syncComponentInstanceDepiction(preset, object, newChain, backbone, nestDepth + 1, orientation, range)
                 } else if (object instanceof SXLocation) {
-                    this.syncSequenceAnnotationDepiction(preset, object, newChain, backbone, nestDepth + 1, orientation, range)
+                    obj = this.syncSequenceAnnotationDepiction(preset, object, newChain, backbone, nestDepth + 1, orientation, range)
                 } else {
                     throw new Error('???')
                 }
 
+                this.syncLabel(preset, backbone, obj, nestDepth)
             }
 
         }
 
+    }
+
+    private syncLabel(preset:DetailPreset, parent:Depiction, labelFor:Depiction, nestDepth:number):void {
+
+        let label:LabelDepiction|undefined = undefined
+
+        for(let child of parent.children) {
+            if(child instanceof LabelDepiction && child.labelFor) {
+                let existingChain = child.labelFor.identifiedChain
+                let newChain = labelFor.identifiedChain
+                if(existingChain && newChain && existingChain.stringify() === newChain.stringify()) {
+                    label = child
+                    break
+                }
+            }
+        }
+
+        if(label) {
+            label.labelFor = labelFor
+            label.setSameVersionAs(this)
+            label.stamp = Layout.nextStamp
+        } else {
+            label = new LabelDepiction(this, labelFor, parent)
+            this.addDepiction(label, parent)
+        }
     }
 
     getIntersectingDepictions(pos:Vec2, bSelectableOnly:boolean):Depiction[] {

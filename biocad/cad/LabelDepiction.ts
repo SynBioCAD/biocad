@@ -29,9 +29,13 @@ export default class LabelDepiction extends Depiction {
 
     attr:any
 
-    constructor(layout:Layout, parent?:Depiction, uid?:number) {
+    labelFor:Depiction
+
+    constructor(layout:Layout, labelFor:Depiction, parent?:Depiction, uid?:number) {
 
         super(layout, undefined, undefined, parent, uid);
+
+        this.labelFor = labelFor
 
         this.attr = {
             'font-family': 'sans-serif',
@@ -50,11 +54,7 @@ export default class LabelDepiction extends Depiction {
 
     render(renderContext:RenderContext):VNode {
 
-        if(!this.parent) {
-            throw new Error('label has no parent?')
-        }
-
-        const labelFor:Depiction = this.parent
+        const labelFor:Depiction = this.labelFor
 
         if(labelFor && CircularBackboneDepiction.ancestorOf(labelFor)) {
             return this.renderCircular(renderContext)
@@ -71,12 +71,7 @@ export default class LabelDepiction extends Depiction {
 
         const layout:Layout = this.layout
 
-        if(! (this.parent instanceof LabelledDepiction)) {
-            throw new Error('label not contained by labelled?')
-        }
-
-        const labelled:LabelledDepiction = this.parent as LabelledDepiction
-        const labelFor:Depiction = labelled.getLabelled()
+        const labelFor:Depiction = this.labelFor
         const depictionOf:SXIdentified|undefined = labelFor.depictionOf
 
         if(depictionOf === undefined)
@@ -121,10 +116,6 @@ export default class LabelDepiction extends Depiction {
 
     private renderLinear(renderContext:RenderContext):VNode {
 
-        if(!this.parent) {
-            throw new Error('label has no parent?')
-        }
-
         const layout:Layout = this.layout
 
         /*
@@ -156,8 +147,7 @@ export default class LabelDepiction extends Depiction {
 
         }*/
 
-        const labelled:LabelledDepiction = this.parent as LabelledDepiction
-        const labelFor:Depiction = labelled.getLabelled()
+        const labelFor:Depiction = this.labelFor
         const depictionOf:SXIdentified|undefined = labelFor.depictionOf
 
         const svgAttr = this.attr

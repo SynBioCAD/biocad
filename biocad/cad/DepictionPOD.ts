@@ -92,20 +92,22 @@ export default class DepictionPOD {
 
     static deserialize(layout:Layout, graph:SBOLXGraph, parent:Depiction|undefined, pod:any):Depiction {
 
-        const depictionOf:SXIdentified|undefined = graph.uriToFacade(pod.depictionOf)
+        let depictionOf:SXIdentified|undefined = graph.uriToFacade(pod.depictionOf)
+
+        let chain:IdentifiedChain|undefined = pod.identifiedChain ? IdentifiedChain.fromString(graph, pod.identifiedChain) : undefined
 
         var depiction:Depiction
 
         if(pod['class'] === 'ComponentDepiction') {
 
-            depiction = new ComponentDepiction(layout, parent, pod.uid)
+            depiction = new ComponentDepiction(layout, depictionOf, chain, parent, pod.uid)
 
             ;(depiction as ComponentDepiction).orientation = pod.orientation
             ;(depiction as ComponentDepiction).backbonePlacement = pod.backbonePlacement
 
         } else if(pod['class'] === 'LabelledDepiction') {
 
-            depiction = new LabelledDepiction(layout, depictionOf, IdentifiedChain.fromString(graph, pod.identifiedChain), parent, pod.uid)
+            depiction = new LabelledDepiction(layout, depictionOf, chain as IdentifiedChain, parent, pod.uid)
 
         } else if(pod['class'] === 'LabelDepiction') {
 
@@ -148,7 +150,7 @@ export default class DepictionPOD {
                 throw new Error('abid must have a parent')
             }
 
-            depiction = new InteractionDepiction(layout, depictionOf as SXInteraction, IdentifiedChain.fromString(graph, pod.identifiedChain), parent, pod.uid)
+            depiction = new InteractionDepiction(layout, depictionOf as SXInteraction, chain as IdentifiedChain, parent, pod.uid)
 
         } else if(pod['class'] === 'FeatureLocationDepiction') {
 
@@ -159,7 +161,7 @@ export default class DepictionPOD {
                 throw new Error('label must have a parent')
             }
 
-            depiction = new FeatureLocationDepiction(layout, parent, pod.uid)
+            depiction = new FeatureLocationDepiction(layout, depictionOf, chain, parent, pod.uid)
 
         } else {
             throw new Error('unknown depiction class')

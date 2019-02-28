@@ -259,6 +259,21 @@ export default abstract class Depiction extends Versioned {
 
     }
 
+    zeroifyOrigin() {
+
+        let min = Vec2.fromXY(0, 0)
+
+        for(let child of this.children) {
+            min = min.min(child.offset)
+        }
+
+        for(let child of this.children) {
+            child.offset = child.offset.subtract(min)
+        }
+
+        return min
+    }
+
     isDescendentOf(d:Depiction) {
 
         for(let p:any = this; p; p = p.parent) {
