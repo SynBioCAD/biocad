@@ -35,6 +35,8 @@ export default class DepictionPOD {
 
             type = 'LabelDepiction'
 
+            additionalProps['labelFor'] = (depiction as LabelDepiction).labelFor.uid
+
         } else if(depiction instanceof LabelledDepiction) {
 
             type = 'LabelledDepiction'
@@ -90,6 +92,10 @@ export default class DepictionPOD {
     }
 
     static deserialize(layout:Layout, graph:SBOLXGraph, parent:Depiction|undefined, pod:any):Depiction {
+        return this._deserialize(layout, graph ,parent, pod, new Map())
+    }
+
+    private static _deserialize(layout:Layout, graph:SBOLXGraph, parent:Depiction|undefined, pod:any, uidToDepiction:Map<number,Depiction>):Depiction {
 
         let depictionOf:SXIdentified|undefined = graph.uriToFacade(pod.depictionOf)
 
@@ -110,11 +116,13 @@ export default class DepictionPOD {
 
         } else if(pod['class'] === 'LabelDepiction') {
 
-            if(parent === undefined) {
-                throw new Error('label must have a parent')
+            let labelFor = uidToDepiction.get(pod['labelFor'])
+        
+            if(!labelFor) {
+                throw new Error('cannot find labelFor for LabelDepiction when deserializing: ' + pod['labelFor'])
             }
 
-            depiction = new LabelDepiction(layout, parent, pod.uid)
+            depiction = new LabelDepiction(layout, labelFor, parent, pod.uid)
 
         } else if(pod['class'] === 'CircularBackboneDepiction') {
 
@@ -176,7 +184,20 @@ export default class DepictionPOD {
 
         for(let childPod of pod.children) {
 
-            depiction.children.push(DepictionPOD.deserialize(layout, graph, depiction, childPod))
+            if(childPod['class'] !== 'LabelDepiction') {
+                let d = DepictionPOD._deserialize(layout, graph, depiction, childPod, uidToDepiction)
+                depiction.children.push(d)
+                uidToDepiction.set(d.uid, d)
+            }
+
+        }
+        for(let childPod of pod.children) {
+
+            if(childPod['class'] === 'LabelDepiction') {
+                let d = DepictionPOD._deserialize(layout, graph, depiction, childPod, uidToDepiction)
+                depiction.children.push(d)
+                uidToDepiction.set(d.uid, d)
+            }
 
         }
 

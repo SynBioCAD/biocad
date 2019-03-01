@@ -456,7 +456,7 @@ export default class Layout extends Versioned {
                 cdDepiction.setSameVersionAs(this)
                 labelled.addChild(cdDepiction)
 
-                const label: LabelDepiction = new LabelDepiction(this, labelled)
+                const label: LabelDepiction = new LabelDepiction(this, cdDepiction, labelled)
                 label.setSameVersionAs(this)
                 labelled.addChild(label)
 
@@ -702,7 +702,7 @@ export default class Layout extends Versioned {
                 cDepiction.setSameVersionAs(this)
                 labelled.addChild(cDepiction)
 
-                const label:LabelDepiction = new LabelDepiction(this, labelled)
+                const label:LabelDepiction = new LabelDepiction(this, cDepiction, labelled)
                 label.setSameVersionAs(this)
                 labelled.addChild(label)
 

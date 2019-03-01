@@ -25,6 +25,9 @@ export default class LayoutEditor extends View {
 
     layout:Layout
 
+    showGrid:boolean = false
+    snapToGrid:boolean = false
+
 
     /* e.g. if suggesting putting a part into a backbone
      */
@@ -148,7 +151,7 @@ export default class LayoutEditor extends View {
                     top: (this.scrollbarSize - this.scrollOffset.y) + 'px',
                     width: (this.layout.getSize().x * this.layout.gridSize.x) * this.scaleFactor + 'px',
                     height: (this.layout.getSize().y * this.layout.gridSize.y) * this.scaleFactor + 'px',
-                    background: createGrid(this.layout.gridSize.multiplyScalar(this.scaleFactor))
+                    background: this.showGrid ? createGrid(this.layout.gridSize.multiplyScalar(this.scaleFactor)) : 'white'
                 }
             }),
             svg('svg', {

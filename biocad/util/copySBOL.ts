@@ -6,14 +6,12 @@ import { SBOLXGraph, SXIdentified } from 'sbolgraph'
 
 // - Need to change their owned objects too
 
-export default function copySBOL(graphA:SBOLXGraph, graphB:SBOLXGraph, newURIPrefix:string, topLevelURIs?:string[]):SXIdentified[] {
+export default function copySBOL(graphA:SBOLXGraph, graphB:SBOLXGraph, newURIPrefix:string):SXIdentified[] {
 
     let intmGraph = graphA.clone()
     intmGraph.changeURIPrefix(newURIPrefix)
 
-    let topLevels:SXIdentified[] = topLevelURIs ?
-        topLevelURIs.map((uri) => intmGraph.uriToFacade(uri)) as SXIdentified[] :
-            intmGraph.topLevels
+    let topLevels:SXIdentified[] = intmGraph.topLevels
 
     // TODO: setCompliantIdentity is expensive; only do it when a good URI has been found
 

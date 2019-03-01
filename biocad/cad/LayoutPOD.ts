@@ -4,13 +4,14 @@ import Depiction from "biocad/cad/Depiction";
 import DepictionPOD from "biocad/cad/DepictionPOD";
 import { SBOLXGraph, SXInteraction } from "sbolgraph";
 import InteractionDepiction from "./InteractionDepiction";
+import { Vec2 } from 'jfw/geom'
 
 export default class LayoutPOD {
 
     static serialize(layout:Layout):any {
 
         const pod:any = {
-            size: layout.size,
+            size: layout.size.toPOD(),
             depictions: []
         }
 
@@ -32,7 +33,7 @@ export default class LayoutPOD {
 
         const layout = new Layout(graph)
 
-        layout.size = pod.size
+        layout.size = Vec2.fromPOD(pod.size)
 
         const depictions:Depiction[] = []
 

@@ -113,7 +113,8 @@ export default class LayoutEditorOverlay extends View {
     private resize(depiction:Depiction, pos:Vec2, dimensions:string[]) {
 
         const transform:Matrix = this.layoutEditor.getTransform().invert()
-        const gridPos:Vec2 = transform.transformVec2(pos.divide(this.layoutEditor.layout.gridSize).round())
+        //const gridPos:Vec2 = transform.transformVec2(pos.divide(this.layoutEditor.layout.gridSize).round())
+        const gridPos:Vec2 = transform.transformVec2(pos.divide(this.layoutEditor.layout.gridSize))
 
         var relPos:Vec2
         
@@ -333,7 +334,8 @@ export default class LayoutEditorOverlay extends View {
             if(_selectionRect === null)
                 throw new Error('???')
 
-            const selectionRect:Rect = transform.transformRect(_selectionRect.round().multiply(layout.gridSize))
+            //const selectionRect:Rect = transform.transformRect(_selectionRect.round().multiply(layout.gridSize))
+            const selectionRect:Rect = transform.transformRect(_selectionRect.multiply(layout.gridSize))
 
             selection.push(
                 svg('rect', {
@@ -448,7 +450,7 @@ export default class LayoutEditorOverlay extends View {
 
             const droppable:SBOLDroppable = _droppable as SBOLDroppable
 
-            let newTopLevels = copySBOL(droppable.graph, app.graph, 'http://fooprefix/', droppable.topLevelURIs)
+            let newTopLevels = copySBOL(droppable.graph, app.graph, 'http://fooprefix/')
 
             // TODO
             const newUri:string = newTopLevels[0].uri
@@ -463,7 +465,8 @@ export default class LayoutEditorOverlay extends View {
                 throw new Error('???')
 
             depiction.offsetExplicit = true
-            depiction.offset = offset.divide(this.layoutEditor.layout.gridSize).divideScalar(this.layoutEditor.scaleFactor).round()
+            //depiction.offset = offset.divide(this.layoutEditor.layout.gridSize).divideScalar(this.layoutEditor.scaleFactor).round()
+            depiction.offset = offset.divide(this.layoutEditor.layout.gridSize).divideScalar(this.layoutEditor.scaleFactor)
 
             layout.configurate([])
 
@@ -493,7 +496,8 @@ export default class LayoutEditorOverlay extends View {
             }
 
             let newRect = Rect.fromPosAndSize(
-                this.mouseGridPos.subtract(dragging.dragOffset).round(),
+                //this.mouseGridPos.subtract(dragging.dragOffset).round(),
+                this.mouseGridPos.subtract(dragging.dragOffset),
                 draggingDepiction.size
             )
 
@@ -677,7 +681,8 @@ export default class LayoutEditorOverlay extends View {
             } else {
                 this.dragging = false
                 this.draggingDepictions = []
-                this.selectionStart = gridPos.round()
+                //this.selectionStart = gridPos.round()
+                this.selectionStart = gridPos
             }
 
         }

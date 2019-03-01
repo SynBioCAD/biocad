@@ -15,7 +15,8 @@ export class BackboneGroup {
 
 export class Backbone {
     children:BackboneChild[]
-    rangesUsed:LinearRangeSet
+    rangesUsedForward:LinearRangeSet
+    rangesUsedReverse:LinearRangeSet
 }
 
 export class BackboneChild {
@@ -208,12 +209,19 @@ export default class ComponentDisplayList {
                     if(!backbone) {
                         backbone = new Backbone()
                         backbone.children = []
-                        backbone.rangesUsed = new LinearRangeSet()
+                        backbone.rangesUsedForward = new LinearRangeSet()
+                        backbone.rangesUsedReverse = new LinearRangeSet()
                         group.backbones.set(n, backbone)
                     }
 
-                    if(!backbone.rangesUsed.intersectsRange(range)) {
-                        return backbone
+                    if(forward) {
+                        if(!backbone.rangesUsedForward.intersectsRange(range)) {
+                            return backbone
+                        }
+                    } else {
+                        if(!backbone.rangesUsedReverse.intersectsRange(range)) {
+                            return backbone
+                        }
                     }
 
                     // move upwards for forward annotations, downwards for reverse
@@ -233,7 +241,11 @@ export default class ComponentDisplayList {
 
                 let backbone = backboneForRange(range, forward)
 
-                backbone.rangesUsed.push(new LinearRange(range.start, range.end))
+                if(forward)
+                    backbone.rangesUsedForward.push(new LinearRange(range.start, range.end))
+                else
+                    backbone.rangesUsedReverse.push(new LinearRange(range.start, range.end))
+
                 allRangesUsed.push(new LinearRange(range.start, range.end))
 
                 let child = new BackboneChild()
@@ -390,9 +402,11 @@ export default class ComponentDisplayList {
             }
 
             for(let backbone of group.backbones.values()) {
-                backbone.rangesUsed.forEach((range) => {
-                    let rangeAsForward = range.normalise()
-                    group.backboneLength = Math.max(group.backboneLength, rangeAsForward.end)
+                backbone.rangesUsedForward.forEach((range) => {
+                    group.backboneLength = Math.max(group.backboneLength, range.end)
+                })
+                backbone.rangesUsedReverse.forEach((range) => {
+                    group.backboneLength = Math.max(group.backboneLength, range.end)
                 })
             }
 
@@ -431,7 +445,8 @@ export default class ComponentDisplayList {
                     deleteRange(allRangesUsed.ranges, rangeToDelete)
 
                     for(let backbone of group.backbones.values()) {
-                        deleteRange(backbone.rangesUsed.ranges, rangeToDelete)
+                        deleteRange(backbone.rangesUsedForward.ranges, rangeToDelete)
+                        deleteRange(backbone.rangesUsedReverse.ranges, rangeToDelete)
                         deleteRange(backbone.children.map((child) => child.range), rangeToDelete)
                     }
 

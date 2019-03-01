@@ -3,6 +3,7 @@
 var path = require('path')
 
 module.exports = {
+    mode: 'development',
     entry: "./biocad/browser.ts",
     output: {
         filename: "bundle_biocad.js",

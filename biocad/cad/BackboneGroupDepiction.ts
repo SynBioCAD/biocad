@@ -187,5 +187,11 @@ export default class BackboneGroupDepiction extends Depiction {
 
         return null
     }
+
+    isSelectable():boolean {
+
+        return false
+
+    }
 }
 

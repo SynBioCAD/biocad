@@ -256,18 +256,18 @@ export default class LabelDepiction extends Depiction {
             name
         ])
 
-        let distance = this.boundingBox.distanceToRect(this.labelFor.boundingBox)
+        let direction = this.boundingBox.center().direction(this.labelFor.boundingBox.center())
 
-        if(distance > 2) {
+        let from = this.boundingBox.edgePointForDirectionVector(direction)
+        let to = this.labelFor.boundingBox.edgePointForDirectionVector(Vec2.fromScalar(0.0).subtract(direction))
+
+        let distance = from.distanceTo(to)
+
+        if(distance > 2 && ! (this.parent instanceof LabelledDepiction)) {
 
             if(!this.parent) {
                 throw new Error('???')
             }
-
-            let direction = this.boundingBox.center().direction(this.labelFor.boundingBox.center())
-
-            let from = this.boundingBox.edgePointForDirectionVector(direction)
-            let to = this.labelFor.boundingBox.edgePointForDirectionVector(Vec2.fromScalar(0.0).subtract(direction))
 
             console.log('dir from to', direction, from, to)
 

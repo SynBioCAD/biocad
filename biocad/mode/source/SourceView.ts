@@ -7,11 +7,14 @@ import LayoutPOD from "biocad/cad/LayoutPOD";
 import EncodingSelector, { Encoding } from './EncodingSelector';
 import { SBOL2Graph, Graph } from 'sbolgraph';
 import CytoscapeRDFWidget from 'biocad/view/CytoscapeRDFWidget'
+import CircuitViewMode from '../circuit/CircuitMode';
+import CircuitView from '../circuit/CircuitView';
 
 export default class SourceView extends View {
 
     encodingSelector:EncodingSelector
     source:string
+    editorMode:string
     graph:Graph|undefined
 
     constructor(app) {
@@ -19,6 +22,7 @@ export default class SourceView extends View {
         super(app)
 
         this.source = ''
+        this.editorMode = 'xml'
         this.encodingSelector = new EncodingSelector(app)
 
         this.encodingSelector.onChangeEncoding = (encoding:Encoding) => {
@@ -38,9 +42,11 @@ export default class SourceView extends View {
         switch(this.encodingSelector.currentEncoding) {
             case Encoding.SBOLX:
                 this.source = graph.serializeXML()
+                this.editorMode = 'xml'
                 break
             case Encoding.SBOL2:
                 this.source = sbol2Graph.serializeXML()
+                this.editorMode = 'xml'
                 break
             case Encoding.SBOLXGraph:
                 this.source = ''
@@ -49,6 +55,18 @@ export default class SourceView extends View {
             case Encoding.SBOL2Graph:
                 this.source = ''
                 this.graph = sbol2Graph
+                break
+            case Encoding.Layout:
+                for(let mode of (this.app as BiocadApp).modes) {
+                    if(mode instanceof CircuitViewMode) {
+                        this.source = JSON.stringify(
+                            LayoutPOD.serialize((mode.view as CircuitView).layout),
+                            null,
+                            2
+                        )
+                        this.editorMode = 'javascript'
+                    }
+                }
                 break
         }
 
@@ -80,7 +98,7 @@ export default class SourceView extends View {
 
                 lineNumbers: true,
                 //viewportMargin: Infinity,
-                mode: 'xml',
+                mode: this.editorMode,
                 value: this.source,
                 readOnly: true
                                 

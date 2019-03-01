@@ -8,7 +8,8 @@ export enum Encoding {
     SBOLX,
     SBOLXGraph,
     SBOL2,
-    SBOL2Graph
+    SBOL2Graph,
+    Layout
 }
 
 let encodingNames:string[] =
