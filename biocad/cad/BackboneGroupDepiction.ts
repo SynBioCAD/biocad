@@ -97,6 +97,7 @@ export default class BackboneGroupDepiction extends Depiction {
 
         drawSingleBackbone(leftOrigin.add(Vec2.fromXY(BackboneGroupDepiction.extensionLength, 0)), leftOrigin, Vec2.fromXY(leftOrigin.x + this.size.x, leftOrigin.y))
 
+        /*
         for(let backbone of this.children) {
             if(! (backbone instanceof BackboneDepiction)) {
                 throw new Error('???')
@@ -129,7 +130,7 @@ export default class BackboneGroupDepiction extends Depiction {
             )
 
             drawSingleBackbone(point, point, end)
-        }
+        }*/
 
 
 

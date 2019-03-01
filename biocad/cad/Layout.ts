@@ -470,7 +470,7 @@ export default class Layout extends Versioned {
 
             if(cdDepiction.opacity === Opacity.Whitebox) {
 
-                var displayList:ComponentDisplayList = ComponentDisplayList.fromComponent(component, { omitEmptySpace: true })
+                var displayList:ComponentDisplayList = ComponentDisplayList.fromComponent(component, { omitEmptySpace: true, forceMinWidth: true })
 
                 for(let backboneGroup of displayList.backboneGroups) {
                     //console.log('BB GROUP LEN ' + backboneGroup.length)
@@ -723,7 +723,7 @@ export default class Layout extends Versioned {
 
         if(cDepiction.opacity === Opacity.Whitebox) {
 
-            var displayList:ComponentDisplayList = ComponentDisplayList.fromComponent(component.instanceOf, { omitEmptySpace: true })
+            var displayList:ComponentDisplayList = ComponentDisplayList.fromComponent(component.instanceOf, { omitEmptySpace: true, forceMinWidth: true })
 
             //console.log(displayList.backboneGroups.length + ' bb groups for ' + component.uriChain)
 

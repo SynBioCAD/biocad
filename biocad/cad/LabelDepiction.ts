@@ -203,32 +203,28 @@ export default class LabelDepiction extends Depiction {
             italic = true
         }
 
+        let roles:string[] = []
+
         if(dOf instanceof SXComponent) {
-            if(dOf.hasRole(Specifiers.SO.CDS)) {
-                italic = true
-            }
+            roles = dOf.soTerms
         } else if(dOf instanceof SXSubComponent) {
             let def = dOf.instanceOf
-            if(def.hasRole(Specifiers.SO.CDS)) {
-                italic = true
-            }
+            roles = def.soTerms
         } else if(dOf instanceof SXSequenceFeature) {
-            if (dOf.hasRole(Specifiers.SO.CDS)) {
-                italic = true
-            }
+            roles = dOf.soTerms
         } else if(dOf instanceof SXLocation) {
             let container = dOf.containingObject
             if(container instanceof SXSequenceFeature) {
-                if (container.hasRole(Specifiers.SO.CDS)) {
-                    italic = true
-                }
+                roles = container.soTerms
             }
             if(container instanceof SXSubComponent) {
                 let def = container.instanceOf
-                if (def.hasRole(Specifiers.SO.CDS)) {
-                    italic = true
-                }
+                roles = def.soTerms
             }
+        }
+
+        if(roles.indexOf('SO:0000316') !== -1) {
+            italic = true
         }
 
         if(this.fade === Fade.Full) {
@@ -263,7 +259,7 @@ export default class LabelDepiction extends Depiction {
 
         let distance = from.distanceTo(to)
 
-        if(distance > 2 && ! (this.parent instanceof LabelledDepiction)) {
+        if(false && distance > 2 && ! (this.parent instanceof LabelledDepiction)) {
 
             if(!this.parent) {
                 throw new Error('???')
@@ -306,4 +302,5 @@ export default class LabelDepiction extends Depiction {
         return false
     }
 }
+
 

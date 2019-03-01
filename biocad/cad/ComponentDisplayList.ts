@@ -3,9 +3,10 @@
 import { SXSequenceFeature, SXSubComponent, SXSequenceConstraint, SXComponent, SXIdentified, SXLocation, SXRange } from "sbolgraph"
 import { LinearRange, LinearRangeSet } from 'jfw/geom'
 import { Specifiers } from "bioterms";
+import { fromHTML } from "../../../jfw/dist/jfw/vdom";
 
 let bpToGridScale = 0.02
-let minGridWidth = 2
+let minGridWidth = 2.0
 
 export class BackboneGroup {
     backbones:Map<number,Backbone>
@@ -27,6 +28,7 @@ export class BackboneChild {
 
 export interface DisplayListOpts {
     omitEmptySpace:boolean
+    forceMinWidth:boolean
 }
 
 export default class ComponentDisplayList {
@@ -143,7 +145,7 @@ export default class ComponentDisplayList {
             // some objects may have no locations at all and are positioned only by
             // constraints.
 
-            let backboneElements = expandLocations(Array.from(set).map((uri:string) => {
+            let backboneElements:SXIdentified[] = Array.from(set).map((uri:string) => {
 
                 console.log(uri, 'contained in backbone group')
 
@@ -154,7 +156,13 @@ export default class ComponentDisplayList {
 
                 return facade
 
-            }))
+            })
+
+            backboneElements.sort((a, b) => {
+                return score(b) - score(a)
+            })
+
+            backboneElements = expandLocations(backboneElements)
 
             let findElement = (uri:string):number => {
 
@@ -265,7 +273,7 @@ export default class ComponentDisplayList {
                         throw new Error('???')
                     }
                     let start = element.start * bpToGridScale
-                    let end = Math.max(element.end ? element.end * bpToGridScale : 0, start + minGridWidth)
+                    let end = element.end ? element.end * bpToGridScale : element.start + 0.0003
                     let forward = element.orientation !== Specifiers.SBOLX.Orientation.ReverseComplement
 
                     let range = new LinearRange(start, end).normalise()
@@ -414,12 +422,46 @@ export default class ComponentDisplayList {
 
             allRangesUsed = allRangesUsed.sort()
 
+
+
+
+            if(opts.forceMinWidth) {
+
+                let entireBackboneRange = new LinearRange(0, group.backboneLength)
+
+                for(let range of allRangesUsed.ranges) {
+
+                    let len = range.end - range.start
+
+                    if(len < minGridWidth) {
+
+                        let diff = minGridWidth - len
+
+                        let chop = new LinearRange(range.start + 0.0001, range.start + 0.0002)
+
+                        chopRange(allRangesUsed.ranges, chop, diff)
+
+                        for(let backbone of group.backbones.values()) {
+                            chopRange(backbone.rangesUsedForward.ranges, chop, diff)
+                            chopRange(backbone.rangesUsedReverse.ranges, chop, diff)
+                            chopRange(backbone.children.map((child) => child.range), chop, diff)
+                        }
+
+                        chopRange([entireBackboneRange], chop, diff)
+                        chopRange(group.locationsOfOmittedRegions.ranges, chop, diff)
+
+                    }
+
+                }
+
+                group.backboneLength = entireBackboneRange.end - entireBackboneRange.start
+
+            }
+
+
+
+
             if(opts.omitEmptySpace) {
-
-                console.log('allRangesUsed', allRangesUsed)
-                console.log('flattened', allRangesUsed.flatten())
-                console.log('inverted', allRangesUsed.flatten().invert())
-
 
                 let rangesBetween = allRangesUsed.flatten().invert()
 
@@ -441,19 +483,23 @@ export default class ComponentDisplayList {
                     let rangeToDelete = rangesToDelete[0]
                     rangesToDelete.splice(0, 1)
 
-                    deleteRange(rangesBetween.ranges, rangeToDelete)
-                    deleteRange(allRangesUsed.ranges, rangeToDelete)
+                    let omitLen = 1
+
+                    chopRange(rangesBetween.ranges, rangeToDelete, omitLen)
+                    chopRange(allRangesUsed.ranges, rangeToDelete, omitLen)
 
                     for(let backbone of group.backbones.values()) {
-                        deleteRange(backbone.rangesUsedForward.ranges, rangeToDelete)
-                        deleteRange(backbone.rangesUsedReverse.ranges, rangeToDelete)
-                        deleteRange(backbone.children.map((child) => child.range), rangeToDelete)
+                        chopRange(backbone.rangesUsedForward.ranges, rangeToDelete, omitLen)
+                        chopRange(backbone.rangesUsedReverse.ranges, rangeToDelete, omitLen)
+                        chopRange(backbone.children.map((child) => child.range), rangeToDelete, omitLen)
                     }
 
-                    deleteRange([entireBackboneRange], rangeToDelete)
-                    deleteRange(group.locationsOfOmittedRegions.ranges, rangeToDelete)
+                    chopRange([entireBackboneRange], rangeToDelete, omitLen)
+                    chopRange(group.locationsOfOmittedRegions.ranges, rangeToDelete, omitLen)
 
                     group.locationsOfOmittedRegions.push(new LinearRange(rangeToDelete.start, rangeToDelete.start + 1))
+
+                    chopRange(rangesToDelete, rangeToDelete, omitLen)
                 }
 
                 group.backboneLength = entireBackboneRange.end - entireBackboneRange.start
@@ -461,25 +507,24 @@ export default class ComponentDisplayList {
 
                 console.log('chopped', allRangesUsed.sort())
 
-                function deleteRange(ranges:LinearRange[], rangeToDelete:LinearRange) {
-                    let len = rangeToDelete.end - rangeToDelete.start
-                    for(let i = 0; i < ranges.length;) {
-                        let range = ranges[i]
-                        let newRange = range.chop(rangeToDelete, 1)
-                        //console.log(range, 'chop', rangeToDelete, 'makes', newRange)
-                        if(!newRange) {
-                            ranges.splice(i, 1)
-                            continue
-                        } else {
-                            range.start = newRange.start
-                            range.end = newRange.end
-                            ++ i
-                            continue
-                        }
+            }
+
+            function chopRange(ranges:LinearRange[], rangeToDelete:LinearRange, newLen:number) {
+                for(let i = 0; i < ranges.length;) {
+                    let range = ranges[i]
+                    let newRange = range.chop(rangeToDelete, newLen)
+                    //console.log(range, 'chop', rangeToDelete, 'makes', newRange)
+                    if(!newRange) {
+                        ranges.splice(i, 1)
+                        continue
+                    } else {
+                        range.start = newRange.start
+                        range.end = newRange.end
+                        ++ i
+                        continue
                     }
                 }
             }
-
 
             this.backboneGroups.push(group)
 
@@ -570,14 +615,47 @@ export default class ComponentDisplayList {
 
 // https://stackoverflow.com/a/21071454/712294
 function move(array, from, to) {
-    if( to === from ) return array;
-  
-    var target = array[from];                         
+    if (to === from) return array;
+
+    var target = array[from];
     var increment = to < from ? -1 : 1;
-  
-    for(var k = from; k != to; k += increment){
-      array[k] = array[k + increment];
+
+    for (var k = from; k != to; k += increment) {
+        array[k] = array[k + increment];
     }
     array[to] = target;
     return array;
-  }
+}
+
+
+
+let table = {
+    'SO:0000316': 1000,
+    'SO:0000167': 1000,
+    'SO:0000139': 1000,
+    'SO:0001687': 1000,
+    'SO:0000141': 1000
+}
+
+function score(obj: SXIdentified) {
+
+    let roles: string[] = []
+
+    if (obj instanceof SXSequenceFeature) {
+        roles = obj.soTerms
+    } else if (obj instanceof SXSubComponent) {
+        roles = obj.instanceOf.soTerms
+    } else {
+        throw new Error('???')
+    }
+
+    console.log('roles', roles)
+
+    let max = 0
+
+    for (let role of roles) {
+        max = Math.max(max, table[role] || 0)
+    }
+
+    return max
+}
