@@ -476,7 +476,7 @@ export default class ComponentDisplayList {
 
                 let entireBackboneRange = new LinearRange(0, group.backboneLength)
 
-                let rangesToDelete = rangesBetween.ranges.slice(0)
+                let rangesToDelete = rangesBetween.clone().ranges
 
                 while(rangesToDelete.length > 0) {
 
@@ -485,7 +485,7 @@ export default class ComponentDisplayList {
 
                     let omitLen = 1
 
-                    chopRange(rangesBetween.ranges, rangeToDelete, omitLen)
+                    //chopRange(rangesBetween.ranges, rangeToDelete, omitLen)
                     chopRange(allRangesUsed.ranges, rangeToDelete, omitLen)
 
                     for(let backbone of group.backbones.values()) {
