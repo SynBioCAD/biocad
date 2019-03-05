@@ -688,6 +688,11 @@ export default class LayoutEditorOverlay extends View {
     onMouseup(pos:Vec2) {
 
 
+        if(this.dragging) {
+            this.dragging = false
+            this.draggingDepictions = []
+        }
+
         if(this.layoutEditor.isProposingLayout()) {
 
             this.layoutEditor.acceptProposedLayout()
@@ -703,12 +708,6 @@ export default class LayoutEditorOverlay extends View {
         var transform:Matrix = this.layoutEditor.getTransform().invert()
 
         const mouseGridPos = transform.transformVec2(pos.divide(this.layoutEditor.layout.gridSize))
-
-
-        if(this.dragging) {
-            this.dragging = false
-            this.draggingDepictions = []
-        }
 
         const selection:Rect|null = this.getSelectionRect()
 

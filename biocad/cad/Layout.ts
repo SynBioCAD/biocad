@@ -30,7 +30,7 @@ import LayoutPOD from "biocad/cad/LayoutPOD";
 import FeatureLocationDepiction from "biocad/cad/FeatureLocationDepiction";
 
 import assert from 'power-assert'
-import ComponentDisplayList, { BackboneGroup, Backbone, BackboneChild, OmittedSpace } from "biocad/cad/ComponentDisplayList";
+import ComponentDisplayList, { BackboneGroup, Backbone, BackboneChild } from "biocad/cad/ComponentDisplayList";
 import { Watcher, SXIdentified, SXSequenceConstraint, SXLocation, SXOrientedLocation, SXInteraction } from "sbolgraph"
 import InteractionDepiction from './InteractionDepiction'
 import BiocadApp from 'biocad/BiocadApp';
@@ -426,7 +426,7 @@ export default class Layout extends Versioned {
 
                 depiction.stamp = Layout.nextStamp
 
-                cdDepiction = depiction
+                cdDepiction = depiction as ComponentDepiction
 
                 depiction.parent = null
 
