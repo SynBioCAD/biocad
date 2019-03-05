@@ -34,6 +34,7 @@ import DNDTwoBlackboxesMakeConstraint from "./dnd-action/DNDTwoBlackboxesMakeCon
 import DNDMoveInWorkspace from "./dnd-action/DNDMoveInWorkspace";
 import DNDEnterWorkspace from "./dnd-action/DNDEnterWorkspace";
 import DNDEnterParent from "./dnd-action/DNDEnterParent";
+import DNDMoveInBackbone from "./dnd-action/DNDMoveInBackbone";
 import InteractionDepiction from "./InteractionDepiction";
 import DepictionRef from "./DepictionRef";
 
@@ -85,6 +86,7 @@ export default class LayoutEditorOverlay extends View {
         this.dnd.push(new DNDEnterParent())
         this.dnd.push(new DNDEnterWorkspace())
         this.dnd.push(new DNDMoveInWorkspace())
+        this.dnd.push(new DNDMoveInBackbone())
 
         const app:BiocadApp = this.app as BiocadApp
         app.dropOverlay.addReceiver(this)

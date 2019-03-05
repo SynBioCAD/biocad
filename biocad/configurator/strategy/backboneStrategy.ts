@@ -71,6 +71,9 @@ export default function backboneStrategy(_parent:Depiction, children:Depiction[]
             continue
         }
 
+        if(child.offsetExplicit)
+            continue
+
         if(!child.range) {
             throw new Error('bb child has no range')
         }

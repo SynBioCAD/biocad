@@ -14,6 +14,7 @@ import CircularBackboneDepiction from 'biocad/cad/CircularBackboneDepiction';
 import InteractionDepiction from './InteractionDepiction';
 import IdentifiedChain from 'biocad/IdentifiedChain';
 import BackboneGroupDepiction from './BackboneGroupDepiction';
+import { LinearRange, LinearRangeSet } from 'jfw/geom';
 
 export default class DepictionPOD {
 
@@ -27,14 +28,18 @@ export default class DepictionPOD {
 
             type = 'ComponentDepiction'
 
-            additionalProps['orientation'] = (depiction as ComponentDepiction).orientation
-            additionalProps['backbonePlacement'] = (depiction as ComponentDepiction).backbonePlacement
+            additionalProps['orientation'] = depiction.orientation
+            additionalProps['backbonePlacement'] = depiction.backbonePlacement
+
+            if(depiction.range) {
+                additionalProps['range'] = depiction.range.toPOD()
+            }
 
         } else if(depiction instanceof LabelDepiction) {
 
             type = 'LabelDepiction'
 
-            additionalProps['labelFor'] = (depiction as LabelDepiction).labelFor.uid
+            additionalProps['labelFor'] = depiction.labelFor.uid
 
         } else if(depiction instanceof FeatureLocationDepiction) {
 
@@ -44,20 +49,21 @@ export default class DepictionPOD {
 
             type = 'CircularBackboneDepiction'
 
-            additionalProps['backboneIndex'] = (depiction as BackboneDepiction).backboneIndex
+            additionalProps['backboneIndex'] = depiction.backboneIndex
 
         } else if(depiction instanceof BackboneDepiction) {
 
             type = 'BackboneDepiction'
             
-            additionalProps['backboneY'] = (depiction as BackboneDepiction).backboneY
-            additionalProps['backboneIndex'] = (depiction as BackboneDepiction).backboneIndex
+            additionalProps['backboneY'] = depiction.backboneY
+            additionalProps['backboneIndex'] = depiction.backboneIndex
 
         } else if(depiction instanceof BackboneGroupDepiction) {
 
             type = 'BackboneGroupDepiction'
 
-            additionalProps['backboneLength'] = (depiction as BackboneGroupDepiction).backboneLength
+            additionalProps['backboneLength'] = depiction.backboneLength
+            additionalProps['locationsOfOmittedRegions'] = depiction.locationsOfOmittedRegions.toPOD()
 
         } else if(depiction instanceof InteractionDepiction) {
 
@@ -105,6 +111,10 @@ export default class DepictionPOD {
             ;(depiction as ComponentDepiction).orientation = pod.orientation
             ;(depiction as ComponentDepiction).backbonePlacement = pod.backbonePlacement
 
+            if(pod.range) {
+                ;(depiction as ComponentDepiction).range = LinearRange.fromPOD(pod.range)
+            }
+
         } else if(pod['class'] === 'LabelDepiction') {
 
             let labelFor = uidToDepiction.get(pod['labelFor'])
@@ -138,6 +148,7 @@ export default class DepictionPOD {
             depiction = new BackboneGroupDepiction(layout, parent, pod.uid)
 
             ;(depiction as BackboneGroupDepiction).backboneLength = pod.backboneLength
+            ;(depiction as BackboneGroupDepiction).locationsOfOmittedRegions = LinearRangeSet.fromPOD(pod.locationsOfOmittedRegions)
 
         } else if(pod['class'] === 'InteractionDepiction') {
 
