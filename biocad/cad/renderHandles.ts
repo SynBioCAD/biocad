@@ -49,7 +49,7 @@ export default function renderHandles(rect:Rect, bHover:boolean, bResizeable:boo
                 cy: pos.y,
                 fill: 'none',
                 'pointer-events': 'visible',
-                r: 12,
+                r: 6,
                 'ev-mousedown': dragEvent(dragHandle, { dimensions: dimensions, callback: callback }),
                 style: {
                     cursor: cursor
