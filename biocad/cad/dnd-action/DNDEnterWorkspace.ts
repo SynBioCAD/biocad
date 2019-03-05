@@ -80,7 +80,8 @@ export default class DNDEnterWorkspace extends DND {
             newLayout.configurate([])
 
             dInNewLayout.offsetExplicit = true
-            dInNewLayout.offset = parent.absoluteOffset.add(targetBBox.topLeft)
+            //dInNewLayout.offset = parent.absoluteOffset.add(targetBBox.topLeft)
+            dInNewLayout.offset = targetBBox.topLeft
 
             return { newLayout, newGraph }
         }
