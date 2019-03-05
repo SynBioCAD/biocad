@@ -22,7 +22,6 @@ import assert from 'power-assert'
 
 import visbolite from 'visbolite'
 import CircularBackboneDepiction from 'biocad/cad/CircularBackboneDepiction';
-import LabelledDepiction from "./LabelledDepiction";
 import IdentifiedChain from "biocad/IdentifiedChain";
 import drawArrow, { ArrowheadType } from "biocad/util/drawArrow";
 
@@ -259,7 +258,7 @@ export default class LabelDepiction extends Depiction {
 
         let distance = from.distanceTo(to)
 
-        if(false && distance > 2 && ! (this.parent instanceof LabelledDepiction)) {
+        if(false && distance > 2) {
 
             if(!this.parent) {
                 throw new Error('???')

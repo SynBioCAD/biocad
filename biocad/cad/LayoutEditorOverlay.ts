@@ -28,7 +28,6 @@ import assert from 'power-assert'
 import Instruction from "biocad/cad/layout-instruction/Instruction";
 import ReplaceInstruction from "biocad/cad/layout-instruction/ReplaceInstruction";
 import { Predicates } from "bioterms";
-import LabelledDepiction from "./LabelledDepiction";
 import { Specifiers } from "bioterms/Specifiers";
 import DND, { DNDResult } from "./dnd-action/DND";
 import DNDTwoBlackboxesMakeConstraint from "./dnd-action/DNDTwoBlackboxesMakeConstraint";
@@ -157,25 +156,22 @@ export default class LayoutEditorOverlay extends View {
 
         let bboxSize = bbox.size()
 
-        if(! (depiction instanceof LabelledDepiction)) {
-            // interaction for instance, cannot be resized
+        if(! (depiction instanceof ComponentDepiction)) {
             return
         }
 
-        let labelled = depiction.getLabelled()
-
-        let newSize = labelled.size.add(Vec2.fromXY(
+        let newSize = depiction.size.add(Vec2.fromXY(
             (- dL) + dR,
             (- dT) + dB
         ))
         
         if (newSize.x !== depiction.size.x) {
-            labelled.minSize = Vec2.fromXY(newSize.x, labelled.minSize.y)
+            depiction.minSize = Vec2.fromXY(newSize.x, depiction.minSize.y)
             stuffChanged = true
         }
 
         if (newSize.y !== depiction.size.y) {
-            labelled.minSize = Vec2.fromXY(labelled.minSize.x, newSize.y)
+            depiction.minSize = Vec2.fromXY(depiction.minSize.x, newSize.y)
             stuffChanged = true
         }
 
@@ -194,7 +190,7 @@ export default class LayoutEditorOverlay extends View {
         //console.log('llamas')
 
         if(stuffChanged)
-            labelled.touch()
+            depiction.touch()
 
         this.app.update()
         
@@ -220,8 +216,8 @@ export default class LayoutEditorOverlay extends View {
 
             if(hovering) {
 
-                handles.push(renderHandles(transform.transformRect(hovering.absoluteBoundingBox.multiply(layout.gridSize)), true, hovering.isResizeable(), (pos:Vec2, dimensions:string[]) => {
-                    this.resize(hovering, pos, dimensions)
+                handles.push(renderHandles(transform.transformRect(hovering.absoluteBoundingBox.multiply(layout.gridSize)), true, /* hovering.isResizeable() */ false, (pos:Vec2, dimensions:string[]) => {
+                    //this.resize(hovering, pos, dimensions)
                 }))
 
                 let hoveringThing = hovering.depictionOf
@@ -298,7 +294,7 @@ export default class LayoutEditorOverlay extends View {
 
             let intersects = layout.getTopIntersectingDepiction(this.mouseGridPos, true)
 
-            if(intersects && intersects instanceof LabelledDepiction) {
+            if(intersects && intersects instanceof ComponentDepiction) {
                 points = this.proposingConnectionFrom.absoluteBoundingBox
                     .closestEdgeMidPointsBetweenThisAnd(intersects.absoluteBoundingBox)
 

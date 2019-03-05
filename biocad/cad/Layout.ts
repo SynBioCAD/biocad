@@ -25,7 +25,6 @@ import LabelDepiction from "biocad/cad/LabelDepiction";
 import configurateComponent from "biocad/configurator/configurateComponent";
 import configurateFeatureLocation from "biocad/configurator/configurateFeatureLocation";
 import configurateLabel from "biocad/configurator/configurateLabel";
-import configurateLabelled from "biocad/configurator/configurateLabelled";
 import configurateBackbone from "biocad/configurator/configurateBackbone";
 import LayoutPOD from "biocad/cad/LayoutPOD";
 import FeatureLocationDepiction from "biocad/cad/FeatureLocationDepiction";
@@ -39,7 +38,6 @@ import App from 'jfw/App';
 import CircularBackboneDepiction from 'biocad/cad/CircularBackboneDepiction';
 import Instruction from 'biocad/cad/layout-instruction/Instruction';
 import InstructionSet from 'biocad/cad/layout-instruction/InstructionSet';
-import LabelledDepiction from './LabelledDepiction';
 import IdentifiedChain from '../IdentifiedChain';
 import BackboneGroupDepiction from './BackboneGroupDepiction';
 
@@ -315,11 +313,7 @@ export default class Layout extends Versioned {
 
                 console.log('layout onVersionChanged: reconfigurating ' + depiction.debugName)
 
-                if(depiction instanceof LabelledDepiction) {
-
-                    configurateLabelled(depiction as LabelledDepiction, instructions)
-
-                } else if(depiction instanceof ComponentDepiction) {
+                if(depiction instanceof ComponentDepiction) {
 
                     configurateComponent(depiction as ComponentDepiction, instructions)
 
@@ -428,19 +422,11 @@ export default class Layout extends Versioned {
 
                 console.log(component.uri + ' found in depictionMap; uid ' + depiction.uid)
 
-                assert(depiction instanceof LabelledDepiction)
+                assert(depiction instanceof ComponentDepiction)
 
                 depiction.stamp = Layout.nextStamp
-                ;(depiction as LabelledDepiction).getLabel().stamp = Layout.nextStamp
-                ;(depiction as LabelledDepiction).getLabelled().stamp = Layout.nextStamp
 
-                let labelled = (depiction as LabelledDepiction).getLabelled()
-
-                if(! (labelled instanceof ComponentDepiction)) {
-                    throw new Error('???')
-                }
-
-                cdDepiction = labelled
+                cdDepiction = depiction
 
                 depiction.parent = null
 
@@ -450,17 +436,10 @@ export default class Layout extends Versioned {
 
                 console.log(component.uri + ' not found in depictionMap')
 
-                const labelled:LabelledDepiction = new LabelledDepiction(this, component, chain, undefined)
-
-                cdDepiction = new ComponentDepiction(this, undefined, undefined, labelled)
+                cdDepiction = new ComponentDepiction(this, component, chain, undefined)
                 cdDepiction.setSameVersionAs(this)
-                labelled.addChild(cdDepiction)
 
-                const label: LabelDepiction = new LabelDepiction(this, cdDepiction, labelled)
-                label.setSameVersionAs(this)
-                labelled.addChild(label)
-
-                this.addDepiction(labelled, undefined)
+                this.addDepiction(cdDepiction, undefined)
 
                 cdDepiction.opacity = opacity
             }
@@ -660,55 +639,20 @@ export default class Layout extends Versioned {
 
             depiction.stamp = Layout.nextStamp
 
-            if(parent instanceof BackboneDepiction) {
+            assert(depiction instanceof ComponentDepiction)
 
-                assert(depiction instanceof ComponentDepiction)
+            depiction.stamp = Layout.nextStamp
 
-                cDepiction = depiction as ComponentDepiction
+            cDepiction = depiction as ComponentDepiction
 
-                this.attachToParent(depiction, parent)
-
-            } else {
-
-                assert(depiction instanceof LabelledDepiction)
-
-                ;(depiction as LabelledDepiction).getLabel().stamp = Layout.nextStamp
-                ;(depiction as LabelledDepiction).getLabelled().stamp = Layout.nextStamp
-
-                let thingThatIsLabelled = (depiction as LabelledDepiction).getLabelled()
-
-                assert(thingThatIsLabelled instanceof ComponentDepiction)
-
-                cDepiction = thingThatIsLabelled as ComponentDepiction
-
-                this.attachToParent(depiction, parent)
-            }
+            this.attachToParent(depiction, parent)
 
         } else {
 
-            if(parent instanceof BackboneDepiction) {
+            cDepiction = new ComponentDepiction(this, component, chain, parent)
+            cDepiction.setSameVersionAs(this)
 
-                cDepiction = new ComponentDepiction(this, component, chain, parent)
-                cDepiction.setSameVersionAs(this)
-
-                this.addDepiction(cDepiction, parent)
-
-            } else {
-
-                let labelled: LabelledDepiction = new LabelledDepiction(this, component, chain, parent)
-                labelled.setSameVersionAs(this)
-
-                cDepiction = new ComponentDepiction(this, undefined, undefined, labelled)
-                cDepiction.setSameVersionAs(this)
-                labelled.addChild(cDepiction)
-
-                const label:LabelDepiction = new LabelDepiction(this, cDepiction, labelled)
-                label.setSameVersionAs(this)
-                labelled.addChild(label)
-
-                this.addDepiction(labelled, parent)
-
-            }
+            this.addDepiction(cDepiction, parent)
 
             cDepiction.opacity = opacity
 

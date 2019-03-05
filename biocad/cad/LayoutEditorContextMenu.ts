@@ -14,7 +14,6 @@ import Depiction, { Opacity } from "biocad/cad/Depiction";
 
 import SequenceMode from 'biocad/mode/sequence/SequenceMode'
 import ComponentDepiction from 'biocad/cad/ComponentDepiction';
-import LabelledDepiction from './LabelledDepiction';
 import SBOLDroppable from 'biocad/droppable/SBOLDroppable';
 
 export default class LayoutEditorContextMenu extends ContextMenu {
@@ -41,13 +40,7 @@ export default class LayoutEditorContextMenu extends ContextMenu {
 
             let depiction = depictions[0]
 
-            let innerDepiction = depiction
-
-            if(depiction instanceof LabelledDepiction) {
-                innerDepiction = depiction.getLabelled()
-            }
-
-            let dOf = innerDepiction.depictionOf
+            let dOf = depiction.depictionOf
 
             items.push(new ContextMenuItem('span.fa.fa-align-justify', 'Edit Sequence', (pos:Vec2) => {
 
@@ -66,12 +59,12 @@ export default class LayoutEditorContextMenu extends ContextMenu {
             }))
 
 
-            if(innerDepiction.opacity === Opacity.Blackbox) {
+            if(depiction.opacity === Opacity.Blackbox) {
 
                 items.push(new ContextMenuItem('span.fa.fa-eye', 'Show Subcomponents', (pos:Vec2) => {
 
-                    innerDepiction.opacity = Opacity.Whitebox
-                    innerDepiction.touch()
+                    depiction.opacity = Opacity.Whitebox
+                    depiction.touch()
 
 
                     app.closeContextMenu()
@@ -83,8 +76,8 @@ export default class LayoutEditorContextMenu extends ContextMenu {
 
                 items.push(new ContextMenuItem('span.fa.fa-eye-slash', 'Hide Subcomponents', (pos:Vec2) => {
 
-                    innerDepiction.opacity = Opacity.Blackbox
-                    innerDepiction.touch()
+                    depiction.opacity = Opacity.Blackbox
+                    depiction.touch()
 
                     app.closeContextMenu()
 
@@ -102,7 +95,7 @@ export default class LayoutEditorContextMenu extends ContextMenu {
 
                         ;(dOf as SXComponent).dissolve()
 
-                        innerDepiction.touch()
+                        depiction.touch()
 
                         app.closeContextMenu()
 
@@ -119,7 +112,7 @@ export default class LayoutEditorContextMenu extends ContextMenu {
                         layoutEditor.deselectAll()
 
                         ;(dOf as SXSubComponent).dissolve()
-                        innerDepiction.touch()
+                        depiction.touch()
 
                         app.closeContextMenu()
 

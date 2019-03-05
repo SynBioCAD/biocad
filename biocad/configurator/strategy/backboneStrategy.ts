@@ -11,7 +11,6 @@ import { SXSequenceFeature, SXRange, SXSubComponent, SXSequenceConstraint, SXIde
 import Layout from "biocad/cad/Layout";
 import BackboneDepiction from '../../cad/BackboneDepiction';
 import FeatureLocationDepiction from 'biocad/cad/FeatureLocationDepiction';
-import LabelledDepiction from 'biocad/cad/LabelledDepiction';
 import BackboneGroupDepiction from 'biocad/cad/BackboneGroupDepiction';
 import LabelDepiction from 'biocad/cad/LabelDepiction';
 

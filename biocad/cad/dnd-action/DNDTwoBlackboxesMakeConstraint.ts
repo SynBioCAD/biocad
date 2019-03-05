@@ -4,7 +4,6 @@ import Depiction, { Opacity, Fade } from "biocad/cad/Depiction";
 import { SBOLXGraph, SXComponent, SXSubComponent } from "sbolgraph";
 import Layout from "biocad/cad/Layout";
 import DND, { DNDResult } from "./DND";
-import LabelledDepiction from "../LabelledDepiction";
 import ComponentDepiction from "../ComponentDepiction";
 import IdentifiedChain from "../../IdentifiedChain";
 
@@ -19,15 +18,10 @@ export default class DNDTwoBlackboxesMakeConstraint extends DND {
         targetBBox:Rect,
         ignoreURIs:string[]):DNDResult|null {
 
-        if(! (sourceDepiction instanceof LabelledDepiction))
+        if(! (sourceDepiction instanceof ComponentDepiction))
             return null
 
-        let labelled = sourceDepiction.getLabelled()
-
-        if(! (labelled instanceof ComponentDepiction))
-            return null
-
-        if(labelled.opacity !== Opacity.Blackbox)
+        if(sourceDepiction.opacity !== Opacity.Blackbox)
             return null
 
 
@@ -39,7 +33,7 @@ export default class DNDTwoBlackboxesMakeConstraint extends DND {
             if(intersecting === sourceDepiction)
                 continue
 
-            if(! (intersecting instanceof LabelledDepiction))
+            if(! (intersecting instanceof ComponentDepiction))
                 continue
 
             let ignored = false
@@ -52,12 +46,7 @@ export default class DNDTwoBlackboxesMakeConstraint extends DND {
             if (ignored)
                 continue
 
-            let otherLabelled = intersecting.getLabelled()
-
-            if(! (otherLabelled instanceof ComponentDepiction))
-                continue
-
-            if(otherLabelled.opacity !== Opacity.Blackbox)
+            if(intersecting.opacity !== Opacity.Blackbox)
                 continue
             
 

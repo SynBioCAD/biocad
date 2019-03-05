@@ -4,7 +4,6 @@ import Depiction, { Opacity } from "biocad/cad/Depiction";
 import { SBOLXGraph, SXComponent, SXSubComponent } from "sbolgraph";
 import Layout from "biocad/cad/Layout";
 import DND, { DNDResult } from "./DND";
-import LabelledDepiction from "../LabelledDepiction";
 import ComponentDepiction from "../ComponentDepiction";
 
 // Allows roots to be moved around

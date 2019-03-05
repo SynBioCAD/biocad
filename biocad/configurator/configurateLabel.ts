@@ -13,7 +13,6 @@ import assert from 'power-assert'
 import measureText from '../util/measureText'
 import CircularBackboneDepiction from 'biocad/cad/CircularBackboneDepiction';
 import InstructionSet from "biocad/cad/layout-instruction/InstructionSet";
-import LabelledDepiction from "biocad/cad/LabelledDepiction";
 
 export default function configurateLabel(label:LabelDepiction, instructions:InstructionSet) {
 

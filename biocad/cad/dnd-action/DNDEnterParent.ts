@@ -4,7 +4,7 @@ import Depiction, { Opacity } from "biocad/cad/Depiction";
 import { SBOLXGraph, SXComponent, SXSubComponent } from "sbolgraph";
 import Layout from "biocad/cad/Layout";
 import DND, { DNDResult } from "./DND";
-import LabelledDepiction from "../LabelledDepiction";
+import ComponentDepiction from "../ComponentDepiction";
 
 // Allows a ComponentD to be dragged into a parent ComponentD to become a child
 
@@ -45,8 +45,8 @@ export default class DNDEnterParent extends DND {
                     continue
                 }
 
-                if(intersecting instanceof LabelledDepiction) {
-                    if(intersecting.getLabelled().opacity === Opacity.Blackbox) {
+                if(intersecting instanceof ComponentDepiction) {
+                    if(intersecting.opacity === Opacity.Blackbox) {
                         continue
                     }
                 }

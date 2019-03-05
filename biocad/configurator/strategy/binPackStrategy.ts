@@ -10,7 +10,6 @@ import LinearRangeSet from "jfw/geom/LinearRangeSet";
 import ComponentDepiction from "biocad/cad/ComponentDepiction";
 import BackboneDepiction from '../../cad/BackboneDepiction';
 import { reverse } from 'dns';
-import LabelledDepiction from 'biocad/cad/LabelledDepiction';
 
 
 const INTERACTION_HEIGHT:number = 1
@@ -368,10 +367,6 @@ function createABInteractionLayers(groups:Group[]):Map<InteractionDepiction, num
     function shouldReverse(interaction:InteractionDepiction) {
 
         for(let participant of interaction.getAllIncludedDepictions()) {
-
-            if(participant instanceof LabelledDepiction) {
-                participant = participant.getLabelled()
-            }
 
             if(participant instanceof ComponentDepiction) {
                 if(participant.orientation === Orientation.Reverse) {

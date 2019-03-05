@@ -289,7 +289,7 @@ export default class ComponentDepiction extends Depiction {
     }
 
     isSelectable():boolean {
-        return false
+        return true
     }
 }
 

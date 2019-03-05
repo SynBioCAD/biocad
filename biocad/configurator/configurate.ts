@@ -14,7 +14,6 @@ import BackboneGroupDepiction from 'biocad/cad/BackboneGroupDepiction'
 import configurateComponent from './configurateComponent'
 import configurateFeatureLocation from './configurateFeatureLocation'
 import configurateLabel from './configurateLabel'
-import configurateLabelled from './configurateLabelled'
 import configurateBackbone from './configurateBackbone'
 import configurateBackboneGroup from './configurateBackboneGroup'
 import BackboneDepiction from "biocad/cad/BackboneDepiction";
@@ -24,7 +23,6 @@ import Instruction from 'biocad/cad/layout-instruction/Instruction';
 import ReplaceInstruction from 'biocad/cad/layout-instruction/ReplaceInstruction';
 
 import binPackStrategy from './strategy/binPackStrategy'
-import LabelledDepiction from 'biocad/cad/LabelledDepiction';
 import MarginInstruction from '../cad/layout-instruction/MarginInstruction';
 
 export default function configurate(layout:Layout, instructions:InstructionSet) {
@@ -77,8 +75,6 @@ export default function configurate(layout:Layout, instructions:InstructionSet) 
             configurateFeatureLocation(depiction, instructions)
         } else if(depiction instanceof LabelDepiction) {
             configurateLabel(depiction, instructions)
-        } else if(depiction instanceof LabelledDepiction) {
-            configurateLabelled(depiction, instructions)
         } else if(depiction instanceof BackboneDepiction) {
             configurateBackbone(depiction, instructions)
         } else if(depiction instanceof BackboneGroupDepiction) {

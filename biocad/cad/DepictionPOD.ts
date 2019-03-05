@@ -12,7 +12,6 @@ import Vec2 from "jfw/geom/Vec2";
 import BackboneDepiction from "biocad/cad/BackboneDepiction";
 import CircularBackboneDepiction from 'biocad/cad/CircularBackboneDepiction';
 import InteractionDepiction from './InteractionDepiction';
-import LabelledDepiction from 'biocad/cad/LabelledDepiction';
 import IdentifiedChain from 'biocad/IdentifiedChain';
 import BackboneGroupDepiction from './BackboneGroupDepiction';
 
@@ -36,10 +35,6 @@ export default class DepictionPOD {
             type = 'LabelDepiction'
 
             additionalProps['labelFor'] = (depiction as LabelDepiction).labelFor.uid
-
-        } else if(depiction instanceof LabelledDepiction) {
-
-            type = 'LabelledDepiction'
 
         } else if(depiction instanceof FeatureLocationDepiction) {
 
@@ -109,10 +104,6 @@ export default class DepictionPOD {
 
             ;(depiction as ComponentDepiction).orientation = pod.orientation
             ;(depiction as ComponentDepiction).backbonePlacement = pod.backbonePlacement
-
-        } else if(pod['class'] === 'LabelledDepiction') {
-
-            depiction = new LabelledDepiction(layout, depictionOf, chain as IdentifiedChain, parent, pod.uid)
 
         } else if(pod['class'] === 'LabelDepiction') {
 
