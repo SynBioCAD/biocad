@@ -1,5 +1,5 @@
 import LabelDepiction from 'biocad/cad/LabelDepiction';
-import { SXComponent, SXSubComponent } from "sbolgraph";
+import { SXComponent, SXSubComponent, SXRange } from "sbolgraph";
 
 import { Types, Specifiers } from 'bioterms'
 
@@ -19,10 +19,11 @@ import Depiction, { Opacity } from 'biocad/cad/Depiction'
 import BackboneDepiction from "biocad/cad/BackboneDepiction";
 import CircularBackboneDepiction from 'biocad/cad/CircularBackboneDepiction';
 import InstructionSet from 'biocad/cad/layout-instruction/InstructionSet';
+import Layout from 'biocad/cad/Layout';
 
 export default function configurateComponent(depiction:ComponentDepiction, instructions:InstructionSet):void {
 
-    console.warn('configurating ' + depiction.debugName)
+    console.log('configurating ' + depiction.debugName)
 
     if(CircularBackboneDepiction.ancestorOf(this)) {
         if(depiction.opacity === Opacity.Whitebox) {
@@ -91,6 +92,8 @@ function configurateWhiteboxComponent(depiction:ComponentDepiction):void {
 
 function configurateBlackboxComponent(depiction:ComponentDepiction):void {
 
+    let layout = depiction.layout
+
     var type = 'user-defined'
 
     const depictionOf = depiction.depictionOf
@@ -134,12 +137,9 @@ function configurateBlackboxComponent(depiction:ComponentDepiction):void {
 
     }
 
+    depiction.setWidthFromLocation()
 
-
-    let w = depiction.range ? (depiction.range.end - depiction.range.start) : 2
-
-    depiction.size = Vec2.fromXY(w, 2).max(depiction.minSize)
-    depiction.size = depiction.size.multiply(  visbolite.glyphScaleFromType(type) )
+    depiction.size = Vec2.fromXY(depiction.size.x, 2 * visbolite.glyphScaleFromType(type).y)
 
     depiction.backbonePlacement = backbonePlacement
 }

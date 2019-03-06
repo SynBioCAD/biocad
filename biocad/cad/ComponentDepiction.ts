@@ -12,8 +12,6 @@ import {
     SXSubComponent
 } from "sbolgraph"
 
-import { Types } from 'bioterms'
-
 import Layout from './Layout'
 
 import visbolite from 'visbolite'
@@ -21,27 +19,20 @@ import visbolite from 'visbolite'
 import parts, { shortNameFromTerm } from 'data/parts'
 
 import RenderContext from './RenderContext'
-import { SXRange, Watcher } from "sbolgraph";
 import CircularBackboneDepiction from 'biocad/cad/CircularBackboneDepiction';
 import BackboneDepiction from 'biocad/cad/BackboneDepiction';
-import { LinearRange } from 'jfw/geom'
 
 import extend = require('xtend')
 import IdentifiedChain from '../IdentifiedChain';
 
-export default class ComponentDepiction extends Depiction {
+import LocationableDepiction from './LocationableDepiction'
 
-    orientation: Orientation
-    range:LinearRange|undefined
-
-    location: SXIdentified|null
-    backbonePlacement:string
+export default class ComponentDepiction extends LocationableDepiction {
 
     constructor(layout:Layout, depictionOf:SXIdentified|undefined, identifiedChain:IdentifiedChain|undefined, parent?:Depiction, uid?:number) {
 
         super(layout, depictionOf, identifiedChain, parent, uid)
 
-        this.orientation = Orientation.Forward
     }
 
     render(renderContext:RenderContext):VNode {
@@ -149,17 +140,6 @@ export default class ComponentDepiction extends Depiction {
         var offset = this.absoluteOffset.multiply(renderContext.layout.gridSize)
         const size = this.size.multiply(renderContext.layout.gridSize)
 
-        const anchorY = this.getAnchorY() * renderContext.layout.gridSize.y
-
-        const anchorYScaled = size.y * (anchorY / size.y)
-
-        offset = offset.add(
-            Vec2.fromXY(
-                (size.x - size.x) / 2,
-                (size.y - size.y) * (anchorY / size.y)
-            )
-        )
-
         var transform = Matrix.identity()
         
         transform = transform.multiply(Matrix.translation(offset))
@@ -188,17 +168,6 @@ export default class ComponentDepiction extends Depiction {
         ])
 
     }
-
-
-    get label():LabelDepiction|undefined {
-
-        for(var i:number = 0; i < this.children.length; ++ i) {
-            if(this.children[i] instanceof LabelDepiction) {
-                return this.children[i] as LabelDepiction
-            }
-        }
-    }
-
 
 
     private renderCircularBlackbox(renderContext:RenderContext):VNode {
@@ -256,37 +225,6 @@ export default class ComponentDepiction extends Depiction {
         ])
     }
 
-
-    getAnchorY():number {
-
-        // TODO: Best effort to align to a parent backbone, if exists.
-        // If there are multiple BackboneDepiction children, only aligns to the first
-        for(var i = 0; i < this.children.length; ++ i) {
-
-            let child:Depiction = this.children[i]
-
-            if(child instanceof BackboneDepiction) {
-                return child.offset.y + child.getAnchorY()
-            }
-
-        }
-
-
-
-        if(this.backbonePlacement === 'mid') {
-
-           return this.size.y / 2
-
-        } else if(this.backbonePlacement === 'top') {
-
-            return this.size.y
-
-        } else {
-
-            return 0
-
-        }
-    }
 
     isSelectable():boolean {
         return true

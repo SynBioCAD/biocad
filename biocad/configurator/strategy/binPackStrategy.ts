@@ -2,7 +2,6 @@ import Depiction, { Orientation, Opacity } from 'biocad/cad/Depiction';
 
 import GrowingPacker from './binPack'
 
-import assert from 'power-assert'
 
 import { Vec2, LinearRange } from 'jfw/geom'
 import InteractionDepiction from "biocad/cad/InteractionDepiction";
@@ -107,7 +106,10 @@ export default function binPackStrategy(parent:Depiction|null, children:Depictio
 
     for(let group of groups) {
 
-        assert(group.fit)
+        if(!group.fit) {
+            console.dir(group)
+            throw new Error('binPackStrategy: group.fit not set')
+        }
 
         let groupOffset = Vec2.fromXY(padding + group.fit.x, padding + group.fit.y)
 

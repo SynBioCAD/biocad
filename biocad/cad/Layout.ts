@@ -30,7 +30,7 @@ import LayoutPOD from "biocad/cad/LayoutPOD";
 import FeatureLocationDepiction from "biocad/cad/FeatureLocationDepiction";
 
 import assert from 'power-assert'
-import ComponentDisplayList, { BackboneGroup, Backbone, BackboneChild } from "biocad/cad/ComponentDisplayList";
+import ComponentDisplayList from "biocad/cad/ComponentDisplayList";
 import { Watcher, SXIdentified, SXSequenceConstraint, SXLocation, SXOrientedLocation, SXInteraction } from "sbolgraph"
 import InteractionDepiction from './InteractionDepiction'
 import BiocadApp from 'biocad/BiocadApp';
@@ -39,7 +39,6 @@ import CircularBackboneDepiction from 'biocad/cad/CircularBackboneDepiction';
 import Instruction from 'biocad/cad/layout-instruction/Instruction';
 import InstructionSet from 'biocad/cad/layout-instruction/InstructionSet';
 import IdentifiedChain from '../IdentifiedChain';
-import BackboneGroupDepiction from './BackboneGroupDepiction';
 
 
 export default class Layout extends Versioned {
@@ -61,6 +60,9 @@ export default class Layout extends Versioned {
     graphWatcher:Watcher|null
     detailLevel:number
 
+    bpToGridScale:number
+    minGlyphWidth:number
+
     constructor(graph:SBOLXGraph) {
 
         super()
@@ -72,6 +74,9 @@ export default class Layout extends Versioned {
         this.identifiedChainToDepiction = new Map<string, Depiction>()
         this.uidToDepiction = new Map<number, Depiction>()
         this.gridSize = Vec2.fromXY(16, 16)
+
+        this.bpToGridScale = 0.02
+        this.minGlyphWidth = 2
 
         if(typeof window !== 'undefined') {
             this.size = Vec2.fromXY(window.innerWidth, window.innerHeight).divide(this.gridSize)
@@ -449,7 +454,7 @@ export default class Layout extends Versioned {
 
             if(cdDepiction.opacity === Opacity.Whitebox) {
 
-                var displayList:ComponentDisplayList = ComponentDisplayList.fromComponent(component, { omitEmptySpace: true, forceMinWidth: true })
+                var displayList:ComponentDisplayList = ComponentDisplayList.fromComponent(component)
 
                 for(let backboneGroup of displayList.backboneGroups) {
                     //console.log('BB GROUP LEN ' + backboneGroup.length)
@@ -463,7 +468,7 @@ export default class Layout extends Versioned {
 
                     let nextChain = chain.extend(child)
 
-                    this.syncComponentInstanceDepiction(preset, child as SXSubComponent, nextChain, cdDepiction, 1, Orientation.Forward, null)
+                    this.syncComponentInstanceDepiction(preset, child as SXSubComponent, nextChain, cdDepiction, 1, Orientation.Forward)
 
                 }
 
@@ -540,7 +545,7 @@ export default class Layout extends Versioned {
 
     }
 
-    private syncSequenceAnnotationDepiction(preset:DetailPreset, location:SXLocation, chain:IdentifiedChain, parent:BackboneDepiction, nestDepth:number, orientation:Orientation, range:LinearRange) {
+    private syncLocationDepiction(preset:DetailPreset, location:SXLocation, chain:IdentifiedChain, parent:BackboneDepiction, nestDepth:number, orientation:Orientation) {
 
         //const sequenceAnnotation:SXSequenceFeature = location.containingSequenceFeature
 
@@ -570,7 +575,7 @@ export default class Layout extends Versioned {
 
         if(containingObject instanceof SXSubComponent) {
 
-            const cDepiction:ComponentDepiction = this.syncComponentInstanceDepiction(preset, containingObject as SXSubComponent, chain, parent, nestDepth, nestedOrientation, range)
+            const cDepiction:ComponentDepiction = this.syncComponentInstanceDepiction(preset, containingObject, chain, parent, nestDepth, nestedOrientation)
             cDepiction.location = location
 
             return cDepiction
@@ -601,12 +606,8 @@ export default class Layout extends Versioned {
             }
 
             salDepiction.location = location
-
-            salDepiction.depictionOf = containingObject as SXSequenceFeature
-
+            salDepiction.depictionOf = containingObject
             salDepiction.orientation = nestedOrientation
-            salDepiction.range = range
-
             salDepiction.isExpandable = false
 
             return salDepiction
@@ -619,7 +620,7 @@ export default class Layout extends Versioned {
 
     }
 
-    private syncComponentInstanceDepiction(preset:DetailPreset, component:SXSubComponent, chain:IdentifiedChain, parent:Depiction, nestDepth:number, orientation:Orientation, range:LinearRange|null):ComponentDepiction {
+    private syncComponentInstanceDepiction(preset:DetailPreset, component:SXSubComponent, chain:IdentifiedChain, parent:Depiction, nestDepth:number, orientation:Orientation):ComponentDepiction {
 
         if(!component.instanceOf)
             throw new Error('Component has no definition')
@@ -636,8 +637,6 @@ export default class Layout extends Versioned {
         var depiction:Depiction|undefined = this.identifiedChainToDepiction.get(chain.stringify())
 
         if(depiction !== undefined) {
-
-            depiction.stamp = Layout.nextStamp
 
             assert(depiction instanceof ComponentDepiction)
 
@@ -659,15 +658,12 @@ export default class Layout extends Versioned {
         }
 
         cDepiction.orientation = orientation
-
-        if(range)
-            cDepiction.range = range
-
+        cDepiction.depictionOf = component
         cDepiction.isExpandable = definition.subComponents.length > 0
 
         if(cDepiction.opacity === Opacity.Whitebox) {
 
-            var displayList:ComponentDisplayList = ComponentDisplayList.fromComponent(component.instanceOf, { omitEmptySpace: true, forceMinWidth: true })
+            var displayList:ComponentDisplayList = ComponentDisplayList.fromComponent(component.instanceOf)
 
             //console.log(displayList.backboneGroups.length + ' bb groups for ' + component.uriChain)
 
@@ -682,7 +678,7 @@ export default class Layout extends Versioned {
 
                 let nextChain = chain.extend(child)
 
-                this.syncComponentInstanceDepiction(preset, child as SXSubComponent, nextChain, cDepiction, nestDepth + 1, orientation, null)
+                this.syncComponentInstanceDepiction(preset, child, nextChain, cDepiction, nestDepth + 1, orientation)
 
             }
 
@@ -723,7 +719,7 @@ export default class Layout extends Versioned {
     }
 
 
-    private syncBackboneGroup(preset:DetailPreset, dlGroup:BackboneGroup, chain:IdentifiedChain, parent:Depiction, nestDepth:number, orientation:Orientation):void {
+    private syncBackboneGroup(preset:DetailPreset, dlGroup:Array<SXIdentified>, chain:IdentifiedChain, parent:Depiction, nestDepth:number, orientation:Orientation):void {
 
         // parent is a depiction of an SXComponent or SXSubComponent (i.e., a ComponentDepiction)
 
@@ -731,79 +727,47 @@ export default class Layout extends Versioned {
             throw new Error('???')
         }
 
-        let group:BackboneGroupDepiction|null = null
-        let bestGroupScore = -1
+        let backbone:BackboneDepiction|null = null
 
         for(let child of parent.children) {
-            if(child instanceof BackboneGroupDepiction) {
-                let score = child.closenessScoreToDisplayList(dlGroup) 
-                if(score > bestGroupScore) {
-                    group = child
-                    bestGroupScore = score
-                }
+            if(child instanceof BackboneDepiction) {
+                backbone = child
+                break
             }
         }
 
-        if(!group) {
-            group = new BackboneGroupDepiction(this, parent)
-            group.setSameVersionAs(this)
-            this.addDepiction(group, parent)
+        if(!backbone) {
+            backbone = new BackboneDepiction(this, parent)
+            backbone.setSameVersionAs(this)
+            this.addDepiction(backbone, parent)
         }
 
-        group.stamp = Layout.nextStamp
-
-        group.backboneLength = dlGroup.backboneLength
-        group.locationsOfOmittedRegions = dlGroup.locationsOfOmittedRegions
+        backbone.stamp = Layout.nextStamp
 
         var c:ComponentDepiction = parent as ComponentDepiction
 
         let circular:boolean = c.getDefinition().hasType(Specifiers.SBOL2.Type.Circular)
 
-        let backbones:Map<Backbone,BackboneDepiction> = new Map()
+        for(let child of dlGroup) {
 
-        for(let [ backboneIndex, dlBackbone ] of dlGroup.backbones) {
+            /*
+            if(!forward) {
+                orientation = reverse(orientation)
+            }*/
 
-            let backbone = group.getBackboneForIndex(backboneIndex)
+            let newChain = chain.extend(child)
 
-            if(!backbone) {
-                backbone =
-                    circular ?
-                        new CircularBackboneDepiction(this, backboneIndex, parent) :
-                        new BackboneDepiction(this, backboneIndex, parent)
-                backbone.setSameVersionAs(this)
-                this.addDepiction(backbone, group)
+            var obj
+
+            if(child instanceof SXSubComponent) {
+                obj = this.syncComponentInstanceDepiction(preset, child, newChain, backbone, nestDepth + 1, orientation)
+            } else if (child instanceof SXLocation) {
+                obj = this.syncLocationDepiction(preset, child, newChain, backbone, nestDepth + 1, orientation)
+            } else {
+                throw new Error('???')
             }
 
-            backbones.set(dlBackbone, backbone)
-            backbone.stamp = Layout.nextStamp
-        }
-
-        for(let [ dlBackbone, backbone ] of backbones) {
-
-            for(let child of dlBackbone.children) {
-
-                let { object, range, forward } = child
-
-                /*
-                if(!forward) {
-                    orientation = reverse(orientation)
-                }*/
-
-                let newChain = chain.extend(object)
-
-                var obj
-
-                if(object instanceof SXSubComponent) {
-                    obj = this.syncComponentInstanceDepiction(preset, object, newChain, backbone, nestDepth + 1, orientation, range)
-                } else if (object instanceof SXLocation) {
-                    obj = this.syncSequenceAnnotationDepiction(preset, object, newChain, backbone, nestDepth + 1, orientation, range)
-                } else {
-                    throw new Error('???')
-                }
-
-                this.syncLabel(preset, backbone, obj, nestDepth)
-            }
-
+            this.syncLabel(preset, backbone, obj, nestDepth)
         }
 
     }

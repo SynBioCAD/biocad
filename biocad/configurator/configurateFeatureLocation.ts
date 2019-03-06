@@ -5,7 +5,7 @@ import LabelDepiction from "biocad/cad/LabelDepiction";
 import { Orientation } from "biocad/cad/Depiction";
 import { shortNameFromTerm } from "data/parts";
 import visbolite from 'visbolite'
-import { SXSequenceFeature } from "sbolgraph"
+import { SXSequenceFeature, SXRange } from "sbolgraph"
 import CircularBackboneDepiction from "biocad/cad/CircularBackboneDepiction";
 import InstructionSet from "biocad/cad/layout-instruction/InstructionSet";
 
@@ -44,6 +44,8 @@ export default function configurateFeatureLocation(depiction:FeatureLocationDepi
 
 function configurateSALinear(depiction:FeatureLocationDepiction):void {
 
+    let layout = depiction.layout
+
     var type = 'user-defined'
 
     const depictionOf:SXSequenceFeature = depiction.depictionOf as SXSequenceFeature
@@ -75,11 +77,9 @@ function configurateSALinear(depiction:FeatureLocationDepiction):void {
 
 
 
-    let w = depiction.range ? (depiction.range.end - depiction.range.start) : 2
+    depiction.setWidthFromLocation()
 
-    depiction.size = Vec2.fromXY(w, 2).max(depiction.minSize)
-
-    depiction.size = depiction.size.multiply(visbolite.glyphScaleFromType(type)) 
+    depiction.size = Vec2.fromXY(depiction.size.x, 2 * visbolite.glyphScaleFromType(type).y)
 
     depiction.backbonePlacement = backbonePlacement
 

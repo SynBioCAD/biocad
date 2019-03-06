@@ -26,63 +26,91 @@ import { SXRange, Watcher } from "sbolgraph";
 
 import extend = require('xtend')
 import IdentifiedChain from '../IdentifiedChain';
-import { Backbone, BackboneChild } from './ComponentDisplayList';
 
 export default class BackboneDepiction extends Depiction {
+
+    static extensionLength:number = 3
 
     orientation: Orientation
     location: SXIdentified|null
     backboneY:number
 
-    backboneIndex:number
+    locationsOfOmittedRegions:LinearRangeSet
 
-    constructor(layout:Layout, backboneIndex:number, parent?:Depiction, uid?:number) {
+    constructor(layout:Layout, parent?:Depiction, uid?:number) {
 
         super(layout, undefined, undefined, parent, uid)
 
         this.orientation = Orientation.Forward
-        this.backboneIndex = backboneIndex
     }
 
     render(renderContext:RenderContext):VNode {
 
-        /*
-        const offset = this.absoluteOffset.multiply(renderContext.layout.gridSize)
-        const size = this.size.multiply(renderContext.layout.gridSize)
+        let offset = this.absoluteOffset
 
-        //const anchorY = this.anchorY * circuitView.gridSize
-        //offset -= Vec2.fromXY(offset.x, offset.y - anchorY)
+        let leftOrigin:Vec2 = Vec2.fromXY(offset.x, offset.y + this.backboneY)
 
-
-        const anchorY = this.getAnchorY() * renderContext.layout.gridSize.y
+        let elements:VNode[] = []
 
 
-        const transform = Matrix.translation(offset)
+        let drawSingleBackbone = (start:Vec2, startWithExtension:Vec2, end:Vec2) => {
+
+            let drawSolidLine = (start:Vec2, end:Vec2) => {
+                elements.push(
+                    svg('path', {
+                        d: [
+                            'M' + start.multiply(renderContext.layout.gridSize).toPathString(),
+                            'L' + end.multiply(renderContext.layout.gridSize).toPathString()
+                        ].join(''),
+                        stroke: 'black',
+                        fill: 'none',
+                        'stroke-width': '2px'
+                    })
+                )
+            }
+
+            let drawDottedLine = (start:Vec2, end:Vec2) => {
+                elements.push(
+                    svg('path', {
+                        d: [
+                            'M' + start.multiply(renderContext.layout.gridSize).toPathString(),
+                            'L' + end.multiply(renderContext.layout.gridSize).toPathString()
+                        ].join(''),
+                        stroke: 'black',
+                        fill: 'none',
+                        'stroke-width': '2px',
+                        'stroke-dasharray': '2 2'
+                    })
+                )
+            }
 
 
-        var svgAttr = {}
+            let omitted = this.locationsOfOmittedRegions.sort().ranges
 
-        if(this.fade === Fade.Full) {
-            svgAttr['opacity'] = '0.2'
-        } else if(this.fade === Fade.Partial) {
-            svgAttr['opacity'] = '0.5'
+            console.dir(omitted)
+
+            if(omitted.length === 0) {
+                drawSolidLine(startWithExtension, end)
+                return
+            }
+
+
+            let cur = startWithExtension
+
+            for(let i = 0; i < omitted.length; ++ i) {
+                let omittedStart = start.add(Vec2.fromXY(omitted[i].start, 0))
+                drawSolidLine(cur, omittedStart)
+                let omittedEnd = start.add(Vec2.fromXY(omitted[i].end, 0))
+                drawDottedLine(omittedStart, omittedEnd)
+                cur = omittedEnd
+            }
+
+            drawSolidLine(cur, end)
         }
 
-        return svg('g', extend(svgAttr, {
-            transform: transform.toSVGString()
-        }), [
-            svg('line', {
-                x1: 0,
-                y1: anchorY,
-                x2: size.x,
-                y2: anchorY,
-                stroke: 'black',
-                'stroke-width': '2px'
-            })
-        ])*/
+        drawSingleBackbone(leftOrigin.add(Vec2.fromXY(BackboneDepiction.extensionLength, 0)), leftOrigin, Vec2.fromXY(leftOrigin.x + this.size.x, leftOrigin.y))
 
-        return svg('g', [])
-
+        return svg('g', elements)
     }
 
     isSelectable():boolean {
@@ -111,25 +139,6 @@ export default class BackboneDepiction extends Depiction {
 
     getAnchorY():number {
         return this.backboneY
-    }
-
-    closenessScoreToDisplayList(dlBackbone:Backbone) {
-
-        let score = 0
-
-        for(let dlChild of dlBackbone.children) {
-            if(! (dlChild instanceof BackboneChild)) {
-                continue
-            }
-            for(let child of this.children) {
-                let dOf = child.depictionOf
-                if(dOf && dlChild.object.uri === dOf.uri) {
-                    ++ score
-                }
-            }
-        }
-
-        return score
     }
 
 }

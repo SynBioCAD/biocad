@@ -1,7 +1,6 @@
 
-import LabelDepiction from 'biocad/cad/LabelDepiction';
-
 import Depiction, { Opacity, Orientation }  from './Depiction'
+import LocationableDepiction from './LocationableDepiction'
 
 import { VNode, svg } from 'jfw/vdom'
 
@@ -12,7 +11,6 @@ import {
     SXSequenceFeature
 } from "sbolgraph"
 
-import { Types } from 'bioterms'
 
 import Layout from './Layout'
 
@@ -21,17 +19,10 @@ import visbolite from 'visbolite'
 import parts, { shortNameFromTerm } from 'data/parts'
 
 import RenderContext from './RenderContext'
-import { SXRange, SXLocation } from "sbolgraph"
 import CircularBackboneDepiction from 'biocad/cad/CircularBackboneDepiction';
 import IdentifiedChain from '../IdentifiedChain';
-import { LinearRange } from 'jfw/geom'
 
-export default class FeatureLocationDepiction extends Depiction {
-
-    orientation: Orientation
-    range: LinearRange
-    location: SXIdentified|null
-    backbonePlacement:string
+export default class FeatureLocationDepiction extends LocationableDepiction {
 
     constructor(layout:Layout, depictionOf:SXIdentified|undefined, identifiedChain:IdentifiedChain|undefined, parent?:Depiction, uid?:number) {
 
@@ -133,34 +124,8 @@ export default class FeatureLocationDepiction extends Depiction {
 
     }
 
-    get label():LabelDepiction|undefined {
-
-        for(var i:number = 0; i < this.children.length; ++ i) {
-            if(this.children[i] instanceof LabelDepiction) {
-                return this.children[i] as LabelDepiction
-            }
-        }
-    }
-
     renderThumb(size:Vec2):VNode {
         return svg('g', [])
-    }
-
-    getAnchorY():number {
-
-        if(this.backbonePlacement === 'mid') {
-
-           return this.size.y / 2
-
-        } else if(this.backbonePlacement === 'top') {
-
-            return this.size.y
-
-        } else {
-
-            return 0
-
-        }
     }
 }
 

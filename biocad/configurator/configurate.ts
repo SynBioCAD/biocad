@@ -9,13 +9,11 @@ import Layout from 'biocad/cad/Layout'
 import Depiction from 'biocad/cad/Depiction'
 import ComponentDepiction from 'biocad/cad/ComponentDepiction'
 import FeatureLocationDepiction from 'biocad/cad/FeatureLocationDepiction'
-import BackboneGroupDepiction from 'biocad/cad/BackboneGroupDepiction'
 
 import configurateComponent from './configurateComponent'
 import configurateFeatureLocation from './configurateFeatureLocation'
 import configurateLabel from './configurateLabel'
 import configurateBackbone from './configurateBackbone'
-import configurateBackboneGroup from './configurateBackboneGroup'
 import BackboneDepiction from "biocad/cad/BackboneDepiction";
 import InstructionSet from 'biocad/cad/layout-instruction/InstructionSet';
 import { SXIdentified } from 'sbolgraph';
@@ -77,8 +75,6 @@ export default function configurate(layout:Layout, instructions:InstructionSet) 
             configurateLabel(depiction, instructions)
         } else if(depiction instanceof BackboneDepiction) {
             configurateBackbone(depiction, instructions)
-        } else if(depiction instanceof BackboneGroupDepiction) {
-            configurateBackboneGroup(depiction, instructions)
         }
 
     }
