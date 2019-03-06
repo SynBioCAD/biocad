@@ -227,8 +227,8 @@ export default function backboneStrategy(_parent:Depiction, children:Depiction[]
             let o = constraint.object
             let r = constraint.restriction
 
-            let sDep = uriToDepiction(s)
-            let oDep = uriToDepiction(o)
+            let sDep = uriToDepiction(s.uri)
+            let oDep = uriToDepiction(o.uri)
 
             if(! (oDep instanceof LocationableDepiction)) {
                 throw new Error('oDep not a LocationableDepiction')
