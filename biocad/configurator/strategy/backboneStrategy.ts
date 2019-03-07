@@ -197,6 +197,22 @@ export default function backboneStrategy(_parent:Depiction, children:Depiction[]
     }
 
 
+
+    // 0. position any explicitly positioned elements
+    for (let element of backboneElements) {
+        if(! (element instanceof LocationableDepiction))
+            continue
+
+        if(element.offsetExplicit) {
+            let start = element.offset.x
+            let end = element.offset.x + element.size.x
+            let range = new LinearRange(start, end)
+            let forward = element.orientation === Orientation.Forward
+            place(element, range, forward)
+        }
+    }
+
+
     // 1. position all fixed
     for (let element of backboneElements) {
         if(! (element instanceof LocationableDepiction))
@@ -502,9 +518,6 @@ export default function backboneStrategy(_parent:Depiction, children:Depiction[]
             continue
         }
 
-        if(child.offsetExplicit)
-            continue
-
         let positioned = childToPositioned.get(child)
 
         if(!positioned) {
@@ -522,6 +535,13 @@ export default function backboneStrategy(_parent:Depiction, children:Depiction[]
         }
 
         y += positioned.layer.backboneY
+
+
+        let x = positioned.range.start
+
+        if(child.offsetExplicit) {
+            x = child.offset.x
+        }
 
         let childOffset = Vec2.fromXY(positioned.range.start, y)
         childOffset = Vec2.fromXY(childOffset.x, childOffset.y - child.getAnchorY())
@@ -622,6 +642,7 @@ export default function backboneStrategy(_parent:Depiction, children:Depiction[]
     backboneY = backboneY - adjust.y
     for(let child of children) {
         backboneHeight = Math.max(backboneHeight, child.offset.y + child.size.y)
+        backboneLength = Math.max(backboneLength, child.offset.x + child.size.x)
     }
 
     backbone.size = Vec2.fromXY(backboneLength, backboneHeight)

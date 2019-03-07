@@ -45,6 +45,15 @@ export default class DNDMoveInBackbone extends DND {
                 dInNewLayout.offset.y
             )
 
+            if(dInNewLayout instanceof ComponentDepiction) {
+
+                let constrained = dInNewLayout.getConstrainedSiblings()
+
+                for(let d of constrained) {
+                    d.offsetExplicit = true
+                }
+            }
+
             newLayout.configurate([])
 
             return { newLayout }

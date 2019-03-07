@@ -82,11 +82,11 @@ export default class LayoutEditorOverlay extends View {
 
 
         this.dnd = []
+        this.dnd.push(new DNDMoveInBackbone())
         this.dnd.push(new DNDTwoBlackboxesMakeConstraint())
         this.dnd.push(new DNDEnterParent())
         this.dnd.push(new DNDEnterWorkspace())
         this.dnd.push(new DNDMoveInWorkspace())
-        this.dnd.push(new DNDMoveInBackbone())
 
         const app:BiocadApp = this.app as BiocadApp
         app.dropOverlay.addReceiver(this)

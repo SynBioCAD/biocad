@@ -229,6 +229,37 @@ export default class ComponentDepiction extends LocationableDepiction {
     isSelectable():boolean {
         return true
     }
+
+    getConstrainedSiblings():Depiction[] {
+
+        let dOf = this.depictionOf
+
+        if(!dOf) 
+            return []
+
+        let s:Depiction[] = []
+
+        if(dOf instanceof SXSubComponent) {
+            let constrainedSCs =
+                dOf.getConstraintsWithThisSubject().map((c) => c.object)
+                    .concat(
+                        dOf.getConstraintsWithThisObject().map((c) => c.subject)
+                    )
+
+            for(let sc of constrainedSCs) {
+
+                let depictions = this.layout.getDepictionsForUri(sc.uri)
+
+                let siblingDepictions = depictions.filter((d) => {
+                    return d.parent === this.parent
+                })
+
+                s = s.concat(siblingDepictions)
+            }
+        }
+
+        return s
+    }
 }
 
 
