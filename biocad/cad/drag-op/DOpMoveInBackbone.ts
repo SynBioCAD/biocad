@@ -3,20 +3,20 @@ import { Rect, Vec2 } from "jfw/geom";
 import Depiction, { Opacity } from "biocad/cad/Depiction";
 import { SBOLXGraph, SXComponent, SXSubComponent } from "sbolgraph";
 import Layout from "biocad/cad/Layout";
-import DND, { DNDResult } from "./DND";
+import DOp, { DOpResult } from "./DOp";
 import ComponentDepiction from "../ComponentDepiction";
 import BackboneDepiction from "../BackboneDepiction";
 
 // Allows parts to be moved horizontally along a backbone
 
-export default class DNDMoveInBackbone extends DND {
+export default class DOpMoveInBackbone extends DOp {
 
     test(
         sourceLayout:Layout, sourceGraph:SBOLXGraph,
         targetLayout:Layout, targetGraph:SBOLXGraph,
         sourceDepiction:Depiction,
         targetBBox:Rect,
-        ignoreURIs:string[]):DNDResult|null {
+        ignoreURIs:string[]):DOpResult|null {
 
             if(sourceLayout !== targetLayout)
                 return null
@@ -28,6 +28,10 @@ export default class DNDMoveInBackbone extends DND {
                 return null
 
             let backbone = sourceDepiction.parent
+
+            if(!backbone.absoluteBoundingBox.intersects(targetBBox)) {
+                return null
+            }
 
 
             let newLayout = sourceLayout.clone()
@@ -41,7 +45,7 @@ export default class DNDMoveInBackbone extends DND {
             dInNewLayout.offsetExplicit = true
 
             dInNewLayout.offset = Vec2.fromXY(
-                targetBBox.topLeft.subtract(backbone.absoluteOffset).x,
+                Math.max(targetBBox.topLeft.subtract(backbone.absoluteOffset).x, 0),
                 dInNewLayout.offset.y
             )
 

@@ -3,24 +3,24 @@ import { Rect } from "jfw/geom";
 import Depiction, { Opacity } from "biocad/cad/Depiction";
 import { SBOLXGraph, SXComponent, SXSubComponent } from "sbolgraph";
 import Layout from "biocad/cad/Layout";
-import DND, { DNDResult } from "./DND";
+import DOp, { DOpResult } from "./DOp";
 import ComponentDepiction from "../ComponentDepiction";
 import IdentifiedChain from "../../IdentifiedChain";
 
 // Allows a ComponentD to be dragged from its parent and become a root in the workspace
 
-// As DNDEnterParent comes earlier in the chain that should catch the parent before
+// As DOpEnterParent comes earlier in the chain that should catch the parent before
 // we get here. so we can assume there was no viable parent to move into and it has to
 // go into the workspace?
 
-export default class DNDEnterWorkspace extends DND {
+export default class DOpEnterWorkspace extends DOp {
 
     test(
         sourceLayout:Layout, sourceGraph:SBOLXGraph,
         targetLayout:Layout, targetGraph:SBOLXGraph,
         sourceDepiction:Depiction,
         targetBBox:Rect,
-        ignoreURIs:string[]):DNDResult|null {
+        ignoreURIs:string[]):DOpResult|null {
 
             if(sourceLayout !== targetLayout)
                 return null

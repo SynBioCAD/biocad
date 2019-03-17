@@ -18,18 +18,18 @@ export default class SBOLDroppable extends Droppable {
 
     graph:SBOLXGraph
     topLevelURIs:string[]|undefined
-    ignoreForDndOps:string[]|undefined
+    ignoreForDragOps:string[]|undefined
 
     layout:Layout
     thumb:LayoutThumbnail
 
-    constructor(app:BiocadApp, graph:SBOLXGraph, topLevelURIs?:string[], ignoreForDndOps?:string[]) {
+    constructor(app:BiocadApp, graph:SBOLXGraph, topLevelURIs?:string[], ignoreForDragOps?:string[]) {
 
         super()
 
         this.graph = graph
         this.topLevelURIs = topLevelURIs
-        this.ignoreForDndOps = ignoreForDndOps
+        this.ignoreForDragOps = ignoreForDragOps
 
         this.layout = new Layout(graph)
 

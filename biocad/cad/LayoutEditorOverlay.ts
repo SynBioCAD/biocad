@@ -29,12 +29,12 @@ import Instruction from "biocad/cad/layout-instruction/Instruction";
 import ReplaceInstruction from "biocad/cad/layout-instruction/ReplaceInstruction";
 import { Predicates } from "bioterms";
 import { Specifiers } from "bioterms/Specifiers";
-import DND, { DNDResult } from "./dnd-action/DND";
-import DNDTwoBlackboxesMakeConstraint from "./dnd-action/DNDTwoBlackboxesMakeConstraint";
-import DNDMoveInWorkspace from "./dnd-action/DNDMoveInWorkspace";
-import DNDEnterWorkspace from "./dnd-action/DNDEnterWorkspace";
-import DNDEnterParent from "./dnd-action/DNDEnterParent";
-import DNDMoveInBackbone from "./dnd-action/DNDMoveInBackbone";
+import DOp, { DOpResult } from "./drag-op/DOp";
+import DOpTwoBlackboxesMakeConstraint from "./drag-op/DOpTwoBlackboxesMakeConstraint";
+import DOpMoveInWorkspace from "./drag-op/DOpMoveInWorkspace";
+import DOpEnterWorkspace from "./drag-op/DOpEnterWorkspace";
+import DOpEnterParent from "./drag-op/DOpEnterParent";
+import DOpMoveInBackbone from "./drag-op/DOpMoveInBackbone";
 import InteractionDepiction from "./InteractionDepiction";
 import DepictionRef from "./DepictionRef";
 
@@ -56,10 +56,10 @@ export default class LayoutEditorOverlay extends View {
     displayRect:Rect|null
 
 
-    proposingResult:DNDResult|null
+    proposingResult:DOpResult|null
 
 
-    dnd:Array<DND>
+    dragOps:Array<DOp>
 
     proposingConnectionFrom:Depiction|undefined
 
@@ -81,12 +81,12 @@ export default class LayoutEditorOverlay extends View {
         this.selectionStart = null
 
 
-        this.dnd = []
-        this.dnd.push(new DNDMoveInBackbone())
-        this.dnd.push(new DNDTwoBlackboxesMakeConstraint())
-        this.dnd.push(new DNDEnterParent())
-        this.dnd.push(new DNDEnterWorkspace())
-        this.dnd.push(new DNDMoveInWorkspace())
+        this.dragOps = []
+        this.dragOps.push(new DOpMoveInBackbone())
+        this.dragOps.push(new DOpTwoBlackboxesMakeConstraint())
+        this.dragOps.push(new DOpEnterParent())
+        this.dragOps.push(new DOpEnterWorkspace())
+        this.dragOps.push(new DOpMoveInWorkspace())
 
         const app:BiocadApp = this.app as BiocadApp
         app.dropOverlay.addReceiver(this)
@@ -500,9 +500,9 @@ export default class LayoutEditorOverlay extends View {
             )
 
             // TODO not good with multipole depictins selected
-            for(let dnd of this.dnd) {
+            for(let dOp of this.dragOps) {
 
-                let result = dnd.test(this.layoutEditor.layout,
+                let result = dOp.test(this.layoutEditor.layout,
                         this.layoutEditor.layout.graph,
                         this.layoutEditor.layout,
                         this.layoutEditor.layout.graph, 
@@ -511,6 +511,8 @@ export default class LayoutEditorOverlay extends View {
                         [])
 
                 if(result) {
+
+                    console.log('onMousemove: got drag op result for ', dOp)
 
                     // If it doesn't change the graph action immediately
                     // if it produced a new graph, propose it until mouse up
@@ -573,21 +575,21 @@ export default class LayoutEditorOverlay extends View {
         const rect:Rect = new Rect(offset.subtract(size.multiplyScalar(0.5)), offset.add(size.multiplyScalar(0.5)))
 
 
-        let newDND = false
+        let newDOp = false
 
-        for(let dnd of this.dnd) {
+        for(let dOp of this.dragOps) {
 
-            let result = dnd.test(_droppable.layout,
+            let result = dOp.test(_droppable.layout,
                     _droppable.graph,
                     this.layoutEditor.layout,
                     this.layoutEditor.layout.graph, 
                     _droppable.layout.getRootDepictions()[0],
                     rect,
-                    droppable.ignoreForDndOps || [])
+                    droppable.ignoreForDragOps || [])
 
             if(result) {
 
-                console.log('got dnd result')
+                console.log('onDroppableMoved: got drag op result for ', dOp)
 
                 this.proposingResult = result
 
@@ -596,7 +598,7 @@ export default class LayoutEditorOverlay extends View {
                 }
 
 
-                newDND = true
+                newDOp = true
 
                 break
             }
@@ -604,7 +606,7 @@ export default class LayoutEditorOverlay extends View {
         }
 
 
-        if(!newDND) {
+        if(!newDOp) {
             if(this.layoutEditor.isProposingLayout()) {
 
                 if(this.proposingResult === null)

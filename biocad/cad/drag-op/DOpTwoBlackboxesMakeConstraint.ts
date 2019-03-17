@@ -3,20 +3,20 @@ import { Rect } from "jfw/geom";
 import Depiction, { Opacity, Fade } from "biocad/cad/Depiction";
 import { SBOLXGraph, SXComponent, SXSubComponent } from "sbolgraph";
 import Layout from "biocad/cad/Layout";
-import DND, { DNDResult } from "./DND";
+import DOp, { DOpResult } from "./DOp";
 import ComponentDepiction from "../ComponentDepiction";
 import IdentifiedChain from "../../IdentifiedChain";
 
 // Allows a blackbox ComponentD to be dragged onto another blackbox ComponentD to form a constraint
 
-export default class DNDTwoBlackboxesMakeConstraint extends DND {
+export default class DOpTwoBlackboxesMakeConstraint extends DOp {
 
     test(
         sourceLayout:Layout, sourceGraph:SBOLXGraph,
         targetLayout:Layout, targetGraph:SBOLXGraph,
         sourceDepiction:Depiction,
         targetBBox:Rect,
-        ignoreURIs:string[]):DNDResult|null {
+        ignoreURIs:string[]):DOpResult|null {
 
         if(! (sourceDepiction instanceof ComponentDepiction))
             return null

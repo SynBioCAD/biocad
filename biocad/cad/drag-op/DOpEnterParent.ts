@@ -3,19 +3,20 @@ import { Rect } from "jfw/geom";
 import Depiction, { Opacity } from "biocad/cad/Depiction";
 import { SBOLXGraph, SXComponent, SXSubComponent } from "sbolgraph";
 import Layout from "biocad/cad/Layout";
-import DND, { DNDResult } from "./DND";
+import DOp, { DOpResult } from "./DOp";
 import ComponentDepiction from "../ComponentDepiction";
+import BackboneDepiction from "../BackboneDepiction";
 
 // Allows a ComponentD to be dragged into a parent ComponentD to become a child
 
-export default class DNDEnterParent extends DND {
+export default class DOpEnterParent extends DOp {
 
     test(
         sourceLayout:Layout, sourceGraph:SBOLXGraph,
         targetLayout:Layout, targetGraph:SBOLXGraph,
         sourceDepiction:Depiction,
         targetBBox:Rect,
-        ignoreURIs:string[]):DNDResult|null {
+        ignoreURIs:string[]):DOpResult|null {
 
             let intersectingDs = targetLayout.getDepictionsIntersectingRect(targetBBox, false)
 
@@ -70,13 +71,6 @@ export default class DNDEnterParent extends DND {
 
                     if(!existingDInNewLayout) {
                         throw new Error('???')
-                    }
-
-                    // Remove us from our current parent
-                    let parent = existingDInNewLayout.parent
-
-                    if(parent) {
-                        parent.removeChild(existingDInNewLayout)
                     }
                 }
 
