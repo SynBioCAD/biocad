@@ -1,4 +1,5 @@
 
+
 import { Rect } from "jfw/geom";
 import Depiction, { Opacity } from "biocad/cad/Depiction";
 import { SBOLXGraph, SXComponent, SXSubComponent } from "sbolgraph";
@@ -7,7 +8,7 @@ import DOp, { DOpResult } from "./DOp";
 import ComponentDepiction from "../ComponentDepiction";
 import BackboneDepiction from "../BackboneDepiction";
 
-export default class DOpEnterParent extends DOp {
+export default class DOpEnterSibling extends DOp {
 
     test(
         sourceLayout:Layout, sourceGraph:SBOLXGraph,
@@ -19,8 +20,8 @@ export default class DOpEnterParent extends DOp {
             let intersectingDs = targetLayout.getDepictionsIntersectingRect(targetBBox, false)
 
             if(sourceDepiction.parent) {
-                if (intersectingDs.indexOf(sourceDepiction.parent) !== -1) {
-                    return null // Still overlapping our parent
+                if (intersectingDs.indexOf(sourceDepiction.parent) === -1) {
+                    return null // not overlapping our parent
                 }
             }
 
@@ -36,8 +37,8 @@ export default class DOpEnterParent extends DOp {
                 if(ignored)
                     continue
 
-                if(intersecting.isDescendentOf(sourceDepiction)) {
-                    continue // Can't become a parent of our child
+                if(!intersecting.isSiblingOf(sourceDepiction)) {
+                    continue
                 }
 
                 if(!intersecting.isSelectable()) {
@@ -46,6 +47,7 @@ export default class DOpEnterParent extends DOp {
 
                 if(intersecting instanceof ComponentDepiction) {
                     if(intersecting.opacity === Opacity.Blackbox) {
+                        // cannot enter a blackbox
                         continue
                     }
                 }
@@ -110,7 +112,7 @@ export default class DOpEnterParent extends DOp {
                 if(dOf instanceof SXSubComponent) {
 
                     // already a sc
-                    // create new sc in parent, delete our dOf
+                    // create new sc in sibling, delete our dOf
 
                     sc = newParentC.createSubComponent(dOf.instanceOf)
 
@@ -119,7 +121,7 @@ export default class DOpEnterParent extends DOp {
                 } else if(dOf instanceof SXComponent) {
 
                     // a c
-                    // create new sc in parent
+                    // create new sc in sibling
 
                     sc = newParentC.createSubComponent(dOf)
                 }

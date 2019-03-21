@@ -66,12 +66,6 @@ export default class DOpTwoBlackboxesMakeConstraint extends DOp {
 
             let newLayout = targetLayout.cloneWithNewGraph(newGraph)
 
-            let existingDepictionInNewLayout:Depiction|undefined = undefined
-
-            if(sourceLayout === targetLayout) {
-                existingDepictionInNewLayout = newLayout.getDepictionForUid(sourceDepiction.uid)
-            }
-
             let chain = new IdentifiedChain()
 
             if (intersecting && intersecting.parent && intersecting.parent.identifiedChain) {
@@ -100,19 +94,11 @@ export default class DOpTwoBlackboxesMakeConstraint extends DOp {
 
                     chain = chain.extend(newSc)
 
-                    if(existingDepictionInNewLayout) {
-                        newLayout.changeDepictionOf(existingDepictionInNewLayout, newSc, chain)
-                    }
-
                 } else if(ourDOf instanceof SXSubComponent) {
 
                     newSc = scInWrapper.createAfter(ourDOf.instanceOf)
 
                     chain = chain.extend(newSc)
-
-                    if(existingDepictionInNewLayout) {
-                        newLayout.changeDepictionOf(existingDepictionInNewLayout, newSc, chain)
-                    }
 
                     ourDOf.destroy()
 
@@ -122,9 +108,9 @@ export default class DOpTwoBlackboxesMakeConstraint extends DOp {
 
                 newLayout.syncAllDepictions(5)
 
-                let dOfWrapper = newLayout.getDepictionsForUri(wrapper.uri)[0]
+                let wrapperDepiction = newLayout.getDepictionsForUri(wrapper.uri)[0]
 
-                if(dOfWrapper === undefined) {
+                if(wrapperDepiction === undefined) {
                     throw new Error('???')
                 }
 
@@ -139,16 +125,18 @@ export default class DOpTwoBlackboxesMakeConstraint extends DOp {
                 scD.setFade(Fade.None)*/
 
 
-
-
                 if(intersecting.offsetExplicit) {
-                    dOfWrapper.offsetExplicit = true
-                    dOfWrapper.offset = intersecting.offset
+                    wrapperDepiction.offsetExplicit = true
+                    wrapperDepiction.offset = intersecting.offset
+                }
+
+                for(let child of wrapperDepiction.children) {
+                    child.offsetExplicit = false
                 }
 
                 newLayout.configurate([])
 
-                return { newGraph, newLayout, validForRect: dOfWrapper.absoluteBoundingBox }
+                return { newGraph, newLayout, validForRect: wrapperDepiction.absoluteBoundingBox, replacements: [] }
 
 
             } else if(theirDOf instanceof SXSubComponent) {
@@ -162,18 +150,10 @@ export default class DOpTwoBlackboxesMakeConstraint extends DOp {
                     newSc = theirDOf.createAfter(ourDOf)
                     chain = chain.extend(newSc)
 
-                    if(existingDepictionInNewLayout) {
-                        newLayout.changeDepictionOf(existingDepictionInNewLayout, newSc, chain)
-                    }
-
                 } else if(ourDOf instanceof SXSubComponent) {
 
                     newSc = theirDOf.createAfter(ourDOf.instanceOf)
                     chain = chain.extend(newSc)
-
-                    if(existingDepictionInNewLayout) {
-                        newLayout.changeDepictionOf(existingDepictionInNewLayout, newSc, chain)
-                    }
 
                     ourDOf.destroy()
 
@@ -195,7 +175,8 @@ export default class DOpTwoBlackboxesMakeConstraint extends DOp {
                     newGraph,
                     newLayout,
                     //validForRect: intersecting.absoluteBoundingBox.surround(newD.absoluteBoundingBox).expand(1)
-                    validForRect: intersecting.absoluteBoundingBox.expand(1)
+                    validForRect: intersecting.absoluteBoundingBox.expand(1),
+                    replacements: []
                 }
 
             } else {

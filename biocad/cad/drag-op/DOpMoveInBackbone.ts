@@ -29,7 +29,12 @@ export default class DOpMoveInBackbone extends DOp {
 
             let backbone = sourceDepiction.parent
 
-            if(!backbone.absoluteBoundingBox.intersects(targetBBox)) {
+
+            if(targetBBox.topLeft.y < backbone.absoluteBoundingBox.topLeft.y - 1) {
+                return null
+            }
+
+            if(targetBBox.bottomRight.y > backbone.absoluteBoundingBox.bottomRight.y + 1) {
                 return null
             }
 
@@ -60,7 +65,7 @@ export default class DOpMoveInBackbone extends DOp {
 
             newLayout.configurate([])
 
-            return { newLayout }
+            return { newLayout , replacements: [] }
 
         }
 

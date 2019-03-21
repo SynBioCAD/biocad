@@ -19,7 +19,7 @@ import LayoutPOD from "biocad/cad/LayoutPOD";
 import SVGDefs from "biocad/cad/SVGDefs";
 import { SBOLXGraph } from "sbolgraph"
 import LayoutEditorDebugLog from './LayoutEditorDebugLog';
-import DepictionRef from './DepictionRef';
+import DepictionRef from './DepictionRefByUid';
 
 export default class LayoutEditor extends View {
 

@@ -40,50 +40,54 @@ export default class DOpEnterWorkspace extends DOp {
             let newGraph = targetGraph.clone()
             let newLayout = targetLayout.cloneWithNewGraph(newGraph)
 
-            let dInNewLayout = newLayout.getDepictionForUid(sourceDepiction.uid)
 
-            if(!dInNewLayout) {
+            let dOf = sourceDepiction.depictionOf
+
+            if(!dOf) {
                 throw new Error('???')
             }
 
-            let parent = dInNewLayout.parent
+            let dOfInNewGraph = newGraph.uriToFacade(dOf.uri)
 
-            if(!parent) {
+            if(! (dOfInNewGraph instanceof SXSubComponent)) {
                 throw new Error('???')
             }
 
-            parent.removeChild(dInNewLayout)
 
-            let dOf = dInNewLayout.depictionOf
 
-            if(! (dOf instanceof SXSubComponent)) {
-                throw new Error('???')
-            }
 
-            // Currently, we're a depictionOf a subcomponent.
-            // As we're moving to the workspace area, we need to become a depictionOf the component itself.
-            // Rather than letting syncAllDepictions create the new depiction, change the existing depiction
-            // manually using changeDepictionOf.
-            // This is necesary because:
-            //  - if this component is instantiated as a subcomponent elsewhere, sync won't bother making a
-            //    depiction of the definition
-            //  - we want to preserve the dragging state of this depiction. if a new depiction was created it
-            //    would no longer be being dragged.
-            //
-            newLayout.changeDepictionOf(dInNewLayout, dOf.instanceOf, new IdentifiedChain().extend(dOf.instanceOf))
+            let instanceOf = dOfInNewGraph.instanceOf
 
-            dOf.destroy()
-
-            console.log('targetbbox topLeft ' + targetBBox.topLeft + ' for ' + dInNewLayout.uid)
+            dOfInNewGraph.destroy()
 
             newLayout.syncAllDepictions(5)
             newLayout.configurate([])
 
-            dInNewLayout.offsetExplicit = true
-            //dInNewLayout.offset = parent.absoluteOffset.add(targetBBox.topLeft)
-            dInNewLayout.offset = targetBBox.topLeft
 
-            return { newLayout, newGraph }
+
+
+            let ds = newLayout.getDepictionsForUri(instanceOf.uri)
+
+            if(ds.length === 0) {
+                throw new Error('???')
+            }
+
+            // highest uid is most recently modified
+            ds.sort((a, b) => b.uid - a.uid)
+
+            let newD = ds[0]
+
+
+            newD.offsetExplicit = true
+            //dInNewLayout.offset = parent.absoluteOffset.add(targetBBox.topLeft)
+            newD.offset = targetBBox.topLeft
+
+            return { newLayout, newGraph, replacements: [
+                {
+                    old: sourceDepiction,
+                    new: newD
+                }
+             ] }
         }
 
 

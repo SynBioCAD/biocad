@@ -19,7 +19,7 @@ import TextInput from 'jfw/ui/form-control/TextInput';
 import soTrie from 'data/soTrie'
 import { Predicates, Specifiers } from 'bioterms';
 import PropertyEditor from './PropertyEditor';
-import DepictionRef from 'biocad/cad/DepictionRef';
+import DepictionRef from 'biocad/cad/DepictionRefByUid';
 import PropertyEditorOneline from './PropertyEditorOneline';
 import PropertyEditorTermSet from './PropertyEditorTermSet';
 import PropertyEditorCombo from './PropertyEditorCombo';
@@ -38,6 +38,7 @@ import { Prefixes } from 'bioterms'
 
 import so from 'data/sequence-ontology'
 import systemsBiologyOntology from 'data/systems-biology-ontology';
+import PropertyEditorDebug from './PropertyEditorDebug';
 
 const strands = [
     {
@@ -215,6 +216,8 @@ export default class Inspector extends View {
                 //this.editors.push(new PropertyEditorSiblingComponent('Participant', interaction.containingModule.uri, participation.uri, Predicates.SBOLX.participant))
                 this.editors.push(new PropertyEditorInteractionParticipants(this.app as BiocadApp, interaction.uri, changeInteraction))
             }
+
+            this.editors.push(new PropertyEditorDebug(depiction))
         }
 
         this.update()

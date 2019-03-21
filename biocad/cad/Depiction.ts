@@ -283,6 +283,14 @@ export default abstract class Depiction extends Versioned {
         return false
     }
 
+    isSiblingOf(d:Depiction) {
+
+        if(d !== this && d.parent === this.parent)
+            return true
+
+        return false
+    }
+
     getOverlappingSiblings():Depiction[] {
 
         if(!this.parent)
@@ -382,6 +390,8 @@ export default abstract class Depiction extends Versioned {
 
         dOf.destroy()
     }
+
+
 
 }
 

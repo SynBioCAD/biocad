@@ -5,8 +5,12 @@ import Depiction from "biocad/cad/Depiction";
 import { Rect } from "jfw/geom";
 
 export interface DOpResult {
+
     newLayout?:Layout|undefined
     newGraph?:SBOLXGraph|undefined
+
+    replacements:Array<{ old:Depiction, new:Depiction }>
+
     validForRect?:Rect|undefined
 }
 

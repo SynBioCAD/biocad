@@ -117,6 +117,20 @@ export default class Layout extends Versioned {
 
     private attachToParent(depiction:Depiction, parent:Depiction) {
 
+        if(depiction.isDescendentOf(parent)) {
+            if(! (depiction.parent === parent)) {
+
+                // setting parent to a former grandparent
+                // adjust offset to include former intermediates (i.e. a no longer needed BackboneDepiction)
+
+                for(let p = depiction.parent; p && p !== parent; p = p.parent) {
+                    depiction.offset = depiction.offset.add(p.offset)
+                }
+
+
+            }
+        }
+
         this.detachFromParent(depiction)
 
         parent.addChild(depiction)
@@ -170,48 +184,6 @@ export default class Layout extends Versioned {
         this.depthSort()
     }
 
-    changeDepictionOf(depiction:Depiction, newDepictionOf:SXIdentified, newChain:IdentifiedChain) {
-
-        if(depiction._depictionOf === undefined)
-            throw new Error('???')
-
-        const utd:Depiction[]|undefined = this.uriToDepictions.get(depiction._depictionOf.uri)
-
-        if(utd !== undefined) {
-            for(var i = 0; i < utd.length; ++ i) {
-                if(utd[i] === depiction) {
-                    utd.splice(i, 1)
-                    break
-                }
-            }
-            if (utd.length === 0) {
-                this.uriToDepictions.delete(depiction._depictionOf.uri)
-            }
-        }
-
-        if(!depiction.identifiedChain) {
-            throw new Error('???')
-        }
-
-        this.identifiedChainToDepiction.delete(depiction.identifiedChain.stringify())
-
-
-        const newUtd = this.uriToDepictions.get(newDepictionOf.uri)
-
-        if (!newUtd)
-            this.uriToDepictions.set(newDepictionOf.uri, [depiction])
-        else
-            newUtd.push(depiction)
-
-
-        this.identifiedChainToDepiction.set(newChain.stringify(), depiction)
-
-        depiction._depictionOf = newDepictionOf
-
-        depiction.identifiedChain = newChain
-
-    }
-
     removeDepiction(depiction:Depiction) {
 
         for(var i = 0; i < this.depictions.length; ++ i) {
@@ -223,6 +195,17 @@ export default class Layout extends Versioned {
 
             }
 
+        }
+
+        let parent = depiction.parent
+
+        for(let child of depiction.children) {
+            child.offset = child.offset.add(depiction.offset)
+            if (parent) {
+                this.attachToParent(child, parent)
+            } else {
+                child.parent = null
+            }
         }
 
         if(depiction.parent)
@@ -485,21 +468,41 @@ export default class Layout extends Versioned {
 
 
 
+
+        this.verifyAcyclic()
+
+        this.depthSort()
+
+
+
+
         /// remove any depictions that weren't touched by this sweep
 
-        for(var i = 0; i < this.depictions.length; ) {
+        /// needs to be leaves first because removeDepiction updates child offsets
 
-            if(this.depictions[i].stamp !== Layout.nextStamp) {
+        // doesn't work because the parent has already been changed to not be the BB that
+        // will be deleted
 
-                console.log(this.depictions[i].debugName + ' is gone')
+        // could do it at the time we change the parent?
+        // or do a dry run and touch everything first before actually doing anything?
 
-                this.removeDepiction(this.depictions[i])
+        for(var i = this.depictions.length - 1; i >= 0; ) {
+
+            let d = this.depictions[i]
+
+            console.log('checking ' + d.debugName + ' depth' + d.calcDepth())
+
+            if(d.stamp !== Layout.nextStamp) {
+
+                console.log(d.debugName + ' is gone')
+
+                this.removeDepiction(d)
 
             } else {
 
-                console.log(this.depictions[i].debugName + ' is still here')
+                console.log(d.debugName + ' is still here')
 
-                ++ i
+                -- i
 
             }
 
@@ -833,8 +836,16 @@ export default class Layout extends Versioned {
 
         //for(var i:number = this.depictions.length - 1; i >= 0; -- i) {
         for(var i:number = 0; i < this.depictions.length; ++ i) {
-            if((bSelectableOnly === false || this.depictions[i].isSelectable()) && this.depictions[i].isVisible() && this.depictions[i].absoluteBoundingBox.intersectsPoint(pos))
-                return this.depictions[i]
+
+            let d = this.depictions[i]
+
+            let bbox = d.absoluteBoundingBox
+
+            if(d instanceof LabelDepiction)
+                d = d.labelFor
+
+            if((bSelectableOnly === false || d.isSelectable()) && d.isVisible() && bbox.intersectsPoint(pos))
+                return d
 
         }
 

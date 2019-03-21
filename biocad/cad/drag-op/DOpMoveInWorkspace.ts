@@ -32,7 +32,7 @@ export default class DOpMoveInWorkspace extends DOp {
 
             sourceDepiction.absoluteOffset = targetBBox.topLeft
 
-            return {}
+            return { replacements: [] }
 
         }
 

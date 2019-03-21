@@ -34,12 +34,14 @@ import DOpTwoBlackboxesMakeConstraint from "./drag-op/DOpTwoBlackboxesMakeConstr
 import DOpMoveInWorkspace from "./drag-op/DOpMoveInWorkspace";
 import DOpEnterWorkspace from "./drag-op/DOpEnterWorkspace";
 import DOpEnterParent from "./drag-op/DOpEnterParent";
+import DOpEnterSibling from "./drag-op/DOpEnterSibling";
 import DOpMoveInBackbone from "./drag-op/DOpMoveInBackbone";
 import InteractionDepiction from "./InteractionDepiction";
-import DepictionRef from "./DepictionRef";
+import DepictionRef from "./DepictionRefByUid";
 
 import copySBOL from 'biocad/util/copySBOL'
 import createInteraction from "./createInteraction";
+import DepictionRefByChain from "./DepictionRefByChain";
 
 export default class LayoutEditorOverlay extends View {
 
@@ -50,7 +52,7 @@ export default class LayoutEditorOverlay extends View {
     selectionStart:Vec2|null
 
     dragging:boolean
-    draggingDepictions:{depiction:DepictionRef, dragOffset:Vec2}[]
+    draggingDepictions:{depiction:DepictionRefByChain, dragOffset:Vec2}[]
 
 
     displayRect:Rect|null
@@ -84,6 +86,7 @@ export default class LayoutEditorOverlay extends View {
         this.dragOps = []
         this.dragOps.push(new DOpMoveInBackbone())
         this.dragOps.push(new DOpTwoBlackboxesMakeConstraint())
+        this.dragOps.push(new DOpEnterSibling())
         this.dragOps.push(new DOpEnterParent())
         this.dragOps.push(new DOpEnterWorkspace())
         this.dragOps.push(new DOpMoveInWorkspace())
@@ -214,9 +217,13 @@ export default class LayoutEditorOverlay extends View {
 
         if(this.selectionStart === null) {
 
-            const hovering:Depiction|null = layout.getTopIntersectingDepiction(this.mouseGridPos, true)
+            let hovering:Depiction|null = layout.getTopIntersectingDepiction(this.mouseGridPos, true)
 
             if(hovering) {
+
+                if(hovering instanceof LabelDepiction) {
+                    hovering = hovering.labelFor
+                }
 
                 handles.push(renderHandles(transform.transformRect(hovering.absoluteBoundingBox.multiply(layout.gridSize)), true, /* hovering.isResizeable() */ false, (pos:Vec2, dimensions:string[]) => {
                     //this.resize(hovering, pos, dimensions)
@@ -483,63 +490,65 @@ export default class LayoutEditorOverlay extends View {
 
 
 
-        for(let i = 0; i < this.draggingDepictions.length; ++ i) {
+        if(this.dragging) {
+            for(let i = 0; i < this.draggingDepictions.length; ++ i) {
 
-            let dragging = this.draggingDepictions[i]
+                let dragging = this.draggingDepictions[i]
 
-            let draggingDepiction = dragging.depiction.toDepiction(this.layoutEditor.layout)
+                let draggingDepiction = dragging.depiction.toDepiction(this.layoutEditor.layout)
 
-            if(!draggingDepiction) {
-                continue
-            }
+                if(!draggingDepiction) {
+                    continue
+                }
 
-            let newRect = Rect.fromPosAndSize(
-                //this.mouseGridPos.subtract(dragging.dragOffset).round(),
-                this.mouseGridPos.subtract(dragging.dragOffset),
-                draggingDepiction.size
-            )
+                let newRect = Rect.fromPosAndSize(
+                    //this.mouseGridPos.subtract(dragging.dragOffset).round(),
+                    this.mouseGridPos.subtract(dragging.dragOffset),
+                    draggingDepiction.size
+                )
 
-            // TODO not good with multipole depictins selected
-            for(let dOp of this.dragOps) {
+                // TODO not good with multipole depictins selected
+                for(let dOp of this.dragOps) {
 
-                let result = dOp.test(this.layoutEditor.layout,
-                        this.layoutEditor.layout.graph,
-                        this.layoutEditor.layout,
-                        this.layoutEditor.layout.graph, 
-                        draggingDepiction,
-                        newRect,
-                        [])
+                    let result = dOp.test(this.layoutEditor.layout,
+                            this.layoutEditor.layout.graph,
+                            this.layoutEditor.layout,
+                            this.layoutEditor.layout.graph, 
+                            draggingDepiction,
+                            newRect,
+                            [])
 
-                if(result) {
+                    if(result) {
 
-                    console.log('onMousemove: got drag op result for ', dOp)
+                        console.log('onMousemove: got drag op result for ', dOp)
 
-                    // If it doesn't change the graph action immediately
-                    // if it produced a new graph, propose it until mouse up
+                        // If it doesn't change the graph action immediately
+                        // if it produced a new graph, propose it until mouse up
 
-                    if(result.newGraph) {
+                        if(result.newGraph) {
 
-                        let layout = result.newLayout
+                            let layout = result.newLayout
 
-                        if(!layout) {
-                            layout = this.layoutEditor.layout.cloneWithNewGraph(result.newGraph)
-                            layout.syncAllDepictions(5)
-                            layout.configurate([])
-                        }
+                            if(!layout) {
+                                layout = this.layoutEditor.layout.cloneWithNewGraph(result.newGraph)
+                                layout.syncAllDepictions(5)
+                                layout.configurate([])
+                            }
 
-                        this.layoutEditor.proposeLayout(layout)
+                            this.layoutEditor.proposeLayout(layout)
 
-                    } else if(result.newLayout) {
+                        } else if(result.newLayout) {
 
-                        this.layoutEditor.immediatelyReplaceLayout(result.newLayout)
+                            this.layoutEditor.immediatelyReplaceLayout(result.newLayout)
 
-                    } 
+                        } 
 
-                    break
+                        break
+                    }
+
                 }
 
             }
-
         }
 
 
@@ -656,7 +665,7 @@ export default class LayoutEditorOverlay extends View {
             for(let d of selection) {
 
                 this.draggingDepictions.push({
-                    depiction: new DepictionRef(d),
+                    depiction: new DepictionRefByChain(d),
                     dragOffset: gridPos.subtract(d.absoluteOffset)
                 })
 
@@ -674,7 +683,7 @@ export default class LayoutEditorOverlay extends View {
                 this.dragging = true
                 this.draggingDepictions = [
                     {
-                        depiction: new DepictionRef(depiction),
+                        depiction: new DepictionRefByChain(depiction),
                         dragOffset: gridPos.subtract(depiction.absoluteOffset)
                     }
                 ]
@@ -699,7 +708,28 @@ export default class LayoutEditorOverlay extends View {
 
         if(this.layoutEditor.isProposingLayout()) {
 
+
+            /*
+            let pR = this.proposingResult
+
+            if(pR !== null) {
+                this.draggingDepictions = this.draggingDepictions.map((drag) => {
+                    let d = drag.depiction.toDepiction(this.layoutEditor.layout)
+                    for(let r of pR.replacements) {
+                        if(r.old === d) {
+                            return {
+                                depiction: new DepictionRefByChain(r.new),
+                                dragOffset: drag.dragOffset
+                            }
+                        }
+                    }
+                    return drag
+                })
+            }*/
+
             this.layoutEditor.acceptProposedLayout()
+
+
 
             this.proposingResult = null
             

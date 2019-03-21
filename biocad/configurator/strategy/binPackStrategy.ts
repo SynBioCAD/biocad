@@ -62,7 +62,7 @@ export default function binPackStrategy(parent:Depiction|null, children:Depictio
         console.log('Group has ' + group.depictions.size + ' depictions and ' + group.interactions.size + ' interactions')
     }
 
-    horizontallyTileGroups(groups, padding)
+    horizontallyTileChildrenOfGroups(groups, padding)
 
     const packer = new GrowingPacker()
 
@@ -129,6 +129,15 @@ export default function binPackStrategy(parent:Depiction|null, children:Depictio
     }
 
     routeABInteractions(groups, interactionToLayer, padding)
+
+
+    if(parent) {
+
+        for(let child of parent.children) {
+            parent.size = parent.size.max(child.offset.add(child.size).addScalar(padding))
+        }
+
+    }
 }
 
 function createInteractionGroups(parent:Depiction|null, children:Depiction[]):Group[] {
@@ -156,7 +165,6 @@ function createInteractionGroups(parent:Depiction|null, children:Depiction[]):Gr
                 return d
             }
         })
-
 
         // are any of the depictions in this interaction already in groups?
         //
@@ -217,8 +225,8 @@ function createInteractionGroups(parent:Depiction|null, children:Depiction[]):Gr
 
 
     // finally, there may be depictions that didn't get placed into a group
-    // because they weren't involved in any interactions. put each of these
-    // into its own group.
+    // because they weren't involved in any interactions.
+    // put each of these into its own group.
     //
     for(let child of children) {
 
@@ -250,7 +258,7 @@ function createInteractionGroups(parent:Depiction|null, children:Depiction[]):Gr
     return Array.from(groups)
 }
 
-function horizontallyTileGroups(groups:Group[], padding:number) {
+function horizontallyTileChildrenOfGroups(groups:Group[], padding:number) {
 
     for(let group of groups) {
 
@@ -261,8 +269,8 @@ function horizontallyTileGroups(groups:Group[], padding:number) {
 
         for(let child of group.depictions) {
 
-            console.log('Child ' + child.debugName + ' has size ' + child.size)
-            console.log('Placing at ' + offset)
+            if(child.offsetExplicit)
+                continue
 
             child.offset = offset
 
@@ -274,6 +282,17 @@ function horizontallyTileGroups(groups:Group[], padding:number) {
 
         group.w = offset.x
         group.h = maxHeight
+
+        /*
+        for(let child of group.depictions) {
+
+            if(!child.offsetExplicit)
+                continue
+
+            group.w = Math.max(group.w, child.offset.add(child.size).x)
+            group.h = Math.max(group.h, child.offset.add(child.size).y)
+        }*/
+
     }
 }
 
