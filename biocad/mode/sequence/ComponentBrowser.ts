@@ -78,5 +78,9 @@ export default class ComponentBrowser extends View {
     onCreate(fn) {
         this.tree.onCreate(fn)
     }
+
+    select(c:SXComponent) {
+        this.tree.select(c.uri)
+    }
 }
 

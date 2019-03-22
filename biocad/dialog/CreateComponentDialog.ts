@@ -43,6 +43,8 @@ export interface CreateComponentDialogOptions extends DialogOptions {
     componentType:string
     componentParentUri:string
 
+    onCreate:(c:SXComponent)=>void
+
 }
 
 export default class CreateComponentDialog extends Dialog {
@@ -55,9 +57,14 @@ export default class CreateComponentDialog extends Dialog {
 
     tempGraph:SBOLXGraph
 
+    onCreate:(c:SXComponent)=>void
+
     constructor(app:App, opts:CreateComponentDialogOptions, defs:CreateComponentDialogDefaults) {
 
         super(app, opts)
+
+        this.onCreate = opts.onCreate
+        
 
         this.tempGraph = new SBOLXGraph([])
 
@@ -121,6 +128,7 @@ export default class CreateComponentDialog extends Dialog {
 
         app.closeDialog(this)
 
+        this.onCreate(c)
 
     }
 

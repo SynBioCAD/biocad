@@ -1,7 +1,7 @@
 
 import { Sidebar, SidebarSection } from 'jfw/ui'
 
-import SXComponentBrowser from './ComponentBrowser'
+import ComponentBrowser from './ComponentBrowser'
 
 import { Specifiers } from 'bioterms'
 import { SXComponent } from "sbolgraph";
@@ -10,6 +10,8 @@ export default class SequenceViewSidebar extends Sidebar {
 
     _onCreate: (type:string, uri:string) => void;
     _onSelect: (component:SXComponent) => void;
+
+    browser:ComponentBrowser
 
     constructor(app) {
 
@@ -33,7 +35,8 @@ export default class SequenceViewSidebar extends Sidebar {
 
         }
 
-        let browser = new SXComponentBrowser(app, (cd) => true)
+        let browser = new ComponentBrowser(app, (cd) => true)
+        this.browser = browser
 
         connectBrowser(browser)
 
@@ -46,6 +49,10 @@ export default class SequenceViewSidebar extends Sidebar {
 
 
 
+    }
+
+    select(c:SXComponent) {
+        this.browser.select(c)
     }
 
     onSelect(onSelect) {

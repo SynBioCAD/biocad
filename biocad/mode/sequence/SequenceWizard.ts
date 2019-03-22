@@ -44,6 +44,14 @@ export default class SequenceWizard extends View {
             }, [
                 h('span.fa.fa-search'),
                 ' Search for parts'
+            ]),
+            h('br'),
+            h('br'),
+            h('a', {
+                'ev-click': clickEvent(clickEdit, { view: this })
+            }, [
+                h('span.fa.fa-edit'),
+                ' Edit sequence manually'
             ])
         ])
     }
@@ -101,3 +109,19 @@ async function clickImport(data) {
 
 async function clickSearch(data) {
 }
+
+async function clickEdit(data) {
+
+    let view:SequenceWizard = data.view
+
+    let app = view.app as BiocadApp
+    let graph = app.graph
+    let component = view.component
+
+    let newSeq = graph.createSequence(component.uriPrefix, component.id + '_sequence', component.version)
+    component.setSequence(newSeq)
+
+    view.onLoadedSequence()
+
+}
+

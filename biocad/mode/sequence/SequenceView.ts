@@ -31,8 +31,7 @@ export default class SequenceView extends View {
         this.sequenceEditor = new SequenceEditor(app)
 
 
-        this.sidebar.onSelect((component:SXComponent) => {
-
+        let select = (component:SXComponent) => {
             let seq = component.sequence
 
             if(seq) {
@@ -45,8 +44,10 @@ export default class SequenceView extends View {
                     this.sequenceWizard = null
                 }
             }
-        })
+        }
 
+        this.sidebar.onSelect(select)
+        
         this.sidebar.onCreate((type, parentUri) => {
 
             app.openDialog(new CreateComponentDialog(app, {
@@ -55,7 +56,11 @@ export default class SequenceView extends View {
                 parent: null,
 
                 componentType: type,
-                componentParentUri: parentUri
+                componentParentUri: parentUri,
+                onCreate: (c:SXComponent) => {
+                    select(c)
+                    this.sidebar.select(c)
+                }
             
             }, new CreateComponentDialogDefaults()))
 
