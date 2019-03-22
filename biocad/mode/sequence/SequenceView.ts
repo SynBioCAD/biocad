@@ -78,10 +78,24 @@ export default class SequenceView extends View {
 
         //const sidebar:Sidebar = this.sidebar
 
+        let main = h('div', {
+            style: {
+                'text-align': 'center'
+            }
+        }, [
+            h('br'),
+            'Select or create a part to edit sequence'
+        )
+
+        if(this.sequenceWizard)
+            main = this.sequenceWizard.render()
+        else if (this.sequenceEditor.component)
+            main = this.sequenceEditor.render()
+
         console.time('render seq view')
         const res:VNode = h('div.jfw-main-view.sf-sequence-view', {
         }, [
-            this.sequenceWizard ? this.sequenceWizard.render() : this.sequenceEditor.render()
+            main
         ])
         console.timeEnd('render seq view')
 
