@@ -7,13 +7,12 @@ import extend = require('xtend')
 
 import componentTypes from 'bioterms/human/componentTypes'
 
-import { Specifiers, Predicates, Types } from 'bioterms'
+import { Specifiers, Predicates, Types, Prefixes } from 'bioterms'
 
 import nameToDisplayId from '../util/nameToDisplayId'
 import { TextInput, Combo } from "jfw/ui/form-control";
 
 import cdTypes from 'data/cdTypes'
-import cdRoles from 'data/roles'
 
 import { click as clickEvent } from 'jfw/event'
 import { SBOLXGraph } from "sbolgraph";
@@ -21,6 +20,11 @@ import BiocadApp from "biocad/BiocadApp";
 
 import { node as graphNode } from "sbolgraph"
 import { SXComponent, SXSequence } from "sbolgraph"
+import PropertyEditorTermSet from 'biocad/property/PropertyEditorTermSet';
+import PropertyAccessorURISet from 'biocad/property/PropertyAccessorURISet';
+
+import so from 'data/sequence-ontology'
+import systemsBiologyOntology from 'data/systems-biology-ontology';
 
 export class CreateComponentDialogDefaults {
 
@@ -46,12 +50,16 @@ export default class CreateComponentDialog extends Dialog {
     nameBox:TextInput
     identifierBox:TextInput
     typeBox:Combo
-    roleBox:Combo
+    roleBox:PropertyEditorTermSet
     uriBox:TextInput
+
+    tempGraph:SBOLXGraph
 
     constructor(app:App, opts:CreateComponentDialogOptions, defs:CreateComponentDialogDefaults) {
 
         super(app, opts)
+
+        this.tempGraph = new SBOLXGraph([])
 
         this.setTitle('Create Component')
 
@@ -68,7 +76,15 @@ export default class CreateComponentDialog extends Dialog {
 
         }), defs.type)
 
-        this.roleBox = new Combo(this, cdRoles, defs.role)
+        this.roleBox = new PropertyEditorTermSet(
+            app as BiocadApp,
+            'Roles',
+            new PropertyAccessorURISet('temp', Predicates.SBOLX.role),
+            Prefixes.sequenceOntologyIdentifiersOrg,
+            so,
+            'SO:0000110'
+        )
+
         this.uriBox = new TextInput(this, defs.uri)
 
         this.nameBox.onChange((newName:string) => {
@@ -89,38 +105,19 @@ export default class CreateComponentDialog extends Dialog {
         const graph:SBOLXGraph = app.graph
 
 
-        // TODO
-        //
-        /*
-        const cdUri:string = graph.generateURI('http://dummyprefix/' + this.identifierBox.getValue() + '$n?$/1')
+        let roles = new SXComponent(this.tempGraph, 'temp').roles
 
-        graph.insertProperties(cdUri, {
-            [Predicates.a]: graphNode.createUriNode(Types.SBOLX.Component),
-            [Predicates.SBOLX.id]: graphNode.createStringNode(SBOLXCompliantURIs.getId(cdUri)),
-            [Predicates.SBOLX.persistentIdentity]: graphNode.createUriNode(SBOLXCompliantURIs.getPersistentIdentity(cdUri)),
-            [Predicates.SBOLX.version]: graphNode.createStringNode(SBOLXCompliantURIs.getVersion(cdUri)),
-            [Predicates.SBOLX.type]: graphNode.createUriNode(this.typeBox.getValue()),
-            [Predicates.SBOLX.hasRole]: graphNode.createUriNode(this.roleBox.getValue())
-        })
+        let prefix = graph.mostPopularUriPrefix
 
+        if(!prefix) {
+            prefix = 'http://bazprefix/'
+        }
 
-        const seqUri:string = graph.generateURI('http://dummyprefix/' + this.identifierBox.getValue() + '_sequence$n?$/1')
+        let c = graph.createComponent(prefix, this.identifierBox.getValue(), '1')
 
-        graph.insertProperties(seqUri, {
-            [Predicates.a]: graphNode.createUriNode(Types.SBOLX.Sequence),
-            [Predicates.SBOLX.id]: graphNode.createStringNode(SBOLXCompliantURIs.getId(seqUri)),
-            [Predicates.SBOLX.persistentIdentity]: graphNode.createUriNode(SBOLXCompliantURIs.getPersistentIdentity(seqUri)),
-            [Predicates.SBOLX.version]: graphNode.createStringNode(SBOLXCompliantURIs.getVersion(seqUri)),
-            [Predicates.SBOLX.sequenceEncoding]: graphNode.createUriNode(Specifiers.SBOL2.SequenceEncoding.NucleicAcid),
-            [Predicates.SBOLX.sequenceElements]: graphNode.createStringNode('')
-        })
-
-
-        const cd = new SXComponent(graph, cdUri)
-        cd.setSequence(new SXSequence(graph, seqUri))
-
-
-*/
+        for(let role of roles) {
+            c.addRole(role)
+        }
 
         app.closeDialog(this)
 
@@ -213,11 +210,7 @@ export default class CreateComponentDialog extends Dialog {
             this.typeBox.render()
         ])
 
-        const roleSelector = h('label', [
-            'Role',
-            h('br'),
-            this.roleBox.render()
-        ])
+        const roleSelector = this.roleBox.render(this.tempGraph)
 
         return h('div.jfw-form-group', {
             style: {

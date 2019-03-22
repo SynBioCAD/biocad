@@ -18,27 +18,27 @@ import TextInput from 'jfw/ui/form-control/TextInput';
 
 import soTrie from 'data/soTrie'
 import { Predicates, Specifiers } from 'bioterms';
-import PropertyEditor from './PropertyEditor';
+import PropertyEditor from '../../property/PropertyEditor';
 import DepictionRef from 'biocad/cad/DepictionRefByUid';
-import PropertyEditorOneline from './PropertyEditorOneline';
-import PropertyEditorTermSet from './PropertyEditorTermSet';
-import PropertyEditorCombo from './PropertyEditorCombo';
-import PropertyEditorInteractionParticipants from './PropertyEditorInteractionParticipants'
+import PropertyEditorOneline from '../../property/PropertyEditorOneline';
+import PropertyEditorTermSet from '../../property/PropertyEditorTermSet';
+import PropertyEditorCombo from '../../property/PropertyEditorCombo';
+import PropertyEditorInteractionParticipants from '../../property/PropertyEditorInteractionParticipants'
 import LayoutEditorView from '../../cad/LayoutEditorView';
 import InteractionDepiction from '../../cad/InteractionDepiction';
-import PropertyEditorSiblingComponent from './PropertyEditorSubComponent';
+import PropertyEditorSiblingComponent from '../../property/PropertyEditorSubComponent';
 import ComponentDepiction from '../../cad/ComponentDepiction';
 import BackboneDepiction from '../../cad/BackboneDepiction';
-import PropertyAccessorString from './PropertyAccessorString';
-import PropertyAccessorStrand from './PropertyAccessorStrand';
-import PropertyAccessorURI from './PropertyAccessorURI';
-import PropertyAccessorURISet from './PropertyAccessorURISet';
+import PropertyAccessorString from '../../property/PropertyAccessorString';
+import PropertyAccessorStrand from '../../property/PropertyAccessorStrand';
+import PropertyAccessorURI from '../../property/PropertyAccessorURI';
+import PropertyAccessorURISet from '../../property/PropertyAccessorURISet';
 
 import { Prefixes } from 'bioterms'
 
 import so from 'data/sequence-ontology'
 import systemsBiologyOntology from 'data/systems-biology-ontology';
-import PropertyEditorDebug from './PropertyEditorDebug';
+import PropertyEditorDebug from '../../property/PropertyEditorDebug';
 
 const strands = [
     {
