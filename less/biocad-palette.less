@@ -20,6 +20,7 @@
 
     margin-bottom: 6px;*/
     
+    position: relative;
 
 
 
@@ -48,7 +49,11 @@
 }
 
 .sf-plv-entry-label .fa-search {
-    display: none;
+    visibility: hidden;
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    font-size: 14pt;
 }
 
 .sf-plv-entry:hover {
@@ -56,6 +61,15 @@
     border-radius: 8px;
     cursor: pointer;
 }
+
+.sf-plv-entry:hover .fa-search{
+    visibility: visible;
+}
+
+.sf-plv-entry-label .fa-search:hover {
+    color: pink;
+}
+
 .sf-plv-entry:hover .sf-plv-entry-label {
     color: black;
 }

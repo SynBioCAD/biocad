@@ -94,7 +94,7 @@ export default class PartsListView extends View {
                     part.longName,
 
                     h('span.fa.fa-search.sf-part-search-button', {
-                        'ev-click': clickEvent(clickSearch, { app: app, part: part })
+                        'ev-mousedown': clickEvent(clickSearch, { app: app, part: part })
                     }, [
                     ])
                 ])
