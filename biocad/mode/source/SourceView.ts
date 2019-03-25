@@ -104,16 +104,13 @@ export default class SourceView extends View {
                                 
             }, {
 
-                width: '100%',
-                height: '100%',
-
-                /*
                 position: 'absolute',
                 left: 0,
-                top: (topbarHeight + languageBarHeight) + 'px',
+                top: 0,
+                right: 0,
+                bottom: 0,
                 width: '100%',
-                height: (bodyHeight - topbarHeight - languageBarHeight) + 'px'*/
-                                
+                height: '100%',
             })
         }
 
@@ -123,13 +120,14 @@ export default class SourceView extends View {
                 height: '100%'
             }
         }, [
-            h('div.jfw-flow-ttb', {
+            this.encodingSelector.render(),
+            h('div', {
                 style: {
                     width: '100%',
-                    height: '100%'
+                    height: '100%',
+                    position: 'relative'
                 }
             }, [
-                this.encodingSelector.render(),
                 widget
             ])
         ])
