@@ -35,7 +35,6 @@ export default class CircularBackboneDepiction extends BackboneDepiction {
 
         super(layout, parent, uid)
 
-        this.orientation = Orientation.Forward
     }
 
     render(renderContext:RenderContext):VNode {

@@ -28,8 +28,6 @@ export default class FeatureLocationDepiction extends LocationableDepiction {
 
         super(layout, depictionOf, identifiedChain, parent, uid)
 
-        this.orientation = Orientation.Forward
-
     }
 
     render(renderContext:RenderContext):VNode {

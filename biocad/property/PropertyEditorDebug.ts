@@ -3,6 +3,7 @@ import PropertyEditor from "./PropertyEditor";
 import { SBOLXGraph } from "sbolgraph";
 import Depiction from "biocad/cad/Depiction";
 import { h } from "@biocad/jfw/dist/jfw/vdom";
+import LocationableDepiction from "biocad/cad/LocationableDepiction";
 
 export default class PropertyEditorDebug extends PropertyEditor {
 
@@ -17,13 +18,7 @@ export default class PropertyEditorDebug extends PropertyEditor {
 
         let parent = this.d.parent
 
-        return h('div', {
-            style: {
-                'backgroundColor': 'white',
-                'color': 'black',
-            }
-
-        }, [
+        let props = [
             h('span', 'uid ' + this.d.uid),
             h('br'),
             h('span', 'offsetExplicit ' + this.d.offsetExplicit),
@@ -33,7 +28,20 @@ export default class PropertyEditorDebug extends PropertyEditor {
             h('span', 'size ' + this.d.size),
             h('br'),
             h('span', 'parent ' + (parent ? parent.debugName : 'none')),
-        ])
+        ]
+
+        if(this.d instanceof LocationableDepiction) {
+            props.push(
+                h('span', 'proportionalWidth ' + this.d.proportionalWidth || 'none')
+            )
+        }
+
+        return h('div', {
+            style: {
+                'backgroundColor': 'white',
+                'color': 'black',
+            }
+        }, props)
 
     }
 }

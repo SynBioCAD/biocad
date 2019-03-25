@@ -1,7 +1,7 @@
 
 import Depiction, { Orientation } from './Depiction'
 import Layout from './Layout';
-import { SXIdentified, SXRange } from 'sbolgraph'
+import { SXIdentified, SXRange, SXLocation } from 'sbolgraph'
 import IdentifiedChain from 'biocad/IdentifiedChain';
 import LabelDepiction from './LabelDepiction';
 import BackboneDepiction from './BackboneDepiction';
@@ -64,11 +64,13 @@ export default abstract class LocationableDepiction extends Depiction {
 
     setWidthFromLocation() {
 
+        let hasFixedLoc = this.location && (this.location as SXLocation).isFixed()
+
         let layout = this.layout
 
         this.proportionalWidth = layout.minGlyphWidth
 
-        if (this.location) {
+        if (hasFixedLoc) {
             if (this.location instanceof SXRange) {
                 let start = this.location.start
                 let end = this.location.end
@@ -81,6 +83,11 @@ export default abstract class LocationableDepiction extends Depiction {
         console.log('PW', this.proportionalWidth)
 
         this.size = Vec2.fromXY(Math.max(this.proportionalWidth, layout.minGlyphWidth), this.size.y)
+        this.size = this.size.max(this.minSize)
+
+        if(!hasFixedLoc) {
+            this.proportionalWidth = this.size.x
+        }
     }
 
 }

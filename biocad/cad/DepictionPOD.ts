@@ -29,6 +29,10 @@ export default class DepictionPOD {
 
             additionalProps['orientation'] = depiction.orientation
             additionalProps['backbonePlacement'] = depiction.backbonePlacement
+            additionalProps['proportionalWidth'] = depiction.proportionalWidth
+
+            if(depiction.location)
+                additionalProps['location'] = depiction.location.uri
 
         } else if(depiction instanceof LabelDepiction) {
 
@@ -40,6 +44,14 @@ export default class DepictionPOD {
 
             type = 'FeatureLocationDepiction'
 
+            additionalProps['orientation'] = depiction.orientation
+            additionalProps['backbonePlacement'] = depiction.backbonePlacement
+            additionalProps['proportionalWidth'] = depiction.proportionalWidth
+
+            if(depiction.location)
+                additionalProps['location'] = depiction.location.uri
+
+
         } else if(depiction instanceof CircularBackboneDepiction) {
 
             type = 'CircularBackboneDepiction'
@@ -49,6 +61,10 @@ export default class DepictionPOD {
             type = 'BackboneDepiction'
             
             additionalProps['backboneY'] = depiction.backboneY
+            additionalProps['locationsOfOmittedRegions'] = depiction.locationsOfOmittedRegions.toPOD()
+
+            if(depiction.location)
+                additionalProps['location'] = depiction.location.uri
 
         } else if(depiction instanceof InteractionDepiction) {
 
@@ -95,6 +111,14 @@ export default class DepictionPOD {
 
             ;(depiction as ComponentDepiction).orientation = pod.orientation
             ;(depiction as ComponentDepiction).backbonePlacement = pod.backbonePlacement
+            ;(depiction as ComponentDepiction).proportionalWidth = pod.proportionalWidth
+
+            let loc =  graph.uriToFacade(pod.location)
+
+            if(loc instanceof SXIdentified) {
+                ; (depiction as ComponentDepiction).location = loc
+            }
+
 
         } else if(pod['class'] === 'LabelDepiction') {
 
@@ -123,6 +147,14 @@ export default class DepictionPOD {
             depiction = new BackboneDepiction(layout, parent, pod.uid)
 
             ;(depiction as BackboneDepiction).backboneY = pod.backboneY
+            ;(depiction as BackboneDepiction).locationsOfOmittedRegions = LinearRangeSet.fromPOD(pod.locationsOfOmittedRegions)
+
+            let loc =  graph.uriToFacade(pod.location)
+
+            if(loc instanceof SXIdentified) {
+                ; (depiction as BackboneDepiction).location = loc
+            }
+
 
         } else if(pod['class'] === 'InteractionDepiction') {
 
@@ -140,11 +172,17 @@ export default class DepictionPOD {
             if(depictionOf === undefined)
                 throw new Error('FeatureLocationDepiction must have a depictionOf')
 
-            if(parent === undefined) {
-                throw new Error('label must have a parent')
+            depiction = new FeatureLocationDepiction(layout, depictionOf, chain, parent, pod.uid)
+
+            ;(depiction as FeatureLocationDepiction).proportionalWidth = pod.proportionalWidth
+
+            let loc =  graph.uriToFacade(pod.location)
+
+            if(! (loc instanceof SXIdentified)) {
+                throw new Error('???')
             }
 
-            depiction = new FeatureLocationDepiction(layout, depictionOf, chain, parent, pod.uid)
+            ;(depiction as FeatureLocationDepiction).location = loc
 
         } else {
             throw new Error('unknown depiction class')

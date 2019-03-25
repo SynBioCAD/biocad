@@ -176,6 +176,14 @@ export default class BiocadApp extends App
 
     }
 
+    getCircuitMode():CircuitMode|undefined {
+
+        for(let mode of this.modes) {
+            if(mode instanceof CircuitMode) {
+                return mode
+            }
+        }
+    }
 }
 
 

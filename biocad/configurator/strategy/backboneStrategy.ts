@@ -317,6 +317,7 @@ export default function backboneStrategy(_parent:Depiction, children:Depiction[]
     let maxIters = 10
 
     // TODO: forward/reverse?
+
     for (let i = 0; i < maxIters; ++i) {
         let doneSomething = false
         for (let constraint of cd.sequenceConstraints) {
@@ -327,6 +328,11 @@ export default function backboneStrategy(_parent:Depiction, children:Depiction[]
                 console.warn('constraint: missing s/o:', constraint.subject.uri, subjectIdx, constraint.object.uri, objIdx)
                 continue
             }
+
+            let subj = backboneElements[subjectIdx]
+            let obj = backboneElements[objIdx]
+
+
             if (restriction === Specifiers.SBOLX.SequenceConstraint.Precedes) {
                 move(backboneElements, subjectIdx, objIdx - 1)
             }

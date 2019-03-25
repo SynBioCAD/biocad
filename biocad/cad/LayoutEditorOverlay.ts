@@ -192,8 +192,6 @@ export default class LayoutEditorOverlay extends View {
             stuffChanged = true
         }
 
-        //console.log('llamas')
-
         if(stuffChanged)
             depiction.touch()
 

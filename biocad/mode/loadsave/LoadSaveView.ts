@@ -14,6 +14,7 @@ import { SBOLXGraph, SBOL2Graph } from 'sbolgraph';
 import ImageRenderer from 'biocad/cad/ImageRenderer'
 
 import SBOLConverterValidator from 'biocad/util/SBOLConverterValidator'
+import CircuitView from '../circuit/CircuitView';
 
 export default class LoadSaveView extends View {
 
@@ -33,9 +34,17 @@ export default class LoadSaveView extends View {
         let graph = app.graph
 
         if(graph.graph.toArray().length > 0) {
-            this.layout = new Layout(app.graph)
-            this.layout.syncAllDepictions(5)
-            this.layout.configurate([])
+
+            let circuitMode = app.getCircuitMode()
+
+            if(circuitMode) {
+                this.layout = (circuitMode.view as CircuitView).layout.clone()
+            } else {
+                this.layout = new Layout(app.graph)
+                this.layout.syncAllDepictions(5)
+                this.layout.configurate([])
+            }
+
 
             this.layout.crop(Vec2.fromXY(3, 2))
 

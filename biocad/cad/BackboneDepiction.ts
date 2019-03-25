@@ -41,7 +41,6 @@ export default class BackboneDepiction extends Depiction {
 
         super(layout, undefined, undefined, parent, uid)
 
-        this.orientation = Orientation.Forward
     }
 
     render(renderContext:RenderContext):VNode {
@@ -86,8 +85,6 @@ export default class BackboneDepiction extends Depiction {
 
 
             let omitted = this.locationsOfOmittedRegions.sort().ranges
-
-            console.dir(omitted)
 
             if(omitted.length === 0) {
                 drawSolidLine(startWithExtension, end)
