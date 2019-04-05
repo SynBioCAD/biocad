@@ -85,7 +85,7 @@ export default class SequenceView extends View {
         }, [
             h('br'),
             'Select or create a part to edit sequence'
-        )
+        ])
 
         if(this.sequenceWizard)
             main = this.sequenceWizard.render()
