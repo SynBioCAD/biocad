@@ -260,7 +260,9 @@ export default class LabelDepiction extends Depiction {
 
         if(false && distance > 2) {
 
-            if(!this.parent) {
+            let parent = this.parent
+
+            if(!parent) {
                 throw new Error('???')
             }
 
@@ -268,8 +270,8 @@ export default class LabelDepiction extends Depiction {
 
             let line = new Line(from, to)
 
-            let a = this.parent.absoluteOffset.add(line.a).multiply(this.layout.gridSize)
-            let b = this.parent.absoluteOffset.add(line.b).multiply(this.layout.gridSize)
+            let a = parent.absoluteOffset.add(line.a).multiply(this.layout.gridSize)
+            let b = parent.absoluteOffset.add(line.b).multiply(this.layout.gridSize)
 
             let svgArrow = svg('path', {
                 d: [
