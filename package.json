@@ -14,7 +14,7 @@
     "prepublishOnly": "tsc -d -p ./ --outDir dist/"
   },
   "dependencies": {
-    "@biocad/jfw": "^0.3.1",
+    "@biocad/jfw": "git+https://github.com/ngbiocad/jfw.git",
     "@types/codemirror": "0.0.42",
     "@types/node": "^10.11.4",
     "almost-equal": "^1.1.0",
