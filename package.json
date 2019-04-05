@@ -25,7 +25,6 @@
     "brfs": "^1.4.3",
     "browser-request": "git+https://github.com/adampash/browser-request.git#feat-add-headers-to-response",
     "circular-iterator": "^1.1.2",
-    "clipboard-polyfill": "^2.7.0",
     "codemirror": "^5.25.0",
     "cytoscape": "^3.2.17",
     "d3-force": "^1.0.4",

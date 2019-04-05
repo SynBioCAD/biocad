@@ -12,7 +12,7 @@ import CreateAnnotationDialog from './CreateAnnotationDialog'
 import { SXSequence, SXComponent } from "sbolgraph"
 import { Specifiers } from "bioterms";
 
-import clipboad = require('clipboard-polyfill')
+//import clipboad = require('clipboard-polyfill')
 
 export default class SequenceEditorContextMenu extends ContextMenu {
 
@@ -81,7 +81,7 @@ export default class SequenceEditorContextMenu extends ContextMenu {
 
                 let elements = sequenceEditor.getSelectionElements() || ''
 
-                clipboad.writeText(elements)
+                //clipboad.writeText(elements)
 
                 app.closeContextMenu()
 
@@ -91,7 +91,9 @@ export default class SequenceEditorContextMenu extends ContextMenu {
 
         items.push(new ContextMenuItem('span.fa.fa-paste', 'Paste', async (pos: Vec2) => {
 
-            let str = await clipboad.readText()
+            //let str = await clipboad.readText()
+
+            let str = ''
 
             let caretPos = sequenceEditor.getCaretPos()
             let sequence = sequenceEditor.sequence
