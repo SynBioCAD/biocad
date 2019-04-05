@@ -23,9 +23,13 @@ export default class BrowseSBHDialog extends Dialog {
 
     results:SearchResult[]
 
+    query:SearchQuery
+
     constructor(app:BiocadApp, opts:BrowseSBHDialogOptions) {
 
         super(app, opts)
+
+        this.query = opts.query
 
         this.setTitle('Find Part')
 
@@ -35,9 +39,9 @@ export default class BrowseSBHDialog extends Dialog {
 
         this.results = []
 
-        opts.query.addObjectType('ComponentDefinition')
+        this.query.addObjectType('ComponentDefinition')
 
-        this.repo.searchMetadata(opts.query).then((results:SearchResult[]) => {
+        this.repo.searchMetadata(this.query).then((results:SearchResult[]) => {
 
             this.results = results
             this.update()
@@ -47,27 +51,52 @@ export default class BrowseSBHDialog extends Dialog {
 
     getContentView():VNode {
 
-        return h('table.jfw-list', [
+        let criteraItems:VNode[] = []
 
-            h('thead', [
-                h('th', 'Name'),
-                h('th', 'Description'),
-            ]),
+        for(let c of this.query.criteria) {
 
-            h('tbody', {
-                'ev-click': clickEvent(clickResult, { dialog: this })
-            }, this.results.map((result:SearchResult) => {
+            if(c.key === 'objectType')
+                continue
 
-                return h('tr', {
-                    dataset: {
-                        uri: result.uri
-                    }
-                }, [
-                    h('td', result.name),
-                    h('td', result.description)
-                ])
+            let t = JSON.stringify(c)
 
-            }))
+
+            criteraItems.push(h('span.addremove-item', [
+                h('span.addremove-remove.fa.fa-times-circle'),
+                ' ' + t
+            ]))
+        }
+
+        criteraItems.push(h('span.addremove-add', [
+            h('span.fa.fa-plus')
+        ]))
+
+        return h('div', [
+
+            h('span.addremove', criteraItems),
+            
+            h('table.jfw-list', [
+
+                h('thead', [
+                    h('th', 'Name'),
+                    h('th', 'Description'),
+                ]),
+
+                h('tbody', {
+                    'ev-click': clickEvent(clickResult, { dialog: this })
+                }, this.results.map((result:SearchResult) => {
+
+                    return h('tr', {
+                        dataset: {
+                            uri: result.uri
+                        }
+                    }, [
+                        h('td', result.name),
+                        h('td', result.description)
+                    ])
+
+                }))
+            ])
         ])
 
     }
