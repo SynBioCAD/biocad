@@ -259,6 +259,7 @@ export default class LabelDepiction extends Depiction {
         let distance = from.distanceTo(to)
 
         if(false && distance > 2) {
+            /*
 
             let parent = this.parent
 
@@ -285,7 +286,9 @@ export default class LabelDepiction extends Depiction {
             return svg('g', [
                 svgText,
                 svgArrow
-            ])
+            ])*/
+
+            return svg('g', [])
 
         } else {
 
