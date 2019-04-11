@@ -431,10 +431,15 @@ function routeABInteractions(groups:Group[], interactionToLayer:Map<InteractionD
 
             if(layerN < 0) {
 
+                let yTop = Math.min(
+                    a.y - INTERACTION_HEIGHT * (- layerN),
+                    b.y - INTERACTION_HEIGHT * (- layerN)
+                )
+
                 interaction.setWaypoints([
                     Vec2.fromXY(a.x, a.y),
-                    Vec2.fromXY(a.x, a.y - INTERACTION_HEIGHT * (- layerN)),
-                    Vec2.fromXY(b.x, b.y - INTERACTION_HEIGHT * (- layerN)),
+                    Vec2.fromXY(a.x, yTop),
+                    Vec2.fromXY(b.x, yTop),
                     Vec2.fromXY(b.x, b.y),
                 ])
 
