@@ -62,32 +62,33 @@ export default abstract class LocationableDepiction extends Depiction {
         }
     }
 
-    setWidthFromLocation() {
+    calcWidthFromLocation(): { proportionalWidth:number, displayWidth:number } {
 
         let hasFixedLoc = this.location && (this.location as SXLocation).isFixed()
 
         let layout = this.layout
 
-        this.proportionalWidth = layout.minGlyphWidth
+        let proportionalWidth = layout.minGlyphWidth
 
         if (hasFixedLoc) {
             if (this.location instanceof SXRange) {
                 let start = this.location.start
                 let end = this.location.end
                 if (start !== undefined && end !== undefined) {
-                    this.proportionalWidth =  Math.abs(end - start) * layout.bpToGridScale
+                    proportionalWidth =  Math.abs(end - start) * layout.bpToGridScale
                 }
             }
         }
 
-        console.log('PW', this.proportionalWidth)
-
-        this.size = Vec2.fromXY(Math.max(this.proportionalWidth, layout.minGlyphWidth), this.size.y)
-        this.size = this.size.max(this.minSize)
+        let w = Math.max(proportionalWidth, layout.minGlyphWidth)
+        w = Math.max(w, this.minSize.x)
 
         if(!hasFixedLoc) {
-            this.proportionalWidth = this.size.x
+            proportionalWidth = w
         }
+
+        return { displayWidth: w, proportionalWidth }
+
     }
 
 }

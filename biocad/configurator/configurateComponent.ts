@@ -74,13 +74,13 @@ function configurateWhiteboxComponent(depiction:ComponentDepiction):void {
 
     const children = depiction.children.filter((child:Depiction) => !(child instanceof LabelDepiction))
 
+    let { proportionalWidth, displayWidth } = depiction.calcWidthFromLocation()
+
     if(children.length > 0) {
 
         const padding = 1
 
         binPackStrategy(depiction, children, padding)
-
-
 
     } else {
 
@@ -88,6 +88,9 @@ function configurateWhiteboxComponent(depiction:ComponentDepiction):void {
 
     }
 
+    depiction.proportionalWidth = proportionalWidth
+
+    depiction.size = depiction.size.max(Vec2.fromXY(displayWidth, 0))
 }
 
 function configurateBlackboxComponent(depiction:ComponentDepiction):void {
@@ -137,9 +140,11 @@ function configurateBlackboxComponent(depiction:ComponentDepiction):void {
 
     }
 
-    depiction.setWidthFromLocation()
 
-    depiction.size = Vec2.fromXY(depiction.size.x, 2 * visbolite.glyphScaleFromType(type).y)
+    let { proportionalWidth, displayWidth } = depiction.calcWidthFromLocation()
+
+    depiction.proportionalWidth = proportionalWidth
+    depiction.size = Vec2.fromXY(displayWidth, 2 * visbolite.glyphScaleFromType(type).y)
 
     depiction.backbonePlacement = backbonePlacement
 }
