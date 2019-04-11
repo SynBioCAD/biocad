@@ -9,6 +9,7 @@ import Versioned from "jfw/Versioned";
 import RenderContext from './RenderContext'
 import CircularBackboneDepiction from './CircularBackboneDepiction'
 import IdentifiedChain from '../IdentifiedChain';
+import LabelDepiction from './LabelDepiction';
 
 export enum Opacity {
     Blackbox,
@@ -60,6 +61,8 @@ export default abstract class Depiction extends Versioned {
     _depictionOf:SXIdentified|undefined
     identifiedChain:IdentifiedChain|undefined
 
+    label:LabelDepiction|null
+
     //graphWatcher:Watcher|undefined
 
     constructor(layout:Layout, depictionOf:SXIdentified|undefined, identifiedChain:IdentifiedChain|undefined, parent?:Depiction, uid?:number) {
@@ -76,6 +79,7 @@ export default abstract class Depiction extends Versioned {
         this.depictionOf = depictionOf
         this.offsetExplicit = false
         this.identifiedChain = identifiedChain
+        this.label = null
     }
 
     cleanup() {
@@ -204,6 +208,22 @@ export default abstract class Depiction extends Versioned {
     get absoluteBoundingBox():Rect {
         const absOffset:Vec2 = this.absoluteOffset
         return new Rect(absOffset, absOffset.add(this.size))
+    }
+
+    get boundingBoxWithLabel():Rect {
+        let r = this.boundingBox
+        if(this.label) {
+            r = r.surround(this.label.boundingBox)
+        }
+        return r
+    }
+
+    get absoluteBoundingBoxWithLabel():Rect {
+        let r = this.absoluteBoundingBox
+        if(this.label) {
+            r = r.surround(this.label.absoluteBoundingBox)
+        }
+        return r
     }
 
     get width():number {

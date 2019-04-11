@@ -116,18 +116,6 @@ export default class BackboneDepiction extends Depiction {
 
     }
 
-
-
-
-
-
-    get label():LabelDepiction|undefined {
-
-        return undefined
-
-    }
-
-
     renderThumb(size:Vec2):VNode {
 
         return svg('g', [

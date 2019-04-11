@@ -77,9 +77,10 @@ function configurateSALinear(depiction:FeatureLocationDepiction):void {
 
 
 
-    depiction.setWidthFromLocation()
+    let { proportionalWidth, displayWidth } = depiction.calcWidthFromLocation()
 
-    depiction.size = Vec2.fromXY(depiction.size.x, 2 * visbolite.glyphScaleFromType(type).y)
+    depiction.size = Vec2.fromXY(displayWidth, 2 * visbolite.glyphScaleFromType(type).y)
+    depiction.proportionalWidth = proportionalWidth
 
     depiction.backbonePlacement = backbonePlacement
 

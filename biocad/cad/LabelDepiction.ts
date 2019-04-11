@@ -36,6 +36,7 @@ export default class LabelDepiction extends Depiction {
         super(layout, undefined, undefined, parent, uid);
 
         this.labelFor = labelFor
+        labelFor.label = this
 
         this.attr = {
             'font-family': 'sans-serif',
@@ -44,12 +45,7 @@ export default class LabelDepiction extends Depiction {
     }
 
     isVisible():boolean {
-
-        if(!this.parent) {
-            throw new Error('label has no parent?')
-        }
-
-        return this.parent.isVisible()
+        return this.labelFor.isVisible()
     }
 
     render(renderContext:RenderContext):VNode {
@@ -64,10 +60,6 @@ export default class LabelDepiction extends Depiction {
     }
 
     private renderCircular(renderContext:RenderContext):VNode {
-
-        if(!this.parent) {
-            throw new Error('label has no parent?')
-        }
 
         const layout:Layout = this.layout
 

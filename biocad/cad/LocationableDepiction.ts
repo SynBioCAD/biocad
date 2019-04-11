@@ -22,15 +22,6 @@ export default abstract class LocationableDepiction extends Depiction {
 
     }
 
-    get label():LabelDepiction|undefined {
-
-        for(var i:number = 0; i < this.children.length; ++ i) {
-            if(this.children[i] instanceof LabelDepiction) {
-                return this.children[i] as LabelDepiction
-            }
-        }
-    }
-
     getAnchorY():number {
 
         // TODO: Best effort to align to a parent backbone, if exists.

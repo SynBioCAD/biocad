@@ -435,6 +435,8 @@ export default class Layout extends Versioned {
             cdDepiction.orientation = Orientation.Forward
             cdDepiction.isExpandable = component.subComponents.length > 0
 
+            this.syncLabel(preset, undefined, cdDepiction, 0)
+
             if(cdDepiction.opacity === Opacity.Whitebox) {
 
                 var displayList:ComponentDisplayList = ComponentDisplayList.fromComponent(component)
@@ -451,8 +453,8 @@ export default class Layout extends Versioned {
 
                     let nextChain = chain.extend(child)
 
-                    this.syncComponentInstanceDepiction(preset, child as SXSubComponent, nextChain, cdDepiction, 1, Orientation.Forward)
-
+                    let ci = this.syncComponentInstanceDepiction(preset, child as SXSubComponent, nextChain, cdDepiction, 1, Orientation.Forward)
+                    this.syncLabel(preset, cdDepiction, ci, 1)
                 }
 
                 //console.log(component.displayName + ' has ' + component.interactions.length + ' interactions')
@@ -681,7 +683,8 @@ export default class Layout extends Versioned {
 
                 let nextChain = chain.extend(child)
 
-                this.syncComponentInstanceDepiction(preset, child, nextChain, cDepiction, nestDepth + 1, orientation)
+                let ci = this.syncComponentInstanceDepiction(preset, child, nextChain, cDepiction, nestDepth + 1, orientation)
+                this.syncLabel(preset, cDepiction, ci, nestDepth)
 
             }
 
@@ -775,11 +778,13 @@ export default class Layout extends Versioned {
 
     }
 
-    private syncLabel(preset:DetailPreset, parent:Depiction, labelFor:Depiction, nestDepth:number):void {
+    private syncLabel(preset:DetailPreset, parent:Depiction|undefined, labelFor:Depiction, nestDepth:number):void {
 
         let label:LabelDepiction|undefined = undefined
 
-        for(let child of parent.children) {
+        let siblings = parent ? parent.children : this.depictions // todo?
+
+        for(let child of siblings) {
             if(child instanceof LabelDepiction && child.labelFor) {
                 let existingChain = child.labelFor.identifiedChain
                 let newChain = labelFor.identifiedChain
@@ -792,6 +797,7 @@ export default class Layout extends Versioned {
 
         if(label) {
             label.labelFor = labelFor
+            labelFor.label = label
             label.setSameVersionAs(this)
             label.stamp = Layout.nextStamp
         } else {

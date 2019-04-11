@@ -20,7 +20,8 @@ export default function configurateLabel(label:LabelDepiction, instructions:Inst
     const depictionOf: SXIdentified | undefined = labelFor.depictionOf
 
     if(depictionOf === undefined) {
-        throw new Error('???')
+        console.dir(label)
+        throw new Error('labelFor ' + labelFor.debugName + ' depictionOf is undefined')
     }
 
     const text:string|undefined = depictionOf.displayName

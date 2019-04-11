@@ -9,6 +9,7 @@ import LinearRangeSet from "jfw/geom/LinearRangeSet";
 import ComponentDepiction from "biocad/cad/ComponentDepiction";
 import BackboneDepiction from '../../cad/BackboneDepiction';
 import { reverse } from 'dns';
+import LabelDepiction from 'biocad/cad/LabelDepiction';
 
 
 const INTERACTION_HEIGHT:number = 1
@@ -124,6 +125,13 @@ export default function binPackStrategy(parent:Depiction|null, children:Depictio
             if(!child.offsetExplicit)
                 child.offset = groupOffset.add(child.offset)
 
+            let label = child.label
+
+            if(label) {
+                if (!label.offsetExplicit)
+                    label.offset = groupOffset.add(label.offset)
+            }
+
         }
 
     }
@@ -232,6 +240,8 @@ function createInteractionGroups(parent:Depiction|null, children:Depiction[]):Gr
 
         if(child instanceof InteractionDepiction)
             continue
+        if(child instanceof LabelDepiction)
+            continue
 
         let effectiveChild = child
 
@@ -269,15 +279,37 @@ function horizontallyTileChildrenOfGroups(groups:Group[], padding:number) {
 
         for(let child of group.depictions) {
 
-            if(child.offsetExplicit)
+            if(child instanceof LabelDepiction)
+                continue // (shouldn't be in the group anyway)
+
+            let label = child.label
+
+            if(child.offsetExplicit) {
+
+                if(label) {
+                    if(!label.offsetExplicit) {
+                        label.offset = child.offset
+                    }
+                }
+
                 continue
+            }
 
             child.offset = offset
 
-            offset = offset.add(Vec2.fromXY(child.size.x + padding, 0))
+            let maxW = child.size.x
 
             maxHeight = Math.max(maxHeight, child.size.y)
 
+            if(label) {
+                label.offset = offset
+                child.offset = child.offset.add(Vec2.fromXY(0, label.size.y))
+                maxW = Math.max(child.size.x, label.size.x)
+                maxHeight = Math.max(maxHeight, child.size.y + label.size.y)
+            }
+
+
+            offset = offset.add(Vec2.fromXY(maxW + padding, 0))
         }
 
         group.w = offset.x
@@ -477,8 +509,8 @@ function horizPoints(takenPoints:Map<Depiction, LinearRangeSet>, a:Depiction, b:
         takenPoints.set(b, takenA)
     }
 
-    let bboxA = a.boundingBox
-    let bboxB = b.boundingBox
+    let bboxA = a.boundingBoxWithLabel
+    let bboxB = b.boundingBoxWithLabel
 
     if(a.parent instanceof BackboneDepiction) {
         bboxA.topLeft = bboxA.topLeft.add(a.parent.offset)
