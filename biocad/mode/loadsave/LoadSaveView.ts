@@ -11,7 +11,7 @@ import fileDialog = require('file-dialog')
 import { click as clickEvent } from 'jfw/event'
 import { SBOLXGraph, SBOL2Graph } from 'sbolgraph';
 
-import ImageRenderer from 'biocad/cad/ImageRenderer'
+import ImageRenderer, { ImageFormat } from 'biocad/cad/ImageRenderer'
 
 import SBOLConverterValidator from 'biocad/util/SBOLConverterValidator'
 import CircuitView from '../circuit/CircuitView';
@@ -374,7 +374,7 @@ async function clickDownloadSVG(data) {
 
     let renderer = new ImageRenderer(view.layout)
 
-    let svg = renderer.renderToSVGString()
+    let svg = await renderer.render(ImageFormat.SVG)
 
     let blob = new Blob([ svg ], {
         type: 'image/svg+xml'
@@ -393,7 +393,7 @@ async function clickDownloadPPTX(data) {
 
     let renderer = new ImageRenderer(view.layout)
 
-    let pptx:ArrayBuffer = await renderer.renderToPPTX()
+    let pptx:ArrayBuffer = await renderer.render(ImageFormat.PPTX)
 
     let blob = new Blob([ new Uint8Array(pptx) ], {
         type: 'application/vnd.openxmlformats-officedocument.presentationml.presentation'

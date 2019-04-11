@@ -1,76 +1,61 @@
 
 import Layout from 'biocad/cad/Layout'
-import ImageRenderer from 'biocad/cad/ImageRenderer'
+import ImageRenderer, { ImageFormat } from 'biocad/cad/ImageRenderer'
 import { SBOLXGraph } from 'sbolgraph'
 import { Vec2 } from 'jfw/geom'
 
 import fs = require('fs')
 import LayoutPOD from 'biocad/cad/LayoutPOD';
 
-import minimist = require('minimist')
-
 import express = require('express')
 import bodyParser = require('body-parser')
 
-main(minimist(process.argv.slice(2)))
+import yargs = require('yargs')
 
-async function main(argv) {
+yargs
+.option('out', {
+    alias: 'o',
+    description: 'Output filename',
+    demandOption: false
+})
+.option('outfmt', {
+    alias: 'f',
+    description: 'Output format',
+    demandOption: false,
+    choices: [ 'svg', 'pdf', 'pptx' ],
+    default: 'svg'
+})
+.command('testall', 'run all tests in testfiles', () => {}, testall)
+.command('render <file>', 'render one file', () => {}, render)
+.command('server <port>', 'run server', () => {}, server)
+.showHelpOnFail(true)
+.demandCommand()
+.help()
+.argv
 
-    if(argv._[0] === 'testall') {
+async function testall(argv) {
 
-        for(let file of fs.readdirSync('testfiles')) {
+    for(let file of fs.readdirSync('testfiles')) {
 
-            if(!file.endsWith('.xml') || file.endsWith('_sbolx.xml'))
-                continue
+        if(!file.endsWith('.xml') || file.endsWith('_sbolx.xml'))
+            continue
 
-            let path = 'testfiles/' + file
+        let path = 'testfiles/' + file
 
-            await doFile(path)
-        }
-
-    } else if(argv._[0] === 'test') {
-
-        let f = process.argv.slice(3).join(' ')
-
-        await doFile(f)
-
-    } else if(argv._[0] === 'server') {
-
-        let server = express()
-        server.use(bodyParser.text({
-            type: '*/*',
-            limit: '1mb'
-        }))
-
-        server.use(async (req, res, next) => {
-
-            let graph = await SBOLXGraph.loadString(req.body, 'application/rdf+xml')
-
-            let layout = new Layout(graph)
-
-            layout.syncAllDepictions(5)
-            layout.configurate([])
-            layout.size = layout.getBoundingSize().add(Vec2.fromXY(1, 1))
-
-            let renderer = new ImageRenderer(layout)
-            let svg = renderer.renderToSVGString()
-
-            res.header('content-type', 'image/svg+xml')
-            res.send(svg)
-        })
-
-        server.listen(argv.port)
-
-    } else {
-        console.error('command line option required')
+        await doFile(path, null, ImageFormat.SVG)
     }
+}
+async function server(argv) {
 
+    let server = express()
+    server.use(bodyParser.text({
+        type: '*/*',
+        limit: '1mb'
+    }))
 
-    async function doFile(path) {
+    server.use(async (req, res, next) => {
 
-        let graph = await SBOLXGraph.loadString(fs.readFileSync(path) + '', 'application/rdf+xml')
-
-        //fs.writeFileSync('testfiles/' + file + '_sbolx.xml', graph.serializeXML())
+        let graph = await SBOLXGraph.loadString(req.body, 'application/rdf+xml')
 
         let layout = new Layout(graph)
 
@@ -79,13 +64,50 @@ async function main(argv) {
         layout.size = layout.getBoundingSize().add(Vec2.fromXY(1, 1))
 
         let renderer = new ImageRenderer(layout)
+        let svg = await renderer.render(ImageFormat.SVG)
 
-        let svg = renderer.renderToSVGString()
+        res.header('content-type', 'image/svg+xml')
+        res.send(svg)
+    })
 
-        fs.writeFileSync(path + '.svg', svg)
+    server.listen(argv.port)
+}
 
-        fs.writeFileSync(path + '_layout.json', JSON.stringify(LayoutPOD.serialize(layout), null, 2))
+async function render(argv) {
+
+    let outfmt = ImageFormat.SVG
+
+    if(argv.outfmt === 'pdf') {
+        outfmt = ImageFormat.PDF
+    } else if(argv.outfmt === 'pptx') {
+        outfmt = ImageFormat.PPTX
     }
 
+    await doFile(argv.file, argv.out, outfmt)
+
 }
+
+async function doFile(path, out, outfmt) {
+
+    let graph = await SBOLXGraph.loadString(fs.readFileSync(path) + '', 'application/rdf+xml')
+
+    //fs.writeFileSync('testfiles/' + file + '_sbolx.xml', graph.serializeXML())
+
+    let layout = new Layout(graph)
+
+    layout.syncAllDepictions(5)
+    layout.configurate([])
+    layout.size = layout.getBoundingSize().add(Vec2.fromXY(1, 1))
+
+    let renderer = new ImageRenderer(layout)
+
+    let svg = await renderer.render(outfmt)
+
+    out = out || path + '.svg'
+
+    fs.writeFileSync(out, svg)
+
+    fs.writeFileSync(out + '_layout.json', JSON.stringify(LayoutPOD.serialize(layout), null, 2))
+}
+
 

@@ -29,7 +29,7 @@ import UData from 'jfw/udata/UData';
 import InitUData from 'biocad/InitUData';
 import GlobalConfig from 'jfw/GlobalConfig';
 import PopupMessageDialog from './dialog/PopupMessageDialog';
-import { DialogOptions } from '@biocad/jfw/dist/jfw/ui/dialog';
+import { DialogOptions } from 'jfw/ui/dialog';
 
 console.log('BiocadApp.ts')
 

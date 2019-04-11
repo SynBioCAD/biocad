@@ -6,6 +6,14 @@ import { VNode, svg, toHTML } from 'jfw/vdom'
 import SVGDefs from "biocad/cad/SVGDefs";
 import request = require('request')
 
+import TextEncodingShim = require('text-encoding-shim')
+let TextEncoder = TextEncodingShim.TextEncoder
+
+export enum ImageFormat {
+    SVG,
+    PDF,
+    PPTX
+}
 
 export default class ImageRenderer implements RenderContext {
 
@@ -19,7 +27,18 @@ export default class ImageRenderer implements RenderContext {
         this.scrollOffset = Vec2.fromXY(0, 0)
     }
 
-    renderToSVGString():string {
+    render(format:ImageFormat):Promise<ArrayBuffer> {
+        switch(format) {
+            case ImageFormat.SVG:
+                return Promise.resolve(this.renderSVG())
+            case ImageFormat.PPTX:
+                return this.renderPPTX()
+            case ImageFormat.PDF:
+                return this.renderPDF()
+        }
+    }
+
+    private renderSVGString():string {
 
         let vnode:VNode = this.renderToVNode()
 
@@ -31,9 +50,17 @@ export default class ImageRenderer implements RenderContext {
         ].join('\n')
     }
 
-    async renderToPPTX():Promise<ArrayBuffer> {
+    private renderSVG():ArrayBuffer {
+        return new TextEncoder().encode(this.renderSVGString())
+    }
 
-        let svg = this.renderToSVGString()
+    private renderPDF():Promise<ArrayBuffer> {
+        throw new Error('not implemented yet')
+    }
+
+    async renderPPTX():Promise<ArrayBuffer> {
+
+        let svg = this.renderSVG()
 
         let r = await fetch('https://api.biocad.io/util/svg2pptx', {
             method: 'POST',
