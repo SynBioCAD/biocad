@@ -81,6 +81,10 @@ export default class LabelDepiction extends Depiction {
         var transform:Matrix = Matrix.identity()
         transform = transform.translate(this.absoluteOffset.multiply(renderContext.layout.gridSize))
 
+        if(this.parent) {
+            throw new Error('?????')
+        }
+
         return svg('g', {
             transform: transform.toSVGString()
         }, [
