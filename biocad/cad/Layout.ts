@@ -546,6 +546,8 @@ export default class Layout extends Versioned {
 
     configurate(instructions:Array<Instruction>) {
 
+        console.log('Layout::configurate')
+
         configurateLayout(this, new InstructionSet(instructions))
 
     }

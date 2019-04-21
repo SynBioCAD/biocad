@@ -288,11 +288,18 @@ function horizontallyTileChildrenOfGroups(groups:Group[], padding:number) {
 
                 if(label) {
                     if(!label.offsetExplicit) {
+                        console.log('explicit child has non-explicit label; positioning at child pos')
                         label.offset = child.offset
+                    } else {
+                        console.log('explicit child has explicit label; do nothing')
                     }
+                } else {
+                    console.log('child has no label')
                 }
 
                 continue
+            } else {
+                console.log('child not explicitly positioned')
             }
 
             child.offset = offset

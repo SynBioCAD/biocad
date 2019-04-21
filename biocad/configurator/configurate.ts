@@ -83,8 +83,6 @@ export default function configurate(layout:Layout, instructions:InstructionSet) 
 
     const rootDepictions:Array<Depiction> = layout.depictions.filter((depiction:Depiction) => {
         return !depiction.parent
-    }).filter((depiction:Depiction) => {
-        return !depiction.offsetExplicit
     })
 
     let bpo = 1
