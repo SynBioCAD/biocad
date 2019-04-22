@@ -27,7 +27,6 @@ export default abstract class LayoutEditorView extends View {
 
     toolbar: View
 
-    layout: Layout
     layoutEditor: LayoutEditor
 
     leftSidebar:CircuitViewLeftSidebar

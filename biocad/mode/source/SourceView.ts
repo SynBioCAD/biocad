@@ -60,7 +60,7 @@ export default class SourceView extends View {
                 for(let mode of (this.app as BiocadApp).modes) {
                     if(mode instanceof CircuitViewMode) {
                         this.source = JSON.stringify(
-                            LayoutPOD.serialize((mode.view as CircuitView).layout),
+                            LayoutPOD.serialize((mode.view as CircuitView).layoutEditor.layout),
                             null,
                             2
                         )

@@ -20,16 +20,16 @@ export default class CircuitView extends LayoutEditorView {
 
         const app = this.app as BiocadApp
 
-        this.layout = new Layout(app.graph)
-        this.layout.syncAllDepictions(5)
-        this.layout.configurate([])
-        this.layout.size = this.layout.getBoundingSize().add(Vec2.fromXY(2, 2)).max(this.layout.size)
-        this.layout.startWatchingGraph(this.app)
+        let layout = new Layout(app.graph)
+        layout.syncAllDepictions(5)
+        layout.configurate([])
+        layout.size = layout.getBoundingSize().add(Vec2.fromXY(2, 2)).max(layout.size)
+        layout.startWatchingGraph(this.app)
 
         if(this.layoutEditor)
             this.layoutEditor.cleanup()
 
-        this.layoutEditor = new LayoutEditor(app, this.layout)
+        this.layoutEditor = new LayoutEditor(app, layout)
     
         this.layoutEditor.onSelectDepictions.listen((depictions:Depiction[]) => {
 
@@ -47,7 +47,7 @@ export default class CircuitView extends LayoutEditorView {
 
 
 
-        this.rightSidebar.debugDepictionTreeView.setLayout(this.layout)
+        this.rightSidebar.debugDepictionTreeView.setLayout(layout)
 
         this.layoutEditor.onProposeLayout.listen((layout:Layout) => {
             this.rightSidebar.debugDepictionTreeView.setLayout(layout)

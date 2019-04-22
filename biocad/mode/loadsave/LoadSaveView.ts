@@ -38,7 +38,7 @@ export default class LoadSaveView extends View {
             let circuitMode = app.getCircuitMode()
 
             if(circuitMode) {
-                this.layout = (circuitMode.view as CircuitView).layout.clone()
+                this.layout = (circuitMode.view as CircuitView).layoutEditor.layout.clone()
             } else {
                 this.layout = new Layout(app.graph)
                 this.layout.syncAllDepictions(5)
