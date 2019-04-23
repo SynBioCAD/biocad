@@ -122,16 +122,10 @@ export default function binPackStrategy(parent:Depiction|null, children:Depictio
 
         for(let child of group.depictions) {
 
+            // includes labels
+
             if(!child.offsetExplicit)
                 child.offset = groupOffset.add(child.offset)
-
-            let label = child.label
-
-            if(label) {
-                if (!label.offsetExplicit)
-                    label.offset = groupOffset.add(label.offset)
-            }
-
         }
 
     }
@@ -289,7 +283,7 @@ function horizontallyTileChildrenOfGroups(groups:Group[], padding:number) {
                 if(label) {
                     if(!label.offsetExplicit) {
                         console.log('explicit child has non-explicit label; positioning at child pos')
-                        label.offset = child.offset
+                        label.offset = child.offset.subtract(Vec2.fromXY(0, label.size.y))
                     } else {
                         console.log('explicit child has explicit label; do nothing')
                     }
@@ -297,26 +291,25 @@ function horizontallyTileChildrenOfGroups(groups:Group[], padding:number) {
                     console.log('child has no label')
                 }
 
-                continue
             } else {
-                console.log('child not explicitly positioned')
+
+                console.log('child not explicitly positioned; use tiling offset')
+
+                child.offset = offset
+
+                let maxW = child.size.x
+
+                if (label) {
+                    label.offset = offset
+                    child.offset = child.offset.add(Vec2.fromXY(0, label.size.y))
+                    maxW = Math.max(child.size.x, label.size.x)
+                    maxHeight = Math.max(maxHeight, child.size.y + label.size.y)
+                }
+
+                offset = offset.add(Vec2.fromXY(maxW + padding, 0))
             }
 
-            child.offset = offset
-
-            let maxW = child.size.x
-
-            maxHeight = Math.max(maxHeight, child.size.y)
-
-            if(label) {
-                label.offset = offset
-                child.offset = child.offset.add(Vec2.fromXY(0, label.size.y))
-                maxW = Math.max(child.size.x, label.size.x)
-                maxHeight = Math.max(maxHeight, child.size.y + label.size.y)
-            }
-
-
-            offset = offset.add(Vec2.fromXY(maxW + padding, 0))
+            maxHeight = Math.max(maxHeight, child.offset.y + child.size.y)
         }
 
         group.w = offset.x
