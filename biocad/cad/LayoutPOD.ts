@@ -40,7 +40,15 @@ export default class LayoutPOD {
         let uidToDepiction = new Map()
 
         for(let depictionPod of pod.depictions) {
-            if(depictionPod['class'] !== 'LabelDepiction')
+            if(depictionPod['class'] === 'LabelDepiction')
+                continue
+            if(depictionPod['class'] === 'InteractionDepiction')
+                continue
+            depictions.push(DepictionPOD.deserialize(layout, graph, undefined, depictionPod, uidToDepiction))
+        }
+
+        for(let depictionPod of pod.depictions) {
+            if(depictionPod['class'] === 'InteractionDepiction')
                 depictions.push(DepictionPOD.deserialize(layout, graph, undefined, depictionPod, uidToDepiction))
         }
 

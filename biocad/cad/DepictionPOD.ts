@@ -70,6 +70,12 @@ export default class DepictionPOD {
 
             type = 'InteractionDepiction'
 
+            additionalProps['sourceDepictions'] = depiction.sourceDepictions.map((d) => d.uid)
+            additionalProps['destDepictions'] = depiction.destDepictions.map((d) => d.uid)
+            additionalProps['otherDepictions'] = depiction.otherDepictions.map((d) => d.uid)
+            additionalProps['ambiguousDirection'] = depiction.ambiguousDirection
+            additionalProps['waypoints'] = depiction.waypoints.map((w) => w.toPOD())
+
         } else {
 
             assert(false)
@@ -167,6 +173,12 @@ export default class DepictionPOD {
             }
 
             depiction = new InteractionDepiction(layout, depictionOf as SXInteraction, chain as IdentifiedChain, parent, pod.uid)
+
+            ;(depiction as InteractionDepiction).sourceDepictions = pod.sourceDepictions.map((d) => uidToDepiction.get(d))
+            ;(depiction as InteractionDepiction).destDepictions = pod.destDepictions.map((d) => uidToDepiction.get(d))
+            ;(depiction as InteractionDepiction).otherDepictions = pod.otherDepictions.map((d) => uidToDepiction.get(d))
+            ;(depiction as InteractionDepiction).ambiguousDirection = pod.ambiguousDirection
+            ;(depiction as InteractionDepiction).waypoints = pod.waypoints.map((w) => Vec2.fromPOD(w))
 
         } else if(pod['class'] === 'FeatureLocationDepiction') {
 

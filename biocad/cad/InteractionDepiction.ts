@@ -21,7 +21,7 @@ export default class InteractionDepiction extends Depiction {
 
     ambiguousDirection:boolean
 
-    private waypoints:Vec2[]
+    waypoints:Vec2[]
 
 
     constructor(layout:Layout, depictionOf:SXInteraction, identifiedChain:IdentifiedChain, parent?:Depiction, uid?:number) {

@@ -5,6 +5,7 @@ import { SBOLXGraph, SXComponent, SXSubComponent } from "sbolgraph";
 import Layout from "biocad/cad/Layout";
 import DOp, { DOpResult } from "./DOp";
 import ComponentDepiction from "../ComponentDepiction";
+import BackboneDepiction from "../BackboneDepiction";
 
 // Allows children to be moved around inside their parent
 
@@ -30,6 +31,11 @@ export default class DOpMoveInParent extends DOp {
             
             if(!parent)
                 return null // I only allow dragging things with a parent
+
+            if(parent instanceof BackboneDepiction) {
+                // handled by other stuff
+                return null
+            }
 
             let relativeNewTopLeft = targetBBox.topLeft.subtract(parent.offset)
 
