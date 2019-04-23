@@ -30,7 +30,17 @@ export default class DOpMoveInWorkspace extends DOp {
             if(sourceDepiction.parent)
                 return null // I only allow dragging roots
 
-            sourceDepiction.absoluteOffset = targetBBox.topLeft
+            let label = sourceDepiction.label
+
+            if(label) {
+                let labelOffset = label.offset.subtract(sourceDepiction.offset)
+
+                sourceDepiction.absoluteOffset = targetBBox.topLeft
+                label.absoluteOffset = targetBBox.topLeft.add(labelOffset)
+
+            } else {
+                sourceDepiction.absoluteOffset = targetBBox.topLeft
+            }
 
             return { replacements: [] }
 
