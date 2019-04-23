@@ -147,9 +147,22 @@ export default class DOpEnterSibling extends DOp {
 
                 newD.offsetExplicit = sourceDepiction.offsetExplicit
 
-                if(sourceDepiction.parent)
-                    newD.offset = sourceDepiction.offset.add(sourceDepiction.parent.offset)
 
+
+                let newOffset = sourceDepiction.offset
+
+                // 1. move offset to parent space if there is a parent
+                // (otherwise it's already in root space)
+                if(sourceDepiction.parent)
+                    newOffset = newOffset.add(sourceDepiction.parent.offset)
+
+                // 2. move offset to sibling space
+                newOffset = newOffset.subtract(intersectingInNewLayout.offset)
+
+                newD.offset = newOffset
+
+                //// ^^^ the above is irrelevant if offsetExplicit false
+                // but super important if not
 
 
                 newLayout.configurate([])

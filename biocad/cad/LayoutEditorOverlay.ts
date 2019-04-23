@@ -36,6 +36,7 @@ import DOpEnterWorkspace from "./drag-op/DOpEnterWorkspace";
 import DOpEnterParent from "./drag-op/DOpEnterParent";
 import DOpEnterSibling from "./drag-op/DOpEnterSibling";
 import DOpMoveInBackbone from "./drag-op/DOpMoveInBackbone";
+import DOpMoveInParent from "./drag-op/DOpMoveInParent";
 import InteractionDepiction from "./InteractionDepiction";
 import DepictionRef from "./DepictionRefByUid";
 
@@ -90,6 +91,7 @@ export default class LayoutEditorOverlay extends View {
         this.dragOps.push(new DOpEnterParent())
         this.dragOps.push(new DOpEnterWorkspace())
         this.dragOps.push(new DOpMoveInWorkspace())
+        this.dragOps.push(new DOpMoveInParent())
 
         const app:BiocadApp = this.app as BiocadApp
         app.dropOverlay.addReceiver(this)
