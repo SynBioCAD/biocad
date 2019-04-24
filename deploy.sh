@@ -12,7 +12,7 @@ echo "biocad.io" >> deploy/CNAME
 cp -r dist/* deploy/
 
 mkdir deploy/css
-lessc less/biocad.less --include-path=node_modules/jfw/less > ./deploy/css/biocad.css
+lessc less/biocad.less --include-path=node_modules/@biocad/jfw/less > ./deploy/css/biocad.css
 
 cd deploy
 git add .
