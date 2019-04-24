@@ -46,6 +46,9 @@ class Group {
 
         for(let i of otherGroup.interactions)
             this.interactions.add(i)
+
+        this.numInteractionsAbove += otherGroup.numInteractionsAbove
+        this.numInteractionsBelow += otherGroup.numInteractionsBelow
     }
 
     interactionLayers:Map<number, LinearRangeSet>
@@ -122,10 +125,16 @@ export default function binPackStrategy(parent:Depiction|null, children:Depictio
 
         for(let child of group.depictions) {
 
-            // includes labels
+            console.log('groupOffset', groupOffset, 'for depiction', child.debugName)
 
-            if(!child.offsetExplicit)
+            if(!child.offsetExplicit) {
                 child.offset = groupOffset.add(child.offset)
+
+                if(child.label) {
+                    if(!child.label.offsetExplicit)
+                        child.label.offset = groupOffset.add(child.label.offset)
+                }
+            }
         }
 
     }
@@ -269,7 +278,9 @@ function horizontallyTileChildrenOfGroups(groups:Group[], padding:number) {
         // horizontal tile
         //
         var offset = Vec2.fromXY(0, 0)
+
         var maxHeight = -99999
+        var maxWidth = -99999
 
         for(let child of group.depictions) {
 
@@ -282,10 +293,10 @@ function horizontallyTileChildrenOfGroups(groups:Group[], padding:number) {
 
                 if(label) {
                     if(!label.offsetExplicit) {
-                        console.log('explicit child has non-explicit label; positioning at child pos')
+                        console.log('explicit child', child.debugName, 'has non-explicit label; positioning at child pos', child.offset)
                         label.offset = child.offset.subtract(Vec2.fromXY(0, label.size.y))
                     } else {
-                        console.log('explicit child has explicit label; do nothing')
+                        console.log('explicit child has explicit label; do nothing to label pos')
                     }
                 } else {
                     console.log('child has no label')
@@ -297,23 +308,37 @@ function horizontallyTileChildrenOfGroups(groups:Group[], padding:number) {
 
                 child.offset = offset
 
-                let maxW = child.size.x
+                let widthOfThisD = child.size.x
 
                 if (label) {
-                    label.offset = offset
-                    child.offset = child.offset.add(Vec2.fromXY(0, label.size.y))
-                    maxW = Math.max(child.size.x, label.size.x)
-                    maxHeight = Math.max(maxHeight, child.size.y + label.size.y)
+                    if(!label.offsetExplicit) {
+                        console.log('non-explicit child has non-explicit label; positioning at child offset', offset)
+                        label.offset = offset
+                        child.offset = child.offset.add(Vec2.fromXY(0, label.size.y))
+
+                        widthOfThisD = Math.max(widthOfThisD, label.size.x)
+
+                        maxWidth = Math.max(maxWidth, label.offset.x + label.size.x)
+                        maxHeight = Math.max(maxHeight, label.offset.y + label.size.y)
+
+                    } else {
+                        console.log('non-explicit child has explicit label; do nothing to label pos')
+                    }
+                } else {
+                    console.log('non-explicit child has no label')
                 }
 
-                offset = offset.add(Vec2.fromXY(maxW + padding, 0))
-            }
+                offset = offset.add(Vec2.fromXY(widthOfThisD + padding, 0))
 
-            maxHeight = Math.max(maxHeight, child.offset.y + child.size.y)
+                maxWidth = Math.max(maxWidth, child.offset.x + child.size.x)
+                maxHeight = Math.max(maxHeight, child.offset.y + child.size.y)
+            }
         }
 
-        group.w = offset.x
+        group.w = maxWidth
         group.h = maxHeight
+
+        console.log('final group w/h after tiling children', group.w, group.h)
 
         /*
         for(let child of group.depictions) {
