@@ -49,12 +49,16 @@ export default class PropertyEditorDebug extends PropertyEditor {
             )
         }
 
-        return h('div', {
-            style: {
-                'backgroundColor': 'white',
-                'color': 'black',
-            }
-        }, props)
+        return h('tr', [
+            h('td', {
+                colSpan: '2',
+                style: {
+                    'backgroundColor': 'white',
+                    'color': 'black',
+                    'font-size': '8pt'
+                }
+            }, props)
+        ])
 
     }
 }
