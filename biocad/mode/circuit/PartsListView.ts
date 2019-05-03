@@ -129,7 +129,7 @@ function mousedownPart(data:any) {
 
     const graph:SBOLXGraph = new SBOLXGraph([])
 
-    let component = graph.createComponent('http://dummyprefix/', part.shortName, '1')
+    let component = graph.createComponent(app.defaultPrefix, part.shortName, '1')
     component.addRole(part.soTerm)
     component.addType(part.typeUri)
 

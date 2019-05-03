@@ -95,7 +95,7 @@ async function clickImport(data) {
                 throw new Error('???')
             }
 
-            c.setSequence(newSeq)
+            c.addSequence(newSeq)
 
             view.onLoadedSequence()
         }
@@ -119,7 +119,7 @@ async function clickEdit(data) {
     let component = view.component
 
     let newSeq = graph.createSequence(component.uriPrefix, component.id + '_sequence', component.version)
-    component.setSequence(newSeq)
+    component.addSequence(newSeq)
 
     view.onLoadedSequence()
 

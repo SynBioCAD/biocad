@@ -39,8 +39,12 @@ export default class SBOLConverterValidator {
 
         console.dir(r)
 
-        if(r.errors && r.errors.length > 0) {
-            throw new Error(JSON.stringify(r.errors))
+        if(r.errors) {
+            for(let err of r.errors) {
+                if(err !== '') {
+                    throw new Error(JSON.stringify(r.errors))
+                }
+            }
         }
 
         return r['result']

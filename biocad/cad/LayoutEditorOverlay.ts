@@ -455,7 +455,7 @@ export default class LayoutEditorOverlay extends View {
 
             const droppable:SBOLDroppable = _droppable as SBOLDroppable
 
-            let newTopLevels = copySBOL(droppable.graph, app.graph, 'http://fooprefix/')
+            let newTopLevels = copySBOL(droppable.graph, app.graph, app.defaultPrefix)
 
             // TODO
             const newUri:string = newTopLevels[0].uri

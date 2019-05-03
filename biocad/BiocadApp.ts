@@ -31,6 +31,8 @@ import GlobalConfig from 'jfw/GlobalConfig';
 import PopupMessageDialog from './dialog/PopupMessageDialog';
 import { DialogOptions } from 'jfw/ui/dialog';
 
+import uuid = require('uuid')
+
 console.log('BiocadApp.ts')
 
 export default class BiocadApp extends App
@@ -52,6 +54,9 @@ export default class BiocadApp extends App
     onLoadGraph:Hook<SBOLXGraph> = new Hook<SBOLXGraph>()
 
 
+    defaultPrefix:string
+
+
     init():void {
 
         super.init()
@@ -71,15 +76,18 @@ export default class BiocadApp extends App
             console.dir(saved)
 
             this.graph = new SBOLXGraph(saved)
+            this.defaultPrefix = this.graph.uriPrefixes[0]
 
         } else {
 
             console.info('Nothing was saved :-(')
 
             this.graph = new SBOLXGraph([])
-
         }
 
+        if(!this.defaultPrefix) {
+            this.defaultPrefix = 'http://' + uuid.v4() + '/'
+        }
 
         if(GlobalConfig.get('biocad.feature.ui.modeswitcher')) {
             this.setTopbar(new BiocadTopbar(this))

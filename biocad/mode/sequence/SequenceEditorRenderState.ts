@@ -49,7 +49,10 @@ export default class SequenceEditorRenderState {
         assert(component)
 
         this.component = component
-        this.sequence = component.sequence
+
+        // TODO multiple sequence support
+        this.sequence = component.sequences[0]
+
         this.elements = this.sequence ? (this.sequence.elements || '') : ''
         this.charSize = sequenceEditor.charSize
         this.charsPerRow = sequenceEditor.charsPerRow

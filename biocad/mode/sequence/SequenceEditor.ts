@@ -81,7 +81,8 @@ export default class SequenceEditor extends View {
 
         this.component = component
         
-        this.sequence = component.sequence || null
+        // TODO multiple sequence support
+        this.sequence = component.sequences[0] || null
 
         if(this.sequence === null) {
             this.sequence = component.createSequence()
