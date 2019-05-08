@@ -89,7 +89,7 @@ export default class LayoutEditorContextMenu extends ContextMenu {
             if(dOf instanceof SXComponent) {
                 if(dOf.containedObjects.length > 0) {
 
-                    items.push(new ContextMenuItem('span.fa.fa-object-ungroup', 'Break apart Group', (pos:Vec2) => {
+                    items.push(new ContextMenuItem('span.fa.fa-object-ungroup', 'Ungroup', (pos:Vec2) => {
 
                         layoutEditor.deselectAll()
 
@@ -107,7 +107,7 @@ export default class LayoutEditorContextMenu extends ContextMenu {
 
                 if(def.containedObjects.length > 0) {
 
-                    items.push(new ContextMenuItem('span.fa.fa-object-ungroup', 'Break apart Group', (pos:Vec2) => {
+                    items.push(new ContextMenuItem('span.fa.fa-object-ungroup', 'Ungroup', (pos:Vec2) => {
 
                         layoutEditor.deselectAll()
 
