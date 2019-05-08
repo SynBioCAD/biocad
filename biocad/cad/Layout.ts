@@ -186,15 +186,22 @@ export default class Layout extends Versioned {
 
     removeDepiction(depiction:Depiction) {
 
+        let removedDepiction = false
+
         for(var i = 0; i < this.depictions.length; ++ i) {
 
             if(this.depictions[i] === depiction) {
 
                 this.depictions.splice(i, 1)
+                removedDepiction = true
                 break
 
             }
 
+        }
+
+        if(!removedDepiction) {
+            throw new Error('I tried to remove a depiction but it wasn\'t there')
         }
 
         let parent = depiction.parent
@@ -488,7 +495,9 @@ export default class Layout extends Versioned {
         // could do it at the time we change the parent?
         // or do a dry run and touch everything first before actually doing anything?
 
-        for(var i = this.depictions.length - 1; i >= 0; ) {
+        for(var i = this.depictions.length - 1; i >= 0
+            // removeDepiction might remove the last one
+            && i < this.depictions.length; ) {
 
             let d = this.depictions[i]
 

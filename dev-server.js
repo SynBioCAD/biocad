@@ -73,6 +73,10 @@ server.use(function(req, res, next) {
 
     console.log('req ' + req.path)
 
+    if(req.path === '/') {
+        res.redirect('/index.html')
+    }
+
     if(req.path === '/css/biocad.css') {
 
         console.log('> sending css')
