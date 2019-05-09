@@ -61,7 +61,7 @@ export default class LayoutEditorContextMenu extends ContextMenu {
 
             if(depiction.opacity === Opacity.Blackbox) {
 
-                items.push(new ContextMenuItem('span.fa.fa-eye', 'Show Subcomponents', (pos:Vec2) => {
+                items.push(new ContextMenuItem('span.fa.fa-eye', 'Show Inside', (pos:Vec2) => {
 
                     depiction.opacity = Opacity.Whitebox
                     depiction.touch()
@@ -74,7 +74,7 @@ export default class LayoutEditorContextMenu extends ContextMenu {
 
             } else {
 
-                items.push(new ContextMenuItem('span.fa.fa-eye-slash', 'Hide Subcomponents', (pos:Vec2) => {
+                items.push(new ContextMenuItem('span.fa.fa-eye-slash', 'Hide Inside', (pos:Vec2) => {
 
                     depiction.opacity = Opacity.Blackbox
                     depiction.touch()
