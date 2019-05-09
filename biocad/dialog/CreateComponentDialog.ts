@@ -68,7 +68,7 @@ export default class CreateComponentDialog extends Dialog {
 
         this.tempGraph = new SBOLXGraph([])
 
-        this.setTitle('Create Component')
+        this.setTitle('Create Part')
 
         this.setWidthAndCalcPosition('75%')
 
@@ -248,7 +248,7 @@ export default class CreateComponentDialog extends Dialog {
 
         const isSubcomponentOf = h('label', [
             h('input', { type: 'checkbox' }),
-            ' This is a subcomponent'
+            ' This is part of an existing part'
         ])
 
         return h('div.jfw-form-group', {
