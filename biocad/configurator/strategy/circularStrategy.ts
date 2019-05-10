@@ -16,7 +16,7 @@ export default function circularStrategy(parent:ComponentDepiction, children:Dep
         throw new Error('???')
 
     const component:SXComponent = parent.getDefinition()
-    const sequence:SXSequence|undefined = component.sequence
+    const sequence:SXSequence|undefined = component.sequences[0]
 
     const midPoint:Vec2 = parent.size.multiplyScalar(0.5)
     const radius:Vec2 = parent.size.multiplyScalar(0.5)

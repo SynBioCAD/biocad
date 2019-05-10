@@ -108,8 +108,8 @@ export default function backboneStrategy(_parent:Depiction, children:Depiction[]
 
     let backboneLength = 0
 
-    if (cd.sequence && cd.sequence.elements) {
-        backboneLength = cd.sequence.elements.length * layout.bpToGridScale
+    if (cd.sequences.length > 0 && cd.sequences[0].elements) {
+        backboneLength = cd.sequences[0].elements.length * layout.bpToGridScale
     }
 
 

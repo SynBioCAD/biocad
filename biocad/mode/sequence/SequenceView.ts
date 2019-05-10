@@ -32,7 +32,7 @@ export default class SequenceView extends View {
 
 
         let select = (component:SXComponent) => {
-            let seq = component.sequence
+            let seq = component.sequences[0]
 
             if(seq) {
                 this.sequenceEditor.setComponent(component)
