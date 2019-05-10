@@ -15,14 +15,14 @@ ngBioCAD can run in several different configurations.
 ## Local webapp
 
     yarn install
-    node dev-server.js webpack_browser.config.js
+    node dev-server.js ./webpack_browser.config.js
 
 Then load `http://localhost:9999/index.html` in a Web browser
 
 ## Local offline
 
     yarn install
-    node dev-server.js webpack_nodejs.config.js
+    node dev-server.js ./webpack_nodejs.config.js
     
 Then run `node bundle_cli.js testall` to test all examples in testfiles
 
