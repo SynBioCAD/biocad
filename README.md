@@ -14,7 +14,7 @@ ngBioCAD can run in several different configurations.
 
 ## Local webapp
 
-    yarn install
+    yarn
     node dev-server.js ./webpack_browser.config.js
 
 Then load `http://localhost:9999/index.html` in a Web browser
