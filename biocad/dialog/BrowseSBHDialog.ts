@@ -2,7 +2,7 @@
 import Dialog from "jfw/ui/dialog/Dialog";
 import BiocadApp from "biocad/BiocadApp";
 import { DialogOptions } from "jfw/ui/dialog";
-import { Repository } from "sbolgraph"
+import { Repository, SXComponent } from "sbolgraph"
 import { SearchQuery, SearchResult } from "sbolgraph"
 import { Specifiers, Types } from "bioterms";
 import { h, VNode } from "jfw/vdom";
@@ -13,7 +13,16 @@ import App from "jfw/App";
 
 export class BrowseSBHDialogOptions extends DialogOptions {
 
+    constructor() {
+
+        super()
+
+        this.query = new SearchQuery()
+        this.targetComponent = null
+    }
+
     query:SearchQuery
+    targetComponent:SXComponent|null
 
 }
 
@@ -25,11 +34,14 @@ export default class BrowseSBHDialog extends Dialog {
 
     query:SearchQuery
 
+    targetComponent:SXComponent|null
+
     constructor(app:BiocadApp, opts:BrowseSBHDialogOptions) {
 
         super(app, opts)
 
         this.query = opts.query
+        this.targetComponent = opts.targetComponent
 
         this.setTitle('Find Part')
 
@@ -122,6 +134,7 @@ function clickResult(data) {
     const inspectDialogOpts:InspectComponentDialogOptions = new InspectComponentDialogOptions()
     inspectDialogOpts.uri = uri
     inspectDialogOpts.parent = dialog
+    inspectDialogOpts.targetComponent = dialog.targetComponent
 
     const app:App = dialog.app
 

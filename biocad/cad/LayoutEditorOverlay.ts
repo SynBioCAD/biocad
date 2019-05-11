@@ -455,10 +455,14 @@ export default class LayoutEditorOverlay extends View {
 
             const droppable:SBOLDroppable = _droppable as SBOLDroppable
 
-            let newTopLevels = copySBOL(droppable.graph, app.graph, app.defaultPrefix)
+            let identityMap = copySBOL(droppable.graph, app.graph, app.defaultPrefix)
 
             // TODO
-            const newUri:string = newTopLevels[0].uri
+            const newUri = identityMap.get(droppable.graph.topLevels[0].uri)
+
+            if(!newUri) {
+                throw new Error('???')
+            }
 
             const layout:Layout = this.layoutEditor.layout
 

@@ -6,6 +6,7 @@ import { h } from 'jfw/vdom'
 import { click as clickEvent } from 'jfw/event'
 import fileDialog = require('file-dialog')
 import copySBOL from 'biocad/util/copySBOL';
+import BrowseSBHDialog, { BrowseSBHDialogOptions } from 'biocad/dialog/BrowseSBHDialog';
 
 export default class SequenceWizard extends View {
 
@@ -84,11 +85,15 @@ async function clickImport(data) {
 
             let c:SXComponent = view.component
 
-            let newObjs = copySBOL(g, c.graph, c.uriPrefix)
+            let identityMap = copySBOL(g, c.graph, c.uriPrefix)
 
-            let newSeq = newObjs[0]
+            let newSeqUri = identityMap.get(seq.uri)
 
-            console.dir(newObjs)
+            if(!newSeqUri) {
+                throw new Error('???')
+            }
+
+            let newSeq = c.graph.uriToFacade(newSeqUri)
 
             if(! (newSeq instanceof SXSequence)) {
                 // TODO: graceful error
@@ -108,6 +113,21 @@ async function clickImport(data) {
 }
 
 async function clickSearch(data) {
+
+    let view:SequenceWizard = data.view
+
+    let app = view.app as BiocadApp
+    let graph = app.graph
+    let component = view.component
+ 
+    let opts = new BrowseSBHDialogOptions()
+    opts.modal = true
+    opts.targetComponent = component
+
+    let dialog = new BrowseSBHDialog(app, opts)
+
+    app.openDialog(dialog)
+
 }
 
 async function clickEdit(data) {

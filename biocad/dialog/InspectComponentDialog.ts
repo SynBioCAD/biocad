@@ -2,7 +2,7 @@
 import TabbedDialog, { Tab } from "jfw/ui/dialog/TabbedDialog";
 import { DialogOptions } from "jfw/ui/dialog";
 import BiocadApp from "biocad/BiocadApp";
-import { SBOLXGraph } from "sbolgraph";
+import { SBOLXGraph, SXIdentified } from "sbolgraph";
 import { VNode, h } from "jfw/vdom";
 import { SXComponent } from "sbolgraph"
 import LayoutThumbnail from "biocad/cad/LayoutThumbnail";
@@ -13,10 +13,13 @@ import InspectComponentThumbnailView from "biocad/dialog/InspectComponentThumbna
 import SequenceEditor from "biocad/mode/sequence/SequenceEditor";
 import { click as clickEvent } from 'jfw/event'
 import SBOLDroppable from "biocad/droppable/SBOLDroppable";
+import copySBOL from "biocad/util/copySBOL";
 
 export class InspectComponentDialogOptions extends DialogOptions {
 
     uri:string
+
+    targetComponent:SXComponent|null
 
 }
 
@@ -24,10 +27,14 @@ export default class InspectComponentDialog extends TabbedDialog {
 
     graph:SBOLXGraph
     component:SXComponent
+    targetComponent:SXComponent|null
 
     constructor(app:BiocadApp, opts:InspectComponentDialogOptions) {
 
         super(app, opts)
+
+
+        this.targetComponent = opts.targetComponent
 
         this.setWidthAndCalcPosition('75%')
 
@@ -57,6 +64,13 @@ export default class InspectComponentDialog extends TabbedDialog {
 
     getContentView():VNode {
 
+        let buttonChildren:VNode[] = []
+
+        buttonChildren.push(
+            h('span.fa.fa-plus'),
+            ' Use this Part'
+        )
+
         return h('div', [
             h('button.jfw-button.jfw-big-button.jfw-green-button', {
                 style: {
@@ -64,10 +78,7 @@ export default class InspectComponentDialog extends TabbedDialog {
                     right: '16px'
                 },
                 'ev-click': clickEvent(clickInsert, { dialog: this })
-            }, [
-                h('span.fa.fa-plus'),
-                ' Add to Design'
-            ]),
+            }, buttonChildren),
 
             super.getContentView()
         ])
@@ -84,10 +95,35 @@ function clickInsert(data) {
 
     const app:BiocadApp = dialog.app as BiocadApp
 
-    const droppable:SBOLDroppable = new SBOLDroppable(app, component.graph, [ component.uri ])
+    if(dialog.targetComponent) {
 
-    app.dropOverlay.startDropping(droppable)
+        let identityMap = 
+            copySBOL(component.graph, dialog.targetComponent.graph, dialog.targetComponent.uriPrefix)
 
+        let newComponentUri = identityMap.get(component.uri)
+
+        if(!newComponentUri) {
+            console.dir(identityMap)
+            throw new Error(component.uri + ' not found in identityMap')
+        }
+
+        let newComponent = dialog.targetComponent.graph.uriToFacade(newComponentUri)
+
+        if(! (newComponent instanceof SXComponent)) {
+            throw new Error('???')
+        }
+
+        for(let instance of dialog.targetComponent.graph.getInstancesOfComponent(dialog.targetComponent)) {
+            instance.instanceOf = newComponent
+        }
+
+        dialog.targetComponent.destroy()
+
+    } else {
+        const droppable:SBOLDroppable = new SBOLDroppable(app, component.graph, [ component.uri ])
+
+        app.dropOverlay.startDropping(droppable)
+    }
+    
     app.closeDialogAndParents(dialog)
-
 }
