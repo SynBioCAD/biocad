@@ -383,6 +383,8 @@ export default class Layout extends Versioned {
 
         const graph:SBOLXGraph = this.graph
 
+
+
         /* Create depictions for anything that doesn't already have one
          */
 
@@ -513,9 +515,9 @@ export default class Layout extends Versioned {
 
                 console.log(d.debugName + ' is still here')
 
-                -- i
-
             }
+
+            -- i
 
         }
 
