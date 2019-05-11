@@ -124,6 +124,10 @@ async function clickSearch(data) {
     opts.modal = true
     opts.targetComponent = component
 
+    for(let role of component.roles) {
+        opts.query.addRole(role)
+    }
+
     let dialog = new BrowseSBHDialog(app, opts)
 
     app.openDialog(dialog)
