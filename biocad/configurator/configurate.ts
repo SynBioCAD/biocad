@@ -22,6 +22,7 @@ import ReplaceInstruction from 'biocad/cad/layout-instruction/ReplaceInstruction
 
 import binPackStrategy from './strategy/binPackStrategy'
 import MarginInstruction from '../cad/layout-instruction/MarginInstruction';
+import WhitelistInstruction from 'biocad/cad/layout-instruction/WhitelistInstruction';
 
 export default function configurate(layout:Layout, instructions:InstructionSet) {
 
@@ -29,6 +30,8 @@ export default function configurate(layout:Layout, instructions:InstructionSet) 
     let marginR = 1
     let marginT = 1
     let marginB = 1
+
+    let whitelistUIDs:Set<number>|undefined
 
     for(let instruction of instructions.instructions) {
 
@@ -63,9 +66,18 @@ export default function configurate(layout:Layout, instructions:InstructionSet) 
 
         }
 
+        if(instruction instanceof WhitelistInstruction) {
+            whitelistUIDs = instruction.whitelistUIDs
+        }
     }
 
     for(let depiction of layout.depictions) {
+
+        if(whitelistUIDs) {
+            if(!whitelistUIDs.has(depiction.uid)) {
+                continue
+            }
+        }
 
         if(depiction instanceof ComponentDepiction) {
             configurateComponent(depiction, instructions)

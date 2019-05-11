@@ -39,6 +39,7 @@ import CircularBackboneDepiction from 'biocad/cad/CircularBackboneDepiction';
 import Instruction from 'biocad/cad/layout-instruction/Instruction';
 import InstructionSet from 'biocad/cad/layout-instruction/InstructionSet';
 import IdentifiedChain from '../IdentifiedChain';
+import WhitelistInstruction from './layout-instruction/WhitelistInstruction';
 
 
 export default class Layout extends Versioned {
@@ -289,8 +290,8 @@ export default class Layout extends Versioned {
          * Any depictions that still have the old version attached to them don't need
          * to be configurated, because they and nothing under them have changed.
          * 
-         * So, start with the lowest-depth (most-nested) objects and configurate them
-         * working outwards, but skip any where the version is different from the
+         * So,
+         * skip any where the version is different from the
          * layout version.
          */
 
@@ -301,34 +302,16 @@ export default class Layout extends Versioned {
         // ideally would just sync the one that changed, but never mind
         //
         this.syncAllDepictions(5)
+
+        let toConfigurateUIDs:Set<number> = new Set<number>()
         
         for(let depiction of this.depictions) {
-
-            if(depiction.isSameVersionAs(this)) {
-
-                console.log('layout onVersionChanged: reconfigurating ' + depiction.debugName)
-
-                if(depiction instanceof ComponentDepiction) {
-
-                    configurateComponent(depiction as ComponentDepiction, instructions)
-
-                } else if(depiction instanceof BackboneDepiction) {
-
-                    configurateBackbone(depiction as BackboneDepiction, instructions)
-
-                } else if(depiction instanceof FeatureLocationDepiction) {
-
-                    configurateFeatureLocation(depiction as FeatureLocationDepiction, instructions)
-
-                } else if(depiction instanceof LabelDepiction) {
-
-                    configurateLabel(depiction as LabelDepiction, instructions)
-
-                }
-
-            } 
-
+            toConfigurateUIDs.add(depiction.uid)
         }
+
+        this.configurate([
+            new WhitelistInstruction(toConfigurateUIDs)
+        ])
 
         if(this.versionChangedCallback)
             this.versionChangedCallback()
