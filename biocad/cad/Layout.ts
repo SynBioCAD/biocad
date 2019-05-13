@@ -358,7 +358,7 @@ export default class Layout extends Versioned {
 
     syncDepictions(detailLevel:number, URIs:string[]): void {
 
-        console.time('syncAllDepictions')
+        console.log('syncDepictions', URIs.join(', '))
 
         ++ Layout.nextStamp
 
@@ -486,17 +486,17 @@ export default class Layout extends Versioned {
 
             let d = this.depictions[i]
 
-            console.log('checking ' + d.debugName + ' depth' + d.calcDepth())
+            //console.log('checking ' + d.debugName + ' depth' + d.calcDepth())
 
             if(d.stamp !== Layout.nextStamp) {
 
-                console.log(d.debugName + ' is gone')
+                console.log(`syncDepictions ${i}/${this.depictions.length}: `, d.debugName + ' is gone')
 
                 this.removeDepiction(d)
 
             } else {
 
-                console.log(d.debugName + ' is still here')
+                console.log(`syncDepictions ${i}/${this.depictions.length}: `, d.debugName + ' is still here')
 
             }
 
