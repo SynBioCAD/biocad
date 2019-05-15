@@ -217,6 +217,11 @@ export default function backboneStrategy(_parent:Depiction, children:Depiction[]
     for (let element of backboneElements) {
         if(! (element instanceof LocationableDepiction))
             continue
+
+        // unless already positioned bc of explicit offset
+        if(childToPositioned.has(element))
+            continue
+
         let location = element.location
         if (location instanceof SXRange && location.isFixed()) {
             if (!location.start) {
@@ -334,7 +339,7 @@ export default function backboneStrategy(_parent:Depiction, children:Depiction[]
 
 
             if (restriction === Specifiers.SBOLX.SequenceConstraint.Precedes) {
-                move(backboneElements, subjectIdx, objIdx - 1)
+                move(backboneElements, subjectIdx, objIdx)
             }
         }
         if (!doneSomething)
