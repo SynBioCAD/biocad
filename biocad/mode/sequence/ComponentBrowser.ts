@@ -6,10 +6,15 @@ import BiocadApp from "biocad/BiocadApp";
 import { SXComponent, SBOLXGraph } from "sbolgraph";
 import { TreeNode } from 'jfw/ui/TreeView';
 
+import { Hook } from 'jfw/util'
+
 export default class ComponentBrowser extends View {
 
     filter:(SXComponent)=>boolean
     tree:TreeView
+
+    onCreate:Hook<string>
+    onSelect:Hook<string>
 
     constructor(app, filter) {
 
@@ -19,6 +24,14 @@ export default class ComponentBrowser extends View {
 
         this.tree = new TreeView(app)
         this.tree.setEditable(true)
+
+        this.tree.onSelect.listen((uri:string) => {
+            fn(new SXComponent(app.graph, uri))
+        })
+
+        this.tree.onCreate.listen((uri:string) => {
+            this.onCreate.fire(uri)
+        })
 
 
         const fetchTreeNodes = ():TreeNode[] => {
@@ -61,22 +74,6 @@ export default class ComponentBrowser extends View {
             this.tree.render()
 
         ])
-    }
-
-
-    onSelect(fn) {
-
-        const app = this.app as BiocadApp
-
-        this.tree.onSelect((uri:string) => {
-
-            fn(new SXComponent(app.graph, uri))
-        
-        })
-    }
-
-    onCreate(fn) {
-        this.tree.onCreate(fn)
     }
 
     select(c:SXComponent) {

@@ -12,7 +12,10 @@ export default class SequenceWizard extends View {
 
     component:SXComponent
 
-    onLoadedSequence:()=>void
+    // sometimes a different component because we might swap it with
+    // one from a registry
+    //
+    onLoadedPart:(component:SXComponent)=>void
 
     constructor(app:BiocadApp, component:SXComponent) {
 
@@ -102,7 +105,7 @@ async function clickImport(data) {
 
             c.addSequence(newSeq)
 
-            view.onLoadedSequence()
+            view.onLoadedPart(c)
         }
 
         reader.readAsText(file[0])
@@ -132,6 +135,9 @@ async function clickSearch(data) {
 
     app.openDialog(dialog)
 
+    dialog.onUsePart = (c:SXComponent) => {
+        view.onLoadedPart(c)
+    }
 }
 
 async function clickEdit(data) {
@@ -145,7 +151,7 @@ async function clickEdit(data) {
     let newSeq = graph.createSequence(component.uriPrefix, component.id + '_sequence', component.version)
     component.addSequence(newSeq)
 
-    view.onLoadedSequence()
+    view.onLoadedPart(component)
 
 }
 

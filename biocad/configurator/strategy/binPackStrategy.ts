@@ -10,6 +10,8 @@ import ComponentDepiction from "biocad/cad/ComponentDepiction";
 import BackboneDepiction from '../../cad/BackboneDepiction';
 import { reverse } from 'dns';
 import LabelDepiction from 'biocad/cad/LabelDepiction';
+import { SXInteraction } from 'sbolgraph';
+import { Specifiers } from 'bioterms';
 
 
 const INTERACTION_HEIGHT:number = 1
@@ -66,11 +68,11 @@ export default function binPackStrategy(parent:Depiction|null, children:Depictio
         console.log('Group has ' + group.depictions.size + ' depictions and ' + group.interactions.size + ' interactions')
     }
 
-    horizontallyTileChildrenOfGroups(groups, padding)
+    horizontallyTileChildrenOfGroups(parent, groups, padding)
 
     const packer = new GrowingPacker()
 
-    let interactionToLayer = createABInteractionLayers(groups)
+    let interactionToLayer = createABInteractionLayers(parent, groups)
 
     // padding
     for(let group of groups) {
@@ -139,7 +141,7 @@ export default function binPackStrategy(parent:Depiction|null, children:Depictio
 
     }
 
-    routeABInteractions(groups, interactionToLayer, padding)
+    routeABInteractions(parent, groups, interactionToLayer, padding)
 
 
     if(parent) {
@@ -271,7 +273,7 @@ function createInteractionGroups(parent:Depiction|null, children:Depiction[]):Gr
     return Array.from(groups)
 }
 
-function horizontallyTileChildrenOfGroups(groups:Group[], padding:number) {
+function horizontallyTileChildrenOfGroups(parent:Depiction|null, groups:Group[], padding:number) {
 
     for(let group of groups) {
 
@@ -356,7 +358,7 @@ function horizontallyTileChildrenOfGroups(groups:Group[], padding:number) {
 
 // Make space for the layers of A->B interactions in each group
 //
-function createABInteractionLayers(groups:Group[]):Map<InteractionDepiction, number> {
+function createABInteractionLayers(parent:Depiction|null, groups:Group[]):Map<InteractionDepiction, number> {
 
     let takenPoints:Map<Depiction, LinearRangeSet> = new Map() // for horizPoints
 
@@ -373,21 +375,27 @@ function createABInteractionLayers(groups:Group[]):Map<InteractionDepiction, num
                 interaction.destDepictions.length === 1 &&
                 interaction.otherDepictions.length === 0
             )) {
+                console.log('skipping interaction ' + interaction.debugName + ' because I only process simple A->B interactions')
+                console.log('this one had ' + interaction.sourceDepictions.length + ' source depiction(s), ' +
+                                    interaction.destDepictions.length + ' dest depiction(s) and '  +
+                                    interaction.otherDepictions.length + ' other depiction(s)')
                 continue
             }
 
-            let { a, b } = horizPoints(takenPoints, interaction.sourceDepictions[0], interaction.destDepictions[0])
+            let { xA, xB } = horizPoints(parent, takenPoints, interaction.sourceDepictions[0], interaction.destDepictions[0])
             
 
             // TODO the -1 and a +1 are a hack because we don't have intersectsOrTouchesRange
-            const range:LinearRange = new LinearRange(a.x - 1, b.x + 1)
+            const range:LinearRange = new LinearRange(xA - 1, xB + 1)
 
 
             var layerDir:number
 
             if(shouldReverse(interaction)) {
+                console.log('placing interaction ' + interaction.debugName + ' below')
                 layerDir = 1
             } else {
+                console.log('placing interaction ' + interaction.debugName + ' above')
                 layerDir = -1
             }
 
@@ -444,6 +452,14 @@ function createABInteractionLayers(groups:Group[]):Map<InteractionDepiction, num
 
     function shouldReverse(interaction:InteractionDepiction) {
 
+        let dOf = interaction.depictionOf
+        
+        if(dOf instanceof SXInteraction) {
+            if(! (dOf.hasType(Specifiers.SBO.GeneticProduction))) {
+                return true
+            }
+        }
+
         for(let participant of interaction.getAllIncludedDepictions()) {
 
             if(participant instanceof ComponentDepiction) {
@@ -458,7 +474,7 @@ function createABInteractionLayers(groups:Group[]):Map<InteractionDepiction, num
     }
 }
 
-function routeABInteractions(groups:Group[], interactionToLayer:Map<InteractionDepiction,number>, padding:number) {
+function routeABInteractions(parent:Depiction|null, groups:Group[], interactionToLayer:Map<InteractionDepiction,number>, padding:number) {
 
     let takenPoints:Map<Depiction, LinearRangeSet> = new Map() // for horizPoints
 
@@ -484,31 +500,41 @@ function routeABInteractions(groups:Group[], interactionToLayer:Map<InteractionD
                 throw new Error('???')
             }
 
-            let { a, b } = horizPoints(takenPoints, interaction.sourceDepictions[0], interaction.destDepictions[0])
+            let a = interaction.sourceDepictions[0]
+            let b = interaction.destDepictions[0]
+
+            let { xA, xB } = horizPoints(parent, takenPoints, a, b)
 
             if(layerN < 0) {
 
+                let yA = a.getBoundingBoxWithLabelRelativeTo(parent).topLeft.y - INTERACTION_OFFSET
+                let yB = b.getBoundingBoxWithLabelRelativeTo(parent).topLeft.y - INTERACTION_OFFSET
+
                 let yTop = Math.min(
-                    a.y - INTERACTION_HEIGHT * (- layerN),
-                    b.y - INTERACTION_HEIGHT * (- layerN)
+                    yA - INTERACTION_HEIGHT * (- layerN),
+                    yB - INTERACTION_HEIGHT * (- layerN)
                 )
 
                 interaction.setWaypoints([
-                    Vec2.fromXY(a.x, a.y),
-                    Vec2.fromXY(a.x, yTop),
-                    Vec2.fromXY(b.x, yTop),
-                    Vec2.fromXY(b.x, b.y),
+                    Vec2.fromXY(xA, yA),
+                    Vec2.fromXY(xA, yTop),
+                    Vec2.fromXY(xB, yTop),
+                    Vec2.fromXY(xB, yB),
                 ])
 
             } else {
 
-                let y = group.h - INTERACTION_OFFSET - (group.numInteractionsBelow * INTERACTION_HEIGHT)
+
+                let yA = a.getBoundingBoxWithLabelRelativeTo(parent).bottomRight.y + INTERACTION_OFFSET
+                let yB = b.getBoundingBoxWithLabelRelativeTo(parent).bottomRight.y + INTERACTION_OFFSET
+
+                let yBottom = group.h - INTERACTION_OFFSET - (group.numInteractionsBelow * INTERACTION_HEIGHT) + (layerN * INTERACTION_HEIGHT)
 
                 interaction.setWaypoints([
-                    Vec2.fromXY(a.x, y),
-                    Vec2.fromXY(a.x, y + INTERACTION_HEIGHT * layerN),
-                    Vec2.fromXY(b.x, y + INTERACTION_HEIGHT * layerN),
-                    Vec2.fromXY(b.x, y),
+                    Vec2.fromXY(xA, yA),
+                    Vec2.fromXY(xA, yBottom),
+                    Vec2.fromXY(xB, yBottom),
+                    Vec2.fromXY(xB, yB)
                 ])
 
 
@@ -518,7 +544,7 @@ function routeABInteractions(groups:Group[], interactionToLayer:Map<InteractionD
 
 }
 
-function horizPoints(takenPoints:Map<Depiction, LinearRangeSet>, a:Depiction, b:Depiction) {
+function horizPoints(parent:Depiction|null, takenPoints:Map<Depiction, LinearRangeSet>, a:Depiction, b:Depiction) {
 
     let takenA = takenPoints.get(a)
 
@@ -534,15 +560,8 @@ function horizPoints(takenPoints:Map<Depiction, LinearRangeSet>, a:Depiction, b:
         takenPoints.set(b, takenA)
     }
 
-    let bboxA = a.boundingBoxWithLabel
-    let bboxB = b.boundingBoxWithLabel
-
-    if(a.parent instanceof BackboneDepiction) {
-        bboxA.topLeft = bboxA.topLeft.add(a.parent.offset)
-    }
-    if(b.parent instanceof BackboneDepiction) {
-        bboxB.topLeft = bboxB.topLeft.add(b.parent.offset)
-    }
+    let bboxA = a.getBoundingBoxWithLabelRelativeTo(parent)
+    let bboxB = b.getBoundingBoxWithLabelRelativeTo(parent)
 
     var xA, xB
 
@@ -562,9 +581,11 @@ function horizPoints(takenPoints:Map<Depiction, LinearRangeSet>, a:Depiction, b:
             xB = bboxB.topLeft.x + (bboxB.width() / 4) * 3
         }
 
+        /*
         while(takenA.intersectsRange(new LinearRange(xA - 0.5, xA + 0.5))) {
             ++ xA
         }
+        */
 
         while(takenB.intersectsRange(new LinearRange(xB - 0.5, xB + 0.5))) {
             -- xB
@@ -586,9 +607,11 @@ function horizPoints(takenPoints:Map<Depiction, LinearRangeSet>, a:Depiction, b:
             xB = bboxB.topLeft.x + (bboxB.width() / 4) * 1
         }
 
+        /*
         while(takenA.intersectsRange(new LinearRange(xA - 0.5, xA + 0.5))) {
             -- xA
         }
+        */
 
         while(takenB.intersectsRange(new LinearRange(xB - 0.5, xB + 0.5))) {
             ++ xB
@@ -598,11 +621,6 @@ function horizPoints(takenPoints:Map<Depiction, LinearRangeSet>, a:Depiction, b:
     takenA.push(new LinearRange(xA - 0.5, xA + 0.5))
     takenB.push(new LinearRange(xB - 0.5, xB + 0.5))
 
-    var yA = bboxA.topLeft.y - INTERACTION_OFFSET
-    var yB = bboxB.topLeft.y - INTERACTION_OFFSET
-    //var yA = bboxA.topLeft.y
-    //var yB = bboxB.topLeft.y
-
-    return { a: Vec2.fromXY(xA, yA), b: Vec2.fromXY(xB, yB) }
+    return { xA, xB }
 }
 

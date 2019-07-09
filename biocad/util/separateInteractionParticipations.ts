@@ -12,14 +12,16 @@ let sourceRoles = [
     Specifiers.SBO.Inhibitor,
     Specifiers.SBO.Stimulator,
     Specifiers.SBO.Modifier,
-    Prefixes.sbo + 'SBO:0000645' // template
+    Prefixes.sbo + 'SBO:0000645', // template
+    Specifiers.SBO.Control
 ]
 
 let destRoles = [
     Specifiers.SBO.Inhibited,
     Specifiers.SBO.Stimulated,
     Specifiers.SBO.Promoter,
-    Specifiers.SBO.Product
+    Specifiers.SBO.Product,
+    Prefixes.sbo + 'SBO:0000644', // modified
 ]
 
 export default function separateInteractionParticipations(interaction:SXInteraction):SeparateResult {
@@ -64,6 +66,7 @@ export default function separateInteractionParticipations(interaction:SXInteract
         if(done)
             continue
 
+        console.warn('unknown participation role: ' + roles)
         result.others.push(participation)
     }
 

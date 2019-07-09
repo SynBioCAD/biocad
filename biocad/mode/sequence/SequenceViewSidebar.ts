@@ -6,10 +6,12 @@ import ComponentBrowser from './ComponentBrowser'
 import { Specifiers } from 'bioterms'
 import { SXComponent } from "sbolgraph";
 
+import { Hook } from 'jfw'
+
 export default class SequenceViewSidebar extends Sidebar {
 
-    _onCreate: (type:string, uri:string) => void;
-    _onSelect: (component:SXComponent) => void;
+    onCreate: Hook<{ type:string, uri:string }>
+    onSelect: Hook<SXComponent>
 
     browser:ComponentBrowser
 
@@ -17,19 +19,19 @@ export default class SequenceViewSidebar extends Sidebar {
 
         super(app)
 
-        this._onSelect = () => {}
-        this._onCreate = () => {}
+        this.onCreate = new Hook()
+        this.onSelect = new Hook()
 
-        const connectBrowser = (browser) => {
+        const connectBrowser = (browser:ComponentBrowser) => {
 
             browser.onSelect((component:SXComponent) => {
                 console.log('sequenceViewSidebar: selected ' + component.displayName)
-                this._onSelect(component)
+                this.onSelect.fire(component)
                 app.update()
             })
 
             browser.onCreate((uri) => {
-                this._onCreate(browser.type, uri)
+                this.onCreate.fire({ type: browser.type, uri })
                 app.update()
             })
 
@@ -55,16 +57,5 @@ export default class SequenceViewSidebar extends Sidebar {
         this.browser.select(c)
     }
 
-    onSelect(onSelect) {
-
-        this._onSelect = onSelect
-
-    }
-
-    onCreate(onCreate) {
-
-        this._onCreate = onCreate
-
-    }
 }
 

@@ -39,8 +39,8 @@ export default class SequenceView extends View {
                 this.sequenceWizard = null
             } else {
                 this.sequenceWizard = new SequenceWizard(app, component)
-                this.sequenceWizard.onLoadedSequence = () => {
-                    this.sequenceEditor.setComponent(component)
+                this.sequenceWizard.onLoadedPart = (c:SXComponent) => {
+                    this.sequenceEditor.setComponent(c)
                     this.sequenceWizard = null
                 }
             }

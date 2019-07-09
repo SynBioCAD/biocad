@@ -186,6 +186,24 @@ export default abstract class Depiction extends Versioned {
 
     }
 
+    getOffsetRelativeTo(ancestor:Depiction|null) {
+
+        if(ancestor === null) {
+            return this.absoluteOffset
+        }
+
+        let offset = this.offset
+
+        for(let p = this.parent; p !== ancestor; p = p.parent) {
+            if(!p) {
+                throw new Error('offsetRelativeTo ran out of parents before it found the ancestor')
+            }
+            offset = offset.add(p.offset)
+        }
+
+        return offset
+    }
+
     calcDepth():number {
 
         ///console.log('calcDepth ' + this.uid + ' ' + this.constructor.name + ' ' + (this.depictionOf ? this.depictionOf.uri : '?'))
@@ -210,6 +228,11 @@ export default abstract class Depiction extends Versioned {
         return new Rect(absOffset, absOffset.add(this.size))
     }
 
+    getBoundingBoxRelativeTo(ancestor:Depiction|null) {
+        let offset = this.getOffsetRelativeTo(ancestor)
+        return new Rect(offset, offset.add(this.size))
+    }
+
     get boundingBoxWithLabel():Rect {
         let r = this.boundingBox
         if(this.label) {
@@ -222,6 +245,17 @@ export default abstract class Depiction extends Versioned {
         let r = this.absoluteBoundingBox
         if(this.label) {
             r = r.surround(this.label.absoluteBoundingBox)
+        }
+        return r
+    }
+
+    getBoundingBoxWithLabelRelativeTo(ancestor:Depiction|null) {
+        if(ancestor === null) {
+            return this.absoluteBoundingBoxWithLabel
+        }
+        let r = this.getBoundingBoxRelativeTo(ancestor)
+        if(this.label) {
+            r = r.surround(this.label.getBoundingBoxRelativeTo(ancestor))
         }
         return r
     }

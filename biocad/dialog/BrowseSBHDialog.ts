@@ -36,6 +36,8 @@ export default class BrowseSBHDialog extends Dialog {
 
     targetComponent:SXComponent|null
 
+    onUsePart:(part:SXComponent)=>void
+
     constructor(app:BiocadApp, opts:BrowseSBHDialogOptions) {
 
         super(app, opts)
@@ -139,6 +141,9 @@ function clickResult(data) {
     const app:App = dialog.app
 
     const inspectDialog:InspectComponentDialog = new InspectComponentDialog(app as BiocadApp, inspectDialogOpts)
+
+    if(dialog.onUsePart)
+        inspectDialog.onUsePart = dialog.onUsePart
 
     app.openDialog(inspectDialog)
 

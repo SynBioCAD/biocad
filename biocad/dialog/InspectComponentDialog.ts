@@ -29,6 +29,8 @@ export default class InspectComponentDialog extends TabbedDialog {
     component:SXComponent
     targetComponent:SXComponent|null
 
+    onUsePart:(part:SXComponent)=>void
+
     constructor(app:BiocadApp, opts:InspectComponentDialogOptions) {
 
         super(app, opts)
@@ -66,23 +68,22 @@ export default class InspectComponentDialog extends TabbedDialog {
 
         let buttonChildren:VNode[] = []
 
-        buttonChildren.push(
-            h('span.fa.fa-plus'),
-            ' Use this Part'
-        )
+        if(this.onUsePart) {
+            buttonChildren.push(
+                h('button.jfw-button.jfw-big-button.jfw-green-button', {
+                    style: {
+                        position: 'absolute',
+                        right: '16px'
+                    },
+                    'ev-click': clickEvent(clickInsert, { dialog: this })
+                }, [
+                    h('span.fa.fa-plus'),
+                    ' Use this Part'
+                ])
+            )
+        }
 
-        return h('div', [
-            h('button.jfw-button.jfw-big-button.jfw-green-button', {
-                style: {
-                    position: 'absolute',
-                    right: '16px'
-                },
-                'ev-click': clickEvent(clickInsert, { dialog: this })
-            }, buttonChildren),
-
-            super.getContentView()
-        ])
-
+        return h('div', buttonChildren.concat([ super.getContentView() ]))
     }
 
 }
@@ -124,6 +125,10 @@ function clickInsert(data) {
 
         app.dropOverlay.startDropping(droppable)
     }
-    
+
+    if(dialog.onUsePart) {
+        dialog.onUsePart(component)
+    }
+
     app.closeDialogAndParents(dialog)
 }
