@@ -55,6 +55,7 @@ export default class ScrollbarWidget {
 
         if(this.viewportSize.x === 0 && this.viewportSize.y === 0) {
             setTimeout(() => this.app.update(), 0)
+            console.log('viewport had no size, so scheduled an app.update instead of rendering scrollbars')
             return h('div', '')
         }
 
@@ -150,12 +151,18 @@ export default class ScrollbarWidget {
         //'<em>after</em> update.'
 
         if(this.renderContext !== prev.renderContext) {
+            console.log('ScrollbarWidget new renderContext; reinit')
             return this.init()
+        } else {
+            console.log('ScrollbarWidget update, but same renderContext :-)')
         }
 
         this.renderContext = prev.renderContext
         this._mainLoop = prev._mainLoop
         this.isFirstRender = prev.isFirstRender
+        this.viewportSize = prev.viewportSize
+
+        console.log('this.viewportSize copied from prev', this.viewportSize)
 
         const parent:Node|null = elem.parentNode
 
