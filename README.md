@@ -1,4 +1,4 @@
-ngBioCAD is an open-source, Web-based computer aided design (CAD) tool for [synthetic biology](http://www.synbioproject.org/topics/synbio101/definition/) built on the [SBOL standard](http://sbolstandard.org/).
+SynBioCAD is an open-source, Web-based computer aided design (CAD) tool for [synthetic biology](http://www.synbioproject.org/topics/synbio101/definition/) built on the [SBOL standard](http://sbolstandard.org/).
 
 Things you can do so far:
 
@@ -10,7 +10,7 @@ Many more features are planned.  Watch this space!
 
 # Usage
 
-ngBioCAD can run in several different configurations.
+SynBioCAD can run in several different configurations.
 
 ## Local webapp
 
@@ -28,7 +28,7 @@ Then run `node bundle_cli.js testall` to test all examples in testfiles
 
 ## Web service
 
-As a Web service, ngBioCAD accepts POSTed SBOL/GenBank files and returns SVG.
+As a Web service, SynBioCAD accepts POSTed SBOL/GenBank files and returns SVG.
 
 First follow the local offline instructions, then run:
 
