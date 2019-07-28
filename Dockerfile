@@ -15,6 +15,6 @@ RUN cd /opt/biocad && yarn install
 RUN cd /opt/biocad && webpack --config webpack_nodejs_nologs.config.js && ls
 
 WORKDIR /opt/biocad
-CMD forever ./dist/bundle_cli.js server --port 8888
+CMD forever ./dist/bundle_cli.js server 8888
 
 
