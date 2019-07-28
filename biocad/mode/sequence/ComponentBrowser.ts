@@ -26,7 +26,7 @@ export default class ComponentBrowser extends View {
         this.tree.setEditable(true)
 
         this.tree.onSelect.listen((uri:string) => {
-            fn(new SXComponent(app.graph, uri))
+            //fn(new SXComponent(app.graph, uri))
         })
 
         this.tree.onCreate.listen((uri:string) => {

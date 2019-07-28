@@ -46,9 +46,11 @@ export default class SequenceView extends View {
             }
         }
 
-        this.sidebar.onSelect(select)
+        this.sidebar.onSelect.listen(select)
         
-        this.sidebar.onCreate((type, parentUri) => {
+        this.sidebar.onCreate.listen((created) => {
+
+            let { type, parentUri } = created
 
             app.openDialog(new CreateComponentDialog(app, {
 

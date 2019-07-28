@@ -6,7 +6,7 @@ import ComponentBrowser from './ComponentBrowser'
 import { Specifiers } from 'bioterms'
 import { SXComponent } from "sbolgraph";
 
-import { Hook } from 'jfw'
+import { Hook } from 'jfw/util'
 
 export default class SequenceViewSidebar extends Sidebar {
 
@@ -24,14 +24,14 @@ export default class SequenceViewSidebar extends Sidebar {
 
         const connectBrowser = (browser:ComponentBrowser) => {
 
-            browser.onSelect((component:SXComponent) => {
+            browser.onSelect.listen((component:SXComponent) => {
                 console.log('sequenceViewSidebar: selected ' + component.displayName)
                 this.onSelect.fire(component)
                 app.update()
             })
 
-            browser.onCreate((uri) => {
-                this.onCreate.fire({ type: browser.type, uri })
+            browser.onCreate.listen((uri) => {
+                //this.onCreate.fire({ type: browser.type, uri })
                 app.update()
             })
 

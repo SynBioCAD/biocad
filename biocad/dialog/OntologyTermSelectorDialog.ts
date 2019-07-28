@@ -42,7 +42,7 @@ export default class OntologyTermSelectorDialog extends Dialog {
 
         return new Promise<string|null>((resolve, reject) => {
             let selected = false
-            dialog.treeView.onSelect((id) => {
+            dialog.treeView.onSelect.listen((id) => {
                 selected = true
                 app.closeDialog(dialog)
                 resolve(id)
