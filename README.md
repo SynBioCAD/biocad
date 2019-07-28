@@ -32,7 +32,7 @@ As a Web service, SynBioCAD accepts POSTed SBOL/GenBank files and returns SVG.
 
 First follow the local offline instructions, then run:
 
-    node bundle_cli.js server --port 8080
+    node bundle_cli.js server 8080
 
 Or use the provided Dockerfile.
 
