@@ -1,5 +1,5 @@
 
 module.exports = function(source) {
-    return source.replace(/console\.[A-z]+\(.*\)/g, ';undefined; /* $& */')
+    return source.replace(/console\.[A-z]+\(.*\)/g, ';undefined;')
 }
 

@@ -376,9 +376,7 @@ function createABInteractionLayers(parent:Depiction|null, groups:Group[]):Map<In
                 interaction.otherDepictions.length === 0
             )) {
                 console.log('skipping interaction ' + interaction.debugName + ' because I only process simple A->B interactions')
-                console.log('this one had ' + interaction.sourceDepictions.length + ' source depiction(s), ' +
-                                    interaction.destDepictions.length + ' dest depiction(s) and '  +
-                                    interaction.otherDepictions.length + ' other depiction(s)')
+                console.log('this one had ' + interaction.sourceDepictions.length + ' source depiction(s), ' + interaction.destDepictions.length + ' dest depiction(s) and '  + interaction.otherDepictions.length + ' other depiction(s)')
                 continue
             }
 
