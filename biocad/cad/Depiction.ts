@@ -196,12 +196,24 @@ export default abstract class Depiction extends Versioned {
 
         for(let p = this.parent; p !== ancestor; p = p.parent) {
             if(!p) {
+                console.error('I am ' + this.debugName)
+                console.error('wanted relative to ' + ancestor.debugName)
+                console.error('my ancestors ' + this.ancestors().map((a) => a.debugName).join(' -----> '))
+                console.error('their ancestors ' + ancestor.ancestors().map((a) => a.debugName).join(' -----> '))
                 throw new Error('offsetRelativeTo ran out of parents before it found the ancestor')
             }
             offset = offset.add(p.offset)
         }
 
         return offset
+    }
+
+    ancestors():Depiction[] {
+        let a:Depiction[] = []
+        for(let d = this.parent; d; d = d.parent) {
+            a.push(d)
+        }
+        return a
     }
 
     calcDepth():number {

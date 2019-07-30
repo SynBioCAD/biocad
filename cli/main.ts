@@ -42,7 +42,13 @@ async function testall(argv) {
 
         let path = 'testfiles/' + file
 
-        await doFile(path, null, ImageFormat.SVG)
+        console.log(path)
+
+        try {
+            await doFile(path, null, ImageFormat.SVG)
+        } catch(e) {
+            console.dir(e)
+        }
     }
 }
 async function server(argv) {

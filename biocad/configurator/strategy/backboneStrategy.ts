@@ -2,7 +2,7 @@
 
 import assert from 'power-assert'
 
-import { Vec2, LinearRangeSet, LinearRange } from 'jfw/geom'
+import { Vec2, LinearRangeSet, LinearRange, Rect } from 'jfw/geom'
 
 import { Specifiers } from 'bioterms'
 import Depiction, { Orientation } from "biocad/cad/Depiction";
@@ -16,22 +16,6 @@ import LocationableDepiction from 'biocad/cad/LocationableDepiction';
 
 
 let minGridWidth = 2
-
-interface Layer {
-    n:number
-    backboneY:number
-    children:Positioned[]
-    rangesUsedForward:LinearRangeSet
-    rangesUsedReverse:LinearRangeSet
-    height:number
-}
-
-interface Positioned {
-    object:Depiction
-    range:LinearRange
-    forward:boolean
-    layer:Layer
-}
 
 export default function backboneStrategy(_parent:Depiction, children:Depiction[], padding) {
 
@@ -106,14 +90,6 @@ export default function backboneStrategy(_parent:Depiction, children:Depiction[]
     }
 
 
-    let backboneLength = 0
-
-    if (cd.sequences.length > 0 && cd.sequences[0].elements) {
-        backboneLength = cd.sequences[0].elements.length * layout.bpToGridScale
-    }
-
-
-    let childToPositioned:Map<Depiction, Positioned> = new Map()
 
     let uriToDepiction = (uri) => {
         let depictions = layout.getDepictionsForUri(uri)
@@ -129,71 +105,57 @@ export default function backboneStrategy(_parent:Depiction, children:Depiction[]
 
     let allRangesUsed = new LinearRangeSet()
 
-    let layers:Map<number, Layer> = new Map()
 
-    let minLayerN = 0
-    let maxLayerN = 0
-
-    let layerForRange = (range:LinearRange, forward:boolean):Layer => {
-
-        let n = 0
-
-        for(;;) {
-
-            let layer = layers.get(n)
-
-            if(!layer) {
-                layer = {
-                    n,
-                    backboneY: 0,
-                    height: 0,
-                    children: [],
-                    rangesUsedForward: new LinearRangeSet(),
-                    rangesUsedReverse: new LinearRangeSet()
-                }
-                layers.set(n, layer)
-                minLayerN = Math.min(n, minLayerN)
-                maxLayerN = Math.max(n, maxLayerN)
-            }
-
-            if(forward) {
-                if(!layer.rangesUsedForward.intersectsRange(range)) {
-                    return layer
-                }
-            } else {
-                if(!layer.rangesUsedReverse.intersectsRange(range)) {
-                    return layer
-                }
-            }
-
-            // move upwards for forward annotations, downwards for reverse
-            if(forward)
-                -- n
-            else
-                ++ n
-        }
-
-    }
+    let placed:Map<Depiction, { forward: boolean }> = new Map()
 
     let place = (object: Depiction, range: LinearRange, forward: boolean) => {
 
-        if (childToPositioned.has(object)) {
-            throw new Error('attempted to position object twice')
+        range = range.normalise()
+
+        if (placed.has(object)) {
+            throw new Error('attempted to place object twice')
         }
 
-        let layer = layerForRange(range, forward)
+        let y = forward ?
+            - object.getAnchorY() :
+            object.getAnchorY()
 
-        if (forward)
-            layer.rangesUsedForward.push(new LinearRange(range.start, range.end))
-        else
-            layer.rangesUsedReverse.push(new LinearRange(range.start, range.end))
+        do {
 
-        allRangesUsed.push(new LinearRange(range.start, range.end))
+            object.offset = Vec2.fromXY(range.start, y)
+            object.size = Vec2.fromXY(range.end - range.start, object.size.y)
 
-        let positioned = { object, range, forward, layer }
+            let overlaps = object.getOverlappingSiblings().filter((sibling) => placed.has(sibling))
 
-        layer.children.push(positioned)
-        childToPositioned.set(object, positioned)
+            if(overlaps.length === 0) {
+                placed.set(object, { forward })
+                return
+            }
+
+            // get highest overlap
+
+            if(forward) {
+
+                overlaps.sort((a, b) => {
+                    return a.boundingBox.topLeft.y - b.boundingBox.topLeft.y
+                })
+
+                console.log('forward', overlaps.map((o) => o.boundingBox))
+
+                y = overlaps[0].boundingBox.topLeft.y - object.size.y
+
+            } else {
+                overlaps.sort((a, b) => {
+                    return b.boundingBox.bottomRight.y - a.boundingBox.bottomRight.y
+                })
+
+                console.log('reverse', overlaps.map((o) => o.boundingBox))
+
+                y = overlaps[0].boundingBox.bottomRight.y
+            }
+
+        } while(true)
+
     }
 
 
@@ -213,13 +175,13 @@ export default function backboneStrategy(_parent:Depiction, children:Depiction[]
     }
 
 
-    // 1. position all fixed
+    // 1. place all fixed
     for (let element of backboneElements) {
         if(! (element instanceof LocationableDepiction))
             continue
 
-        // unless already positioned bc of explicit offset
-        if(childToPositioned.has(element))
+        // unless already placed bc of explicit offset
+        if(placed.has(element))
             continue
 
         let location = element.location
@@ -237,7 +199,7 @@ export default function backboneStrategy(_parent:Depiction, children:Depiction[]
         }
     }
 
-    // 2. position all constrained that reference fixed
+    // 2. place all constrained that reference fixed
     /// ... and constrained that reference the former, recursively
     /// (keep going until we can't position anything else)
     //
@@ -258,8 +220,8 @@ export default function backboneStrategy(_parent:Depiction, children:Depiction[]
                 throw new Error('sDep not a LocationableDepiction')
             }
 
-            let positionedS = childToPositioned.get(sDep)
-            let positionedO = childToPositioned.get(oDep)
+            let positionedS = placed.get(sDep)
+            let positionedO = placed.get(oDep)
 
             if (positionedS) {
                 if (positionedO) {
@@ -274,10 +236,10 @@ export default function backboneStrategy(_parent:Depiction, children:Depiction[]
                     // place o AFTER s because s precedes o
                     if (positionedS.forward) {
                         // forward; place o to the right of s
-                        place(oDep, new LinearRange(positionedS.range.end, positionedS.range.end + width), true)
+                        place(oDep, new LinearRange(sDep.boundingBox.bottomRight.x, sDep.boundingBox.bottomRight.x + width), true)
                     } else {
                         // reverse; place o to the left of s
-                        place(oDep, new LinearRange(positionedS.range.start - width, positionedS.range.start), false)
+                        place(oDep, new LinearRange(sDep.boundingBox.topLeft.x - width, sDep.boundingBox.topLeft.x), false)
                     }
                     doneSomething = true
                 }
@@ -295,10 +257,10 @@ export default function backboneStrategy(_parent:Depiction, children:Depiction[]
                     // place s BEFORE o because s precedes o
                     if (positionedO.forward) {
                         // forward; place s to the left of o
-                        place(sDep, new LinearRange(positionedO.range.start - width, positionedO.range.start), true)
+                        place(sDep, new LinearRange(oDep.boundingBox.topLeft.x - width, oDep.boundingBox.topLeft.x), true)
                     } else {
                         // reverse; place s to the right of o
-                        place(sDep, new LinearRange(positionedO.range.end, positionedO.range.end + width), false)
+                        place(sDep, new LinearRange(oDep.boundingBox.bottomRight.x, oDep.boundingBox.bottomRight.x + width), false)
                     }
 
                     doneSomething = true
@@ -347,7 +309,7 @@ export default function backboneStrategy(_parent:Depiction, children:Depiction[]
     }
 
     let constraintElements =
-        backboneElements.filter((element) => !childToPositioned.has(element))
+        backboneElements.filter((element) => !placed.has(element))
 
     // they're now sorted and filtered out, but where does the first one go?
     // 0 I guess?
@@ -368,16 +330,12 @@ export default function backboneStrategy(_parent:Depiction, children:Depiction[]
         x = x + width
     }
 
+    /*
     for (let layer of layers.values()) {
-        layer.rangesUsedForward.forEach((range) => {
-            backboneLength = Math.max(backboneLength, range.end)
-        })
-        layer.rangesUsedReverse.forEach((range) => {
+        layer.rangesUsed.forEach((range) => {
             backboneLength = Math.max(backboneLength, range.end)
         })
     }
-
-    allRangesUsed = allRangesUsed.sort()
 
 
 
@@ -403,14 +361,6 @@ export default function backboneStrategy(_parent:Depiction, children:Depiction[]
 
             let chop = new LinearRange(positioned.range.start + 0.0001, positioned.range.start + 0.0002)
 
-            chopRange(allRangesUsed.ranges, chop, paddingLength)
-
-            for(let layer of layers.values()) {
-                chopRange(layer.rangesUsedForward.ranges, chop, paddingLength)
-                chopRange(layer.rangesUsedReverse.ranges, chop, paddingLength)
-                chopRange(layer.children.map((child) => child.range), chop, paddingLength)
-            }
-
             chopRange([entireBackboneRange], chop, paddingLength)
 
         }
@@ -418,7 +368,7 @@ export default function backboneStrategy(_parent:Depiction, children:Depiction[]
     }
 
     backboneLength = entireBackboneRange.end - entireBackboneRange.start
-
+*/
 
 
 
@@ -454,8 +404,7 @@ export default function backboneStrategy(_parent:Depiction, children:Depiction[]
             chopRange(allRangesUsed.ranges, rangeToDelete, omitLen)
 
             for(let layer of layers.values()) {
-                chopRange(layer.rangesUsedForward.ranges, rangeToDelete, omitLen)
-                chopRange(layer.rangesUsedReverse.ranges, rangeToDelete, omitLen)
+                chopRange(layer.rangesUsed.ranges, rangeToDelete, omitLen)
                 chopRange(layer.children.map((child) => child.range), rangeToDelete, omitLen)
             }
 
@@ -488,79 +437,10 @@ export default function backboneStrategy(_parent:Depiction, children:Depiction[]
 
 
 
-    for(let [n, layer] of layers) {
-
-        let minAscent = 0
-        let maxDescent = 0
-
-        for (let child of layer.children) {
-
-            const { ascent, descent } = ascentDescent(child.object)
-
-            minAscent = Math.min(ascent, minAscent)
-            maxDescent = Math.max(descent, maxDescent)
-        }
-
-        //var backboneHeight = padding + Math.abs(minAscent) + maxDescent + padding
-        var layerHeight = Math.abs(minAscent) + maxDescent
-
-        /* the height must always be an even number so that the backbone
-         * can split us in half vertically.  if it was odd the backbone would
-         * end up inside a grid cell.
-         */
-        //if (layerHeight % 2 != 0)
-            //layerHeight += 1
-
-        //const parentMid = backboneHeight / 2
-        //const backboneY = padding + Math.abs(minAscent)
-        let backboneY = Math.abs(minAscent)
-
-        layer.backboneY = backboneY
-        layer.height = layerHeight
-    }
 
 
 
-    // 1. position all the children using their ranges
-    for(let child of children) {
-
-        if(!(child instanceof ComponentDepiction) && !(child instanceof FeatureLocationDepiction)) {
-            // label
-            continue
-        }
-
-        let positioned = childToPositioned.get(child)
-
-        if(!positioned) {
-            throw new Error('bb child has not been positioned')
-        }
-
-        let y = 0
-
-        for(let n = minLayerN; n < positioned.layer.n; ++ n) {
-            let layer = layers.get(n)
-            if(!layer) {
-                throw new Error('???')
-            }
-            y += layer.height
-        }
-
-        y += positioned.layer.backboneY
-
-
-        let x = positioned.range.start
-
-        if(child.offsetExplicit) {
-            x = child.offset.x
-        }
-
-        let childOffset = Vec2.fromXY(positioned.range.start, y)
-        childOffset = Vec2.fromXY(childOffset.x, childOffset.y - child.getAnchorY())
-
-        child.offset = childOffset
-    }
-
-    // 2. set initial label positions
+    // 1. set initial label positions
 
     for(let child of children) {
 
@@ -589,7 +469,7 @@ export default function backboneStrategy(_parent:Depiction, children:Depiction[]
     }
 
 
-    // 3. fix label overlaps
+    // 2. fix label overlaps
     for(let child of children) {
 
         if(! (child instanceof LabelDepiction)) {
@@ -613,99 +493,45 @@ export default function backboneStrategy(_parent:Depiction, children:Depiction[]
     }
 
 
-    console.log('Backbone: minLayerN', minLayerN, ' maxLayer', maxLayerN)
 
+    // width
 
-    let backboneY = 0
+    let backboneLength = 0
 
-    for(let n = minLayerN; n <= 0; ++ n) {
-        let layer = layers.get(n)
-        if(!layer) {
-            throw new Error('???')
-        }
-        if(n === 0) {
-            backboneY += layer.backboneY
-            break
-        } else {
-            backboneY += layer.height
-        }
-    }
-    
-    backbone.backboneY = backboneY
-
-
-    let backboneHeight = 0
-
-    for(let n = minLayerN; n <= maxLayerN; ++ n) {
-
-        let layer = layers.get(n)
-        if(!layer) {
-            throw new Error('???')
-        }
-        backboneHeight += layer.height
+    if (cd.sequences.length > 0 && cd.sequences[0].elements) {
+        backboneLength = cd.sequences[0].elements.length * layout.bpToGridScale
     }
 
-    backbone.size = Vec2.fromXY(backboneLength, backboneHeight)
-    
-
-
-    let adjust = backbone.zeroifyOrigin()
-    backboneY = backboneY - adjust.y
     for(let child of children) {
-        backboneHeight = Math.max(backboneHeight, child.offset.y + child.size.y)
         backboneLength = Math.max(backboneLength, child.offset.x + child.size.x)
     }
 
-    backbone.size = Vec2.fromXY(backboneLength, backboneHeight)
-    backbone.backboneY = backboneY
 
-    //console.error('BACKBONE (ANCHOR) Y IS ' + parent.backboneY + ' FOR ' + parent.debugName)
-}
+    // height 
 
-function ascentDescent(child:Depiction) {
+    let ascent = 0
 
-    const childSize = child.size
-
-    const anchorY = child.getAnchorY()
-
-    return {
-        //ascent: (- anchorY) - marginTop,
-        //descent: (childSize.y - anchorY) + marginBottom
-        ascent: (- anchorY),
-        descent: (childSize.y - anchorY)
+    for(let child of children) {
+        ascent = Math.min(ascent, child.offset.y)
     }
+
+    backbone.backboneY = -ascent
+
+    let backboneHeight = 0
+
+    for(let child of children) {
+        child.offset = Vec2.fromXY(child.offset.x, child.offset.y + (-ascent))
+        backboneHeight = Math.max(backboneHeight, child.offset.y + child.size.y)
+    }
+
+
+
+
+
+    backbone.size = Vec2.fromXY(backboneLength, backboneHeight)
 }
 
 
-
-/*
-
-
-            backboneElements = expandLocations(backboneElements)
-
-
-            let uriToPositionedChild:Map<string,BackboneChild> = new Map()
-
-            // we need to create a backbone group for these objects.
-            // it will contain one or more backbones depending on how many overlapping
-            // features there are.
-
-            let backboneLength = 0
-
-            if(cd.sequence && cd.sequence.elements) {
-                backboneLength = cd.sequence.elements.length * bpToGridScale
-            }
-
-            let group = new BackboneGroup()
-            group.backbones = new Map<number, Backbone>()
-            group.backboneLength = backboneLength
-            group.locationsOfOmittedRegions = new LinearRangeSet()
-
-
-
-
-
-*/
 
 
 

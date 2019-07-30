@@ -60,7 +60,15 @@ class Group {
 
 export default function binPackStrategy(parent:Depiction|null, children:Depiction[], padding:number) {
 
-    let groups = createInteractionGroups(parent, children)
+    if(parent) {
+    for(let child of parent.children) {
+        if(!(child.parent === parent)) {
+            throw new Error('??????')
+        }
+    }
+}
+
+    let groups:Group[] = createInteractionGroups(parent, children)
 
     console.log('binPackStrategy: Created ' + groups.length + ' interaction group(s)')
 
@@ -178,6 +186,19 @@ function createInteractionGroups(parent:Depiction|null, children:Depiction[]):Gr
                 return d
             }
         })
+
+        if (parent) {
+            effectiveParticipantDepictions = effectiveParticipantDepictions.filter((d) => {
+                if (!d.isDescendentOf(parent)) {
+                    console.error('interaction participant mapped to something that did not have what we were binpacking as an ancestor')
+                    console.error('we were binpacking ' + parent.debugName + ' and the participant was ' + d.debugName)
+                    return false
+                }
+
+                return true
+            })
+        }
+            
 
         // are any of the depictions in this interaction already in groups?
         //
