@@ -18,6 +18,11 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const yargs = require("yargs");
 yargs
+    .option('in', {
+    alias: 'i',
+    description: 'Input filename FASTA/GenBank/SBOL',
+    demandOption: false
+})
     .option('out', {
     alias: 'o',
     description: 'Output filename',
@@ -43,13 +48,7 @@ function testall(argv) {
             if (!file.endsWith('.xml') || file.endsWith('_sbolx.xml'))
                 continue;
             let path = 'testfiles/' + file;
-            console.log(path);
-            try {
-                yield doFile(path, null, ImageRenderer_1.ImageFormat.SVG);
-            }
-            catch (e) {
-                console.dir(e);
-            }
+            yield doFile(path, ImageRenderer_1.ImageFormat.SVG);
         }
     });
 }
@@ -83,10 +82,10 @@ function render(argv) {
         else if (argv.outfmt === 'pptx') {
             outfmt = ImageRenderer_1.ImageFormat.PPTX;
         }
-        yield doFile(argv.file, argv.out, outfmt);
+        yield doFile(argv.file, outfmt);
     });
 }
-function doFile(path, out, outfmt) {
+function doFile(path, outfmt) {
     return __awaiter(this, void 0, void 0, function* () {
         let graph = yield sbolgraph_1.SBOLXGraph.loadString(fs.readFileSync(path) + '', 'application/rdf+xml');
         //fs.writeFileSync('testfiles/' + file + '_sbolx.xml', graph.serializeXML())
@@ -96,9 +95,8 @@ function doFile(path, out, outfmt) {
         layout.size = layout.getBoundingSize().add(geom_1.Vec2.fromXY(1, 1));
         let renderer = new ImageRenderer_1.default(layout);
         let svg = yield renderer.render(outfmt);
-        out = out || path + '.svg';
-        fs.writeFileSync(out, svg);
-        fs.writeFileSync(out + '_layout.json', JSON.stringify(LayoutPOD_1.default.serialize(layout), null, 2));
+        fs.writeFileSync(path + '.svg', svg);
+        fs.writeFileSync(path + '_layout.json', JSON.stringify(LayoutPOD_1.default.serialize(layout), null, 2));
     });
 }
 //# sourceMappingURL=main.js.map
