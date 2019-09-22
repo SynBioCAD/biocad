@@ -13,7 +13,7 @@ import { Rect, Vec2 } from "jfw/geom"
 import ScrollbarWidget from './ScrollbarWidget'
 import BiocadApp from "biocad/BiocadApp";
 import Matrix from "jfw/geom/Matrix";
-import Hook from "jfw/Hook";
+import { Hook } from "jfw/util";
 import Droppable from "biocad/droppable/Droppable";
 import LayoutPOD from "biocad/cad/LayoutPOD";
 import SVGDefs from "biocad/cad/SVGDefs";

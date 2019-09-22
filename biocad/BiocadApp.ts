@@ -16,7 +16,7 @@ import SequenceMode from './mode/sequence/SequenceMode'
 import SimulatorMode from './mode/simulator/SimulatorMode'
 import LoadSaveMode from './mode/loadsave/LoadSaveMode'
 
-import Hook from 'jfw/Hook'
+import { Hook } from 'jfw/util'
 
 import DropOverlay from './DropOverlay'
 import { VNode, h, create } from "jfw/vdom";

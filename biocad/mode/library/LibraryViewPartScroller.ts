@@ -8,7 +8,7 @@ import { search, SearchResult } from 'sbh-proxy-client'
 
 import SVGScrollerWidget, { SVGScrollerEntry } from './SVGScrollerWidget'
 import LibraryView from "biocad/mode/library/LibraryView";
-import Hook from "jfw/Hook";
+import { Hook } from "jfw/util";
 
 export default class LibraryViewPartScroller extends View {
 
