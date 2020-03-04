@@ -32,7 +32,7 @@ export default function copySBOL(graphA:SBOLXGraph, graphB:SBOLXGraph, newURIPre
     }
 
     // TODO check doesn't exist and make new ids if it does
-    graphB.addAll(intmGraph)
+    graphB.graph.addAll(intmGraph)
 
     return identityMap
 }

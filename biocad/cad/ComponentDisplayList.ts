@@ -1,5 +1,5 @@
 
-import { SXSequenceFeature, SXSubComponent, SXSequenceConstraint, SXComponent, SXIdentified, SXLocation } from "sbolgraph"
+import { SXSequenceFeature, SXSubComponent, SXSequenceConstraint, SXComponent, SXIdentified, SXLocation, SBOLXGraph } from "sbolgraph"
 
 export default class ComponentDisplayList {
 
@@ -8,15 +8,15 @@ export default class ComponentDisplayList {
     ungrouped:Array<SXIdentified>
 
 
-    static fromComponent(component:SXComponent):ComponentDisplayList {
+    static fromComponent(graph:SBOLXGraph, component:SXComponent):ComponentDisplayList {
 
-        return new ComponentDisplayList(component)
+        return new ComponentDisplayList(graph, component)
 
     }
 
 
 
-    private constructor(cd:SXComponent) {
+    private constructor(graph: SBOLXGraph, cd:SXComponent) {
         
 
         const visited:Set<string> = new Set()
@@ -111,7 +111,7 @@ export default class ComponentDisplayList {
 
                 console.log(uri, 'contained in backbone group')
 
-                const facade:SXIdentified|undefined = cd.graph.uriToFacade(uri)
+                const facade:SXIdentified|undefined = graph.uriToFacade(uri)
 
                 if(!facade)
                     throw new Error('???')
