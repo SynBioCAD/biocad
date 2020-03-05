@@ -124,12 +124,13 @@ export default class DepictionPOD {
             ;(depiction as ComponentDepiction).backbonePlacement = pod.backbonePlacement
             ;(depiction as ComponentDepiction).proportionalWidth = pod.proportionalWidth
 
-            let loc = sbol3(graph).uriToFacade(pod.location)
+            if(pod.location) {
+                let loc = sbol3(graph).uriToFacade(pod.location)
 
-            if(loc instanceof S3Identified) {
-                ; (depiction as ComponentDepiction).location = loc
+                if(loc instanceof S3Identified) {
+                    ; (depiction as ComponentDepiction).location = loc
+                }
             }
-
 
         } else if(pod['class'] === 'LabelDepiction') {
 
@@ -162,12 +163,13 @@ export default class DepictionPOD {
             ;(depiction as BackboneDepiction).backboneY = pod.backboneY
             ;(depiction as BackboneDepiction).locationsOfOmittedRegions = LinearRangeSet.fromPOD(pod.locationsOfOmittedRegions)
 
-            let loc = sbol3(graph).uriToFacade(pod.location)
+            if(pod.location) {
+                let loc = sbol3(graph).uriToFacade(pod.location)
 
-            if(loc instanceof S3Identified) {
-                ; (depiction as BackboneDepiction).location = loc
+                if(loc instanceof S3Identified) {
+                    ; (depiction as BackboneDepiction).location = loc
+                }
             }
-
 
         } else if(pod['class'] === 'InteractionDepiction') {
 
@@ -195,13 +197,15 @@ export default class DepictionPOD {
 
             ;(depiction as FeatureLocationDepiction).proportionalWidth = pod.proportionalWidth
 
-            let loc = sbol3(graph).uriToFacade(pod.location)
+            if(pod.location) {
+                let loc = sbol3(graph).uriToFacade(pod.location)
 
-            if(! (loc instanceof S3Identified)) {
-                throw new Error('???')
+                if(! (loc instanceof S3Identified)) {
+                    throw new Error('???')
+                }
+
+                ;(depiction as FeatureLocationDepiction).location = loc
             }
-
-            ;(depiction as FeatureLocationDepiction).location = loc
 
         } else {
             throw new Error('unknown depiction class')
