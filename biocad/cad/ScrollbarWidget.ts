@@ -151,10 +151,10 @@ export default class ScrollbarWidget {
         //'<em>after</em> update.'
 
         if(this.renderContext !== prev.renderContext) {
-            console.log('ScrollbarWidget new renderContext; reinit')
+            // console.log('ScrollbarWidget new renderContext; reinit')
             return this.init()
         } else {
-            console.log('ScrollbarWidget update, but same renderContext :-)')
+            // console.log('ScrollbarWidget update, but same renderContext :-)')
         }
 
         this.renderContext = prev.renderContext
@@ -162,7 +162,7 @@ export default class ScrollbarWidget {
         this.isFirstRender = prev.isFirstRender
         this.viewportSize = prev.viewportSize
 
-        console.log('this.viewportSize copied from prev', this.viewportSize)
+        // console.log('this.viewportSize copied from prev', this.viewportSize)
 
         const parent:Node|null = elem.parentNode
 
