@@ -1,6 +1,6 @@
 
 import PropertyAccessor from "./PropertyAccessor";
-import { triple, SBOLXGraph, node, SXSubComponent, SXSequenceFeature, SXThingWithLocation } from 'sbolgraph'
+import { triple, Graph, node, S3SubComponent, S3SequenceFeature, S3ThingWithLocation, sbol3 } from 'sbolgraph'
 
 export default class PropertyAccessorStrand extends PropertyAccessor<string> {
 
@@ -13,11 +13,11 @@ export default class PropertyAccessorStrand extends PropertyAccessor<string> {
         this.onChange = onChange
     }
 
-    set(graph:SBOLXGraph, value:string) {
+    set(graph:Graph, value:string) {
 
-        let scOrSeqFeature = graph.uriToFacade(this.object)
+        let scOrSeqFeature = sbol3(graph).uriToFacade(this.object)
 
-        if(! (scOrSeqFeature instanceof SXThingWithLocation))
+        if(! (scOrSeqFeature instanceof S3ThingWithLocation))
             return
 
         scOrSeqFeature.setOrientation(value)
@@ -26,10 +26,10 @@ export default class PropertyAccessorStrand extends PropertyAccessor<string> {
             this.onChange()
     }
 
-    get(graph:SBOLXGraph):string {
-        let scOrSeqFeature = graph.uriToFacade(this.object)
+    get(graph:Graph):string {
+        let scOrSeqFeature = sbol3(graph).uriToFacade(this.object)
 
-        if(! (scOrSeqFeature instanceof SXThingWithLocation))
+        if(! (scOrSeqFeature instanceof S3ThingWithLocation))
             return ''
 
         return scOrSeqFeature.getOrientation() || ''

@@ -1,7 +1,7 @@
 
 import { View } from 'jfw/ui'
-import { SBOLXGraph } from 'sbolgraph';
+import { Graph } from 'sbolgraph';
 
 export default abstract class PropertyEditor {
-    abstract render(graph:SBOLXGraph)
+    abstract render(graph:Graph)
 }

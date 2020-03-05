@@ -1,6 +1,6 @@
 
 import PropertyEditor from "./PropertyEditor";
-import { SBOLXGraph } from "sbolgraph";
+import { Graph } from "sbolgraph";
 import Depiction from "biocad/cad/Depiction";
 import { h } from "@biocad/jfw/dist/jfw/vdom";
 import LocationableDepiction from "biocad/cad/LocationableDepiction";
@@ -15,7 +15,7 @@ export default class PropertyEditorDebug extends PropertyEditor {
         this.d = d
     }
 
-    render(graph:SBOLXGraph) {
+    render(graph:Graph) {
 
         let parent = this.d.parent
 

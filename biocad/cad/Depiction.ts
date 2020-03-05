@@ -3,13 +3,14 @@ import { VNode } from 'jfw/vdom'
 
 import { Vec2 } from 'jfw/geom'
 import Layout from 'biocad/cad/Layout'
-import { SXIdentified, Watcher, SXLocation, SXSubComponent } from "sbolgraph"
+import { S3Identified, Watcher, S3Location, S3SubComponent } from "sbolgraph"
 import Rect from "jfw/geom/Rect";
 import Versioned from "jfw/Versioned";
 import RenderContext from './RenderContext'
 import CircularBackboneDepiction from './CircularBackboneDepiction'
 import IdentifiedChain from '../IdentifiedChain';
 import LabelDepiction from './LabelDepiction';
+import { sbol3 } from 'sbolgraph'
 
 export enum Opacity {
     Blackbox,
@@ -58,14 +59,14 @@ export default abstract class Depiction extends Versioned {
     parent: Depiction|null
     children: Array<Depiction>
 
-    _depictionOf:SXIdentified|undefined
+    _depictionOf:S3Identified|undefined
     identifiedChain:IdentifiedChain|undefined
 
     label:LabelDepiction|null
 
     //graphWatcher:Watcher|undefined
 
-    constructor(layout:Layout, depictionOf:SXIdentified|undefined, identifiedChain:IdentifiedChain|undefined, parent?:Depiction, uid?:number) {
+    constructor(layout:Layout, depictionOf:S3Identified|undefined, identifiedChain:IdentifiedChain|undefined, parent?:Depiction, uid?:number) {
 
         super()
 
@@ -90,7 +91,7 @@ export default abstract class Depiction extends Versioned {
         }*/
     }
 
-    get depictionOf():SXIdentified|undefined {
+    get depictionOf():S3Identified|undefined {
 
         let dOf = this._depictionOf
 
@@ -103,7 +104,7 @@ export default abstract class Depiction extends Versioned {
         return undefined
     }
 
-    set depictionOf(dOf:SXIdentified|undefined) {
+    set depictionOf(dOf:S3Identified|undefined) {
 
         this._depictionOf = dOf
 
@@ -426,15 +427,13 @@ export default abstract class Depiction extends Versioned {
         if (!dOf)
             return
 
-        let graph = dOf.graph
-
-        if(dOf instanceof SXSubComponent) {
+        if(dOf instanceof S3SubComponent) {
 
             let def = dOf.instanceOf
 
             if(def) {
 
-                let instantiations = graph.getInstancesOfComponent(def)
+                let instantiations = sbol3(dOf.graph).getInstancesOfComponent(def)
 
                 if(instantiations.length === 1) {
                     def.destroy()

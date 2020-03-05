@@ -2,7 +2,7 @@
 import Layout from "biocad/cad/Layout";
 import Depiction from "biocad/cad/Depiction";
 import DepictionPOD from "biocad/cad/DepictionPOD";
-import { SBOLXGraph, SXInteraction } from "sbolgraph";
+import { Graph, S3Interaction } from "sbolgraph";
 import InteractionDepiction from "./InteractionDepiction";
 import { Vec2 } from 'jfw/geom'
 
@@ -29,7 +29,7 @@ export default class LayoutPOD {
         return pod
     }
 
-    static deserialize(graph:SBOLXGraph, pod:any):Layout {
+    static deserialize(graph:Graph, pod:any):Layout {
 
         const layout = new Layout(graph)
 
@@ -64,7 +64,7 @@ export default class LayoutPOD {
         for(let depiction of layout.depictions) {
             if(depiction instanceof InteractionDepiction) {
                 let dOf = depiction._depictionOf
-                if(!dOf || ! (dOf instanceof SXInteraction)) {
+                if(!dOf || ! (dOf instanceof S3Interaction)) {
                     throw new Error('bad depictionOf')
                 }
             }

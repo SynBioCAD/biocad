@@ -1,4 +1,4 @@
-import  { SXIdentified, SXInteraction }  from "sbolgraph"
+import  { S3Identified, S3Interaction, sbol3 }  from "sbolgraph"
 
 import LabelDepiction from 'biocad/cad/LabelDepiction';
 import Depiction, { Opacity } from 'biocad/cad/Depiction';
@@ -18,7 +18,7 @@ import BiocadApp from "biocad/BiocadApp";
 import Droppable from "biocad/droppable/Droppable";
 import SBOLDroppable from "biocad/droppable/SBOLDroppable";
 
-import { SBOLXGraph, SXComponent, SXSubComponent } from "sbolgraph"
+import { Graph, S3Component, S3SubComponent } from "sbolgraph"
 import LayoutEditorContextMenu from "biocad/cad/LayoutEditorContextMenu";
 import DepictionPOD from "biocad/cad/DepictionPOD";
 import BackboneDepiction from 'biocad/cad/BackboneDepiction';
@@ -231,9 +231,9 @@ export default class LayoutEditorOverlay extends View {
 
                 let hoveringThing = hovering.depictionOf
 
-                if(hoveringThing && hoveringThing instanceof SXSubComponent) {
+                if(hoveringThing && hoveringThing instanceof S3SubComponent) {
 
-                    let sc = hoveringThing as SXSubComponent
+                    let sc = hoveringThing as S3SubComponent
 
                     for(let mapping of sc.mappings) {
 
@@ -458,7 +458,7 @@ export default class LayoutEditorOverlay extends View {
             let identityMap = copySBOL(droppable.graph, app.graph, app.defaultPrefix)
 
             // TODO
-            const newUri = identityMap.get(droppable.graph.topLevels[0].uri)
+            const newUri = identityMap.get(sbol3(droppable.graph).topLevels[0].uri)
 
             if(!newUri) {
                 throw new Error('???')

@@ -1,12 +1,11 @@
 
-import { SBOLXGraph, SBOL2Graph } from "sbolgraph";
+import { Graph, SBOL2GraphView, sbol3 } from "sbolgraph";
 
 export default class SBOLConverterValidator {
 
-    static async sxToGenbank(g:SBOLXGraph) {
+    static async sxToGenbank(g:Graph) {
 
-        let sbol2Graph = new SBOL2Graph()
-        await sbol2Graph.loadString(g.serializeXML())
+        let gv = await SBOL2GraphView.loadString(sbol3(g).serializeXML())
 
         let res = await fetch('http://www.async.ece.utah.edu/validate/', {
             method: 'POST',
@@ -31,7 +30,7 @@ export default class SBOLConverterValidator {
                     'language': 'GenBank'
                 },
                 'return_file': true,
-                'main_file': sbol2Graph.serializeXML()
+                'main_file': gv.serializeXML()
             })
         })
 
@@ -50,10 +49,10 @@ export default class SBOLConverterValidator {
         return r['result']
     }
 
-    static async sxToFASTA(g:SBOLXGraph) {
+    static async sxToFASTA(g:Graph) {
 
-        let sbol2Graph = new SBOL2Graph()
-        await sbol2Graph.loadString(g.serializeXML())
+        let sbol2Graph = new SBOL2GraphView(new Graph())
+        await sbol2Graph.loadString(sbol3(g).serializeXML())
 
         let res = await fetch('http://www.async.ece.utah.edu/validate/', {
             method: 'POST',

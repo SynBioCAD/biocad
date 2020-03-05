@@ -1,6 +1,6 @@
 import  LayoutEditor  from 'biocad/cad/LayoutEditor';
 import { Specifiers } from 'bioterms';
-import { SXComponent, SXSubComponent } from "sbolgraph"
+import { S3Component, S3SubComponent } from "sbolgraph"
 import { Predicates, Types } from 'bioterms';
 import BiocadApp from 'biocad/BiocadApp';
 
@@ -9,7 +9,7 @@ import { Vec2, Matrix } from 'jfw/geom';
 import ContextMenu, { ContextMenuItem } from 'jfw/ui/ContextMenu';
 
 import { node as graphNode } from "sbolgraph"
-import { SBOLXGraph } from "sbolgraph"
+import { Graph } from "sbolgraph"
 import Depiction, { Opacity } from "biocad/cad/Depiction";
 
 import SequenceMode from 'biocad/mode/sequence/SequenceMode'
@@ -48,7 +48,7 @@ export default class LayoutEditorContextMenu extends ContextMenu {
 
                 const dOf = depiction.depictionOf
 
-                if(dOf instanceof SXComponent) {
+                if(dOf instanceof S3Component) {
                     seqMode.seqView.sequenceEditor.setComponent(dOf)
                     app.setMode(seqMode)
                 }
@@ -86,14 +86,14 @@ export default class LayoutEditorContextMenu extends ContextMenu {
             }
 
 
-            if(dOf instanceof SXComponent) {
+            if(dOf instanceof S3Component) {
                 if(dOf.containedObjects.length > 0) {
 
                     items.push(new ContextMenuItem('span.fa.fa-object-ungroup', 'Ungroup', (pos:Vec2) => {
 
                         layoutEditor.deselectAll()
 
-                        ;(dOf as SXComponent).dissolve()
+                        ;(dOf as S3Component).dissolve()
 
                         depiction.touch()
 
@@ -101,7 +101,7 @@ export default class LayoutEditorContextMenu extends ContextMenu {
 
                     }))
                 }
-            } else if(dOf instanceof SXSubComponent) {
+            } else if(dOf instanceof S3SubComponent) {
 
                 let def = dOf.instanceOf
 
@@ -111,7 +111,7 @@ export default class LayoutEditorContextMenu extends ContextMenu {
 
                         layoutEditor.deselectAll()
 
-                        ;(dOf as SXSubComponent).dissolve()
+                        ;(dOf as S3SubComponent).dissolve()
                         depiction.touch()
 
                         app.closeContextMenu()
@@ -131,9 +131,9 @@ export default class LayoutEditorContextMenu extends ContextMenu {
 
             items.push(new ContextMenuItem('span.fa.fa-clone', 'Duplicate', (pos:Vec2) => {
 
-                if(dOf instanceof SXComponent) {
+                if(dOf instanceof S3Component) {
 
-                    let newGraph:SBOLXGraph = app.graph.clone()
+                    let newGraph:Graph = app.graph.clone()
 
                     let droppable:SBOLDroppable = new SBOLDroppable(app, newGraph, [ dOf.uri ], [ dOf.uri ])
                     app.dropOverlay.startDropping(droppable)
@@ -164,9 +164,9 @@ export default class LayoutEditorContextMenu extends ContextMenu {
                 let dOf = roots.map((d) => {
                     return d.depictionOf
                 }).filter((dOf) => {
-                    return dOf && dOf instanceof SXComponent
+                    return dOf && dOf instanceof S3Component
                 }).map((dOf) => {
-                    return dOf as SXComponent
+                    return dOf as S3Component
                 })
 
                 if(dOf.length > 0) {

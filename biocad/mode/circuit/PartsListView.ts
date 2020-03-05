@@ -1,4 +1,4 @@
-import { SBOLXGraph } from "sbolgraph";
+import { Graph, sbol3 } from "sbolgraph";
 
 import { Vec2 } from 'jfw/geom'
 import { View } from 'jfw/ui'
@@ -127,9 +127,9 @@ function mousedownPart(data:any) {
     const app:BiocadApp = data.app
     const part = data.part
 
-    const graph:SBOLXGraph = new SBOLXGraph([])
+    const graph:Graph = new Graph([])
 
-    let component = graph.createComponent(app.defaultPrefix, part.shortName, '1')
+    let component = sbol3(graph).createComponent(app.defaultPrefix, part.shortName, '1')
     component.addRole(part.soTerm)
     component.addType(part.typeUri)
 

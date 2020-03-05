@@ -1,11 +1,11 @@
 
-import { SXInteraction, SXParticipation } from "sbolgraph";
+import { S3Interaction, S3Participation } from "sbolgraph";
 import { Prefixes, Specifiers } from "bioterms";
 
 export interface SeparateResult {
-    sources:SXParticipation[]
-    destinations:SXParticipation[]
-    others:SXParticipation[]
+    sources:S3Participation[]
+    destinations:S3Participation[]
+    others:S3Participation[]
 }
 
 let sourceRoles = [
@@ -24,7 +24,7 @@ let destRoles = [
     Prefixes.sbo + 'SBO:0000644', // modified
 ]
 
-export default function separateInteractionParticipations(interaction:SXInteraction):SeparateResult {
+export default function separateInteractionParticipations(interaction:S3Interaction):SeparateResult {
 
     let types = interaction.types
 

@@ -1,5 +1,5 @@
 import LabelDepiction from 'biocad/cad/LabelDepiction';
-import { SXComponent, SXSubComponent, SXRange } from "sbolgraph";
+import { S3Component, S3SubComponent, S3Range } from "sbolgraph";
 
 import { Types, Specifiers } from 'bioterms'
 
@@ -101,14 +101,14 @@ function configurateBlackboxComponent(depiction:ComponentDepiction):void {
 
     const depictionOf = depiction.depictionOf
 
-    var definition:SXComponent
+    var definition:S3Component
     
-    if(depictionOf instanceof SXComponent) {
-        definition = depictionOf as SXComponent
-    } else if(depictionOf instanceof SXSubComponent) {
-        definition = (depictionOf as SXSubComponent).instanceOf
-    } else if(depictionOf instanceof SXSubComponent) {
-        definition = (depictionOf as SXSubComponent).instanceOf
+    if(depictionOf instanceof S3Component) {
+        definition = depictionOf as S3Component
+    } else if(depictionOf instanceof S3SubComponent) {
+        definition = (depictionOf as S3SubComponent).instanceOf
+    } else if(depictionOf instanceof S3SubComponent) {
+        definition = (depictionOf as S3SubComponent).instanceOf
     } else {
         throw new Error('Unknown depictionOf type')
     }

@@ -3,14 +3,14 @@ import  { h } from 'jfw/vdom'
 
 import { View, TreeView } from 'jfw/ui'
 import BiocadApp from "biocad/BiocadApp";
-import { SXComponent, SBOLXGraph } from "sbolgraph";
+import { S3Component, Graph, sbol3 } from "sbolgraph";
 import { TreeNode } from 'jfw/ui/TreeView';
 
 import { Hook } from 'jfw/util'
 
 export default class ComponentBrowser extends View {
 
-    filter:(SXComponent)=>boolean
+    filter:(S3Component)=>boolean
     tree:TreeView
 
     onCreate:Hook<string>
@@ -26,7 +26,7 @@ export default class ComponentBrowser extends View {
         this.tree.setEditable(true)
 
         this.tree.onSelect.listen((uri:string) => {
-            //fn(new SXComponent(app.graph, uri))
+            //fn(new S3Component(app.graph, uri))
         })
 
         this.tree.onCreate.listen((uri:string) => {
@@ -36,18 +36,18 @@ export default class ComponentBrowser extends View {
 
         const fetchTreeNodes = ():TreeNode[] => {
 
-            const graph:SBOLXGraph = app.graph
+            const graph:Graph = app.graph
 
             const nodes = []
 
-            return graph.rootComponents.filter(this.filter).map(SXComponentToNode)
+            return sbol3(graph).rootComponents.filter(this.filter).map(S3ComponentToNode)
 
-            function SXComponentToNode(component:SXComponent):TreeNode {
+            function S3ComponentToNode(component:S3Component):TreeNode {
 
                 const subnodes = component.subComponents.filter((component) => {
                     return filter(component.instanceOf)
                 }).map((component) => {
-                    return SXComponentToNode(component.instanceOf)
+                    return S3ComponentToNode(component.instanceOf)
                 })
 
                 var node:TreeNode = new TreeNode()
@@ -76,7 +76,7 @@ export default class ComponentBrowser extends View {
         ])
     }
 
-    select(c:SXComponent) {
+    select(c:S3Component) {
         this.tree.select(c.uri)
     }
 }

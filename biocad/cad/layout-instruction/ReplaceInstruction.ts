@@ -1,14 +1,14 @@
 
 import Instruction from './Instruction'
 import Depiction from 'biocad/cad/Depiction';
-import { SXIdentified } from 'sbolgraph'
+import { S3Identified } from 'sbolgraph'
 
 export default class ReplaceInstruction extends Instruction {
 
-    toReplace:SXIdentified
-    replaceWith:SXIdentified
+    toReplace:S3Identified
+    replaceWith:S3Identified
 
-    constructor(toReplace:SXIdentified, replaceWith:SXIdentified) {
+    constructor(toReplace:S3Identified, replaceWith:S3Identified) {
 
         super()
 

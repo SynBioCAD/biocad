@@ -2,7 +2,7 @@
 
 import { Rect } from "jfw/geom";
 import Depiction, { Opacity } from "biocad/cad/Depiction";
-import { SBOLXGraph, SXComponent, SXSubComponent } from "sbolgraph";
+import { Graph, S3Component, S3SubComponent, sbol3 } from "sbolgraph";
 import Layout from "biocad/cad/Layout";
 import DOp, { DOpResult } from "./DOp";
 import ComponentDepiction from "../ComponentDepiction";
@@ -11,8 +11,8 @@ import BackboneDepiction from "../BackboneDepiction";
 export default class DOpEnterSibling extends DOp {
 
     test(
-        sourceLayout:Layout, sourceGraph:SBOLXGraph,
-        targetLayout:Layout, targetGraph:SBOLXGraph,
+        sourceLayout:Layout, sourceGraph:Graph,
+        targetLayout:Layout, targetGraph:Graph,
         sourceDepiction:Depiction,
         targetBBox:Rect,
         ignoreURIs:string[]):DOpResult|null {
@@ -57,7 +57,7 @@ export default class DOpEnterSibling extends DOp {
                 let newGraph = targetGraph.clone()
 
                 if(targetGraph !== sourceGraph) {
-                    newGraph.addAll(sourceGraph)
+                    newGraph.graph.addAll(sourceGraph.graph)
                 }
 
                 let newLayout = targetLayout.cloneWithNewGraph(newGraph)
@@ -79,11 +79,11 @@ export default class DOpEnterSibling extends DOp {
                     throw new Error('???')
                 }
 
-                var newParentC:SXComponent|undefined
+                var newParentC:S3Component|undefined
 
-                if(intersectingInNewLayoutDOf instanceof SXSubComponent) {
+                if(intersectingInNewLayoutDOf instanceof S3SubComponent) {
                     newParentC = intersectingInNewLayoutDOf.instanceOf
-                } else if(intersectingInNewLayoutDOf instanceof SXComponent) {
+                } else if(intersectingInNewLayoutDOf instanceof S3Component) {
                     newParentC = intersectingInNewLayoutDOf
                 } else {
                     throw new Error('???')
@@ -101,15 +101,15 @@ export default class DOpEnterSibling extends DOp {
                     throw new Error('???')
                 }
 
-                let dOf = newGraph.uriToFacade(srcDOf.uri)
+                let dOf = sbol3(newGraph).uriToFacade(srcDOf.uri)
 
                 if(!dOf) {
                     throw new Error('???')
                 }
 
-                let sc:SXSubComponent|undefined = undefined
+                let sc:S3SubComponent|undefined = undefined
 
-                if(dOf instanceof SXSubComponent) {
+                if(dOf instanceof S3SubComponent) {
 
                     // already a sc
                     // create new sc in sibling, delete our dOf
@@ -118,7 +118,7 @@ export default class DOpEnterSibling extends DOp {
 
                     dOf.destroy()
 
-                } else if(dOf instanceof SXComponent) {
+                } else if(dOf instanceof S3Component) {
 
                     // a c
                     // create new sc in sibling

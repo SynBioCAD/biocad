@@ -8,9 +8,9 @@ import { VNode, svg } from 'jfw/vdom'
 import { Matrix, Vec2, LinearRangeSet } from 'jfw/geom'
 
 import {
-    SXIdentified,
-    SXComponent,
-    SXSubComponent
+    S3Identified,
+    S3Component,
+    S3SubComponent
 } from "sbolgraph"
 
 import { Types } from 'bioterms'
@@ -22,7 +22,7 @@ import visbolite from 'visbolite'
 import parts, { shortNameFromTerm } from 'data/parts'
 
 import RenderContext from './RenderContext'
-import { SXRange, Watcher } from "sbolgraph";
+import { S3Range, Watcher } from "sbolgraph";
 
 import extend = require('xtend')
 import IdentifiedChain from '../IdentifiedChain';
@@ -32,7 +32,7 @@ export default class BackboneDepiction extends Depiction {
     static extensionLength:number = 3
 
     orientation: Orientation
-    location: SXIdentified|null
+    location: S3Identified|null
     backboneY:number
 
     locationsOfOmittedRegions:LinearRangeSet

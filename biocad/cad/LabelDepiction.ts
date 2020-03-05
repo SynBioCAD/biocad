@@ -1,4 +1,4 @@
-import { SXIdentified, SXComponent, SXSubComponent, SXLocation, SXSequenceFeature } from "sbolgraph";
+import { S3Identified, S3Component, S3SubComponent, S3Location, S3SequenceFeature } from "sbolgraph";
 
 import Layout from 'biocad/cad/Layout';
 
@@ -64,7 +64,7 @@ export default class LabelDepiction extends Depiction {
         const layout:Layout = this.layout
 
         const labelFor:Depiction = this.labelFor
-        const depictionOf:SXIdentified|undefined = labelFor.depictionOf
+        const depictionOf:S3Identified|undefined = labelFor.depictionOf
 
         if(depictionOf === undefined)
             throw new Error('???')
@@ -144,7 +144,7 @@ export default class LabelDepiction extends Depiction {
         }*/
 
         const labelFor:Depiction = this.labelFor
-        const depictionOf:SXIdentified|undefined = labelFor.depictionOf
+        const depictionOf:S3Identified|undefined = labelFor.depictionOf
 
         const svgAttr = this.attr
 
@@ -200,19 +200,19 @@ export default class LabelDepiction extends Depiction {
 
         let roles:string[] = []
 
-        if(dOf instanceof SXComponent) {
+        if(dOf instanceof S3Component) {
             roles = dOf.soTerms
-        } else if(dOf instanceof SXSubComponent) {
+        } else if(dOf instanceof S3SubComponent) {
             let def = dOf.instanceOf
             roles = def.soTerms
-        } else if(dOf instanceof SXSequenceFeature) {
+        } else if(dOf instanceof S3SequenceFeature) {
             roles = dOf.soTerms
-        } else if(dOf instanceof SXLocation) {
+        } else if(dOf instanceof S3Location) {
             let container = dOf.containingObject
-            if(container instanceof SXSequenceFeature) {
+            if(container instanceof S3SequenceFeature) {
                 roles = container.soTerms
             }
-            if(container instanceof SXSubComponent) {
+            if(container instanceof S3SubComponent) {
                 let def = container.instanceOf
                 roles = def.soTerms
             }

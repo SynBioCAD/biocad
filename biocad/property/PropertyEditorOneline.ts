@@ -1,6 +1,6 @@
 
 import { VNode, h } from 'jfw/vdom'
-import { SBOLXGraph, triple, node } from "sbolgraph";
+import { Graph, triple, node } from "sbolgraph";
 import PropertyEditor from "./PropertyEditor";
 import { keyupChange } from 'jfw/event'
 import PropertyAccessor from './PropertyAccessor';
@@ -19,7 +19,7 @@ export default class PropertyEditorOneline extends PropertyEditor {
 
     }
 
-    render(graph:SBOLXGraph):VNode {
+    render(graph:Graph):VNode {
 
         let value:string|undefined = this.accessor.get(graph)
 
@@ -38,7 +38,7 @@ export default class PropertyEditorOneline extends PropertyEditor {
 function onChange(data:any) {
 
     let editor:PropertyEditorOneline = data.editor
-    let graph:SBOLXGraph = data.graph
+    let graph:Graph = data.graph
 
     console.log(data.value)
 

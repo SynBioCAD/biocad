@@ -8,15 +8,15 @@ import Depiction, { Orientation } from "biocad/cad/Depiction";
 import ComponentDepiction from "biocad/cad/ComponentDepiction";
 import getEllipsePoint from 'jfw/geom/getEllipsePoint'
 import FeatureLocationDepiction from "biocad/cad/FeatureLocationDepiction";
-import { SXSequenceFeature, SXRange, SXComponent, SXSequence, SXIdentified } from "sbolgraph"
+import { S3SequenceFeature, S3Range, S3Component, S3Sequence, S3Identified } from "sbolgraph"
 
 export default function circularStrategy(parent:ComponentDepiction, children:Depiction[], padding) {
 
     if(!parent.depictionOf)
         throw new Error('???')
 
-    const component:SXComponent = parent.getDefinition()
-    const sequence:SXSequence|undefined = component.sequences[0]
+    const component:S3Component = parent.getDefinition()
+    const sequence:S3Sequence|undefined = component.sequences[0]
 
     const midPoint:Vec2 = parent.size.multiplyScalar(0.5)
     const radius:Vec2 = parent.size.multiplyScalar(0.5)
@@ -35,18 +35,18 @@ export default function circularStrategy(parent:ComponentDepiction, children:Dep
         if (!child.depictionOf)
             throw new Error('???')
 
-        const sequenceAnnotation:SXSequenceFeature = child.depictionOf as SXSequenceFeature
+        const sequenceAnnotation:S3SequenceFeature = child.depictionOf as S3SequenceFeature
 
-        var location:SXIdentified|null = null
+        var location:S3Identified|null = null
         
         if(child instanceof ComponentDepiction)
             location = (child as ComponentDepiction).location || null
         else if(child instanceof FeatureLocationDepiction)
             location = (child as FeatureLocationDepiction).location || null
 
-        if(location && location instanceof SXRange) {
+        if(location && location instanceof S3Range) {
 
-            const range:SXRange = location as SXRange
+            const range:S3Range = location as S3Range
 
             const start:number|undefined = range.start
             const end:number|undefined = range.end

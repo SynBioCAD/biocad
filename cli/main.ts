@@ -1,7 +1,7 @@
 
 import Layout from 'biocad/cad/Layout'
 import ImageRenderer, { ImageFormat } from 'biocad/cad/ImageRenderer'
-import { SBOLXGraph } from 'sbolgraph'
+import { Graph, SBOL3GraphView } from 'sbolgraph'
 import { Vec2 } from 'jfw/geom'
 
 import fs = require('fs')
@@ -37,7 +37,7 @@ async function testall(argv) {
 
     for(let file of fs.readdirSync('testfiles')) {
 
-        if(!file.endsWith('.xml') || file.endsWith('_sbolx.xml'))
+        if(!file.endsWith('.xml') || file.endsWith('_sbol3.xml'))
             continue
 
         let path = 'testfiles/' + file
@@ -55,9 +55,8 @@ async function server(argv) {
 
     server.use(async (req, res, next) => {
 
-        let graph = await SBOLXGraph.loadString(req.body, 'application/rdf+xml')
-
-        let layout = new Layout(graph)
+        let gv = await SBOL3GraphView.loadString(req.body, 'application/rdf+xml')
+        let layout = new Layout(gv.graph)
 
         layout.syncAllDepictions(5)
         layout.configurate([])
@@ -89,11 +88,11 @@ async function render(argv) {
 
 async function doFile(path, out, outfmt) {
 
-    let graph = await SBOLXGraph.loadString(fs.readFileSync(path) + '', 'application/rdf+xml')
+    let gv = await SBOL3GraphView.loadString(fs.readFileSync(path) + '', 'application/rdf+xml')
 
-    //fs.writeFileSync('testfiles/' + file + '_sbolx.xml', graph.serializeXML())
+    //fs.writeFileSync('testfiles/' + file + '_sbol3.xml', graph.serializeXML())
 
-    let layout = new Layout(graph)
+    let layout = new Layout(gv.graph)
 
     layout.syncAllDepictions(5)
     layout.configurate([])

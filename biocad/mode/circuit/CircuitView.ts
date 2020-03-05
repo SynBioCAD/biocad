@@ -7,7 +7,7 @@ import Layout from 'biocad/cad/Layout'
 import LayoutPOD from 'biocad/cad/LayoutPOD'
 import LayoutEditor from 'biocad/cad/LayoutEditor'
 import Depiction from 'biocad/cad/Depiction'
-import { SBOLXGraph } from 'sbolgraph';
+import { Graph } from 'sbolgraph';
 import { Vec2 } from 'jfw/geom'
 
 export default class CircuitView extends LayoutEditorView {
@@ -38,7 +38,7 @@ export default class CircuitView extends LayoutEditorView {
             //console.log(JSON.stringify(LayoutPOD.serialize(this.layout), null, 2))
         })
 
-        this.layoutEditor.onNewGraph.listen((graph:SBOLXGraph) => {
+        this.layoutEditor.onNewGraph.listen((graph:Graph) => {
 
             app.graph = graph
 

@@ -1,13 +1,13 @@
 
 import Layout from "biocad/cad/Layout";
-import { SBOLXGraph } from "sbolgraph";
+import { Graph } from "sbolgraph";
 import Depiction from "biocad/cad/Depiction";
 import { Rect } from "jfw/geom";
 
 export interface DOpResult {
 
     newLayout?:Layout|undefined
-    newGraph?:SBOLXGraph|undefined
+    newGraph?:Graph|undefined
 
     replacements:Array<{ old:Depiction, new:Depiction }>
 
@@ -34,8 +34,8 @@ export default abstract class DOp {
     //
 
     abstract test(
-        sourceLayout:Layout, sourceGraph:SBOLXGraph,
-        targetLayout:Layout, targetGraph:SBOLXGraph,
+        sourceLayout:Layout, sourceGraph:Graph,
+        targetLayout:Layout, targetGraph:Graph,
         sourceDepiction:Depiction,
         targetBBox:Rect,
         ignoreURIs:string[]):DOpResult|null

@@ -5,7 +5,7 @@ import { h, VNode } from 'jfw/vdom'
 import RemoveURIPrefixDialog from './RemoveURIPrefixDialog'
 
 import { click as clickEvent } from 'jfw/event'
-import { SBOLXGraph } from "sbolgraph";
+import { Graph, sbol3 } from "sbolgraph";
 import BiocadApp from "biocad/BiocadApp";
 import TextInput from 'jfw/ui/form-control/TextInput';
 
@@ -29,7 +29,7 @@ export default class SetupCurrentDocumentView extends View {
     render():VNode {
 
         const app:BiocadApp = this.app as BiocadApp
-        const graph:SBOLXGraph = app.graph
+        const graph:Graph = app.graph
 
 
         return h('div.jfw-main-view.sf-setup-view', {
@@ -47,7 +47,7 @@ export default class SetupCurrentDocumentView extends View {
                     h('th', 'Default'),
                     h('th'),
                     h('tbody', 
-                        graph.uriPrefixes.map((uriPrefix) => {
+                        sbol3(graph).uriPrefixes.map((uriPrefix) => {
                             return h('tr', [
                                 h('td', [
                                     h('div.sf-setup-uri-prefix', h('code', uriPrefix))

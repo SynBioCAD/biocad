@@ -8,7 +8,7 @@ import SequenceEditor from './SequenceEditor'
 import CreateComponentDialog, { CreateComponentDialogDefaults } from '../../dialog/CreateComponentDialog'
 import { App } from "jfw";
 import BiocadApp from "biocad/BiocadApp";
-import { SXComponent } from "sbolgraph";
+import { S3Component } from "sbolgraph";
 import SequenceWizard from './SequenceWizard';
 
 var n = 0
@@ -31,7 +31,7 @@ export default class SequenceView extends View {
         this.sequenceEditor = new SequenceEditor(app)
 
 
-        let select = (component:SXComponent) => {
+        let select = (component:S3Component) => {
             let seq = component.sequences[0]
 
             if(seq) {
@@ -39,7 +39,7 @@ export default class SequenceView extends View {
                 this.sequenceWizard = null
             } else {
                 this.sequenceWizard = new SequenceWizard(app, component)
-                this.sequenceWizard.onLoadedPart = (c:SXComponent) => {
+                this.sequenceWizard.onLoadedPart = (c:S3Component) => {
                     this.sequenceEditor.setComponent(c)
                     this.sequenceWizard = null
                 }
@@ -59,7 +59,7 @@ export default class SequenceView extends View {
 
                 componentType: type,
                 componentParentUri: parentUri,
-                onCreate: (c:SXComponent) => {
+                onCreate: (c:S3Component) => {
                     select(c)
                     this.sidebar.select(c)
                 }

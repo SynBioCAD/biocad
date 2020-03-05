@@ -15,11 +15,11 @@ import { TextInput, Combo } from "jfw/ui/form-control";
 import cdTypes from 'data/cdTypes'
 
 import { click as clickEvent } from 'jfw/event'
-import { SBOLXGraph } from "sbolgraph";
+import { Graph, sbol3 } from "sbolgraph";
 import BiocadApp from "biocad/BiocadApp";
 
 import { node as graphNode } from "sbolgraph"
-import { SXComponent, SXSequence } from "sbolgraph"
+import { S3Component, S3Sequence } from "sbolgraph"
 import PropertyEditorTermSet from 'biocad/property/PropertyEditorTermSet';
 import PropertyAccessorURISet from 'biocad/property/PropertyAccessorURISet';
 
@@ -43,7 +43,7 @@ export interface CreateComponentDialogOptions extends DialogOptions {
     componentType:string
     componentParentUri:string
 
-    onCreate:(c:SXComponent)=>void
+    onCreate:(c:S3Component)=>void
 
 }
 
@@ -55,9 +55,9 @@ export default class CreateComponentDialog extends Dialog {
     roleBox:PropertyEditorTermSet
     uriBox:TextInput
 
-    tempGraph:SBOLXGraph
+    tempGraph:Graph
 
-    onCreate:(c:SXComponent)=>void
+    onCreate:(c:S3Component)=>void
 
     constructor(app:App, opts:CreateComponentDialogOptions, defs:CreateComponentDialogDefaults) {
 
@@ -66,7 +66,7 @@ export default class CreateComponentDialog extends Dialog {
         this.onCreate = opts.onCreate
         
 
-        this.tempGraph = new SBOLXGraph([])
+        this.tempGraph = new Graph([])
 
         this.setTitle('Create Part')
 
@@ -86,7 +86,7 @@ export default class CreateComponentDialog extends Dialog {
         this.roleBox = new PropertyEditorTermSet(
             app as BiocadApp,
             'Roles',
-            new PropertyAccessorURISet('temp', Predicates.SBOLX.role),
+            new PropertyAccessorURISet('temp', Predicates.SBOL3.role),
             Prefixes.sequenceOntologyIdentifiersOrg,
             so,
             'SO:0000110'
@@ -109,18 +109,18 @@ export default class CreateComponentDialog extends Dialog {
     onClickCreate() {
 
         const app:BiocadApp = this.app as BiocadApp
-        const graph:SBOLXGraph = app.graph
+        const graph:Graph = app.graph
 
 
-        let roles = new SXComponent(this.tempGraph, 'temp').roles
+        let roles = new S3Component(sbol3(this.tempGraph), 'temp').roles
 
-        let prefix = graph.mostPopularUriPrefix
+        let prefix = sbol3(graph).mostPopularUriPrefix
 
         if(!prefix) {
             prefix = 'http://bazprefix/'
         }
 
-        let c = graph.createComponent(prefix, this.identifierBox.getValue(), '1')
+        let c = sbol3(graph).createComponent(prefix, this.identifierBox.getValue(), '1')
 
         for(let role of roles) {
             c.addRole(role)

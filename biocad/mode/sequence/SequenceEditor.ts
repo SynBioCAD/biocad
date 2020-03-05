@@ -1,5 +1,5 @@
 
-import { SXComponent } from "sbolgraph"
+import { S3Component } from "sbolgraph"
 
 import { h, svg } from 'jfw/vdom'
 
@@ -19,14 +19,14 @@ import RenderState from './SequenceEditorRenderState'
 import { VNode } from "jfw/vdom"
 import { Dialog } from "jfw/ui/dialog";
 import { App } from "jfw";
-import { SXSequence } from "sbolgraph"
+import { S3Sequence } from "sbolgraph"
 
 import getReverseComplementSequenceString = require('ve-sequence-utils/src/getReverseComplementSequenceString')
 
 export default class SequenceEditor extends View {
 
-    component:SXComponent|null
-    sequence:SXSequence|null
+    component:S3Component|null
+    sequence:S3Sequence|null
 
     charsPerRow:number
     charSize:number
@@ -77,7 +77,7 @@ export default class SequenceEditor extends View {
         this.bodySubTree = new SubTree(this.body)
     }
 
-    setComponent(component:SXComponent) {
+    setComponent(component:S3Component) {
 
         this.component = component
         

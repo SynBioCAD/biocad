@@ -1,7 +1,7 @@
 
 import Instruction from './Instruction'
 import Depiction from 'biocad/cad/Depiction';
-import { SXIdentified } from 'sbolgraph';
+import { S3Identified } from 'sbolgraph';
 
 export default class MarginInstruction extends Instruction {
 

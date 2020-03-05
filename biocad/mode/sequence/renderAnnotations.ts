@@ -7,7 +7,7 @@ import SequenceEditorLine from './SequenceEditorLine'
 import LinearRangeSet from "jfw/geom/LinearRangeSet";
 import IdentifiedLinearRange from "biocad/mode/sequence/IdentifiedLinearRange";
 import getNameFromRole from 'biocad/util/getNameFromRole'
-import { SXSequenceFeature, SXRange, SXLocation, SXThingWithLocation, SXSubComponent } from "sbolgraph"
+import { S3SequenceFeature, S3Range, S3Location, S3ThingWithLocation, S3SubComponent } from "sbolgraph"
 import LinearRangeTree, { LinearRangeTreeNode } from 'jfw/geom/LinearRangeTree';
 
 export default function renderAnnotations(sequenceEditor) {
@@ -118,10 +118,10 @@ export default function renderAnnotations(sequenceEditor) {
 
             var roles:Array<string>|undefined
 
-            if(range.thing instanceof SXSubComponent)
-                roles = (range.thing as SXSubComponent).instanceOf.roles
-            else if(range.thing instanceof SXSequenceFeature)
-                roles = (range.thing as SXSequenceFeature).roles
+            if(range.thing instanceof S3SubComponent)
+                roles = (range.thing as S3SubComponent).instanceOf.roles
+            else if(range.thing instanceof S3SequenceFeature)
+                roles = (range.thing as S3SequenceFeature).roles
 
             if(roles === undefined)
                 throw new Error('???')

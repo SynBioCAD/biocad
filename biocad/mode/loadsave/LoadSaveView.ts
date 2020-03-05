@@ -9,7 +9,7 @@ import Layout from '../../cad/Layout';
 import fileDialog = require('file-dialog')
 
 import { click as clickEvent } from 'jfw/event'
-import { SBOLXGraph, SBOL2Graph } from 'sbolgraph';
+import { Graph, SBOL2GraphView, SBOL3GraphView, sbol3 } from 'sbolgraph';
 
 import ImageRenderer, { ImageFormat } from 'biocad/cad/ImageRenderer'
 
@@ -255,8 +255,8 @@ async function clickImport(data)  {
 
             let app = view.app as BiocadApp
 
-            let g = await SBOLXGraph.loadString(reader.result + '', file[0].type)
-            app.loadGraph(g)
+            let g = await SBOL3GraphView.loadString(reader.result + '', file[0].type)
+            app.loadGraph(g.graph)
         }
 
         reader.readAsText(file[0])
@@ -298,7 +298,7 @@ async function clickExportBiocad(data)  {
 
     let graph = (view.app as BiocadApp).graph
 
-    let xml = graph.serializeXML()
+    let xml = sbol3(graph).serializeXML()
 
     let blob = new Blob([ xml ], {
         type: 'application/rdf+xml'
@@ -314,9 +314,8 @@ async function clickExportSBOL2(data)  {
 
     let graph = (view.app as BiocadApp).graph
 
-    let graph2 = new SBOL2Graph()
-    
-    await graph2.loadString(graph.serializeXML())
+    let graph2 = new SBOL2GraphView(new Graph())
+    await graph2.loadString(sbol3(graph).serializeXML())
 
     let xml = graph2.serializeXML()
 

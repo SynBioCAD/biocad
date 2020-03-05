@@ -1,7 +1,7 @@
 
 import { Rect, Vec2 } from "jfw/geom";
 import Depiction, { Opacity } from "biocad/cad/Depiction";
-import { SBOLXGraph, SXComponent, SXSubComponent } from "sbolgraph";
+import { Graph, S3Component, S3SubComponent } from "sbolgraph";
 import Layout from "biocad/cad/Layout";
 import DOp, { DOpResult } from "./DOp";
 import ComponentDepiction from "../ComponentDepiction";
@@ -12,8 +12,8 @@ import BackboneDepiction from "../BackboneDepiction";
 export default class DOpMoveInBackbone extends DOp {
 
     test(
-        sourceLayout:Layout, sourceGraph:SBOLXGraph,
-        targetLayout:Layout, targetGraph:SBOLXGraph,
+        sourceLayout:Layout, sourceGraph:Graph,
+        targetLayout:Layout, targetGraph:Graph,
         sourceDepiction:Depiction,
         targetBBox:Rect,
         ignoreURIs:string[]):DOpResult|null {

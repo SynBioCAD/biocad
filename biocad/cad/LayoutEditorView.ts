@@ -16,7 +16,7 @@ import Layout from 'biocad/cad/Layout'
 import LayoutEditor from 'biocad/cad/LayoutEditor'
 import { App } from "jfw";
 
-import { SBOLXGraph } from "sbolgraph"
+import { Graph } from "sbolgraph"
 import Depiction from "biocad/cad/Depiction";
 import CircuitViewLeftSidebar from "biocad/mode/circuit/CircuitViewLeftSidebar";
 import CircuitViewRightSidebar from "biocad/mode/circuit/CircuitViewRightSidebar";
@@ -44,7 +44,7 @@ export default abstract class LayoutEditorView extends View {
         this.createLayout()
 
 
-        app.onLoadGraph.listen((graph:SBOLXGraph) => {
+        app.onLoadGraph.listen((graph:Graph) => {
             this.createLayout()
         })
 

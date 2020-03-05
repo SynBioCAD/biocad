@@ -1,6 +1,6 @@
 import Depiction from "./Depiction";
 import { Specifiers } from "bioterms";
-import { SXComponent, SXSubComponent, SXInteraction } from "sbolgraph";
+import { S3Component, S3SubComponent, S3Interaction } from "sbolgraph";
 import LayoutEditor from "./LayoutEditor";
 
 export default function createInteraction(layoutEditor:LayoutEditor, from:Depiction, to:Depiction) {
@@ -11,11 +11,11 @@ export default function createInteraction(layoutEditor:LayoutEditor, from:Depict
     let type = Specifiers.SBO.Stimulation
     let ourrole = Specifiers.SBO.Stimulator
     let theirrole = Specifiers.SBO.Stimulated
-    let interaction:SXInteraction|null = null
-    let wrapper:SXComponent|null = null
+    let interaction:S3Interaction|null = null
+    let wrapper:S3Component|null = null
 
-    if(fOf instanceof SXComponent) {
-        if(tOf instanceof SXComponent) {
+    if(fOf instanceof S3Component) {
+        if(tOf instanceof S3Component) {
             // from component to component
             wrapper = fOf.wrap('untitled')
             wrapper.setBoolProperty('http://biocad.io/terms/untitled', true)
@@ -23,19 +23,19 @@ export default function createInteraction(layoutEditor:LayoutEditor, from:Depict
             let scA = wrapper.subComponents[0]
             let scB = wrapper.subComponents[1]
             interaction = scA.createInteractionWith(scB, id, type, ourrole, theirrole)
-        } else if(tOf instanceof SXSubComponent) {
+        } else if(tOf instanceof S3SubComponent) {
             // from component to subcomponent
             let scA = tOf.containingComponent.createSubComponent(fOf)
             interaction = scA.createInteractionWith(tOf, id, type, ourrole, theirrole)
         } else {
             throw new Error('???')
         }
-    } else if(fOf instanceof SXSubComponent) {
-        if(tOf instanceof SXComponent) {
+    } else if(fOf instanceof S3SubComponent) {
+        if(tOf instanceof S3Component) {
             // from subcomponent to component
             let scB = fOf.containingComponent.createSubComponent(tOf)
             interaction = fOf.createInteractionWith(scB, id, type, ourrole, theirrole)
-        } else if(tOf instanceof SXSubComponent) {
+        } else if(tOf instanceof S3SubComponent) {
             // from subcomponent to subcomponent
             if(tOf.containingComponent.uri === fOf.containingComponent.uri) {
                 interaction = fOf.createInteractionWith(tOf,id, type, ourrole, theirrole)

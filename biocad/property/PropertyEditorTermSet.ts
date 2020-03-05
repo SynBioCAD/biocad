@@ -1,6 +1,6 @@
 
 import { VNode, h } from 'jfw/vdom'
-import { SBOLXGraph, triple } from "sbolgraph";
+import { Graph, triple } from "sbolgraph";
 import PropertyEditor from "./PropertyEditor";
 import OntologyTermSelectorDialog from 'biocad/dialog/OntologyTermSelectorDialog'
 import BiocadApp from 'biocad/BiocadApp'
@@ -31,7 +31,7 @@ export default class PropertyEditorTermSet extends PropertyEditor {
         this.ontologyNamespace = ontologyNamespace
     }
 
-    render(graph:SBOLXGraph):VNode {
+    render(graph:Graph):VNode {
 
         let uris = this.accessor.get(graph)
 
@@ -68,7 +68,7 @@ async function clickChoose(data) {
 
     let editor:PropertyEditorTermSet = data.editor
 
-    let graph:SBOLXGraph = data.graph
+    let graph:Graph = data.graph
 
     let app = editor.app
 
@@ -91,7 +91,7 @@ function clickRemove(data) {
     let editor:PropertyEditorTermSet = data.editor
     let uri:string = data.uri
 
-    let graph:SBOLXGraph = data.graph
+    let graph:Graph = data.graph
 
     let cur = editor.accessor.get(graph)
 

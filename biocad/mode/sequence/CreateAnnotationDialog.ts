@@ -12,7 +12,7 @@ import Combo from 'jfw/ui/form-control/Combo'
 import roles from 'data/roles'
 import { Specifiers } from "bioterms";
 import Button from "jfw/ui/form-control/Button";
-import { SXSequence, SXComponent } from "sbolgraph"
+import { S3Sequence, S3Component } from "sbolgraph"
 
 export default class CreateAnnotationDialog extends Dialog {
 
@@ -31,14 +31,14 @@ export default class CreateAnnotationDialog extends Dialog {
             modal: true,
             annoStart: 0,
             annoEnd: 0,
-            SXComponent: null,
+            S3Component: null,
             sequence: null
             
         }, opts))
 
 
-        const sequence:SXSequence = opts.sequence
-        const component:SXComponent = opts.SXComponent
+        const sequence:S3Sequence = opts.sequence
+        const component:S3Component = opts.S3Component
 
 
         this.setTitle('Annotate Sequence')

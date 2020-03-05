@@ -4,11 +4,11 @@ import Combo from 'jfw/ui/form-control/Combo'
 import { Specifiers } from 'bioterms'
 import { h, VNode } from "jfw/vdom";
 
-import { SXComponent } from "sbolgraph"
+import { S3Component } from "sbolgraph"
 
 import { change as changeEvent } from 'jfw/event'
 
-export default function renderCDStrandChooser(cd:SXComponent) {
+export default function renderCDStrandChooser(cd:S3Component) {
 
     const options = [
         {
@@ -36,7 +36,7 @@ export default function renderCDStrandChooser(cd:SXComponent) {
 
 function onChange(data) {
     
-    const cd:SXComponent = data.cd
+    const cd:S3Component = data.cd
     const value:string = data.value
 
     console.log('changing strand to ' + value)

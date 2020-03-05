@@ -5,8 +5,8 @@ import { App } from 'jfw'
 import { click as clickEvent } from 'jfw/event'
 
 export enum Encoding {
-    SBOLX,
-    SBOLXGraph,
+    SBOL3,
+    Graph,
     SBOL2,
     SBOL2Graph,
     Layout
@@ -22,7 +22,7 @@ export default class EncodingSelector extends View {
 
     constructor(app:App) {
         super(app)
-        this.currentEncoding = Encoding.SBOLX
+        this.currentEncoding = Encoding.SBOL3
     }
 
     render():VNode {

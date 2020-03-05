@@ -4,7 +4,7 @@ import { h, svg, VNode } from 'jfw/vdom'
 import { View } from 'jfw/ui'
 import BiocadApp from "biocad/BiocadApp";
 import Depiction from "biocad/cad/Depiction";
-import { SXIdentified, SXSubComponent, SXComponent, SXInteraction } from "sbolgraph"
+import { S3Identified, S3SubComponent, S3Component, S3Interaction, sbol3, S2ExperimentalData } from "sbolgraph"
 
 import describeSOUri from 'data/describeSOUri'
 import renderCDTypeChooser from "biocad/stateless-ui/renderCDTypeChooser";
@@ -43,38 +43,38 @@ import PropertyEditorDebug from '../../property/PropertyEditorDebug';
 const strands = [
     {
         name: 'Forward',
-        uri: Specifiers.SBOLX.Orientation.Inline
+        uri: Specifiers.SBOL3.Orientation.Inline
     },
     {
         name: 'Reverse Complement',
-        uri: Specifiers.SBOLX.Orientation.ReverseComplement
+        uri: Specifiers.SBOL3.Orientation.ReverseComplement
     }
 ]
 
 const types = [
     {
         name: 'DNA',
-        uri: Specifiers.SBOLX.Type.DNA
+        uri: Specifiers.SBOL3.Type.DNA
     },
     {
         name: 'RNA',
-        uri: Specifiers.SBOLX.Type.RNA
+        uri: Specifiers.SBOL3.Type.RNA
     },
     {
         name: 'Protein',
-        uri: Specifiers.SBOLX.Type.Protein
+        uri: Specifiers.SBOL3.Type.Protein
     },
     {
         name: 'Complex',
-        uri: Specifiers.SBOLX.Type.Complex
+        uri: Specifiers.SBOL3.Type.Complex
     },
     {
         name: 'Small Molecule',
-        uri: Specifiers.SBOLX.Type.SmallMolecule
+        uri: Specifiers.SBOL3.Type.SmallMolecule
     },
     {
         name: 'Effector',
-        uri: Specifiers.SBOLX.Type.Effector
+        uri: Specifiers.SBOL3.Type.Effector
     }
 ]
 
@@ -123,11 +123,11 @@ export default class Inspector extends View {
                 continue
             }
 
-            let effectiveComponent:null|SXComponent = null
+            let effectiveComponent:null|S3Component = null
 
-            if(dOf instanceof SXComponent) {
+            if(dOf instanceof S3Component) {
                 effectiveComponent = dOf
-            } else if(dOf instanceof SXSubComponent) {
+            } else if(dOf instanceof S3SubComponent) {
                 effectiveComponent = dOf.instanceOf
             }
 
@@ -137,7 +137,7 @@ export default class Inspector extends View {
                     for(let d of layout.getDepictionsForUri(effectiveComponent.uri)) {
                         d.touch()
                     }
-                    let instantiations = effectiveComponent.graph.getInstancesOfComponent(effectiveComponent)
+                    let instantiations = sbol3(effectiveComponent.graph).getInstancesOfComponent(effectiveComponent)
                     for(let instance of instantiations) {
                         for(let d of layout.getDepictionsForUri(instance.uri)) {
                             d.touch()
@@ -158,7 +158,7 @@ export default class Inspector extends View {
                     for(let d of layout.getDepictionsForUri(effectiveComponent.uri)) {
                         d.touchRecursive()
                     }
-                    let instantiations = effectiveComponent.graph.getInstancesOfComponent(effectiveComponent)
+                    let instantiations = sbol3(effectiveComponent.graph).getInstancesOfComponent(effectiveComponent)
                     for(let instance of instantiations) {
                         for(let d of layout.getDepictionsForUri(instance.uri)) {
                             d.touchRecursive()
@@ -185,13 +185,13 @@ export default class Inspector extends View {
             }
 
             this.editors.push(new PropertyEditorOneline('Name', new PropertyAccessorString(dOf.uri, Predicates.Dcterms.title, changeName)))
-            this.editors.push(new PropertyEditorOneline('Identifier', new PropertyAccessorString(dOf.uri, Predicates.SBOLX.id, changeNonRecursive)))
+            this.editors.push(new PropertyEditorOneline('Identifier', new PropertyAccessorString(dOf.uri, Predicates.SBOL3.id, changeNonRecursive)))
 
             if(effectiveComponent) {
 
-                this.editors.push(new PropertyEditorCombo('Type', new PropertyAccessorURI(effectiveComponent.uri, Predicates.SBOLX.type), types))
-                this.editors.push(new PropertyEditorTermSet(this.app as BiocadApp, 'Roles', new PropertyAccessorURISet(effectiveComponent.uri, Predicates.SBOLX.role, changeNonRecursive), Prefixes.sequenceOntologyIdentifiersOrg, so, 'SO:0000110'))
-                //this.editors.push(new PropertyEditorTermSet('Roles', dOf.uri, Predicates.SBOLX.hasRole, strands))
+                this.editors.push(new PropertyEditorCombo('Type', new PropertyAccessorURI(effectiveComponent.uri, Predicates.SBOL3.type), types))
+                this.editors.push(new PropertyEditorTermSet(this.app as BiocadApp, 'Roles', new PropertyAccessorURISet(effectiveComponent.uri, Predicates.SBOL3.role, changeNonRecursive), Prefixes.sequenceOntologyIdentifiersOrg, so, 'SO:0000110'))
+                //this.editors.push(new PropertyEditorTermSet('Roles', dOf.uri, Predicates.SBOL3.hasRole, strands))
 
             }
 
@@ -202,7 +202,7 @@ export default class Inspector extends View {
             if(depiction instanceof InteractionDepiction) {
                 let interaction = depiction.depictionOf
 
-                if(! (interaction instanceof SXInteraction)) {
+                if(! (interaction instanceof S3Interaction)) {
                     throw new Error('???')
                 }
 
@@ -211,9 +211,9 @@ export default class Inspector extends View {
                     this.update()
                 }
 
-                this.editors.push(new PropertyEditorTermSet(this.app as BiocadApp, 'Roles', new PropertyAccessorURISet(interaction.uri, Predicates.SBOLX.type, changeNonRecursive), Prefixes.sbo, systemsBiologyOntology, 'SBO:0000231'))
+                this.editors.push(new PropertyEditorTermSet(this.app as BiocadApp, 'Roles', new PropertyAccessorURISet(interaction.uri, Predicates.SBOL3.type, changeNonRecursive), Prefixes.sbo, systemsBiologyOntology, 'SBO:0000231'))
 
-                //this.editors.push(new PropertyEditorSiblingComponent('Participant', interaction.containingModule.uri, participation.uri, Predicates.SBOLX.participant))
+                //this.editors.push(new PropertyEditorSiblingComponent('Participant', interaction.containingModule.uri, participation.uri, Predicates.SBOL3.participant))
                 this.editors.push(new PropertyEditorInteractionParticipants(this.app as BiocadApp, interaction.uri, changeInteraction))
             }
 
@@ -253,9 +253,13 @@ export default class Inspector extends View {
                 }, thumbElements)
             }
 
-            const depictionOf = graph.uriToFacade(this.inspecting[0].uri)
+            const depictionOf = sbol3(graph).uriToFacade(this.inspecting[0].uri)
 
             if(depictionOf) {
+
+                if(! (depictionOf instanceof S3Identified)) {
+                    throw new Error('???')
+                }
 
                 elements.push(h('div.sf-inspector-top', [
                     thumb ? thumb : h('span'),
@@ -338,13 +342,13 @@ export default class Inspector extends View {
 
         this.inspecting.forEach((depiction) => {
 
-            const depictionOf:SXIdentified|undefined = depiction.depictionOf
+            const depictionOf:S3Identified|undefined = depiction.depictionOf
 
             if(depictionOf !== undefined) {
 
                 tableElements.push(propertyEditorOneline(depictionOf, Predicates.Dcterms.title))
 
-                var cd:SXComponent|null = cdFromDepiction(depictionOf)
+                var cd:S3Component|null = cdFromDepiction(depictionOf)
 
                 if(cd !== null) {
 
@@ -425,7 +429,7 @@ export default class Inspector extends View {
 
                 if(depiction.depictionOf !== undefined) {
 
-                    const cd: SXComponent | null = cdFromDepiction(depiction.depictionOf)
+                    const cd: S3Component | null = cdFromDepiction(depiction.depictionOf)
 
                     if (cd !== null) {
                         cd.addRole('http://lol/' + role)
@@ -443,13 +447,13 @@ export default class Inspector extends View {
     }*/
 
 /*
-function cdFromDepiction(depictionOf:SXIdentified):SXComponent|null {
+function cdFromDepiction(depictionOf:S3Identified):S3Component|null {
 
 
-    if (depictionOf instanceof SXSubComponent) {
-        return (depictionOf as SXSubComponent).instanceOf
-    } else if (depictionOf instanceof SXComponent) {
-        return (depictionOf as SXComponent)
+    if (depictionOf instanceof S3SubComponent) {
+        return (depictionOf as S3SubComponent).instanceOf
+    } else if (depictionOf instanceof S3Component) {
+        return (depictionOf as S3Component)
     }
 
     return null
@@ -459,7 +463,7 @@ function cdFromDepiction(depictionOf:SXIdentified):SXComponent|null {
 function clickRemoveRole(data) {
 
     const view:Inspector = data.view
-    const cd:SXComponent = data.cd
+    const cd:S3Component = data.cd
     const role:string = data.role
 
     cd.removeRole(role)
@@ -471,7 +475,7 @@ function clickRemoveRole(data) {
 }
 
 
-function propertyEditorOneline(title:string, object:SXIdentified, predicate:string) {
+function propertyEditorOneline(title:string, object:S3Identified, predicate:string) {
 
     return h('tr.sf-inspector-oneline', [
         h('td', 'Name'),
@@ -480,7 +484,7 @@ function propertyEditorOneline(title:string, object:SXIdentified, predicate:stri
 
 }
 
-function propertyEditorCombo(title:string, object:SXIdentified, predicate:string, options:{name:string,value:string}[]) {
+function propertyEditorCombo(title:string, object:S3Identified, predicate:string, options:{name:string,value:string}[]) {
 
     return h('select.jfw-select', {
         //'ev-change': changeEvent(onChange, { cd: cd }),
@@ -495,7 +499,7 @@ function propertyEditorCombo(title:string, object:SXIdentified, predicate:string
 
 }
 
-function propertyEditorSet(title:string, object:SXIdentified, predicate:string, options:{name:string,value:string}[]) {
+function propertyEditorSet(title:string, object:S3Identified, predicate:string, options:{name:string,value:string}[]) {
 
     let els: VNode[] = []
 

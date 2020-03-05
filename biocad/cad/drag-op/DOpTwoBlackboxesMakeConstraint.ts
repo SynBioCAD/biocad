@@ -1,7 +1,7 @@
 
 import { Rect } from "jfw/geom";
 import Depiction, { Opacity, Fade } from "biocad/cad/Depiction";
-import { SBOLXGraph, SXComponent, SXSubComponent } from "sbolgraph";
+import { Graph, S3Component, S3SubComponent, Facade, S3Identified, sbol3 } from "sbolgraph";
 import Layout from "biocad/cad/Layout";
 import DOp, { DOpResult } from "./DOp";
 import ComponentDepiction from "../ComponentDepiction";
@@ -12,8 +12,8 @@ import IdentifiedChain from "../../IdentifiedChain";
 export default class DOpTwoBlackboxesMakeConstraint extends DOp {
 
     test(
-        sourceLayout:Layout, sourceGraph:SBOLXGraph,
-        targetLayout:Layout, targetGraph:SBOLXGraph,
+        sourceLayout:Layout, sourceGraph:Graph,
+        targetLayout:Layout, targetGraph:Graph,
         sourceDepiction:Depiction,
         targetBBox:Rect,
         ignoreURIs:string[]):DOpResult|null {
@@ -51,18 +51,17 @@ export default class DOpTwoBlackboxesMakeConstraint extends DOp {
             
 
 
-            let ourDOf = sourceDepiction._depictionOf
-            let theirDOf = intersecting._depictionOf
+            let ourDOf:Facade|undefined = sourceDepiction._depictionOf
+            let theirDOf:Facade|undefined = intersecting._depictionOf
 
             if(ourDOf === undefined || theirDOf === undefined)
                 continue
 
 
             let newGraph = targetGraph.clone()
-            newGraph.addAll(sourceGraph)
-            ourDOf = newGraph.uriToFacade(ourDOf.uri)
-            theirDOf = newGraph.uriToFacade(theirDOf.uri)
-
+            newGraph.graph.addAll(sourceGraph.graph)
+            ourDOf = sbol3(newGraph).uriToFacade(ourDOf.uri)
+            theirDOf = sbol3(newGraph).uriToFacade(theirDOf.uri)
 
             let newLayout = targetLayout.cloneWithNewGraph(newGraph)
 
@@ -72,11 +71,11 @@ export default class DOpTwoBlackboxesMakeConstraint extends DOp {
                 chain = intersecting.parent.identifiedChain
             }
 
-            if(theirDOf instanceof SXComponent) {
+            if(theirDOf instanceof S3Component) {
 
                 // Joining with a component. wrap it and use createAfter
 
-                let wrapper:SXComponent = theirDOf.wrap('untitled')
+                let wrapper:S3Component = theirDOf.wrap('untitled')
                 chain = chain.extend(wrapper)
 
                 wrapper.setBoolProperty('http://biocad.io/terms/untitled', true)
@@ -86,15 +85,15 @@ export default class DOpTwoBlackboxesMakeConstraint extends DOp {
                 if(scInWrapper === undefined)
                     throw new Error('???')
 
-                let newSc:SXSubComponent|undefined = undefined
+                let newSc:S3SubComponent|undefined = undefined
 
-                if(ourDOf instanceof SXComponent) {
+                if(ourDOf instanceof S3Component) {
 
                     newSc = scInWrapper.createAfter(ourDOf)
 
                     chain = chain.extend(newSc)
 
-                } else if(ourDOf instanceof SXSubComponent) {
+                } else if(ourDOf instanceof S3SubComponent) {
 
                     newSc = scInWrapper.createAfter(ourDOf.instanceOf)
 
@@ -139,18 +138,18 @@ export default class DOpTwoBlackboxesMakeConstraint extends DOp {
                 return { newGraph, newLayout, validForRect: wrapperDepiction.absoluteBoundingBox, replacements: [] }
 
 
-            } else if(theirDOf instanceof SXSubComponent) {
+            } else if(theirDOf instanceof S3SubComponent) {
 
                 // Joining with a SC. use createAfter
 
-                let newSc:SXSubComponent|undefined = undefined
+                let newSc:S3SubComponent|undefined = undefined
 
-                if(ourDOf instanceof SXComponent) {
+                if(ourDOf instanceof S3Component) {
 
                     newSc = theirDOf.createAfter(ourDOf)
                     chain = chain.extend(newSc)
 
-                } else if(ourDOf instanceof SXSubComponent) {
+                } else if(ourDOf instanceof S3SubComponent) {
 
                     newSc = theirDOf.createAfter(ourDOf.instanceOf)
                     chain = chain.extend(newSc)

@@ -2,7 +2,7 @@
 import Dialog from "jfw/ui/dialog/Dialog";
 import BiocadApp from "biocad/BiocadApp";
 import { DialogOptions } from "jfw/ui/dialog";
-import { Repository, SXComponent } from "sbolgraph"
+import { Repository, S3Component } from "sbolgraph"
 import { SearchQuery, SearchResult } from "sbolgraph"
 import { Specifiers, Types } from "bioterms";
 import { h, VNode } from "jfw/vdom";
@@ -22,7 +22,7 @@ export class BrowseSBHDialogOptions extends DialogOptions {
     }
 
     query:SearchQuery
-    targetComponent:SXComponent|null
+    targetComponent:S3Component|null
 
 }
 
@@ -34,9 +34,9 @@ export default class BrowseSBHDialog extends Dialog {
 
     query:SearchQuery
 
-    targetComponent:SXComponent|null
+    targetComponent:S3Component|null
 
-    onUsePart:(part:SXComponent)=>void
+    onUsePart:(part:S3Component)=>void
 
     constructor(app:BiocadApp, opts:BrowseSBHDialogOptions) {
 

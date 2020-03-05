@@ -17,7 +17,7 @@ import { Hook } from "jfw/util";
 import Droppable from "biocad/droppable/Droppable";
 import LayoutPOD from "biocad/cad/LayoutPOD";
 import SVGDefs from "biocad/cad/SVGDefs";
-import { SBOLXGraph } from "sbolgraph"
+import { Graph, SBOL3GraphView, sbol3 } from "sbolgraph"
 import LayoutEditorDebugLog from './LayoutEditorDebugLog';
 import DepictionRef from './DepictionRefByUid';
 
@@ -33,10 +33,10 @@ export default class LayoutEditor extends View {
      */
     proposedLayout:Layout|null
     onProposeLayout:Hook<Layout>
-    //private proposedGraph:SBOLXGraph|null
+    //private proposedGraph:Graph|null
 
 
-    onNewGraph:Hook<SBOLXGraph>
+    onNewGraph:Hook<Graph>
 
 
     overlay:LayoutEditorOverlay
@@ -66,7 +66,7 @@ export default class LayoutEditor extends View {
         this.onSelectDepictions = new Hook<Depiction[]>()
         this.onProposeLayout = new Hook<Layout>()
 
-        this.onNewGraph = new Hook<SBOLXGraph>()
+        this.onNewGraph = new Hook<Graph>()
 
         this.layout = layout
         this.layout.versionChangedCallback = () => this.app.update()
@@ -92,7 +92,7 @@ export default class LayoutEditor extends View {
         console.time('push undo level')
 
         let layout = LayoutPOD.serialize(this.layout)
-        let graph = this.layout.graph.serializeXML() // TODO: use a faster serialization?
+        let graph = sbol3(this.layout.graph).serializeXML() // TODO: use a faster serialization?
 
         this.undoLevels.push({ layout, graph })
 
@@ -110,9 +110,9 @@ export default class LayoutEditor extends View {
 
         let oldState = this.undoLevels[this.undoLevels.length - 1]
 
-        let newGraph = await SBOLXGraph.loadString(oldState.graph, 'application/rdf+xml')
+        let newGraph = await SBOL3GraphView.loadString(oldState.graph, 'application/rdf+xml')
 
-        let layout = LayoutPOD.deserialize(newGraph, oldState.layout)
+        let layout = LayoutPOD.deserialize(newGraph.graph, oldState.layout)
         this.undoLevels.pop()
 
         this.immediatelyReplaceLayout(layout)

@@ -1,5 +1,5 @@
 import PropertyEditor from "./PropertyEditor";
-import { SBOLXGraph, triple, node, SXComponent, SXSubComponent } from "sbolgraph";
+import { Graph, triple, node, S3Component, S3SubComponent, sbol3 } from "sbolgraph";
 import { VNode, h } from 'jfw/vdom'
 import PropertyEditorCombo from "./PropertyEditorCombo";
 import { change as changeEvent } from 'jfw/event'
@@ -22,16 +22,16 @@ export default class PropertyEditorSubComponent extends PropertyEditor {
 
     }
     
-    render(graph:SBOLXGraph):VNode {
+    render(graph:Graph):VNode {
 
         let value:string|undefined = triple.objectUri(
             graph.matchOne(this.objectURI, this.predicate, null)
         )
 
-        let parentComponent = graph.uriToFacade(this.componentURI)
-        let subComponent = value ? graph.uriToFacade(value) : undefined
+        let parentComponent = sbol3(graph).uriToFacade(this.componentURI)
+        let subComponent = value ? sbol3(graph).uriToFacade(value) : undefined
         
-        if(! (parentComponent instanceof SXComponent) || ! (subComponent instanceof SXSubComponent)) {
+        if(! (parentComponent instanceof S3Component) || ! (subComponent instanceof S3SubComponent)) {
             throw new Error('not subcomponent?')
         }
 
@@ -59,7 +59,7 @@ export default class PropertyEditorSubComponent extends PropertyEditor {
 function onChange(data:any) {
 
     let editor:PropertyEditorSubComponent = data.editor
-    let graph:SBOLXGraph = data.graph
+    let graph:Graph = data.graph
 
     console.log(data.value)
 

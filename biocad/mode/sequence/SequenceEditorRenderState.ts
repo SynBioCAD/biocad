@@ -1,4 +1,4 @@
-import { SXComponent, SXSequence, SXSequenceFeature, SXRange, SXIdentified, SXLocation, SXSubComponent, SXThingWithLocation } from "sbolgraph";
+import { S3Component, S3Sequence, S3SequenceFeature, S3Range, S3Identified, S3Location, S3SubComponent, S3ThingWithLocation, sbol3 } from "sbolgraph";
 
 import assert from 'power-assert'
 
@@ -24,8 +24,8 @@ import binarysearch = require('binarysearch')
  */
 export default class SequenceEditorRenderState {
 
-    component:SXComponent
-    sequence:SXSequence
+    component:S3Component
+    sequence:S3Sequence
     elements:string
     charSize:number
     charsPerRow:number
@@ -39,7 +39,7 @@ export default class SequenceEditorRenderState {
     marginWidth:number
     rangeColors:any
     allLinesBBox:Rect
-    annoLabelBBoxes:Array<[SXThingWithLocation, Rect]>
+    annoLabelBBoxes:Array<[S3ThingWithLocation, Rect]>
     annoHoverUris:Set<string>
     rangeDescriptors:Map<string, string>
 
@@ -285,7 +285,7 @@ export default class SequenceEditorRenderState {
 
 }
 
-function getAnnotatedRanges(component:SXComponent) {
+function getAnnotatedRanges(component:S3Component) {
 
     const ranges = new LinearRangeSet()
 
@@ -295,7 +295,7 @@ function getAnnotatedRanges(component:SXComponent) {
 
     addRangesFromComponent(0, component)
 
-    function addRangesFromComponent(base:number, component:SXComponent) {
+    function addRangesFromComponent(base:number, component:S3Component) {
 
         for(let feature of component.sequenceFeatures) {
 
@@ -303,9 +303,9 @@ function getAnnotatedRanges(component:SXComponent) {
 
                 switch(location.objectType) {
 
-                    case Types.SBOLX.Range:
+                    case Types.SBOL3.Range:
 
-                        var range:SXRange = new SXRange(location.graph, location.uri)
+                        var range:S3Range = new S3Range(sbol3(location.graph), location.uri)
 
                         const start:number|undefined = range.start
                         const end:number|undefined = range.end
@@ -332,9 +332,9 @@ function getAnnotatedRanges(component:SXComponent) {
 
                 switch(location.objectType) {
 
-                    case Types.SBOLX.Range:
+                    case Types.SBOL3.Range:
 
-                        var range:SXRange = new SXRange(location.graph, location.uri)
+                        var range:S3Range = new S3Range(sbol3(location.graph), location.uri)
 
                         const start:number|undefined = range.start
                         const end:number|undefined = range.end

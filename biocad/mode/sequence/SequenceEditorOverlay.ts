@@ -13,7 +13,7 @@ import SequenceEditor from './SequenceEditor'
 import SequenceEditorContextMenu from './SequenceEditorContextMenu'
 
 import KeyboardListener from 'jfw/util/KeyboardListener'
-import { SXSequence, SXThingWithLocation } from "sbolgraph"
+import { S3Sequence, S3ThingWithLocation } from "sbolgraph"
 import { Specifiers } from "bioterms";
 import SequenceEditorLine from "biocad/mode/sequence/SequenceEditorLine";
 
@@ -60,7 +60,7 @@ export default class SequenceEditorOverlay extends View {
         if(!ev.key)
             return
 
-        const seq:SXSequence|null = this.sequenceEditor.sequence
+        const seq:S3Sequence|null = this.sequenceEditor.sequence
 
         if(seq === null)
             throw new Error('???')

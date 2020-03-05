@@ -1,8 +1,8 @@
 
-import { SXComponent } from "sbolgraph";
+import { S3Component } from "sbolgraph";
 
 import Droppable from "./Droppable";
-import { SBOLXGraph } from "sbolgraph"
+import { Graph } from "sbolgraph"
 import Layout from "biocad/cad/Layout";
 import LayoutThumbnail from "biocad/cad/LayoutThumbnail";
 import BiocadApp from "biocad/BiocadApp";
@@ -10,20 +10,20 @@ import { VNode } from "jfw/vdom";
 import Vec2 from "jfw/geom/Vec2";
 import Rect from "jfw/geom/Rect";
 import Depiction from "biocad/cad/Depiction";
-import { SXSubComponent, SXSequenceFeature, SXIdentified, SXOrientedLocation } from "sbolgraph"
+import { S3SubComponent, S3SequenceFeature, S3Identified, S3OrientedLocation } from "sbolgraph"
 import { Specifiers } from "bioterms";
 import MarginInstruction from "../cad/layout-instruction/MarginInstruction";
 
 export default class SBOLDroppable extends Droppable {
 
-    graph:SBOLXGraph
+    graph:Graph
     topLevelURIs:string[]|undefined
     ignoreForDragOps:string[]|undefined
 
     layout:Layout
     thumb:LayoutThumbnail
 
-    constructor(app:BiocadApp, graph:SBOLXGraph, topLevelURIs?:string[], ignoreForDragOps?:string[]) {
+    constructor(app:BiocadApp, graph:Graph, topLevelURIs?:string[], ignoreForDragOps?:string[]) {
 
         super()
 
@@ -59,7 +59,7 @@ export default class SBOLDroppable extends Droppable {
     }
 
     /*
-    finalizeDrop(newGraph:SBOLXGraph, depiction:Depiction):void {
+    finalizeDrop(newGraph:Graph, depiction:Depiction):void {
 
         newGraph.addAll(this.graph)
 
@@ -68,7 +68,7 @@ export default class SBOLDroppable extends Droppable {
             throw new Error('???')
 
 
-        const realDepictionOf:SXIdentified|undefined = newGraph.uriToFacade(depiction.depictionOf.uri)
+        const realDepictionOf:S3Identified|undefined = newGraph.uriToFacade(depiction.depictionOf.uri)
 
         if(realDepictionOf === undefined)
             throw new Error('???')
@@ -78,34 +78,34 @@ export default class SBOLDroppable extends Droppable {
 
         if(depiction.parent) {
 
-            const parentDepictionOf:SXIdentified|undefined = depiction.parent.depictionOf
+            const parentDepictionOf:S3Identified|undefined = depiction.parent.depictionOf
 
             if(parentDepictionOf === undefined)
                 throw new Error('???')
 
-            var cDef:SXComponent|null = null
+            var cDef:S3Component|null = null
 
-            if(parentDepictionOf instanceof SXComponent) {
-                cDef = parentDepictionOf as SXComponent
-            } else if(parentDepictionOf instanceof SXSubComponent) {
-                cDef = (parentDepictionOf as SXSubComponent).instanceOf
+            if(parentDepictionOf instanceof S3Component) {
+                cDef = parentDepictionOf as S3Component
+            } else if(parentDepictionOf instanceof S3SubComponent) {
+                cDef = (parentDepictionOf as S3SubComponent).instanceOf
             }
 
             if(cDef !== null) {
 
-                var c:SXSubComponent|undefined = undefined
+                var c:S3SubComponent|undefined = undefined
 
-                if(realDepictionOf instanceof SXComponent) {
-                    c = cDef.createSubComponent(realDepictionOf as SXComponent)
-                } else if(realDepictionOf instanceof SXSubComponent) {
-                    c = realDepictionOf as SXSubComponent
-                    cDef.createSubComponent((realDepictionOf as SXSubComponent).instanceOf)
+                if(realDepictionOf instanceof S3Component) {
+                    c = cDef.createSubComponent(realDepictionOf as S3Component)
+                } else if(realDepictionOf instanceof S3SubComponent) {
+                    c = realDepictionOf as S3SubComponent
+                    cDef.createSubComponent((realDepictionOf as S3SubComponent).instanceOf)
                 }
 
                 if(!c)
                     throw new Error('???')
 
-                const loc:SXOrientedLocation = c.addOrientedLocation()
+                const loc:S3OrientedLocation = c.addOrientedLocation()
                 loc.orientation = Specifiers.SBOL2.Orientation.Inline
             }
         }

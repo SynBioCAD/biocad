@@ -1,6 +1,6 @@
 
 import { View } from 'jfw/ui'
-import { SXComponent, SBOLXGraph, SXSequence } from 'sbolgraph';
+import { S3Component, Graph, S3Sequence, SBOL3GraphView, sbol3 } from 'sbolgraph';
 import BiocadApp from 'biocad/BiocadApp';
 import { h } from 'jfw/vdom'
 import { click as clickEvent } from 'jfw/event'
@@ -10,14 +10,14 @@ import BrowseSBHDialog, { BrowseSBHDialogOptions } from 'biocad/dialog/BrowseSBH
 
 export default class SequenceWizard extends View {
 
-    component:SXComponent
+    component:S3Component
 
     // sometimes a different component because we might swap it with
     // one from a registry
     //
-    onLoadedPart:(component:SXComponent)=>void
+    onLoadedPart:(component:S3Component)=>void
 
-    constructor(app:BiocadApp, component:SXComponent) {
+    constructor(app:BiocadApp, component:S3Component) {
 
         super(app)
 
@@ -76,9 +76,9 @@ async function clickImport(data) {
             if(!ev.target)
                 return
 
-            let g = await SBOLXGraph.loadString(reader.result + '', file[0].type)
+            let gv = await SBOL3GraphView.loadString(reader.result + '', file[0].type)
 
-            let seq = g.sequences[0]
+            let seq = gv.sequences[0]
 
             if(!seq) {
                 console.error('no sequences in file')
@@ -86,9 +86,9 @@ async function clickImport(data) {
             
             // TODO: allow picking sequence if multiple (SBOL only)
 
-            let c:SXComponent = view.component
+            let c:S3Component = view.component
 
-            let identityMap = copySBOL(g, c.graph, c.uriPrefix)
+            let identityMap = copySBOL(gv.graph, c.graph, c.uriPrefix)
 
             let newSeqUri = identityMap.get(seq.uri)
 
@@ -96,9 +96,9 @@ async function clickImport(data) {
                 throw new Error('???')
             }
 
-            let newSeq = c.graph.uriToFacade(newSeqUri)
+            let newSeq = sbol3(c.graph).uriToFacade(newSeqUri)
 
-            if(! (newSeq instanceof SXSequence)) {
+            if(! (newSeq instanceof S3Sequence)) {
                 // TODO: graceful error
                 throw new Error('???')
             }
@@ -135,7 +135,7 @@ async function clickSearch(data) {
 
     app.openDialog(dialog)
 
-    dialog.onUsePart = (c:SXComponent) => {
+    dialog.onUsePart = (c:S3Component) => {
         view.onLoadedPart(c)
     }
 }
@@ -148,7 +148,7 @@ async function clickEdit(data) {
     let graph = app.graph
     let component = view.component
 
-    let newSeq = graph.createSequence(component.uriPrefix, component.id + '_sequence', component.version)
+    let newSeq = sbol3(graph).createSequence(component.uriPrefix, component.id + '_sequence', component.version)
     component.addSequence(newSeq)
 
     view.onLoadedPart(component)

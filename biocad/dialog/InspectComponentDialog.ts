@@ -2,9 +2,9 @@
 import TabbedDialog, { Tab } from "jfw/ui/dialog/TabbedDialog";
 import { DialogOptions } from "jfw/ui/dialog";
 import BiocadApp from "biocad/BiocadApp";
-import { SBOLXGraph, SXIdentified } from "sbolgraph";
+import { Graph, S3Identified, sbol3, SBOL3GraphView } from "sbolgraph";
 import { VNode, h } from "jfw/vdom";
-import { SXComponent } from "sbolgraph"
+import { S3Component } from "sbolgraph"
 import LayoutThumbnail from "biocad/cad/LayoutThumbnail";
 import Layout from "biocad/cad/Layout";
 import Rect from "jfw/geom/Rect";
@@ -19,17 +19,17 @@ export class InspectComponentDialogOptions extends DialogOptions {
 
     uri:string
 
-    targetComponent:SXComponent|null
+    targetComponent:S3Component|null
 
 }
 
 export default class InspectComponentDialog extends TabbedDialog {
 
-    graph:SBOLXGraph
-    component:SXComponent
-    targetComponent:SXComponent|null
+    graph:Graph
+    component:S3Component
+    targetComponent:S3Component|null
 
-    onUsePart:(part:SXComponent)=>void
+    onUsePart:null|((part:S3Component)=>void)
 
     constructor(app:BiocadApp, opts:InspectComponentDialogOptions) {
 
@@ -40,10 +40,10 @@ export default class InspectComponentDialog extends TabbedDialog {
 
         this.setWidthAndCalcPosition('75%')
 
-        SBOLXGraph.loadURL(opts.uri + '/sbol').then((graph:SBOLXGraph) => {
+        SBOL3GraphView.loadURL(opts.uri + '/sbol').then((gv:SBOL3GraphView) => {
 
-            this.graph = graph
-            this.component = new SXComponent(graph, opts.uri)
+            this.graph = gv.graph
+            this.component = new S3Component(gv, opts.uri)
 
             const displayName:string|undefined = this.component.displayName
 
@@ -92,7 +92,7 @@ function clickInsert(data) {
 
     const dialog:InspectComponentDialog = data.dialog
 
-    const component:SXComponent = dialog.component
+    const component:S3Component = dialog.component
 
     const app:BiocadApp = dialog.app as BiocadApp
 
@@ -108,13 +108,13 @@ function clickInsert(data) {
             throw new Error(component.uri + ' not found in identityMap')
         }
 
-        let newComponent = dialog.targetComponent.graph.uriToFacade(newComponentUri)
+        let newComponent = sbol3(dialog.targetComponent.graph).uriToFacade(newComponentUri)
 
-        if(! (newComponent instanceof SXComponent)) {
+        if(! (newComponent instanceof S3Component)) {
             throw new Error('???')
         }
 
-        for(let instance of dialog.targetComponent.graph.getInstancesOfComponent(dialog.targetComponent)) {
+        for(let instance of sbol3(dialog.targetComponent.graph).getInstancesOfComponent(dialog.targetComponent)) {
             instance.instanceOf = newComponent
         }
 

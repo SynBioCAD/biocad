@@ -5,7 +5,7 @@ import { h, VNode } from 'jfw/vdom'
 import BiocadApp from "biocad/BiocadApp";
 import LayoutPOD from "biocad/cad/LayoutPOD";
 import EncodingSelector, { Encoding } from './EncodingSelector';
-import { SBOL2Graph, Graph } from 'sbolgraph';
+import { SBOL2GraphView, Graph, sbol3 } from 'sbolgraph';
 import CytoscapeRDFWidget from 'biocad/view/CytoscapeRDFWidget'
 import CircuitViewMode from '../circuit/CircuitMode';
 import CircuitView from '../circuit/CircuitView';
@@ -36,25 +36,25 @@ export default class SourceView extends View {
 
         const graph = app.graph
 
-        let sbol2Graph = new SBOL2Graph()
-        await sbol2Graph.loadString(graph.serializeXML())
+        let sbol2Graph = new SBOL2GraphView(new Graph())
+        await sbol2Graph.loadString(sbol3(graph).serializeXML())
 
         switch(this.encodingSelector.currentEncoding) {
-            case Encoding.SBOLX:
-                this.source = graph.serializeXML()
+            case Encoding.SBOL3:
+                this.source = sbol3(graph).serializeXML()
                 this.editorMode = 'xml'
                 break
             case Encoding.SBOL2:
                 this.source = sbol2Graph.serializeXML()
                 this.editorMode = 'xml'
                 break
-            case Encoding.SBOLXGraph:
+            case Encoding.Graph:
                 this.source = ''
                 this.graph = graph
                 break
             case Encoding.SBOL2Graph:
                 this.source = ''
-                this.graph = sbol2Graph
+                this.graph = sbol2Graph.graph
                 break
             case Encoding.Layout:
                 for(let mode of (this.app as BiocadApp).modes) {

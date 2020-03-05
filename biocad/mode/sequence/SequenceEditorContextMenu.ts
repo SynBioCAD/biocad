@@ -9,7 +9,7 @@ import BiocadApp from '../../BiocadApp'
 import SequenceEditorOverlay from "biocad/mode/sequence/SequenceEditorOverlay";
 
 import CreateAnnotationDialog from './CreateAnnotationDialog'
-import { SXSequence, SXComponent } from "sbolgraph"
+import { S3Sequence, S3Component } from "sbolgraph"
 import { Specifiers } from "bioterms";
 
 //import clipboad = require('clipboard-polyfill')
@@ -21,8 +21,8 @@ export default class SequenceEditorContextMenu extends ContextMenu {
     constructor(overlay:SequenceEditorOverlay, pos:Vec2) {
 
         const sequenceEditor:SequenceEditor = overlay.sequenceEditor
-        const component:SXComponent|null = sequenceEditor.component
-        const sequence:SXSequence|null = sequenceEditor.sequence
+        const component:S3Component|null = sequenceEditor.component
+        const sequence:S3Sequence|null = sequenceEditor.sequence
 
         if(component === null)
             throw new Error('???')
@@ -60,13 +60,13 @@ export default class SequenceEditorContextMenu extends ContextMenu {
 
                 /*
                 app.openDialog(new CreateAnnotationDialog(app, {
-                    component:SXComponent,
+                    component:S3Component,
                     sequence: sequence,
                     annoStart: overlay.selectionStart,
                     annoEnd: overlay.selectionEnd
                 }))*/
 
-                if(overlay.selectionStart === null || overlay.selectionEnd === null || SXComponent === null)
+                if(overlay.selectionStart === null || overlay.selectionEnd === null || S3Component === null)
                     throw new Error('???')
 
                 component.createFeatureWithRange(overlay.selectionStart + 1, overlay.selectionEnd, 'Untitled Feature')

@@ -5,7 +5,7 @@ import LabelDepiction from "biocad/cad/LabelDepiction";
 import { Orientation } from "biocad/cad/Depiction";
 import { shortNameFromTerm } from "data/parts";
 import visbolite from 'visbolite'
-import { SXSequenceFeature, SXRange } from "sbolgraph"
+import { S3SequenceFeature, S3Range } from "sbolgraph"
 import CircularBackboneDepiction from "biocad/cad/CircularBackboneDepiction";
 import InstructionSet from "biocad/cad/layout-instruction/InstructionSet";
 
@@ -48,7 +48,7 @@ function configurateSALinear(depiction:FeatureLocationDepiction):void {
 
     var type = 'user-defined'
 
-    const depictionOf:SXSequenceFeature = depiction.depictionOf as SXSequenceFeature
+    const depictionOf:S3SequenceFeature = depiction.depictionOf as S3SequenceFeature
 
     const roles:Array<string> = depictionOf.roles
 

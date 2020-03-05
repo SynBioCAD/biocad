@@ -3,7 +3,7 @@
 import Depiction from "biocad/cad/Depiction";
 import Layout from "biocad/cad/Layout";
 import { svg, VNode } from "jfw/vdom";
-import { SXInteraction, SXParticipation, SXSubComponent } from "sbolgraph";
+import { S3Interaction, S3Participation, S3SubComponent } from "sbolgraph";
 import { Specifiers, Prefixes } from 'bioterms'
 import { assert } from 'power-assert'
 import { Vec2, Rect } from "jfw/geom";
@@ -24,7 +24,7 @@ export default class InteractionDepiction extends Depiction {
     waypoints:Vec2[]
 
 
-    constructor(layout:Layout, depictionOf:SXInteraction, identifiedChain:IdentifiedChain, parent?:Depiction, uid?:number) {
+    constructor(layout:Layout, depictionOf:S3Interaction, identifiedChain:IdentifiedChain, parent?:Depiction, uid?:number) {
 
         super(layout, depictionOf, identifiedChain, parent, uid)
         
@@ -38,7 +38,7 @@ export default class InteractionDepiction extends Depiction {
 
         let interaction = this.depictionOf
 
-        if(! (interaction instanceof SXInteraction)) {
+        if(! (interaction instanceof S3Interaction)) {
             throw new Error('no interaction dOf?')
         }
 
@@ -76,7 +76,7 @@ export default class InteractionDepiction extends Depiction {
 
             let dOf = this.depictionOf
 
-            if(!dOf || !(dOf instanceof SXInteraction)) {
+            if(!dOf || !(dOf instanceof S3Interaction)) {
                 return svg('g')
             }
 
@@ -108,7 +108,7 @@ export default class InteractionDepiction extends Depiction {
             if(!this.ambiguousDirection) {
                 let dOf = this.depictionOf
 
-                if(dOf instanceof SXInteraction) {
+                if(dOf instanceof S3Interaction) {
 
                     let types = dOf.types
 

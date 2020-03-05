@@ -10,7 +10,7 @@ import ComponentDepiction from "biocad/cad/ComponentDepiction";
 import BackboneDepiction from '../../cad/BackboneDepiction';
 import { reverse } from 'dns';
 import LabelDepiction from 'biocad/cad/LabelDepiction';
-import { SXInteraction } from 'sbolgraph';
+import { S3Interaction } from 'sbolgraph';
 import { Specifiers } from 'bioterms';
 
 
@@ -452,7 +452,7 @@ function createABInteractionLayers(parent:Depiction|null, groups:Group[]):Map<In
 
         let dOf = interaction.depictionOf
         
-        if(dOf instanceof SXInteraction) {
+        if(dOf instanceof S3Interaction) {
             if(! (dOf.hasType(Specifiers.SBO.GeneticProduction))) {
                 return true
             }

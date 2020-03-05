@@ -3,9 +3,9 @@
 import View from "jfw/ui/View";
 import { VNode, h, create, svg } from "jfw/vdom";
 import BiocadApp from "biocad/BiocadApp";
-import { SBOLXGraph } from "sbolgraph"
+import { Graph, SBOL3GraphView, sbol3 } from "sbolgraph"
 import { Types } from "bioterms";
-import { SXComponent } from "sbolgraph";
+import { S3Component } from "sbolgraph";
 import Layout from "biocad/cad/Layout";
 import LayoutThumbnail from "biocad/cad/LayoutThumbnail";
 import SBOLDroppable from "biocad/droppable/SBOLDroppable";
@@ -15,7 +15,7 @@ import { click as clickEvent } from 'jfw/event'
 
 export default class PartSummaryView extends View {
 
-    graph:SBOLXGraph|null
+    graph:Graph|null
     uri:string
 
     layout:Layout|null
@@ -32,10 +32,10 @@ export default class PartSummaryView extends View {
         this.layoutThumbnail = null
 
 
-        SBOLXGraph.loadURL(uri + '/sbol').then((graph:SBOLXGraph) => {
+        SBOL3GraphView.loadURL(uri + '/sbol').then((gv:SBOL3GraphView) => {
 
-            this.graph = graph
-            this.layout = new Layout(graph)
+            this.graph = gv.graph
+            this.layout = new Layout(gv.graph)
             this.layout.syncAllDepictions(5)
             this.layout.configurate([])
             this.layoutThumbnail = new LayoutThumbnail(app, this.layout)
@@ -68,7 +68,7 @@ export default class PartSummaryView extends View {
 
         } else {
 
-            const type:string|undefined = this.graph.getType(this.uri)
+            const type:string|undefined = sbol3(this.graph).getType(this.uri)
 
             elements.push(this.renderComponent())
         }
@@ -84,7 +84,7 @@ export default class PartSummaryView extends View {
         if(this.graph === null || this.layoutThumbnail === null)
             throw new Error('???')
 
-        const cd:SXComponent = new SXComponent(this.graph, this.uri)
+        const cd:S3Component = new S3Component(sbol3(this.graph), this.uri)
 
         const elements:VNode[] = []
 
@@ -120,7 +120,7 @@ export default class PartSummaryView extends View {
 
         const app:BiocadApp = this.app as BiocadApp
 
-        if(part instanceof SXComponent) {
+        if(part instanceof S3Component) {
 
             app.setMode(app.modes.filter((mode) => mode instanceof CircuitMode)[0])
             app.dropOverlay.startDropping(new SBOLDroppable(app, this.graph, [ part.uri ]))

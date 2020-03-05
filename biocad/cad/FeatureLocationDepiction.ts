@@ -7,8 +7,8 @@ import { VNode, svg } from 'jfw/vdom'
 import { Matrix, Vec2 } from 'jfw/geom'
 
 import {
-    SXIdentified,
-    SXSequenceFeature
+    S3Identified,
+    S3SequenceFeature
 } from "sbolgraph"
 
 
@@ -24,7 +24,7 @@ import IdentifiedChain from '../IdentifiedChain';
 
 export default class FeatureLocationDepiction extends LocationableDepiction {
 
-    constructor(layout:Layout, depictionOf:SXIdentified|undefined, identifiedChain:IdentifiedChain|undefined, parent?:Depiction, uid?:number) {
+    constructor(layout:Layout, depictionOf:S3Identified|undefined, identifiedChain:IdentifiedChain|undefined, parent?:Depiction, uid?:number) {
 
         super(layout, depictionOf, identifiedChain, parent, uid)
 
@@ -71,7 +71,7 @@ export default class FeatureLocationDepiction extends LocationableDepiction {
 
         var type = 'user-defined'
 
-        if(! (this.depictionOf instanceof SXSequenceFeature))
+        if(! (this.depictionOf instanceof S3SequenceFeature))
             throw new Error('???')
 
         const orientation = this.orientation

@@ -1,8 +1,8 @@
-import { SXIdentified, SBOLXGraph } from "sbolgraph";
+import { S3Identified, Graph, sbol3 } from "sbolgraph";
 
 export default class IdentifiedChain {
 
-    private identifieds:SXIdentified[]
+    private identifieds:S3Identified[]
 
     constructor() {
         this.identifieds = []
@@ -15,7 +15,7 @@ export default class IdentifiedChain {
         return this.identifieds[this.identifieds.length - 1]
     }
 
-    extend(next:SXIdentified):IdentifiedChain {
+    extend(next:S3Identified):IdentifiedChain {
 
         let chain:IdentifiedChain = new IdentifiedChain()
 
@@ -26,7 +26,7 @@ export default class IdentifiedChain {
 
     }
 
-    containsIdentified(identified:SXIdentified):boolean {
+    containsIdentified(identified:S3Identified):boolean {
         return this.containsURI(identified.uri)
     }
 
@@ -43,9 +43,9 @@ export default class IdentifiedChain {
         return this.identifieds.map((id) => id.uri).join(';')
     }
 
-    static fromString(graph:SBOLXGraph, str:string):IdentifiedChain {
+    static fromString(graph:Graph, str:string):IdentifiedChain {
         let chain = new IdentifiedChain()
-        chain.identifieds = str.split(';').map((s) => graph.uriToFacade(s) as SXIdentified)
+        chain.identifieds = str.split(';').map((s) => sbol3(graph).uriToFacade(s) as S3Identified)
         return chain
     }
 

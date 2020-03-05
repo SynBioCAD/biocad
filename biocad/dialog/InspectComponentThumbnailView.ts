@@ -1,7 +1,7 @@
 
 import View from 'jfw/ui/View'
 import BiocadApp from "biocad/BiocadApp";
-import { SXComponent } from "sbolgraph"
+import { S3Component } from "sbolgraph"
 import { VNode, h } from "jfw/vdom";
 import Layout from "biocad/cad/Layout";
 import LayoutThumbnail from "biocad/cad/LayoutThumbnail";
@@ -13,7 +13,7 @@ export default class InspectComponentThumbnailView extends View {
     layout:Layout
     thumb:LayoutThumbnail
 
-    constructor(app:BiocadApp, component:SXComponent) {
+    constructor(app:BiocadApp, component:S3Component) {
 
         super(app)
 

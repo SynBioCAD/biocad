@@ -7,7 +7,7 @@ import { Vec2, LinearRangeSet, LinearRange } from 'jfw/geom'
 import { Specifiers } from 'bioterms'
 import Depiction, { Orientation } from "biocad/cad/Depiction";
 import ComponentDepiction from "biocad/cad/ComponentDepiction";
-import { SXSequenceFeature, SXRange, SXSubComponent, SXSequenceConstraint, SXIdentified, SXComponent, SXLocation } from "sbolgraph"
+import { S3SequenceFeature, S3Range, S3SubComponent, S3SequenceConstraint, S3Identified, S3Component, S3Location } from "sbolgraph"
 import Layout from "biocad/cad/Layout";
 import BackboneDepiction from '../../cad/BackboneDepiction';
 import FeatureLocationDepiction from 'biocad/cad/FeatureLocationDepiction';
@@ -50,11 +50,11 @@ export default function backboneStrategy(_parent:Depiction, children:Depiction[]
 
     let cd = backbone.depictionOf
 
-    if(cd instanceof SXSubComponent) {
+    if(cd instanceof S3SubComponent) {
         cd = cd.instanceOf
     }
 
-    if(! (cd instanceof SXComponent)) {
+    if(! (cd instanceof S3Component)) {
         throw new Error('bb not instanceOf a CD')
     }
 
@@ -87,10 +87,10 @@ export default function backboneStrategy(_parent:Depiction, children:Depiction[]
                 continue
             }
 
-            if (dOf instanceof SXLocation) {
+            if (dOf instanceof S3Location) {
 
-                let location: SXLocation = dOf as SXLocation
-                let containingObject: SXIdentified | undefined = location.containingObject
+                let location: S3Location = dOf as S3Location
+                let containingObject: S3Identified | undefined = location.containingObject
 
                 if (containingObject && containingObject.uri === uri) {
                     return i
@@ -223,13 +223,13 @@ export default function backboneStrategy(_parent:Depiction, children:Depiction[]
             continue
 
         let location = element.location
-        if (location instanceof SXRange && location.isFixed()) {
+        if (location instanceof S3Range && location.isFixed()) {
             if (!location.start) {
                 throw new Error('???')
             }
             let start = location.start * layout.bpToGridScale
             let end = location.end ? location.end * layout.bpToGridScale : location.start + 0.0003
-            let forward = location.orientation !== Specifiers.SBOLX.Orientation.ReverseComplement
+            let forward = location.orientation !== Specifiers.SBOL3.Orientation.ReverseComplement
 
             let range = new LinearRange(start, end).normalise()
 
@@ -269,7 +269,7 @@ export default function backboneStrategy(_parent:Depiction, children:Depiction[]
                 // s done, o not
                 let width = oDep.proportionalWidth
 
-                if (r === Specifiers.SBOLX.SequenceConstraint.Precedes) {
+                if (r === Specifiers.SBOL3.SequenceConstraint.Precedes) {
 
                     // place o AFTER s because s precedes o
                     if (positionedS.forward) {
@@ -290,7 +290,7 @@ export default function backboneStrategy(_parent:Depiction, children:Depiction[]
 
                 let width = sDep.proportionalWidth
 
-                if (r === Specifiers.SBOLX.SequenceConstraint.Precedes) {
+                if (r === Specifiers.SBOL3.SequenceConstraint.Precedes) {
 
                     // place s BEFORE o because s precedes o
                     if (positionedO.forward) {
@@ -338,7 +338,7 @@ export default function backboneStrategy(_parent:Depiction, children:Depiction[]
             let obj = backboneElements[objIdx]
 
 
-            if (restriction === Specifiers.SBOLX.SequenceConstraint.Precedes) {
+            if (restriction === Specifiers.SBOL3.SequenceConstraint.Precedes) {
                 move(backboneElements, subjectIdx, objIdx)
             }
         }
@@ -719,13 +719,13 @@ let table = {
     'SO:0000141': 1000
 }
 
-function score(obj: SXIdentified) {
+function score(obj: S3Identified) {
 
     let roles: string[] = []
 
-    if (obj instanceof SXSequenceFeature) {
+    if (obj instanceof S3SequenceFeature) {
         roles = obj.soTerms
-    } else if (obj instanceof SXSubComponent) {
+    } else if (obj instanceof S3SubComponent) {
         roles = obj.instanceOf.soTerms
     } else {
         console.dir(obj)

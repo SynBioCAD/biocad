@@ -9,9 +9,9 @@ import { VNode, svg } from 'jfw/vdom'
 import { Matrix, Vec2 } from 'jfw/geom'
 
 import {
-    SXIdentified,
-    SXSubComponent,
-    SXComponent
+    S3Identified,
+    S3SubComponent,
+    S3Component
 } from 'sbolgraph'
 
 import { Types } from 'bioterms'
@@ -23,13 +23,13 @@ import visbolite from 'visbolite'
 import parts, { shortNameFromTerm } from 'data/parts'
 
 import RenderContext from './RenderContext'
-import { SXRange, Watcher } from "sbolgraph";
+import { S3Range, Watcher } from "sbolgraph";
 import BackboneDepiction from 'biocad/cad/BackboneDepiction';
 
 export default class CircularBackboneDepiction extends BackboneDepiction {
 
     orientation: Orientation
-    location: SXIdentified|null
+    location: S3Identified|null
 
     constructor(layout:Layout, parent?:Depiction, uid?:number) {
 

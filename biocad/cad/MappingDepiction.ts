@@ -3,7 +3,7 @@ import InteractionDepiction from './InteractionDepiction'
 import Depiction from "biocad/cad/Depiction";
 import Layout from "biocad/cad/Layout";
 import { svg, VNode } from "jfw/vdom";
-import { SXInteraction, SXParticipation, SXSubComponent, SXMapsTo } from "sbolgraph";
+import { S3Interaction, S3Participation, S3SubComponent, S3MapsTo } from "sbolgraph";
 import { Specifiers } from 'bioterms'
 import { assert } from 'power-assert'
 import Vec2 from "jfw/geom/Vec2";
@@ -18,7 +18,7 @@ export default class MappingDepiction extends Depiction {
     private waypoints:Vec2[]
 
 
-    constructor(layout:Layout, depictionOf:SXMapsTo, identifiedChain:IdentifiedChain, parent?:Depiction, uid?:number) {
+    constructor(layout:Layout, depictionOf:S3MapsTo, identifiedChain:IdentifiedChain, parent?:Depiction, uid?:number) {
 
         super(layout, depictionOf, identifiedChain, parent, uid)
         

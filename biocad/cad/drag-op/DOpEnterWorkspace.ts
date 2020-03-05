@@ -1,7 +1,7 @@
 
 import { Rect } from "jfw/geom";
 import Depiction, { Opacity } from "biocad/cad/Depiction";
-import { SBOLXGraph, SXComponent, SXSubComponent } from "sbolgraph";
+import { Graph, S3Component, S3SubComponent, sbol3 } from "sbolgraph";
 import Layout from "biocad/cad/Layout";
 import DOp, { DOpResult } from "./DOp";
 import ComponentDepiction from "../ComponentDepiction";
@@ -16,8 +16,8 @@ import IdentifiedChain from "../../IdentifiedChain";
 export default class DOpEnterWorkspace extends DOp {
 
     test(
-        sourceLayout:Layout, sourceGraph:SBOLXGraph,
-        targetLayout:Layout, targetGraph:SBOLXGraph,
+        sourceLayout:Layout, sourceGraph:Graph,
+        targetLayout:Layout, targetGraph:Graph,
         sourceDepiction:Depiction,
         targetBBox:Rect,
         ignoreURIs:string[]):DOpResult|null {
@@ -47,9 +47,9 @@ export default class DOpEnterWorkspace extends DOp {
                 throw new Error('???')
             }
 
-            let dOfInNewGraph = newGraph.uriToFacade(dOf.uri)
+            let dOfInNewGraph = sbol3(newGraph).uriToFacade(dOf.uri)
 
-            if(! (dOfInNewGraph instanceof SXSubComponent)) {
+            if(! (dOfInNewGraph instanceof S3SubComponent)) {
                 throw new Error('???')
             }
 

@@ -1,11 +1,11 @@
 
 import PropertyEditor from './PropertyEditor'
-import { SXParticipation, SXSubComponent } from 'sbolgraph'
+import { S3Participation, S3SubComponent, sbol3 } from 'sbolgraph'
 import { click as clickEvent, change as changeEvent } from 'jfw/event'
 import BiocadApp from 'biocad/BiocadApp'
 import OntologyTermSelectorDialog from 'biocad/dialog/OntologyTermSelectorDialog'
 import sbo from 'data/systems-biology-ontology'
-import { SBOLXGraph, SXInteraction } from 'sbolgraph'
+import { Graph, S3Interaction } from 'sbolgraph'
 import { h } from 'jfw/vdom'
 
 export default class PropertyEditorInteractionParticipants extends PropertyEditor {
@@ -21,11 +21,11 @@ export default class PropertyEditorInteractionParticipants extends PropertyEdito
         this.onChange = onChange
     }
 
-    render(graph:SBOLXGraph) {
+    render(graph:Graph) {
 
-        let interaction = graph.uriToFacade(this.interactionURI)
+        let interaction = sbol3(graph).uriToFacade(this.interactionURI)
 
-        if(! (interaction instanceof SXInteraction)) {
+        if(! (interaction instanceof S3Interaction)) {
             return h('tr', [])
         }
 
@@ -33,7 +33,7 @@ export default class PropertyEditorInteractionParticipants extends PropertyEdito
 
         let editor = this
 
-        return interaction.participations.map((participation:SXParticipation) => {
+        return interaction.participations.map((participation:S3Participation) => {
             return h('tr', [
                 h('td', {
                     colSpan: 2
@@ -51,7 +51,7 @@ export default class PropertyEditorInteractionParticipants extends PropertyEdito
             ])
         })
 
-        function renderComponentSelector(participation:SXParticipation) {
+        function renderComponentSelector(participation:S3Participation) {
             let participant = participation.participant
             return h('select.jfw-select', {
                 'ev-change': changeEvent(changeParticipant, { editor, participation })
@@ -88,7 +88,7 @@ export default class PropertyEditorInteractionParticipants extends PropertyEdito
 async function clickChooseRole(data) {
 
     let editor:PropertyEditorInteractionParticipants = data.editor
-    let participation:SXParticipation = data.participation
+    let participation:S3Participation = data.participation
 
     let app = editor.app
 
@@ -106,7 +106,7 @@ async function clickChooseRole(data) {
 function clickRemoveRole(data) {
 
     let editor:PropertyEditorInteractionParticipants = data.editor
-    let participation:SXParticipation = data.participation
+    let participation:S3Participation = data.participation
     let role:string = data.role
 
     participation.removeRole(role)
@@ -120,7 +120,7 @@ function clickRemoveRole(data) {
 function changeParticipant(data) {
 
     let editor:PropertyEditorInteractionParticipants = data.editor
-    let participation:SXParticipation = data.participation
+    let participation:S3Participation = data.participation
     let interaction = participation.interaction
     let graph = participation.graph
 
@@ -130,7 +130,7 @@ function changeParticipant(data) {
     }
 
     let newParticipantURI = data.value
-    let newParticipant = graph.uriToFacade(newParticipantURI)
+    let newParticipant = sbol3(graph).uriToFacade(newParticipantURI)
 
     if(!newParticipant) {
         console.warn('new participant was null?')
@@ -157,7 +157,7 @@ function changeParticipant(data) {
         }
     }
 
-    participation.participant = newParticipant as SXSubComponent
+    participation.participant = newParticipant as S3SubComponent
 
     if(editor.onChange)
         editor.onChange()

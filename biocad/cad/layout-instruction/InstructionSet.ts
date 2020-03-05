@@ -1,5 +1,5 @@
 import Instruction from "biocad/cad/layout-instruction/Instruction";
-import { SXIdentified } from "sbolgraph";
+import { S3Identified } from "sbolgraph";
 import PinInstruction from "biocad/cad/layout-instruction/PinInstruction";
 import ReplaceInstruction from "biocad/cad/layout-instruction/ReplaceInstruction";
 import { inspect } from "util";
@@ -16,7 +16,7 @@ export default class InstructionSet {
     }
 
     /*
-    getInstructionsForIdentified(identified:SXIdentified):Array<Instruction> {
+    getInstructionsForIdentified(identified:S3Identified):Array<Instruction> {
 
         return this.instructions.filter((instruction:Instruction) => {
 
@@ -33,7 +33,7 @@ export default class InstructionSet {
 
     }
 
-    getReplacementFor(identified:SXIdentified):SXIdentified|null {
+    getReplacementFor(identified:S3Identified):S3Identified|null {
 
         for(let instruction of this.instructions) {
 

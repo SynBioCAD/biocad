@@ -4,8 +4,6 @@ import { App } from 'jfw'
 import TestDialog from './dialog/TestDialog'
 import BiocadTopbar from './topbar/BiocadTopbar'
 
-import { SBOLXGraph } from "sbolgraph"
-
 import configurate from './configurator/configurate'
 
 import SetupMode from './mode/setup/SetupMode'
@@ -32,12 +30,13 @@ import PopupMessageDialog from './dialog/PopupMessageDialog';
 import { DialogOptions } from 'jfw/ui/dialog';
 
 import uuid = require('uuid')
+import { Graph, sbol3 } from 'sbolgraph'
 
 console.log('BiocadApp.ts')
 
 export default class BiocadApp extends App
 {
-    graph: SBOLXGraph
+    graph:Graph
 
     dropOverlay:DropOverlay
 
@@ -51,7 +50,7 @@ export default class BiocadApp extends App
     }
 
 
-    onLoadGraph:Hook<SBOLXGraph> = new Hook<SBOLXGraph>()
+    onLoadGraph:Hook<Graph> = new Hook<Graph>()
 
 
     defaultPrefix:string
@@ -75,14 +74,14 @@ export default class BiocadApp extends App
             console.info('I have saved state! ' + typeof(saved))
             console.dir(saved)
 
-            this.graph = new SBOLXGraph(saved)
-            this.defaultPrefix = this.graph.uriPrefixes[0]
+            this.graph = new Graph(saved)
+            this.defaultPrefix = sbol3(this.graph).uriPrefixes[0]
 
         } else {
 
             console.info('Nothing was saved :-(')
 
-            this.graph = new SBOLXGraph([])
+            this.graph = new Graph([])
         }
 
         if(!this.defaultPrefix) {
@@ -132,7 +131,7 @@ export default class BiocadApp extends App
         /*
         if(!GlobalConfig.get('biocad.headless')) {
 
-            SBOLXGraph.loadURL("/data/BBa_K1444001.xml").then((graph:SBOLXGraph) => {
+            Graph.loadURL("/data/BBa_K1444001.xml").then((graph:Graph) => {
 
                 this.loadGraph(graph)
 
@@ -141,7 +140,7 @@ export default class BiocadApp extends App
         }*/
     }
 
-    loadGraph(graph:SBOLXGraph):void {
+    loadGraph(graph:Graph):void {
 
         this.graph = graph
 

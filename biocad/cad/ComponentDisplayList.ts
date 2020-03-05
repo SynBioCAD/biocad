@@ -1,22 +1,22 @@
 
-import { SXSequenceFeature, SXSubComponent, SXSequenceConstraint, SXComponent, SXIdentified, SXLocation } from "sbolgraph"
+import { S3SequenceFeature, S3SubComponent, S3SequenceConstraint, S3Component, S3Identified, S3Location, Graph, Facade, sbol3 } from "sbolgraph"
 
 export default class ComponentDisplayList {
 
 
-    backboneGroups:Array<Array<SXIdentified>>
-    ungrouped:Array<SXIdentified>
+    backboneGroups:Array<Array<S3Identified>>
+    ungrouped:Array<S3Identified>
 
 
-    static fromComponent(component:SXComponent):ComponentDisplayList {
+    static fromComponent(graph:Graph, component:S3Component):ComponentDisplayList {
 
-        return new ComponentDisplayList(component)
+        return new ComponentDisplayList(graph, component)
 
     }
 
 
 
-    private constructor(cd:SXComponent) {
+    private constructor(graph:Graph, cd:S3Component) {
         
 
         const visited:Set<string> = new Set()
@@ -111,9 +111,12 @@ export default class ComponentDisplayList {
 
                 console.log(uri, 'contained in backbone group')
 
-                const facade:SXIdentified|undefined = cd.graph.uriToFacade(uri)
+                const facade:Facade|undefined = sbol3(graph).uriToFacade(uri)
 
                 if(!facade)
+                    throw new Error('???')
+
+                if(!(facade instanceof S3Identified))
                     throw new Error('???')
 
                 return facade
@@ -127,7 +130,7 @@ export default class ComponentDisplayList {
          */
 
 
-        this.ungrouped = cd.subComponents.filter((c:SXSubComponent) => {
+        this.ungrouped = cd.subComponents.filter((c:S3SubComponent) => {
             return !visited.has(c.uri)
         })
 
@@ -142,9 +145,9 @@ export default class ComponentDisplayList {
         // might not have any locations cos it's positioned only by a sequenceconstraint
 
 
-        function expandLocations(children:Array<SXIdentified>):Array<SXLocation|SXSequenceFeature|SXSubComponent> {
+        function expandLocations(children:Array<S3Identified>):Array<S3Location|S3SequenceFeature|S3SubComponent> {
 
-            const res:Array<SXLocation> = []
+            const res:Array<S3Location> = []
 
             for(let child of children) {
 
@@ -156,17 +159,17 @@ export default class ComponentDisplayList {
             return res
         }
 
-        function expandChildLocations(child:SXIdentified):Array<SXLocation|SXSequenceFeature|SXSubComponent> {
+        function expandChildLocations(child:S3Identified):Array<S3Location|S3SequenceFeature|S3SubComponent> {
 
             var locations
 
-            if(child instanceof SXSequenceFeature) {
+            if(child instanceof S3SequenceFeature) {
 
-                locations = (child as SXSequenceFeature).locations
+                locations = (child as S3SequenceFeature).locations
 
-            } else if(child instanceof SXSubComponent) {
+            } else if(child instanceof S3SubComponent) {
 
-                locations = (child as SXSubComponent).locations
+                locations = (child as S3SubComponent).locations
 
             } else {
 

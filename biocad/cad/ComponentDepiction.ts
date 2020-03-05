@@ -7,9 +7,9 @@ import { VNode, svg } from 'jfw/vdom'
 import { Matrix, Vec2 } from 'jfw/geom'
 
 import {
-    SXIdentified,
-    SXComponent,
-    SXSubComponent
+    S3Identified,
+    S3Component,
+    S3SubComponent
 } from "sbolgraph"
 
 import Layout from './Layout'
@@ -29,7 +29,7 @@ import LocationableDepiction from './LocationableDepiction'
 
 export default class ComponentDepiction extends LocationableDepiction {
 
-    constructor(layout:Layout, depictionOf:SXIdentified|undefined, identifiedChain:IdentifiedChain|undefined, parent?:Depiction, uid?:number) {
+    constructor(layout:Layout, depictionOf:S3Identified|undefined, identifiedChain:IdentifiedChain|undefined, parent?:Depiction, uid?:number) {
 
         super(layout, depictionOf, identifiedChain, parent, uid)
 
@@ -83,21 +83,21 @@ export default class ComponentDepiction extends LocationableDepiction {
 
     }
 
-    public getDefinition():SXComponent {
+    public getDefinition():S3Component {
 
-        const depictionOf:SXIdentified|undefined = this.depictionOf
+        const depictionOf:S3Identified|undefined = this.depictionOf
 
         if(depictionOf === undefined)
             throw new Error('???')
 
         var definition
         
-        if(depictionOf instanceof SXSubComponent) {
-            definition = (depictionOf as SXSubComponent).instanceOf
-        } else if(depictionOf instanceof SXSubComponent) {
-            definition = (depictionOf as SXSubComponent).instanceOf
-        } else if(depictionOf instanceof SXComponent) {
-            definition = depictionOf as SXComponent
+        if(depictionOf instanceof S3SubComponent) {
+            definition = (depictionOf as S3SubComponent).instanceOf
+        } else if(depictionOf instanceof S3SubComponent) {
+            definition = (depictionOf as S3SubComponent).instanceOf
+        } else if(depictionOf instanceof S3Component) {
+            definition = depictionOf as S3Component
         } else {
             throw new Error('???')
         }
@@ -107,7 +107,7 @@ export default class ComponentDepiction extends LocationableDepiction {
 
     private getGlyphType():string {
 
-        const definition:SXComponent = this.getDefinition()
+        const definition:S3Component = this.getDefinition()
 
         const roles = definition.roles
 
@@ -124,7 +124,7 @@ export default class ComponentDepiction extends LocationableDepiction {
 
     private renderBlackbox(renderContext:RenderContext):VNode {
 
-        const depictionOf:SXIdentified|undefined = this.depictionOf
+        const depictionOf:S3Identified|undefined = this.depictionOf
 
         if(depictionOf === undefined)
             throw new Error('???')
@@ -133,7 +133,7 @@ export default class ComponentDepiction extends LocationableDepiction {
         const orientation = this.orientation
 
 
-        const definition:SXComponent = this.getDefinition()
+        const definition:S3Component = this.getDefinition()
 
         const type = this.getGlyphType()
 
@@ -209,7 +209,7 @@ export default class ComponentDepiction extends LocationableDepiction {
 
         const orientation = this.orientation
 
-        const definition:SXComponent = this.getDefinition()
+        const definition:S3Component = this.getDefinition()
 
         const type = this.getGlyphType()
 
@@ -239,7 +239,7 @@ export default class ComponentDepiction extends LocationableDepiction {
 
         let s:Depiction[] = []
 
-        if(dOf instanceof SXSubComponent) {
+        if(dOf instanceof S3SubComponent) {
             let constrainedSCs =
                 dOf.getConstraintsWithThisSubject().map((c) => c.object)
                     .concat(

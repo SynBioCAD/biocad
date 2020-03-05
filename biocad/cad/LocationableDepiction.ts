@@ -1,7 +1,7 @@
 
 import Depiction, { Orientation } from './Depiction'
 import Layout from './Layout';
-import { SXIdentified, SXRange, SXLocation } from 'sbolgraph'
+import { S3Identified, S3Range, S3Location } from 'sbolgraph'
 import IdentifiedChain from 'biocad/IdentifiedChain';
 import LabelDepiction from './LabelDepiction';
 import BackboneDepiction from './BackboneDepiction';
@@ -10,11 +10,11 @@ import { Vec2 } from 'jfw/geom'
 export default abstract class LocationableDepiction extends Depiction {
 
     orientation: Orientation
-    location: SXIdentified|null
+    location: S3Identified|null
     backbonePlacement:string
     proportionalWidth:number
 
-    constructor(layout:Layout, depictionOf:SXIdentified|undefined, identifiedChain:IdentifiedChain|undefined, parent?:Depiction, uid?:number) {
+    constructor(layout:Layout, depictionOf:S3Identified|undefined, identifiedChain:IdentifiedChain|undefined, parent?:Depiction, uid?:number) {
 
         super(layout, depictionOf, identifiedChain, parent, uid)
 
@@ -55,14 +55,14 @@ export default abstract class LocationableDepiction extends Depiction {
 
     calcWidthFromLocation(): { proportionalWidth:number, displayWidth:number } {
 
-        let hasFixedLoc = this.location && (this.location as SXLocation).isFixed()
+        let hasFixedLoc = this.location && (this.location as S3Location).isFixed()
 
         let layout = this.layout
 
         let proportionalWidth = layout.minGlyphWidth
 
         if (hasFixedLoc) {
-            if (this.location instanceof SXRange) {
+            if (this.location instanceof S3Range) {
                 let start = this.location.start
                 let end = this.location.end
                 if (start !== undefined && end !== undefined) {

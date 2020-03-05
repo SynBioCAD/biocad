@@ -1,6 +1,6 @@
 
 import PropertyAccessor from "./PropertyAccessor";
-import { triple, SBOLXGraph, node } from 'sbolgraph'
+import { triple, Graph, node } from 'sbolgraph'
 
 export default class PropertyAccessorURISet extends PropertyAccessor<string[]> {
 
@@ -15,7 +15,7 @@ export default class PropertyAccessorURISet extends PropertyAccessor<string[]> {
         this.onChange = onChange
     }
 
-    set(graph:SBOLXGraph, values:string[]) {
+    set(graph:Graph, values:string[]) {
 
         graph.removeMatches(this.object, this.predicate, null)
 
@@ -26,7 +26,7 @@ export default class PropertyAccessorURISet extends PropertyAccessor<string[]> {
             this.onChange()
     }
 
-    get(graph:SBOLXGraph):string[] {
+    get(graph:Graph):string[] {
         return graph.match(this.object, this.predicate, null).map(triple.objectUri) as string[]
     }
 }

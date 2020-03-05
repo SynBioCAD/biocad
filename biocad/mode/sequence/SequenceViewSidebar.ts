@@ -4,14 +4,14 @@ import { Sidebar, SidebarSection } from 'jfw/ui'
 import ComponentBrowser from './ComponentBrowser'
 
 import { Specifiers } from 'bioterms'
-import { SXComponent } from "sbolgraph";
+import { S3Component } from "sbolgraph";
 
 import { Hook } from 'jfw/util'
 
 export default class SequenceViewSidebar extends Sidebar {
 
     onCreate: Hook<{ type:string, uri:string }>
-    onSelect: Hook<SXComponent>
+    onSelect: Hook<S3Component>
 
     browser:ComponentBrowser
 
@@ -24,7 +24,7 @@ export default class SequenceViewSidebar extends Sidebar {
 
         const connectBrowser = (browser:ComponentBrowser) => {
 
-            browser.onSelect.listen((component:SXComponent) => {
+            browser.onSelect.listen((component:S3Component) => {
                 console.log('sequenceViewSidebar: selected ' + component.displayName)
                 this.onSelect.fire(component)
                 app.update()
@@ -53,7 +53,7 @@ export default class SequenceViewSidebar extends Sidebar {
 
     }
 
-    select(c:SXComponent) {
+    select(c:S3Component) {
         this.browser.select(c)
     }
 

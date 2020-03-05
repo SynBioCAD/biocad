@@ -1,20 +1,20 @@
 
-import { SBOLXGraph, SXIdentified } from 'sbolgraph'
+import { Graph, S3Identified, sbol3 } from 'sbolgraph'
 
 
 // All the SBOL is copied but only things speciifed by topLevelURIs get renamed
 
 // - Need to change their owned objects too
 
-export default function copySBOL(graphA:SBOLXGraph, graphB:SBOLXGraph, newURIPrefix:string):Map<string,string> {
+export default function copySBOL(graphA:Graph, graphB:Graph, newURIPrefix:string):Map<string,string> {
 
     let intmGraph = graphA.clone()
     
-    let identityMap:Map<string,string> = intmGraph.changeURIPrefix(newURIPrefix)
+    let identityMap:Map<string,string> = sbol3(intmGraph).changeURIPrefix(newURIPrefix)
 
     // TODO: setCompliantIdentity is expensive; only do it when a good URI has been found
 
-    for(let topLevel of intmGraph.topLevels) {
+    for(let topLevel of sbol3(intmGraph).topLevels) {
         let curID:string|undefined = topLevel.id
         if(curID === undefined) {
             curID = 'anon'

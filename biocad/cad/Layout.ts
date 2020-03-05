@@ -3,11 +3,12 @@ import Versioned  from 'jfw/Versioned';
 import Depiction, { Opacity, Orientation } from './Depiction'
 
 import {
-    SBOLXGraph,
-    SXComponent,
-    SXSubComponent,
-    SXSequenceFeature,
-    SXRange
+    Graph,
+    S3Component,
+    S3SubComponent,
+    S3SequenceFeature,
+    S3Range,
+    sbol3
 } from "sbolgraph"
 
 import DetailPreset from './detail-preset/DetailPreset'
@@ -31,7 +32,7 @@ import FeatureLocationDepiction from "biocad/cad/FeatureLocationDepiction";
 
 import assert from 'power-assert'
 import ComponentDisplayList from "biocad/cad/ComponentDisplayList";
-import { Watcher, SXIdentified, SXSequenceConstraint, SXLocation, SXOrientedLocation, SXInteraction } from "sbolgraph"
+import { Watcher, S3Identified, S3SequenceConstraint, S3Location, S3OrientedLocation, S3Interaction } from "sbolgraph"
 import InteractionDepiction from './InteractionDepiction'
 import BiocadApp from 'biocad/BiocadApp';
 import App from 'jfw/App';
@@ -57,14 +58,14 @@ export default class Layout extends Versioned {
 
     size:Vec2
 
-    graph:SBOLXGraph
+    graph:Graph
     graphWatcher:Watcher|null
     detailLevel:number
 
     bpToGridScale:number
     minGlyphWidth:number
 
-    constructor(graph:SBOLXGraph) {
+    constructor(graph:Graph) {
 
         super()
 
@@ -265,7 +266,7 @@ export default class Layout extends Versioned {
 
     }
 
-    cloneWithNewGraph(newGraph:SBOLXGraph):Layout {
+    cloneWithNewGraph(newGraph:Graph):Layout {
 
         return LayoutPOD.deserialize(newGraph, LayoutPOD.serialize(this))
 
@@ -350,8 +351,8 @@ export default class Layout extends Versioned {
 
     syncAllDepictions(detailLevel:number): void {
 
-        let graph:SBOLXGraph = this.graph
-        let rootComponents:Array<SXComponent> = graph.rootComponents
+        let graph:Graph = this.graph
+        let rootComponents:Array<S3Component> = sbol3(graph).rootComponents
 
         this.syncDepictions(detailLevel, rootComponents.map((c) => c.uri))
     }
@@ -364,7 +365,7 @@ export default class Layout extends Versioned {
 
         this.detailLevel = detailLevel
 
-        const graph:SBOLXGraph = this.graph
+        const graph:Graph = this.graph
 
 
 
@@ -373,13 +374,13 @@ export default class Layout extends Versioned {
 
         const preset:DetailPreset = levelToPreset(detailLevel)
 
-        let components:Array<SXComponent> = []
+        let components:Array<S3Component> = []
 
         for(let uri of URIs) {
 
-            let c = graph.uriToFacade(uri)
+            let c = sbol3(graph).uriToFacade(uri)
 
-            if(c instanceof SXComponent) {
+            if(c instanceof S3Component) {
                 components.push(c)
             }
         }
@@ -431,7 +432,7 @@ export default class Layout extends Versioned {
 
             if(cdDepiction.opacity === Opacity.Whitebox) {
 
-                var displayList:ComponentDisplayList = ComponentDisplayList.fromComponent(component)
+                var displayList:ComponentDisplayList = ComponentDisplayList.fromComponent(this.graph, component)
 
                 for(let backboneGroup of displayList.backboneGroups) {
                     //console.log('BB GROUP LEN ' + backboneGroup.length)
@@ -440,12 +441,12 @@ export default class Layout extends Versioned {
 
                 for(let child of displayList.ungrouped) {
 
-                    if(! (child instanceof SXSubComponent))
+                    if(! (child instanceof S3SubComponent))
                         throw new Error('???')
 
                     let nextChain = chain.extend(child)
 
-                    let ci = this.syncComponentInstanceDepiction(preset, child as SXSubComponent, nextChain, cdDepiction, 1, Orientation.Forward)
+                    let ci = this.syncComponentInstanceDepiction(preset, child as S3SubComponent, nextChain, cdDepiction, 1, Orientation.Forward)
                     this.syncLabel(preset, cdDepiction, ci, 1)
                 }
 
@@ -546,11 +547,11 @@ export default class Layout extends Versioned {
 
     }
 
-    private syncLocationDepiction(preset:DetailPreset, location:SXLocation, chain:IdentifiedChain, parent:BackboneDepiction, nestDepth:number, orientation:Orientation) {
+    private syncLocationDepiction(preset:DetailPreset, location:S3Location, chain:IdentifiedChain, parent:BackboneDepiction, nestDepth:number, orientation:Orientation) {
 
-        //const sequenceAnnotation:SXSequenceFeature = location.containingSequenceFeature
+        //const sequenceAnnotation:S3SequenceFeature = location.containingSequenceFeature
 
-        const containingObject:SXIdentified|undefined = location.containingObject
+        const containingObject:S3Identified|undefined = location.containingObject
 
         if(containingObject === undefined)
             throw new Error('???')
@@ -561,10 +562,10 @@ export default class Layout extends Versioned {
 
         var nestedOrientation:Orientation
 
-        if(location instanceof SXOrientedLocation) {
+        if(location instanceof S3OrientedLocation) {
 
-            nestedOrientation = (location as SXOrientedLocation).orientation ===
-                Specifiers.SBOLX.Orientation.ReverseComplement ?
+            nestedOrientation = (location as S3OrientedLocation).orientation ===
+                Specifiers.SBOL3.Orientation.ReverseComplement ?
                     reverse(orientation) : orientation
 
         } else {
@@ -574,14 +575,14 @@ export default class Layout extends Versioned {
         }
 
 
-        if(containingObject instanceof SXSubComponent) {
+        if(containingObject instanceof S3SubComponent) {
 
             const cDepiction:ComponentDepiction = this.syncComponentInstanceDepiction(preset, containingObject, chain, parent, nestDepth, nestedOrientation)
             cDepiction.location = location
 
             return cDepiction
 
-        } else if(containingObject instanceof SXSequenceFeature) {
+        } else if(containingObject instanceof S3SequenceFeature) {
 
             var depiction:Depiction|undefined = this.identifiedChainToDepiction.get(chain.stringify())
             var salDepiction
@@ -621,7 +622,7 @@ export default class Layout extends Versioned {
 
     }
 
-    private syncComponentInstanceDepiction(preset:DetailPreset, component:SXSubComponent, chain:IdentifiedChain, parent:Depiction, nestDepth:number, orientation:Orientation):ComponentDepiction {
+    private syncComponentInstanceDepiction(preset:DetailPreset, component:S3SubComponent, chain:IdentifiedChain, parent:Depiction, nestDepth:number, orientation:Orientation):ComponentDepiction {
 
         if(!component.instanceOf)
             throw new Error('Component has no definition')
@@ -630,7 +631,7 @@ export default class Layout extends Versioned {
 
         //console.error('syncing CID with orientation ' + orientation)
         
-        const definition:SXComponent = component.instanceOf
+        const definition:S3Component = component.instanceOf
 
 
         var cDepiction:ComponentDepiction
@@ -664,7 +665,7 @@ export default class Layout extends Versioned {
 
         if(cDepiction.opacity === Opacity.Whitebox) {
 
-            var displayList:ComponentDisplayList = ComponentDisplayList.fromComponent(component.instanceOf)
+            var displayList:ComponentDisplayList = ComponentDisplayList.fromComponent(this.graph, component.instanceOf)
 
             //console.log(displayList.backboneGroups.length + ' bb groups for ' + component.uriChain)
 
@@ -674,7 +675,7 @@ export default class Layout extends Versioned {
 
             for(let child of displayList.ungrouped) {
 
-                if(! (child instanceof SXSubComponent))
+                if(! (child instanceof S3SubComponent))
                     throw new Error('???')
 
                 let nextChain = chain.extend(child)
@@ -697,7 +698,7 @@ export default class Layout extends Versioned {
         return cDepiction
     }
 
-    createInteractionDepiction(preset:DetailPreset, interaction:SXInteraction, chain:IdentifiedChain, parent:ComponentDepiction) {
+    createInteractionDepiction(preset:DetailPreset, interaction:S3Interaction, chain:IdentifiedChain, parent:ComponentDepiction) {
 
         var iDepiction:InteractionDepiction|null
 
@@ -721,9 +722,9 @@ export default class Layout extends Versioned {
     }
 
 
-    private syncBackboneGroup(preset:DetailPreset, dlGroup:Array<SXIdentified>, chain:IdentifiedChain, parent:Depiction, nestDepth:number, orientation:Orientation):void {
+    private syncBackboneGroup(preset:DetailPreset, dlGroup:Array<S3Identified>, chain:IdentifiedChain, parent:Depiction, nestDepth:number, orientation:Orientation):void {
 
-        // parent is a depiction of an SXComponent or SXSubComponent (i.e., a ComponentDepiction)
+        // parent is a depiction of an S3Component or S3SubComponent (i.e., a ComponentDepiction)
 
         if(! (parent instanceof ComponentDepiction)) {
             throw new Error('???')
@@ -761,9 +762,9 @@ export default class Layout extends Versioned {
 
             var obj
 
-            if(child instanceof SXSubComponent) {
+            if(child instanceof S3SubComponent) {
                 obj = this.syncComponentInstanceDepiction(preset, child, newChain, backbone, nestDepth + 1, orientation)
-            } else if (child instanceof SXLocation) {
+            } else if (child instanceof S3Location) {
                 obj = this.syncLocationDepiction(preset, child, newChain, backbone, nestDepth + 1, orientation)
             } else {
                 throw new Error('???')

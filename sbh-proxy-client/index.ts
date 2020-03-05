@@ -1,6 +1,6 @@
 
 import request = require('request')
-import { SBOLXGraph } from 'sbolgraph'
+import { Graph } from 'sbolgraph'
 
 const URL = 'http://localhost:9992'
 

@@ -1,5 +1,5 @@
 
-import { SBOLXGraph } from "sbolgraph"
+import { Graph, SBOL3GraphView } from "sbolgraph"
 import LayoutThumbnail from "biocad/cad/LayoutThumbnail";
 import Layout from "biocad/cad/Layout";
 import { create } from "jfw/vdom";
@@ -16,9 +16,9 @@ export default class Headless {
 
     headlessLoad(url:string):Promise<string> {
 
-        return SBOLXGraph.loadURL(url).then((graph:SBOLXGraph) => {
+        return SBOL3GraphView.loadURL(url).then((gv:SBOL3GraphView) => {
 
-            const layout:Layout = new Layout(graph)
+            const layout:Layout = new Layout(gv.graph)
 
             layout.syncAllDepictions(5)
             layout.configurate([])

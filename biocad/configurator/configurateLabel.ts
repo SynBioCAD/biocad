@@ -1,4 +1,4 @@
-import { SXIdentified } from "sbolgraph";
+import { S3Identified } from "sbolgraph";
 import Depiction, { Orientation } from 'biocad/cad/Depiction';
 import ComponentDepiction from 'biocad/cad/ComponentDepiction';
 
@@ -17,7 +17,7 @@ import InstructionSet from "biocad/cad/layout-instruction/InstructionSet";
 export default function configurateLabel(label:LabelDepiction, instructions:InstructionSet) {
 
     const labelFor: Depiction = label.labelFor
-    const depictionOf: SXIdentified | undefined = labelFor.depictionOf
+    const depictionOf: S3Identified | undefined = labelFor.depictionOf
 
     if(depictionOf === undefined) {
         console.dir(label)
