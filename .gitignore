@@ -10,5 +10,7 @@ cache
 renderfarm/biocad/*
 .idea
 *.class
+dist/**/*.js
+dist/**/*.d.ts
 
 
