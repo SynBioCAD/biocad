@@ -13,8 +13,8 @@ export default class ComponentBrowser extends View {
     filter:(S3Component)=>boolean
     tree:TreeView
 
-    onCreate:Hook<string>
-    onSelect:Hook<string>
+    onCreate:Hook<string> = new Hook()
+    onSelect:Hook<string> = new Hook()
 
     constructor(app, filter) {
 
