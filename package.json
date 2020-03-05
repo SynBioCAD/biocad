@@ -13,8 +13,7 @@
   },
   "scripts": {
     "dev": "node ./dev-server ./webpack_browser_dev.config.js",
-    "prepare": "tsc -d -p ./ --outDir dist/",
-    "prepublishOnly": "tsc -d -p ./ --outDir dist/"
+    "prepack": "tsc -d -p ./ --outDir dist/"
   },
   "dependencies": {
     "@biocad/jfw": "git+https://github.com/ngbiocad/jfw.git",
