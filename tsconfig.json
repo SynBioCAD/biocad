@@ -15,7 +15,9 @@
     },
     "include": [
         "biocad/**/*",
-        "visbolite/**/*",
         "cli/**/*"
+    ],
+    "files": [
+        "custom.d.ts"
     ]
 }

@@ -6,7 +6,7 @@ import BiocadApp from "biocad/BiocadApp";
 import { Graph, SBOL3GraphView, sbol3 } from "sbolgraph"
 import { Types } from "bioterms";
 import { S3Component } from "sbolgraph";
-import Layout from "biocad/cad/Layout";
+import Layout from "biocad/cad/layout/Layout";
 import LayoutThumbnail from "biocad/cad/LayoutThumbnail";
 import SBOLDroppable from "biocad/droppable/SBOLDroppable";
 import CircuitMode from 'biocad/mode/circuit/CircuitMode'

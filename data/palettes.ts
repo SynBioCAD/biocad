@@ -8,11 +8,7 @@ export default [
                 "name": "Transcription",
                 "description": "Fundamental transcription machinery such as promoters, RBSs, CDSs and terminators.",
                 "members": [
-                    "cds",
-                    "rbs",
-                    "promoter",
-                    "operator",
-                    "terminator"
+                    "CDS"
                 ]
             },
             {
@@ -21,8 +17,6 @@ export default [
                 "icon": "scissors",
                 "description": "Sites for recognition of restriction endonucleases.",
                 "members": [
-                    "restriction_site",
-                    "blunt_restriction_site",
                 ]
             },
             {
@@ -37,7 +31,6 @@ export default [
                 "name": "Molecules",
                 "description": "Molecular species such as small molecules, complexes, macromolecules.",
                 "members": [
-                    "protein"
                 ]
             }
         ]
@@ -50,18 +43,6 @@ export default [
                 "name": "protlang",
                 "description": "protlang stuff",
                 "members": [
-                    "linker",
-                    "stability-element",
-                    "localization-tag-reversible",
-                    "localization-tag-irreversible",
-                    "covalent-modification",
-                    "catalytic-site",
-                    "binding-site",
-                    "biochemical-tag",
-                    "protein-cleavage-site",
-                    "degradation-tag",
-                    "defined-region",
-                    "membrane-static"
                 ]
             }
         ]

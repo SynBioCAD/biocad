@@ -1,6 +1,6 @@
 
 import RenderContext from './RenderContext'
-import Layout from './Layout'
+import Layout from 'biocad/cad/layout/Layout'
 import { Vec2 } from 'jfw/geom'
 import { VNode, svg, toHTML } from 'jfw/vdom'
 import SVGDefs from "biocad/cad/SVGDefs";

@@ -24,7 +24,6 @@ module.exports = {
             jfw: path.resolve(__dirname, 'node_modules/@biocad/jfw/dist/jfw'),
             data: path.resolve(__dirname, 'data'),
             featurecreep: path.resolve(__dirname, 'featurecreep'),
-            visbolite: path.resolve(__dirname, 'visbolite'),
             biocad: path.resolve(__dirname, 'biocad'),
             'sbh-proxy-client': path.resolve(__dirname, 'sbh-proxy-client'),
         }

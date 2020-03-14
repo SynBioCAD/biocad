@@ -3,7 +3,7 @@ import { View } from 'jfw/ui'
 import { CodeMirrorWidget } from 'jfw/ui/widget'
 import { h, VNode } from 'jfw/vdom'
 import BiocadApp from "biocad/BiocadApp";
-import LayoutPOD from "biocad/cad/LayoutPOD";
+import LayoutPOD from "biocad/cad/layout/LayoutPOD";
 import EncodingSelector, { Encoding } from './EncodingSelector';
 import { SBOL2GraphView, Graph, sbol3 } from 'sbolgraph';
 import CytoscapeRDFWidget from 'biocad/view/CytoscapeRDFWidget'

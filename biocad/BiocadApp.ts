@@ -1,10 +1,7 @@
 
 import { App } from 'jfw'
 
-import TestDialog from './dialog/TestDialog'
 import BiocadTopbar from './topbar/BiocadTopbar'
-
-import configurate from './configurator/configurate'
 
 import SetupMode from './mode/setup/SetupMode'
 import LibraryMode from './mode/library/LibraryMode'
@@ -20,10 +17,7 @@ import DropOverlay from './DropOverlay'
 import { VNode, h, create } from "jfw/vdom";
 
 import Mode from "jfw/ui/Mode";
-import HeadlessMode from "biocad/mode/headless/HeadlessMode";
-import Layout from "biocad/cad/Layout";
 import Headless from "biocad/Headless";
-import UData from 'jfw/udata/UData';
 import InitUData from 'biocad/InitUData';
 import GlobalConfig from 'jfw/GlobalConfig';
 import PopupMessageDialog from './dialog/PopupMessageDialog';

@@ -3,7 +3,7 @@ import { S3Identified } from "sbolgraph"
 
 import { h, VNode } from "jfw/vdom";
 import { Graph } from "sbolgraph"
-import Layout from "biocad/cad/Layout";
+import Layout from "biocad/cad/layout/Layout";
 import LayoutThumbnail from "biocad/cad/LayoutThumbnail";
 import BiocadApp from "biocad/BiocadApp";
 import assert from 'power-assert'
@@ -12,7 +12,7 @@ import Vec2 from "jfw/geom/Vec2";
 import Rect from "jfw/geom/Rect";
 
 import { contextMenu as contextMenuEvent, click as clickEvent } from 'jfw/event'
-import Depiction from "biocad/cad/Depiction";
+import Depiction from "biocad/cad/layout/Depiction";
 
 import Droppable from './droppable/Droppable'
 import SBOLDroppable from "biocad/droppable/SBOLDroppable";

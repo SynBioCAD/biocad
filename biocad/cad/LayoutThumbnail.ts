@@ -1,5 +1,5 @@
 
-import Depiction from 'biocad/cad/Depiction';
+import Depiction from 'biocad/cad/layout/Depiction';
 
 import { View } from 'jfw/ui'
 import { createGrid } from 'jfw/graphics'
@@ -7,7 +7,7 @@ import { createGrid } from 'jfw/graphics'
 import { h, svg, VNode } from 'jfw/vdom'
 
 import { Types } from 'bioterms'
-import Layout from "biocad/cad/Layout";
+import Layout from "biocad/cad/layout/Layout";
 import BiocadApp from "biocad/BiocadApp";
 import Vec2 from "jfw/geom/Vec2";
 import Rect from "jfw/geom/Rect";
