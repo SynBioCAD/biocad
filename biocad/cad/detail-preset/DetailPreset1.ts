@@ -3,7 +3,7 @@ import DetailPreset from './DetailPreset'
 
 import { Specifiers } from 'bioterms'
 
-import { Opacity } from '../Depiction'
+import { Opacity } from '../layout/Depiction'
 
 import {
     S3SubComponent,

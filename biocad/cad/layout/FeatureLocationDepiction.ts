@@ -14,11 +14,11 @@ import {
 
 import Layout from './Layout'
 
-import parts, { shortNameFromTerm } from 'data/parts'
+import { shortNameFromTerm } from 'data/parts'
 
-import RenderContext from './RenderContext'
-import CircularBackboneDepiction from 'biocad/cad/CircularBackboneDepiction';
-import IdentifiedChain from '../IdentifiedChain';
+import RenderContext from '../RenderContext'
+import CircularBackboneDepiction from 'biocad/cad/layout/CircularBackboneDepiction';
+import IdentifiedChain from '../../IdentifiedChain';
 import Glyph from 'biocad/glyph/Glyph'
 
 export default class FeatureLocationDepiction extends LocationableDepiction {

@@ -1,6 +1,6 @@
 
 import Instruction from './Instruction'
-import Depiction from 'biocad/cad/Depiction';
+import Depiction from 'biocad/cad/layout/Depiction';
 import { S3Identified } from 'sbolgraph'
 
 export default class ReplaceInstruction extends Instruction {

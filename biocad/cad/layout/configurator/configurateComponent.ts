@@ -7,7 +7,7 @@ import { Orientation } from 'biocad/cad/layout/Depiction'
 
 import { Vec2 } from 'jfw/geom'
 
-import parts, { shortNameFromTerm } from 'data/parts'
+import { shortNameFromTerm } from 'data/parts'
 
 import binPackStrategy from './strategy/binPackStrategy'
 import tileHorizontalStrategy from './strategy/tileHorizontalStrategy'

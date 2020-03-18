@@ -5,26 +5,23 @@ import { View } from 'jfw/ui'
 import { h, svg, VNode} from 'jfw/vdom'
 import { click as clickEvent, contextMenu as contextMenuEvent } from 'jfw/event'
 
-import visbolite from 'visbolite'
-
 import App from "jfw/App";
 import BiocadApp from "biocad/BiocadApp";
-import { Specifiers, Predicates, Types } from "bioterms";
 
-import { node as graphNode } from "sbolgraph"
 import SBOLDroppable from "biocad/droppable/SBOLDroppable";
 import BrowseSBHDialog, { BrowseSBHDialogOptions } from "biocad/dialog/BrowseSBHDialog";
 import { SearchQuery } from "sbolgraph"
 
 import { FinalizeEvent } from 'biocad/DropOverlay'
+import Glyph from "biocad/glyph/Glyph";
 
 export default class PartsListView extends View {
 
     app:App
 
-    parts:any[]
+    parts:Glyph[]
 
-    constructor(app:App, parts:any[]) {
+    constructor(app:App, parts:Glyph[]) {
 
         super(app)
 
@@ -34,12 +31,9 @@ export default class PartsListView extends View {
 
     render():VNode {
 
-        var rowHeight = 34
-        var svgPadding = 4
-        var boxSize = Vec2.fromXY(rowHeight * 0.7, rowHeight * 0.7)
         var app:App = this.app
 
-        function renderPartEntry(part) {
+        function renderPartEntry(part:Glyph) {
 
             /*
             var glyphInfoBW = {
@@ -53,15 +47,13 @@ export default class PartsListView extends View {
 
             var glyphInfoColor = {
                 defaultColor: '#ddd',
-                type: part.shortName,
                 stroke: 'none',
-                size: boxSize,
                 thickness: 2,
                 autoApplyScale: true
             }
 
             //var glyphSvgBW = visbolite.render(glyphInfoBW)
-            var glyphSvgColor = visbolite.render(glyphInfoColor)
+            var glyphSvgColor = Glyph.render(part.glyphName, glyphInfoColor)
 
             return h('div.sf-plv-entry', {
                 'ev-mousedown': clickEvent(mousedownPart, { app: app, part: part }),
@@ -80,18 +72,20 @@ export default class PartsListView extends View {
                 ]),*/
                 svg('svg', {
                     'class': 'sf-plv-color',
-                    'viewBox': [
-                        0,
-                        0,
-                        boxSize.x,
-                        boxSize.y
-                    ].join(' ')
+                //    width: 100,
+                //    height: 100,
+                //     'viewBox': [
+                //         0,
+                //         0,
+                //         100,
+                //         100
+                //     ].join(' ')
                 }, [
                     glyphSvgColor
                 ]),
 
                 h('div.sf-plv-entry-label', [
-                    part.longName,
+                    part.glyphName,
 
                     h('span.fa.fa-search.sf-part-search-button', {
                         'ev-mousedown': clickEvent(clickSearch, { app: app, part: part })

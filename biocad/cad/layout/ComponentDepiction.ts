@@ -14,7 +14,7 @@ import {
 
 import Layout from './Layout'
 
-import parts, { shortNameFromTerm } from 'data/parts'
+import { shortNameFromTerm } from 'data/parts'
 
 import RenderContext from '../RenderContext'
 import CircularBackboneDepiction from 'biocad/cad/layout/CircularBackboneDepiction';

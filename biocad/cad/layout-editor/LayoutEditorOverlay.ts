@@ -20,15 +20,9 @@ import SBOLDroppable from "biocad/droppable/SBOLDroppable";
 
 import { Graph, S3Component, S3SubComponent } from "sbolgraph"
 import LayoutEditorContextMenu from "biocad/cad/LayoutEditorContextMenu";
-import DepictionPOD from "biocad/cad/layout/DepictionPOD";
-import BackboneDepiction from 'biocad/cad/layout/BackboneDepiction';
 import ComponentDepiction from 'biocad/cad/layout/ComponentDepiction';
 
 import assert from 'power-assert'
-import Instruction from "biocad/cad/layout-instruction/Instruction";
-import ReplaceInstruction from "biocad/cad/layout-instruction/ReplaceInstruction";
-import { Predicates } from "bioterms";
-import { Specifiers } from "bioterms/Specifiers";
 import DOp, { DOpResult } from "biocad/cad/drag-op/DOp";
 import DOpTwoBlackboxesMakeConstraint from "biocad/cad/drag-op/DOpTwoBlackboxesMakeConstraint";
 import DOpMoveInWorkspace from "biocad/cad/drag-op/DOpMoveInWorkspace";

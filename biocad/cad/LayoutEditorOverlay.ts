@@ -1,7 +1,7 @@
 import  { S3Identified, S3Interaction, sbol3 }  from "sbolgraph"
 
-import LabelDepiction from 'biocad/cad/LabelDepiction';
-import Depiction, { Opacity } from 'biocad/cad/Depiction';
+import LabelDepiction from 'biocad/cad/layout/LabelDepiction';
+import Depiction, { Opacity } from 'biocad/cad/layout/Depiction';
 import { Vec2 } from 'jfw/geom';
 import { VNode, svg, active } from 'jfw/vdom';
 
@@ -9,7 +9,7 @@ import { View } from 'jfw/ui'
 import LayoutEditor from "biocad/cad/LayoutEditor";
 
 import { mousemove as mousemoveEvent, click as clickEvent, mousewheel as wheelEvent, gesture as gestureEvent, contextMenu as contextMenuEvent, drag } from 'jfw/event'
-import Layout from "biocad/cad/Layout";
+import Layout from "biocad/cad/layout/Layout";
 
 import renderHandles from './renderHandles'
 import Matrix from "jfw/geom/Matrix";
@@ -20,15 +20,9 @@ import SBOLDroppable from "biocad/droppable/SBOLDroppable";
 
 import { Graph, S3Component, S3SubComponent } from "sbolgraph"
 import LayoutEditorContextMenu from "biocad/cad/LayoutEditorContextMenu";
-import DepictionPOD from "biocad/cad/DepictionPOD";
-import BackboneDepiction from 'biocad/cad/BackboneDepiction';
-import ComponentDepiction from 'biocad/cad/ComponentDepiction';
+import ComponentDepiction from 'biocad/cad/layout/ComponentDepiction';
 
 import assert from 'power-assert'
-import Instruction from "biocad/cad/layout-instruction/Instruction";
-import ReplaceInstruction from "biocad/cad/layout-instruction/ReplaceInstruction";
-import { Predicates } from "bioterms";
-import { Specifiers } from "bioterms/Specifiers";
 import DOp, { DOpResult } from "./drag-op/DOp";
 import DOpTwoBlackboxesMakeConstraint from "./drag-op/DOpTwoBlackboxesMakeConstraint";
 import DOpMoveInWorkspace from "./drag-op/DOpMoveInWorkspace";
@@ -37,12 +31,11 @@ import DOpEnterParent from "./drag-op/DOpEnterParent";
 import DOpEnterSibling from "./drag-op/DOpEnterSibling";
 import DOpMoveInBackbone from "./drag-op/DOpMoveInBackbone";
 import DOpMoveInParent from "./drag-op/DOpMoveInParent";
-import InteractionDepiction from "./InteractionDepiction";
-import DepictionRef from "./DepictionRefByUid";
+import DepictionRef from "biocad/cad/layout/DepictionRefByUid";
 
 import copySBOL from 'biocad/util/copySBOL'
 import createInteraction from "./createInteraction";
-import DepictionRefByChain from "./DepictionRefByChain";
+import DepictionRefByChain from "biocad/cad/layout/DepictionRefByChain";
 
 export default class LayoutEditorOverlay extends View {
 

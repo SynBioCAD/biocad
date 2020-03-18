@@ -89,8 +89,21 @@ export default class Glyph {
         this.soTerms = svgNode.attrib.soterms.split(',')
 
         for(let def of svgNode.attrib['parametric:defaults'].split(';')) {
-            this.defaultParameters[def.split('=')[0]] = parseFloat(def.split('=')[1])
+            let k = def.split('=')[0]
+            let v = parseFloat(def.split('=')[1])
+
+            if(k.indexOf('pad_') === 0) {
+                v = 0
+            }
+
+            this.defaultParameters[k] = v
         }
+
+        let baselineNode = svgNode.findall("path[@class='baseline']")[0]
+        let bboxNode = svgNode.findall("rect[@class='bounding-box']")[0]
+
+        console.dir(bboxNode)
+
     }
 
     static async load(glyphName:string):Promise<Glyph> {
@@ -106,7 +119,7 @@ export default class Glyph {
 
         paramMap = Object.assign(paramMap, params)
 
-        return svgNode._children.map(renderNode)
+        return svgNode._children.filter(filterNodes).map(renderNode)
 
         function renderNode(node:any):VNode {
 
@@ -127,13 +140,16 @@ export default class Glyph {
                 }
             }
 
-            return svg(node.tag, attribs, node._children.map(renderNode))
+            return svg(node.tag, attribs, node._children.filter(filterNodes).map(renderNode))
+        }
+
+        function filterNodes(node:any):boolean {
+            // return node.attrib.class !== 'baseline' && node.attrib.class !== 'bounding-box'
+            return true
         }
 
         function calculate(expression:string) {
-
             return expression.replace(/\{(.+?)\}/g, (match, g1) => {
-                console.log('match', g1)
                 return math.evaluate(g1, paramMap)
             })
         }
@@ -158,7 +174,13 @@ export default class Glyph {
 
     static render(glyphType:string, params:any):VNode {
 
-        return Glyph.getGlyph(glyphType).render(params)
+        let glyph = Glyph.getGlyph(glyphType)
+
+        if(glyph === undefined) {
+            throw new Error('glyph not found: ' + glyphType)
+        }
+        
+        return glyph.render(params)
     }
 
 

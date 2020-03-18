@@ -18,7 +18,7 @@ import { Types } from 'bioterms'
 
 import Layout from './Layout'
 
-import parts, { shortNameFromTerm } from 'data/parts'
+import { shortNameFromTerm } from 'data/parts'
 
 import RenderContext from '../RenderContext'
 import { S3Range, Watcher } from "sbolgraph";

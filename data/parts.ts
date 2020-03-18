@@ -1,23 +1,6 @@
 
 import { Prefixes, Specifiers } from 'bioterms'
-
-const parts = [
-
-    ///
-    /// SBOLV
-    /// 
-
-    {
-        shortName: 'CDS',
-        longName: 'Coding Sequence',
-        soTerm: Specifiers.SO.CDS,
-        typeUri: Specifiers.SBOL2.Type.DNA,
-        defaultLength: 128,
-        defaultHeight: 32
-    }
-
-]
-
+import Glyph from 'biocad/glyph/Glyph';
 
 export function shortNameFromTerm(uri:string) {
 
@@ -28,23 +11,24 @@ export function shortNameFromTerm(uri:string) {
                 || ''
 }
 
-export default parts
-
 function soToGlyphType(so) {
 
-    for(var i = 0; i < parts.length; ++ i) {
+    let glyphs = Glyph.glyphs
 
-        const term = parts[i].soTerm
+    for(var i = 0; i < glyphs.length; ++ i) {
 
-        if(term.indexOf('SO:') !== -1) {
-            if(parts[i].soTerm.split('SO:')[1] === so.split('SO:')[1]) {
-                return parts[i].shortName
+        for(let term of glyphs[i].soTerms) {
+
+            if(term.indexOf('SO:') !== -1) {
+                if(term.split('SO:')[1] === so.split('SO:')[1]) {
+                    return glyphs[i].glyphName
+                }
             }
-        }
 
-        if(term.indexOf('GO:') !== -1) {
-            if(parts[i].soTerm.split('GO:')[1] === so.split('GO:')[1]) {
-                return parts[i].shortName
+            if(term.indexOf('GO:') !== -1) {
+                if(term.split('GO:')[1] === so.split('GO:')[1]) {
+                    return glyphs[i].glyphName
+                }
             }
         }
     }

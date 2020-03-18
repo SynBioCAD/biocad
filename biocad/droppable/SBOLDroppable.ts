@@ -1,17 +1,11 @@
 
-import { S3Component } from "sbolgraph";
-
 import Droppable from "./Droppable";
 import { Graph } from "sbolgraph"
-import Layout from "biocad/cad/Layout";
+import Layout from "biocad/cad/layout/Layout";
 import LayoutThumbnail from "biocad/cad/LayoutThumbnail";
 import BiocadApp from "biocad/BiocadApp";
 import { VNode } from "jfw/vdom";
 import Vec2 from "jfw/geom/Vec2";
-import Rect from "jfw/geom/Rect";
-import Depiction from "biocad/cad/Depiction";
-import { S3SubComponent, S3SequenceFeature, S3Identified, S3OrientedLocation } from "sbolgraph"
-import { Specifiers } from "bioterms";
 import MarginInstruction from "../cad/layout-instruction/MarginInstruction";
 
 export default class SBOLDroppable extends Droppable {

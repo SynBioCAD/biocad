@@ -8,15 +8,28 @@ export default [
                 "name": "Transcription",
                 "description": "Fundamental transcription machinery such as promoters, RBSs, CDSs and terminators.",
                 "members": [
-                    "CDS"
+                    "Promoter",
+                    "RibosomeEntrySite",
+                    "CDS",
+                    "Terminator",
+                    "Insulator",
+                    "NonCodingRNA",
+                    "Operator"
                 ]
             },
             {
                 "id": "biocad.palette.sbolv",
-                "name": "Restriction",
+                "name": "Recombination",
                 "icon": "scissors",
-                "description": "Sites for recognition of restriction endonucleases.",
+                "description": "",
                 "members": [
+                    "BluntRestrictionSite",
+                    "DNACleavageSite",
+                    "OverhangSite3",
+                    "OverhangSite5",
+                    "RecombinationSite",
+                    "StickyEndRestrictionEnzymeCleavageSite3",
+                    "StickyEndRestrictionEnzymeCleavageSite5"
                 ]
             },
             {
@@ -31,6 +44,29 @@ export default [
                 "name": "Molecules",
                 "description": "Molecular species such as small molecules, complexes, macromolecules.",
                 "members": [
+                    "Aptamer"
+                ]
+            },
+            {
+                "id": "biocad.palette.other",
+                "name": "Other",
+                "description": "Other parts",
+                "members": [
+                    "AssemblyScar",
+                    "Composite",
+                    "DNALocation",
+                    "DNAStabilityElement",
+                    "EngineeredRegion",
+                    "NoGlyph",
+                    "NucleicAcidOneStrand",
+                    "OmittedDetail",
+                    "OriginOfReplication",
+                    "OriginOfTransfer",
+                    "PolyASite",
+                    "Primer",
+                    "Signature",
+                    "Spacer",
+                    "Unspecified"
                 ]
             }
         ]

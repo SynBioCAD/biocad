@@ -1,10 +1,10 @@
 
 import TreeView, { TreeNode } from 'jfw/ui/TreeView'
 import { VNode, h } from 'jfw/vdom'
-import Layout from 'biocad/cad/Layout';
+import Layout from 'biocad/cad/layout/Layout';
 import App from 'jfw/App'
 import Dialog from 'jfw/ui/dialog/Dialog'
-import Depiction from 'biocad/cad/Depiction';
+import Depiction from 'biocad/cad/layout/Depiction';
 
 export default class DepictionTreeView extends TreeView {
 

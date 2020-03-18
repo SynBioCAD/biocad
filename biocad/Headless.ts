@@ -1,7 +1,7 @@
 
 import { Graph, SBOL3GraphView } from "sbolgraph"
 import LayoutThumbnail from "biocad/cad/LayoutThumbnail";
-import Layout from "biocad/cad/Layout";
+import Layout from "biocad/cad/layout/Layout";
 import { create } from "jfw/vdom";
 import BiocadApp from "biocad/BiocadApp";
 import Rect from "jfw/geom/Rect";

@@ -1,11 +1,10 @@
 
 import { Rect } from "jfw/geom";
-import Depiction, { Opacity } from "biocad/cad/Depiction";
+import Depiction, { Opacity } from "biocad/cad/layout/Depiction";
 import { Graph, S3Component, S3SubComponent } from "sbolgraph";
-import Layout from "biocad/cad/Layout";
+import Layout from "biocad/cad/layout/Layout";
 import DOp, { DOpResult } from "./DOp";
-import ComponentDepiction from "../ComponentDepiction";
-import BackboneDepiction from "../BackboneDepiction";
+import BackboneDepiction from "../layout/BackboneDepiction";
 
 // Allows children to be moved around inside their parent
 

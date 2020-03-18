@@ -3,12 +3,17 @@ import GlobalConfig from 'jfw/GlobalConfig'
 import BiocadApp from './BiocadApp'
 
 import config from '../configs/default'
+import Glyph from './glyph/Glyph'
 
-GlobalConfig.init(config).then(() => {
+async function main() {
+
+    await GlobalConfig.init(config)
+    await Glyph.loadGlyphs()
 
     const app = new BiocadApp(document.getElementsByTagName('body')[0])
 
     app.init()
+}
 
-})
+main()
 

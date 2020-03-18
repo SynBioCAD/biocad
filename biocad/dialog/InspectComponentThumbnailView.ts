@@ -3,7 +3,7 @@ import View from 'jfw/ui/View'
 import BiocadApp from "biocad/BiocadApp";
 import { S3Component } from "sbolgraph"
 import { VNode, h } from "jfw/vdom";
-import Layout from "biocad/cad/Layout";
+import Layout from "biocad/cad/layout/Layout";
 import LayoutThumbnail from "biocad/cad/LayoutThumbnail";
 import Vec2 from "jfw/geom/Vec2";
 import Rect from "jfw/geom/Rect";
