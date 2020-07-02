@@ -129,7 +129,7 @@ function mousedownPart(data:any) {
 
     const graph:Graph = new Graph([])
 
-    let component = sbol3(graph).createComponent(app.defaultPrefix, part.shortName, '1')
+    let component = sbol3(graph).createComponent(app.defaultPrefix, part.shortName)
     component.addRole(part.soTerm)
     component.addType(part.typeUri)
 

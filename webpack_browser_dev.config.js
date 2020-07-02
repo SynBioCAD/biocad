@@ -25,6 +25,7 @@ module.exports = {
             biocad: path.resolve(__dirname, 'biocad'),
             request: 'browser-request',
             'sbh-proxy-client': path.resolve(__dirname, 'sbh-proxy-client'),
+            'fs': 'fs-browser-stub'
         }
     },
 

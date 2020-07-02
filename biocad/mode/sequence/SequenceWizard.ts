@@ -148,7 +148,7 @@ async function clickEdit(data) {
     let graph = app.graph
     let component = view.component
 
-    let newSeq = sbol3(graph).createSequence(component.uriPrefix, component.id + '_sequence', component.version)
+    let newSeq = sbol3(graph).createSequence(component.uriPrefix, component.displayId + '_sequence')
     component.addSequence(newSeq)
 
     view.onLoadedPart(component)

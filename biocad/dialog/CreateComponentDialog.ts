@@ -120,7 +120,7 @@ export default class CreateComponentDialog extends Dialog {
             prefix = 'http://bazprefix/'
         }
 
-        let c = sbol3(graph).createComponent(prefix, this.identifierBox.getValue(), '1')
+        let c = sbol3(graph).createComponent(prefix, this.identifierBox.getValue())
 
         for(let role of roles) {
             c.addRole(role)
