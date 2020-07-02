@@ -174,7 +174,7 @@ export default class Inspector extends View {
             }
 
             this.editors.push(new PropertyEditorOneline('Name', new PropertyAccessorString(dOf.uri, Predicates.Dcterms.title, changeName)))
-            this.editors.push(new PropertyEditorOneline('Identifier', new PropertyAccessorString(dOf.uri, Predicates.SBOL3.id, changeNonRecursive)))
+            this.editors.push(new PropertyEditorOneline('Identifier', new PropertyAccessorString(dOf.uri, Predicates.SBOL3.displayId, changeNonRecursive)))
 
             if(effectiveComponent) {
 

@@ -18,9 +18,10 @@
     esutils "^2.0.2"
     js-tokens "^4.0.0"
 
-"@biocad/jfw@git+https://github.com/ngbiocad/jfw.git":
+"@biocad/jfw@^0.4.0":
   version "0.4.0"
-  resolved "git+https://github.com/ngbiocad/jfw.git#e4234e093ef5c871770c8c2efaa8cc1979722a66"
+  resolved "https://registry.yarnpkg.com/@biocad/jfw/-/jfw-0.4.0.tgz#af805450aa0fde1d728225083fa3d100632d67b0"
+  integrity sha512-8ni2XltH1lPivp5Jyat+QtCudMiVGPFuvAz1oL0qVFYMm7fKuUBJmLKD+RbHlDLmkbwtiWg9QXuo7mMMr2bueQ==
   dependencies:
     "@types/codemirror" "0.0.76"
     almost-equal "^1.1.0"
@@ -70,6 +71,20 @@
   resolved "https://registry.yarnpkg.com/@rdfjs/to-ntriples/-/to-ntriples-1.0.2.tgz#c2fe8f6e8d8010c2315c0a816d1cd42a4447965e"
   integrity sha512-ngw5XAaGHjgGiwWWBPGlfdCclHftonmbje5lMys4G2j4NvfExraPIuRZgjSnd5lg4dnulRVUll8tRbgKO+7EDA==
 
+"@rdfoo/n3@^0.4.5":
+  version "0.4.5"
+  resolved "https://registry.yarnpkg.com/@rdfoo/n3/-/n3-0.4.5.tgz#f2dbcdd00e81c3d8b3d6fc68379c958581446b63"
+  integrity sha512-otCzJT0E1OfyUe3NCHj0ZbFvq9dJNLTv30f/tyi8BXzVPdc2EpEg4k+diRFefC1dqadTpAaP+P6r01JOg9ngeg==
+
+"@rdfoo/rdf-parser-n3@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@rdfoo/rdf-parser-n3/-/rdf-parser-n3-0.4.0.tgz#4b025ec2cd2172f22216c17f7745aa9460e9dee2"
+  integrity sha512-Vn0QbchUmTjUVxtkvuNCPkCSonB+xzewkpXZcKdkPbgTFDKo09XzGr4auVC//y0ZH2l9B0+9OuS+m50gAnWLZg==
+  dependencies:
+    "@rdfoo/n3" "^0.4.5"
+    rdf-ext "^0.3.0"
+    rdf-parser-abstract "^0.3.0"
+
 "@types/codemirror@0.0.76":
   version "0.0.76"
   resolved "https://registry.yarnpkg.com/@types/codemirror/-/codemirror-0.0.76.tgz#c52719878056a216bc05889b46a41d4eb1434423"
@@ -81,6 +96,14 @@
   version "0.0.42"
   resolved "https://registry.yarnpkg.com/@types/estree/-/estree-0.0.42.tgz#8d0c1f480339efedb3e46070e22dd63e0430dd11"
   integrity sha512-K1DPVvnBCPxzD+G51/cxVIoc2X8uUVl1zpJeE6iKcgHMj4+tbat5Xu4TjV7v2QSDbIeAfLi2hIk+u2+s0MlpUQ==
+
+"@types/glob@*":
+  version "7.1.2"
+  resolved "https://registry.yarnpkg.com/@types/glob/-/glob-7.1.2.tgz#06ca26521353a545d94a0adc74f38a59d232c987"
+  integrity sha512-VgNIkxK+j7Nz5P7jvUZlRvhuPSmsEfS03b0alKcq5V/STUKAa3Plemsn5mrQUO7am6OErJ4rhGEGJbACclrtRA==
+  dependencies:
+    "@types/minimatch" "*"
+    "@types/node" "*"
 
 "@types/json5@^0.0.29":
   version "0.0.29"
@@ -94,6 +117,18 @@
   dependencies:
     decimal.js "^10.0.0"
 
+"@types/minimatch@*":
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/@types/minimatch/-/minimatch-3.0.3.tgz#3dca0e3f33b200fc7d1139c0cd96c1268cadfd9d"
+  integrity sha512-tHq6qdbT9U1IRSGf14CL0pUlULksvY9OZ+5eEgl1N7t+OA3tGvNpxJCzuKQlsNgCVwbAs670L1vcVQi8j9HjnA==
+
+"@types/mz@0.0.32":
+  version "0.0.32"
+  resolved "https://registry.yarnpkg.com/@types/mz/-/mz-0.0.32.tgz#e8248b4e41424c052edc1725dd33650c313a3659"
+  integrity sha512-cy3yebKhrHuOcrJGkfwNHhpTXQLgmXSv1BX+4p32j+VUQ6aP2eJ5cL7OvGcAQx75fCTFaAIIAKewvqL+iwSd4g==
+  dependencies:
+    "@types/node" "*"
+
 "@types/node@*", "@types/node@^13.7.0":
   version "13.7.7"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-13.7.7.tgz#1628e6461ba8cc9b53196dfeaeec7b07fa6eea99"
@@ -103,6 +138,11 @@
   version "12.12.29"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-12.12.29.tgz#46275f028b4e463b9ac5fefc1d08bc66cc193f25"
   integrity sha512-yo8Qz0ygADGFptISDj3pOC9wXfln/5pQaN/ysDIzOaAWXt73cNHmtEC8zSO2Y+kse/txmwIAJzkYZ5fooaS5DQ==
+
+"@types/node@^8.0.34", "@types/node@^8.10.59":
+  version "8.10.61"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-8.10.61.tgz#d299136ce54bcaf1abaa4a487f9e4bedf6b0d393"
+  integrity sha512-l+zSbvT8TPRaCxL1l9cwHCb0tSqGAGcjPJFItGGYat5oCTiq1uQQKYg5m7AF1mgnEBzFXGLJ2LRmNjtreRX76Q==
 
 "@types/rdf-js@^2.0.1":
   version "2.0.11"
@@ -363,6 +403,11 @@ ansi-styles@^3.2.0, ansi-styles@^3.2.1:
   dependencies:
     color-convert "^1.9.0"
 
+any-promise@^1.0.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/any-promise/-/any-promise-1.3.0.tgz#abc6afeedcea52e809cdc0376aed3ce39635d17f"
+  integrity sha1-q8av7tzqUugJzcA3au0845Y10X8=
+
 anymatch@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/anymatch/-/anymatch-2.0.0.tgz#bcb24b4f37934d9aa7ac17b4adaf89e7c76ef2eb"
@@ -587,9 +632,10 @@ bindings@^1.5.0:
   dependencies:
     file-uri-to-path "1.0.0"
 
-"bioterms@git+https://github.com/udp/bioterms.git":
-  version "0.10.0"
-  resolved "git+https://github.com/udp/bioterms.git#2e348f96bba33533a4b4e4907641449cc4a2792a"
+bioterms@^0.13.0:
+  version "0.13.0"
+  resolved "https://registry.yarnpkg.com/bioterms/-/bioterms-0.13.0.tgz#600c8ba24e8e5d1a4886619102642f95e516e324"
+  integrity sha512-+bBTHNlQhTsZXKPC1tZdKBmIIaEhmEIaolcfu3Vm85lw8xlmawJgocrcc9tYeDVIFxDAA4Ozk+xQT7POcOOqjw==
 
 bluebird@^3.5.5:
   version "3.7.2"
@@ -874,7 +920,7 @@ caseless@~0.12.0:
   resolved "https://registry.yarnpkg.com/caseless/-/caseless-0.12.0.tgz#1b681c21ff84033c826543090689420d187151dc"
   integrity sha1-G2gcIf+EAzyCZUMJBolCDRhxUdw=
 
-chalk@2.4.2, chalk@^2.0.0, chalk@^2.0.1, chalk@^2.1.0, chalk@^2.3.0, chalk@^2.4.1:
+chalk@2.4.2, chalk@^2.0.0, chalk@^2.0.1, chalk@^2.1.0, chalk@^2.3.0, chalk@^2.4.1, chalk@^2.4.2:
   version "2.4.2"
   resolved "https://registry.yarnpkg.com/chalk/-/chalk-2.4.2.tgz#cd42541677a54333cf541a49108c1432b44c9424"
   integrity sha512-Mti+f9lpJNcwF4tWV8/OrTTtF1gZi+f8FqlyAdouralcFWFQWF2+NgCHShjkCb+IFBLq9buZwE1xckQU4peSuQ==
@@ -2101,6 +2147,11 @@ from2@^2.1.0:
     inherits "^2.0.1"
     readable-stream "^2.0.0"
 
+fs-browser-stub@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/fs-browser-stub/-/fs-browser-stub-1.0.1.tgz#4a62c8a2769ec7400f266704999df61e0c98b6f8"
+  integrity sha512-l5HJDvzLmHOBZ0KZwvRKtipPHrA6eFWGvsuGTbQDzHRoIXXfMpOEuYVtlugGWHQHlsnFqw6xLR0kTPDXYTZwxw==
+
 fs-write-stream-atomic@^1.0.8:
   version "1.0.10"
   resolved "https://registry.yarnpkg.com/fs-write-stream-atomic/-/fs-write-stream-atomic-1.0.10.tgz#b47df53493ef911df75731e70a9ded0189db40c9"
@@ -2180,6 +2231,13 @@ glob-parent@^3.1.0:
   dependencies:
     is-glob "^3.1.0"
     path-dirname "^1.0.0"
+
+glob-promise@^3.4.0:
+  version "3.4.0"
+  resolved "https://registry.yarnpkg.com/glob-promise/-/glob-promise-3.4.0.tgz#b6b8f084504216f702dc2ce8c9bc9ac8866fdb20"
+  integrity sha512-q08RJ6O+eJn+dVanerAndJwIcumgbDdYiUT7zFQl3Wm1xD6fBKtah7H8ZJChj4wP+8C+QfeVy8xautR7rdmKEw==
+  dependencies:
+    "@types/glob" "*"
 
 glob@^7.1.1, glob@^7.1.3, glob@^7.1.4:
   version "7.1.6"
@@ -2941,7 +2999,6 @@ magic-string@^0.22.4:
 
 "main-loop@git+https://github.com/udp/main-loop.git", "main-loop@git+https://github.com/udp/main-loop.git#dc3ef23aa4ea25b42489864f5730b095aabe3c43":
   version "3.2.0"
-  uid dc3ef23aa4ea25b42489864f5730b095aabe3c43
   resolved "git+https://github.com/udp/main-loop.git#dc3ef23aa4ea25b42489864f5730b095aabe3c43"
   dependencies:
     error "^4.1.1"
@@ -3165,6 +3222,18 @@ mixin-deep@^1.2.0:
     for-in "^1.0.2"
     is-extendable "^1.0.1"
 
+mkdirp-promise@^5.0.1:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/mkdirp-promise/-/mkdirp-promise-5.0.1.tgz#e9b8f68e552c68a9c1713b84883f7a1dd039b8a1"
+  integrity sha1-6bj2jlUsaKnBcTuEiD96HdA5uKE=
+  dependencies:
+    mkdirp "*"
+
+mkdirp@*:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-1.0.4.tgz#3eb5ed62622756d79a5f0e2a221dfebad75c2f7e"
+  integrity sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==
+
 mkdirp@^0.5.0, mkdirp@^0.5.1:
   version "0.5.1"
   resolved "https://registry.yarnpkg.com/mkdirp/-/mkdirp-0.5.1.tgz#30057438eac6cf7f8c4767f38648d6697d75c903"
@@ -3193,6 +3262,15 @@ ms@2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.1.tgz#30a5864eb3ebb0a66f2ebe6d727af06a09d86e0a"
   integrity sha512-tgp+dl5cGk28utYktBsrFqA7HKgrhgPsg6Z/EfhWI4gl1Hwq8B/GmY/0oXZ6nF8hDVesS/FpnYaD/kOWhYQvyg==
+
+mz@^2.7.0:
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/mz/-/mz-2.7.0.tgz#95008057a56cafadc2bc63dde7f9ff6955948e32"
+  integrity sha512-z81GNO7nnYMEhrGh9LeymoE4+Yr0Wn5McHIZMK5cfQCl+NDX08sCZgUc9/6MHni9IWuFLm1Z3HTCXu2z9fN62Q==
+  dependencies:
+    any-promise "^1.0.0"
+    object-assign "^4.0.1"
+    thenify-all "^1.0.0"
 
 n3@^0.4.5:
   version "0.4.5"
@@ -3255,6 +3333,11 @@ nice-try@^1.0.4:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/nice-try/-/nice-try-1.0.5.tgz#a3378a7696ce7d223e88fc9b764bd7ef1089e366"
   integrity sha512-1nh45deeb5olNY7eX82BkPO7SSxR5SSYJiPTrTdFUVYwAl8CKMA5N9PjTYkHiRjisVcxcQ1HXdLhx2qxxJzLNQ==
+
+node-fetch@^2.2.0:
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.0.tgz#e633456386d4aa55863f676a7ab0daa8fdecb0fd"
+  integrity sha512-8dG4H5ujfvFiqDmVu9fQ5bOHUC15JMjMY/Zumv26oOvvVJjM67KF8koCWIabKQ1GJIa9r2mMZscBq/TbdOcmNA==
 
 node-fingerprint@0.0.2:
   version "0.0.2"
@@ -3319,7 +3402,7 @@ oauth-sign@~0.9.0:
   resolved "https://registry.yarnpkg.com/oauth-sign/-/oauth-sign-0.9.0.tgz#47a7b016baa68b5fa0ecf3dee08a85c679ac6455"
   integrity sha512-fexhUFFPTGV8ybAtSIGbV6gOkSv8UtRbDBnAyLQw4QPKkgNlsH2ByPGtMUqdWkos6YCRmAqViwgZrJc/mRDzZQ==
 
-object-assign@^4.1.1:
+object-assign@^4.0.1, object-assign@^4.1.1:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/object-assign/-/object-assign-4.1.1.tgz#2109adc7965887cfc05cbbd442cac8bfbb360863"
   integrity sha1-IQmtx5ZYh8/AXLvUQsrIv7s2CGM=
@@ -3919,13 +4002,6 @@ rdf-parser-abstract@^0.3.0:
     inherits "^2.0.1"
     readable-stream "^2.2.3"
 
-"rdf-parser-abstract@git+https://github.com/udp/rdf-parser-abstract.git":
-  version "0.3.0"
-  resolved "git+https://github.com/udp/rdf-parser-abstract.git#65c87088feb862ae26728a11afc50e05165b40ce"
-  dependencies:
-    concat-stream "^1.5.0"
-    inherits "^2.0.1"
-
 rdf-parser-dom@^0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/rdf-parser-dom/-/rdf-parser-dom-0.3.0.tgz#46435beffbc67fa35ab76c76ded75fba6b04972e"
@@ -3998,24 +4074,32 @@ rdf-store-inmemory@^0.3.0:
     rdf-ext "^0.3.0"
     rdf-store-abstract "^0.3.0"
 
-"rdfoo-prov@git+https://github.com/udp/rdfoo-prov.git":
-  version "0.2.0"
-  resolved "git+https://github.com/udp/rdfoo-prov.git#4635b093761dce4781825725c174028682c49761"
+rdfoo-prov@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/rdfoo-prov/-/rdfoo-prov-0.7.0.tgz#fc758cd038e3c160735888317cca6497f84cad80"
+  integrity sha512-W7oj2veQGhn0x4ZW4cvH295b9zacwCtBuNpQQCQuxjF2E4ssCLuJXexswUn7/OM7GY9RLj2sOM8gbNIeHp5hEw==
   dependencies:
     "@types/node" "^13.7.0"
-    bioterms "git+https://github.com/udp/bioterms.git"
-    rdfoo "git+https://github.com/udp/rdfoo.git"
+    bioterms "^0.13.0"
+    rdfoo "^0.10.0"
 
-"rdfoo@git+https://github.com/udp/rdfoo.git":
-  version "0.2.0"
-  resolved "git+https://github.com/udp/rdfoo.git#5511c4fedce00f1d24178777a1be4a546b01133c"
+rdfoo@^0.10.0:
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/rdfoo/-/rdfoo-0.10.0.tgz#1e987297e3d9c762efb81d236fda161cdebf7b96"
+  integrity sha512-ylBm+NYSpPgbkdDBRvDmOL/bkTdJ7ktUwUwrMD++BVTNz9Wm72SkURN5uqSmgKd+x2vr5AkW2aZxHKnVZshOgA==
   dependencies:
+    "@rdfoo/rdf-parser-n3" "^0.4.0"
+    "@types/node" "^8.10.59"
     "@types/uuid" "^3.4.4"
+    chalk "^2.4.2"
     elementtree "^0.1.7"
     genbankjs "0.1.0"
+    glob "^7.1.3"
+    glob-promise "^3.4.0"
+    mkdirp-promise "^5.0.1"
+    node-fetch "^2.2.0"
     power-assert "^1.4.4"
     rdf-graph-array-sboljs "^0.3.1"
-    rdf-parser-n3 "^0.3.0"
     rdf-parser-rdfxml "^0.3.1"
     rdf-serializer-xml "^0.1.0"
     shortid "^2.2.8"
@@ -4227,18 +4311,28 @@ sax@^1.2.2:
   resolved "https://registry.yarnpkg.com/sax/-/sax-1.2.4.tgz#2816234e2378bddc4e5354fab5caa895df7100d9"
   integrity sha512-NqVDv9TpANUjFm0N8uM5GxL36UgKi9/atZw+x7YFnQ8ckwFGKrl4xX4yWtrey3UJm5nP1kUbnYgLopqWNSRhWw==
 
-"sbolgraph@git+https://github.com/udp/sbolgraph.git":
-  version "0.16.0"
-  resolved "git+https://github.com/udp/sbolgraph.git#0903e5e50e518541d7089c8eda883ff586b79e23"
+sbolgraph@^0.29.0:
+  version "0.29.0"
+  resolved "https://registry.yarnpkg.com/sbolgraph/-/sbolgraph-0.29.0.tgz#1b0c44cfb44f64ce40021e3d6e2caa325cd6bfed"
+  integrity sha512-MH1cLvZKYNRt9kpQUC22U7wwqpIqlp1qmnepUQVmMNS4kBdKnqSIMavOPu6xA4bs+KFzne1l9/oTLlzQFfoPTw==
   dependencies:
+    "@types/mz" "0.0.32"
+    "@types/node" "^8.0.34"
     "@types/uuid" "^3.4.4"
-    bioterms "git+https://github.com/udp/bioterms.git"
+    bioterms "^0.13.0"
     browser-request "git+https://github.com/adampash/browser-request.git#feat-add-headers-to-response"
+    chalk "^2.4.2"
     genbankjs "0.1.0"
+    glob "^7.1.3"
+    glob-promise "^3.4.0"
+    mkdirp-promise "^5.0.1"
+    mz "^2.7.0"
+    node-fetch "^2.2.0"
+    rdf-graph-array-sboljs "^0.3.1"
     rdf-parser-n3 "^0.3.0"
     rdf-parser-rdfxml "^0.3.1"
-    rdfoo "git+https://github.com/udp/rdfoo.git"
-    rdfoo-prov "git+https://github.com/udp/rdfoo-prov.git"
+    rdfoo "^0.10.0"
+    rdfoo-prov "^0.7.0"
     request "^2.81.0"
     shortid "^2.2.8"
     uuid "^3.3.2"
@@ -4816,6 +4910,20 @@ text-encoding-shim@^1.0.3:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/text-encoding-shim/-/text-encoding-shim-1.0.5.tgz#dfd9cde8dbbffe0c52be2fc277a6a65c66d23e41"
   integrity sha512-H7yYW+jRn4yhu60ygZ2f/eMhXPITRt4QSUTKzLm+eCaDsdX8avmgWpmtmHAzesjBVUTAypz9odu5RKUjX5HNYA==
+
+thenify-all@^1.0.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/thenify-all/-/thenify-all-1.6.0.tgz#1a1918d402d8fc3f98fbf234db0bcc8cc10e9726"
+  integrity sha1-GhkY1ALY/D+Y+/I02wvMjMEOlyY=
+  dependencies:
+    thenify ">= 3.1.0 < 4"
+
+"thenify@>= 3.1.0 < 4":
+  version "3.3.1"
+  resolved "https://registry.yarnpkg.com/thenify/-/thenify-3.3.1.tgz#8932e686a4066038a016dd9e2ca46add9838a95f"
+  integrity sha512-RVZSIV5IG10Hk3enotrhvz0T9em6cyHBLkH/YAZuKqd8hRkKhSfCGIcP2KUY0EPxndzANBmNllzWPwak+bheSw==
+  dependencies:
+    any-promise "^1.0.0"
 
 through2@^2.0.0, through2@~2.0.3:
   version "2.0.5"

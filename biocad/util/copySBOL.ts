@@ -15,20 +15,23 @@ export default function copySBOL(graphA:Graph, graphB:Graph, newURIPrefix:string
     // TODO: setCompliantIdentity is expensive; only do it when a good URI has been found
 
     for(let topLevel of sbol3(intmGraph).topLevels) {
-        let curID:string|undefined = topLevel.id
+        let curID:string|undefined = topLevel.displayId
         if(curID === undefined) {
             curID = 'anon'
         }
         let n = 1
 
         let origUri = topLevel.uri
+        let newUri = topLevel.uri
 
-        while(graphB.hasMatch(topLevel.uri, null, null)) {
+        while(graphB.hasMatch(newUri, null, null)) {
             ++ n
-            topLevel.setCompliantIdentity(curID + n, topLevel.version)
+            newUri = origUri + '_' + n
         }
 
-        identityMap.set(origUri, topLevel.uri)
+        intmGraph.replaceURI(origUri, newUri)
+
+        identityMap.set(origUri, newUri)
     }
 
     // TODO check doesn't exist and make new ids if it does
@@ -36,6 +39,7 @@ export default function copySBOL(graphA:Graph, graphB:Graph, newURIPrefix:string
 
     return identityMap
 }
+
 
 
 
