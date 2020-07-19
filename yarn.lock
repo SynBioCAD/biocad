@@ -18,10 +18,10 @@
     esutils "^2.0.2"
     js-tokens "^4.0.0"
 
-"@biocad/jfw@^0.4.0":
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/@biocad/jfw/-/jfw-0.4.0.tgz#af805450aa0fde1d728225083fa3d100632d67b0"
-  integrity sha512-8ni2XltH1lPivp5Jyat+QtCudMiVGPFuvAz1oL0qVFYMm7fKuUBJmLKD+RbHlDLmkbwtiWg9QXuo7mMMr2bueQ==
+"@biocad/jfw@^0.5.0":
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/@biocad/jfw/-/jfw-0.5.0.tgz#20f37253cfa69b62bdf9b8296afebc62a1383ce0"
+  integrity sha512-/77KA4ausAp9r0dJVZMiwFiIuz4UTm3Zk03vvMwmY8cSPgjIZItbVIwPX0yGPdax/cIV8QdGKxy/FWlYp5jR7A==
   dependencies:
     "@types/codemirror" "0.0.76"
     almost-equal "^1.1.0"
@@ -2927,9 +2927,9 @@ lodash.deburr@^4.1.0:
   integrity sha1-3bG7s+8HRYwBd7oH3hRCLLAz/5s=
 
 lodash@^4.17.14, lodash@^4.17.5:
-  version "4.17.15"
-  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.15.tgz#b447f6670a0455bbfeedd11392eff330ea097548"
-  integrity sha512-8xOcRHvCjnocdS5cpwXQXVzmmh5e5+saE2QGoeQmbKmRS6J3VQppPOIt0MnmE+4xlZoumy0GPG0D0MVIQbNA1A==
+  version "4.17.19"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.19.tgz#e48ddedbe30b3321783c5b4301fbd353bc1e4a4b"
+  integrity sha512-JNvd8XER9GQX0v2qJgsaN/mzFCNA5BRe/j8JN9d+tWyGLSodKQHKFicdwNYzWwI3wjRnaKPsGj1XkBjx/F96DQ==
 
 log-symbols@^2.1.0:
   version "2.2.0"
