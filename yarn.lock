@@ -18,10 +18,10 @@
     esutils "^2.0.2"
     js-tokens "^4.0.0"
 
-"@biocad/jfw@^0.4.0":
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/@biocad/jfw/-/jfw-0.4.0.tgz#af805450aa0fde1d728225083fa3d100632d67b0"
-  integrity sha512-8ni2XltH1lPivp5Jyat+QtCudMiVGPFuvAz1oL0qVFYMm7fKuUBJmLKD+RbHlDLmkbwtiWg9QXuo7mMMr2bueQ==
+"@biocad/jfw@^0.5.0":
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/@biocad/jfw/-/jfw-0.5.0.tgz#20f37253cfa69b62bdf9b8296afebc62a1383ce0"
+  integrity sha512-/77KA4ausAp9r0dJVZMiwFiIuz4UTm3Zk03vvMwmY8cSPgjIZItbVIwPX0yGPdax/cIV8QdGKxy/FWlYp5jR7A==
   dependencies:
     "@types/codemirror" "0.0.76"
     almost-equal "^1.1.0"
@@ -636,9 +636,9 @@ bluebird@^3.5.5:
   integrity sha512-XpNj6GDQzdfW+r2Wnn7xiSAd7TM3jzkxGXBGTtWKuSXv1xUV+azxAm8jdWZN06QTQk+2N2XB9jRDkvbmQmcRtg==
 
 bn.js@^4.0.0, bn.js@^4.1.0, bn.js@^4.1.1, bn.js@^4.4.0:
-  version "4.11.8"
-  resolved "https://registry.yarnpkg.com/bn.js/-/bn.js-4.11.8.tgz#2cde09eb5ee341f484746bb0309b3253b1b1442f"
-  integrity sha512-ItfYfPLkWHUjckQCk8xC+LwxgK8NYcXywGigJgSwOP8Y2iyWT4f2vsZnoOXTTbo+o5yXmIUJ4gn5538SO5S3gA==
+  version "4.11.9"
+  resolved "https://registry.yarnpkg.com/bn.js/-/bn.js-4.11.9.tgz#26d556829458f9d1e81fc48952493d0ba3507828"
+  integrity sha512-E6QoYqCKZfgatHTdHzs1RRKP7ip4vvm+EyRUeE2RF0NblwVvb0p6jSVeNTOFxPn26QXN2o6SMfNxKp6kU8zQaw==
 
 body-parser@1.19.0:
   version "1.19.0"
@@ -1493,9 +1493,9 @@ elementtree@^0.1.6, elementtree@^0.1.7:
     sax "1.1.4"
 
 elliptic@^6.0.0:
-  version "6.5.2"
-  resolved "https://registry.yarnpkg.com/elliptic/-/elliptic-6.5.2.tgz#05c5678d7173c049d8ca433552224a495d0e3762"
-  integrity sha512-f4x70okzZbIQl/NSRLkI/+tteV/9WqL98zx+SQ69KbXxmVrmjwsNUPn/gYJJ0sHvEak24cZgHIPegRePAtA/xw==
+  version "6.5.3"
+  resolved "https://registry.yarnpkg.com/elliptic/-/elliptic-6.5.3.tgz#cb59eb2efdaf73a0bd78ccd7015a62ad6e0f93d6"
+  integrity sha512-IMqzv5wNQf+E6aHeIqATs0tOLeOTwj1QKbRcS3jBbYkl5oLAserA8yJTT7/VyHUYG91PRmPyeQDObKLPpeS4dw==
   dependencies:
     bn.js "^4.4.0"
     brorand "^1.0.1"
