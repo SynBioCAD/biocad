@@ -73,7 +73,7 @@ export default class Layout extends Versioned {
         this.uriToDepictions = new Map<string, Depiction[]>()
         this.identifiedChainToDepiction = new Map<string, Depiction>()
         this.uidToDepiction = new Map<number, Depiction>()
-        this.gridSize = Vec2.fromXY(16, 16)
+        this.gridSize = Vec2.fromXY(32, 20)
 
         this.bpToGridScale = 0.02
         this.minGlyphWidth = 2

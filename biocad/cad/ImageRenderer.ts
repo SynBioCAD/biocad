@@ -101,8 +101,8 @@ export default class ImageRenderer implements RenderContext {
                 xmlns: 'http://www.w3.org/2000/svg',
                 'xmlns:xlink': 'http://w3.org/1999/xlink'
             }, 
-            width: size.x + 'px',
-            height: size.y + 'px',
+            width: 50 + size.x + 'px',
+            height: 20 + size.y + 'px',
             viewBox: '0 0 ' + size.x + ' ' + size.y
         }, svgElements)
     }
