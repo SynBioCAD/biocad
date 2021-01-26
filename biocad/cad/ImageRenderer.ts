@@ -38,7 +38,7 @@ export default class ImageRenderer implements RenderContext {
         }
     }
 
-    private renderSVGString():string {
+    renderSVGString():string {
 
         let vnode:VNode = this.renderToVNode()
 
