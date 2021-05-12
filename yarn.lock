@@ -18,10 +18,10 @@
     esutils "^2.0.2"
     js-tokens "^4.0.0"
 
-"@biocad/jfw@^0.4.0":
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/@biocad/jfw/-/jfw-0.4.0.tgz#af805450aa0fde1d728225083fa3d100632d67b0"
-  integrity sha512-8ni2XltH1lPivp5Jyat+QtCudMiVGPFuvAz1oL0qVFYMm7fKuUBJmLKD+RbHlDLmkbwtiWg9QXuo7mMMr2bueQ==
+"@biocad/jfw@^0.5.0":
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/@biocad/jfw/-/jfw-0.5.0.tgz#20f37253cfa69b62bdf9b8296afebc62a1383ce0"
+  integrity sha512-/77KA4ausAp9r0dJVZMiwFiIuz4UTm3Zk03vvMwmY8cSPgjIZItbVIwPX0yGPdax/cIV8QdGKxy/FWlYp5jR7A==
   dependencies:
     "@types/codemirror" "0.0.76"
     almost-equal "^1.1.0"
@@ -1001,9 +1001,9 @@ clone@^2.1.2:
   integrity sha1-G39Ln1kfHo+DZwQBYANFoCiHQ18=
 
 codemirror@^5.25.0:
-  version "5.52.0"
-  resolved "https://registry.yarnpkg.com/codemirror/-/codemirror-5.52.0.tgz#4dbd6aef7f0e63db826b9a23922f0c03ac75c0a7"
-  integrity sha512-K2UB6zjscrfME03HeRe/IuOmCeqNpw7PLKGHThYpLbZEuKf+ZoujJPhxZN4hHJS1O7QyzEsV7JJZGxuQWVaFCg==
+  version "5.58.2"
+  resolved "https://registry.yarnpkg.com/codemirror/-/codemirror-5.58.2.tgz#ed54a1796de1498688bea1cdd4e9eeb187565d1b"
+  integrity sha512-K/hOh24cCwRutd1Mk3uLtjWzNISOkm4fvXiMO7LucCrqbh6aJDdtqUziim3MZUI6wOY0rvY1SlL1Ork01uMy6w==
 
 collection-visit@^1.0.0:
   version "1.0.0"
