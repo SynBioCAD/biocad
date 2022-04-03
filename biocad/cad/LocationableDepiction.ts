@@ -5,7 +5,7 @@ import { S3Identified, S3Range, S3Location } from 'sbolgraph'
 import IdentifiedChain from 'biocad/IdentifiedChain';
 import LabelDepiction from './LabelDepiction';
 import BackboneDepiction from './BackboneDepiction';
-import { Vec2 } from 'jfw/geom'
+import { Vec2 } from '@biocad/jfw/geom'
 
 export default abstract class LocationableDepiction extends Depiction {
 

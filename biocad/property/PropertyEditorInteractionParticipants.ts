@@ -1,12 +1,12 @@
 
 import PropertyEditor from './PropertyEditor'
 import { S3Participation, S3SubComponent, sbol3 } from 'sbolgraph'
-import { click as clickEvent, change as changeEvent } from 'jfw/event'
+import { click as clickEvent, change as changeEvent } from '@biocad/jfw/event'
 import BiocadApp from 'biocad/BiocadApp'
 import OntologyTermSelectorDialog from 'biocad/dialog/OntologyTermSelectorDialog'
 import sbo from 'data/systems-biology-ontology'
 import { Graph, S3Interaction } from 'sbolgraph'
-import { h } from 'jfw/vdom'
+import { h } from '@biocad/jfw/vdom'
 
 export default class PropertyEditorInteractionParticipants extends PropertyEditor {
 

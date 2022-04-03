@@ -2,12 +2,12 @@
 
 import assert from 'power-assert'
 
-import { Vec2, LinearRangeSet, LinearRange } from 'jfw/geom'
+import { Vec2, LinearRangeSet, LinearRange } from '@biocad/jfw/geom'
 
 import { Specifiers } from 'bioterms'
 import Depiction, { Orientation } from "biocad/cad/Depiction";
 import ComponentDepiction from "biocad/cad/ComponentDepiction";
-import { S3SequenceFeature, S3Range, S3SubComponent, S3SequenceConstraint, S3Identified, S3Component, S3Location } from "sbolgraph"
+import { S3SequenceFeature, S3Range, S3SubComponent, S3Constraint, S3Identified, S3Component, S3Location } from "sbolgraph"
 import Layout from "biocad/cad/Layout";
 import BackboneDepiction from '../../cad/BackboneDepiction';
 import FeatureLocationDepiction from 'biocad/cad/FeatureLocationDepiction';
@@ -244,9 +244,9 @@ export default function backboneStrategy(_parent:Depiction, children:Depiction[]
     for (; ;) {
         let doneSomething = false
         for (let constraint of cd.sequenceConstraints) {
-            let s = constraint.subject
-            let o = constraint.object
-            let r = constraint.restriction
+            let s = constraint.constraintSubject
+            let o = constraint.constraintObject
+            let r = constraint.constraintRestriction
 
             let sDep = uriToDepiction(s.uri)
             let oDep = uriToDepiction(o.uri)
@@ -269,7 +269,7 @@ export default function backboneStrategy(_parent:Depiction, children:Depiction[]
                 // s done, o not
                 let width = oDep.proportionalWidth
 
-                if (r === Specifiers.SBOL3.SequenceConstraint.Precedes) {
+                if (r === Specifiers.SBOL3.Constraint.Precedes) {
 
                     // place o AFTER s because s precedes o
                     if (positionedS.forward) {
@@ -290,7 +290,7 @@ export default function backboneStrategy(_parent:Depiction, children:Depiction[]
 
                 let width = sDep.proportionalWidth
 
-                if (r === Specifiers.SBOL3.SequenceConstraint.Precedes) {
+                if (r === Specifiers.SBOL3.Constraint.Precedes) {
 
                     // place s BEFORE o because s precedes o
                     if (positionedO.forward) {
@@ -326,11 +326,12 @@ export default function backboneStrategy(_parent:Depiction, children:Depiction[]
     for (let i = 0; i < maxIters; ++i) {
         let doneSomething = false
         for (let constraint of cd.sequenceConstraints) {
-            let subjectIdx = findElement(constraint.subject.uri)
-            let objIdx = findElement(constraint.object.uri)
-            let restriction = constraint.restriction
+            let subjectIdx = findElement(constraint.constraintSubject.uri)
+            let objIdx = findElement(constraint.constraintObject.uri)
+            let restriction = constraint.constraintRestriction
             if (subjectIdx === -1 || objIdx === -1) {
-                console.warn('constraint: missing s/o:', constraint.subject.uri, subjectIdx, constraint.object.uri, objIdx)
+                console.warn('constraint: missing s/o:',
+                    constraint.constraintSubject.uri, subjectIdx, constraint.constraintObject.uri, objIdx)
                 continue
             }
 
@@ -338,7 +339,7 @@ export default function backboneStrategy(_parent:Depiction, children:Depiction[]
             let obj = backboneElements[objIdx]
 
 
-            if (restriction === Specifiers.SBOL3.SequenceConstraint.Precedes) {
+            if (restriction === Specifiers.SBOL3.Constraint.Precedes) {
                 move(backboneElements, subjectIdx, objIdx)
             }
         }

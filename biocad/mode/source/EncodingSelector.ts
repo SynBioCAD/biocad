@@ -1,8 +1,8 @@
 
-import { VNode, h } from 'jfw/vdom'
-import { View } from 'jfw/ui'
-import { App } from 'jfw'
-import { click as clickEvent } from 'jfw/event'
+import { VNode, h } from '@biocad/jfw/vdom'
+import { View } from '@biocad/jfw/ui'
+import { App } from '@biocad/jfw'
+import { click as clickEvent } from '@biocad/jfw/event'
 
 export enum Encoding {
     SBOL3,

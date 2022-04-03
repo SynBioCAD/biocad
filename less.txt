@@ -1,0 +1,3 @@
+./node_modules/less/bin/lessc --include-path=./node_modules/@biocad/jfw/less less/biocad.less > biocad.css
+
+

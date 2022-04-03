@@ -1,6 +1,6 @@
 
-import { View } from 'jfw/ui'
-import { h, svg, VNode } from 'jfw/vdom'
+import { View } from '@biocad/jfw/ui'
+import { h, svg, VNode } from '@biocad/jfw/vdom'
 
 import renderDefs from './renderDefs'
 import renderAnnotations from './renderAnnotations'

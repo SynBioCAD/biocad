@@ -1,11 +1,11 @@
 
 
-import { View } from 'jfw/ui'
-import { h } from 'jfw/vdom'
+import { View } from '@biocad/jfw/ui'
+import { h } from '@biocad/jfw/vdom'
 
-//import { Slider } from 'jfw/ui/form-control'
+//import { Slider } from '@biocad/jfw/ui/form-control'
 
-import { click as clickEvent } from 'jfw/event'
+import { click as clickEvent } from '@biocad/jfw/event'
 
 import RelayoutDialog from './RelayoutDialog'
 import LayoutEditorView from "./LayoutEditorView";

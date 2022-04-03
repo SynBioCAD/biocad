@@ -1,10 +1,10 @@
 
 import LinearRange from "jfw/geom/LinearRange";
-import { S3Range, S3ThingWithLocation } from "sbolgraph"
+import { S3Range, S3Feature } from "sbolgraph"
 
 export default class IdentifiedLinearRange extends LinearRange
 {
-    thing:S3ThingWithLocation
+    thing:S3Feature
     location:S3Range
     label:string
 
@@ -12,6 +12,6 @@ export default class IdentifiedLinearRange extends LinearRange
         super(start, end)
         this.location = location
         this.label = label
-        this.thing = location.containingObject as S3ThingWithLocation
+        this.thing = location.containingObject as S3Feature
     }
 }

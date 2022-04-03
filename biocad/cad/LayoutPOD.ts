@@ -4,7 +4,7 @@ import Depiction from "biocad/cad/Depiction";
 import DepictionPOD from "biocad/cad/DepictionPOD";
 import { Graph, S3Interaction } from "sbolgraph";
 import InteractionDepiction from "./InteractionDepiction";
-import { Vec2 } from 'jfw/geom'
+import { Vec2 } from '@biocad/jfw/geom'
 
 export default class LayoutPOD {
 

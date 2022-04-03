@@ -1,5 +1,5 @@
 
-import { Sidebar, SidebarSection } from 'jfw/ui'
+import { Sidebar, SidebarSection } from '@biocad/jfw/ui'
 import Inspector from './Inspector'
 import DepictionTreeView from '../../cad/DepictionTreeView';
 import CircuitView from './CircuitView';

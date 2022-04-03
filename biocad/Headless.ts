@@ -14,9 +14,11 @@ export default class Headless {
         this.app = app
     }
 
-    headlessLoad(url:string):Promise<string> {
+    async headlessLoad(url:string):Promise<string> {
 
-        return SBOL3GraphView.loadURL(url).then((gv:SBOL3GraphView) => {
+        let str = await (await fetch(url)).text()
+
+        return SBOL3GraphView.loadString(str).then((gv:SBOL3GraphView) => {
 
             const layout:Layout = new Layout(gv.graph)
 

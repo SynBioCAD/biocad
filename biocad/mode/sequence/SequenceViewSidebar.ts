@@ -1,12 +1,12 @@
 
-import { Sidebar, SidebarSection } from 'jfw/ui'
+import { Sidebar, SidebarSection } from '@biocad/jfw/ui'
 
 import ComponentBrowser from './ComponentBrowser'
 
 import { Specifiers } from 'bioterms'
 import { S3Component } from "sbolgraph";
 
-import { Hook } from 'jfw/util'
+import { Hook } from '@biocad/jfw/util'
 
 export default class SequenceViewSidebar extends Sidebar {
 

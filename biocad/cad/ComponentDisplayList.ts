@@ -1,5 +1,5 @@
 
-import { S3SequenceFeature, S3SubComponent, S3SequenceConstraint, S3Component, S3Identified, S3Location, Graph, Facade, sbol3 } from "sbolgraph"
+import { S3SequenceFeature, S3SubComponent, S3Constraint, S3Component, S3Identified, S3Location, Graph, Facade, sbol3 } from "sbolgraph"
 
 export default class ComponentDisplayList {
 
@@ -65,7 +65,7 @@ export default class ComponentDisplayList {
 
            for(let set of sets) {
 
-               if(set.has(sc.subject.uri) || set.has(sc.object.uri)) {
+               if(set.has(sc.constraintSubject.uri) || set.has(sc.constraintObject.uri)) {
 
                    if(firstSet !== null) {
 
@@ -76,10 +76,10 @@ export default class ComponentDisplayList {
 
                    } else {
 
-                       set.add(sc.subject.uri)
-                       set.add(sc.object.uri)
-                       visited.add(sc.subject.uri)
-                       visited.add(sc.object.uri)
+                       set.add(sc.constraintSubject.uri)
+                       set.add(sc.constraintObject.uri)
+                       visited.add(sc.constraintSubject.uri)
+                       visited.add(sc.constraintObject.uri)
 
                        firstSet = set
                    }
@@ -89,10 +89,10 @@ export default class ComponentDisplayList {
            if(!firstSet) {
 
                let newSet:Set<string> = new Set()
-               newSet.add(sc.subject.uri)
-               newSet.add(sc.object.uri)
-               visited.add(sc.subject.uri)
-               visited.add(sc.object.uri)
+               newSet.add(sc.constraintSubject.uri)
+               newSet.add(sc.constraintObject.uri)
+               visited.add(sc.constraintSubject.uri)
+               visited.add(sc.constraintObject.uri)
                sets.add(newSet)
 
            }

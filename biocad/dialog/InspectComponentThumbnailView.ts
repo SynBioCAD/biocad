@@ -1,5 +1,5 @@
 
-import View from 'jfw/ui/View'
+import View from '@biocad/jfw/ui/View'
 import BiocadApp from "biocad/BiocadApp";
 import { S3Component } from "sbolgraph"
 import { VNode, h } from "jfw/vdom";

@@ -1,6 +1,6 @@
 
-import { Topbar } from 'jfw/ui'
-import { h } from 'jfw/vdom'
+import { Topbar } from '@biocad/jfw/ui'
+import { h } from '@biocad/jfw/vdom'
 
 export default class BiocadTopbar extends Topbar {
 

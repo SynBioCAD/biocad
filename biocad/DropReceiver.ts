@@ -1,5 +1,5 @@
 
-import { Vec2, Rect } from 'jfw/geom'
+import { Vec2, Rect } from '@biocad/jfw/geom'
 import Droppable from './droppable/Droppable'
 
 interface DropReceiver {

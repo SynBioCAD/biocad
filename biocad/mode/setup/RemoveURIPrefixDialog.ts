@@ -1,10 +1,10 @@
 
 import BiocadApp from 'biocad/BiocadApp'
 
-import { Dialog } from 'jfw/ui/dialog'
-import { RadioButtons, Combo } from 'jfw/ui/form-control'
+import { Dialog } from '@biocad/jfw/ui/dialog'
+import { RadioButtons, Combo } from '@biocad/jfw/ui/form-control'
 
-import { h, VNode } from 'jfw/vdom'
+import { h, VNode } from '@biocad/jfw/vdom'
 
 import extend = require('xtend')
 

@@ -2,13 +2,13 @@ import  { S3Identified, S3Interaction, sbol3 }  from "sbolgraph"
 
 import LabelDepiction from 'biocad/cad/LabelDepiction';
 import Depiction, { Opacity } from 'biocad/cad/Depiction';
-import { Vec2 } from 'jfw/geom';
-import { VNode, svg, active } from 'jfw/vdom';
+import { Vec2 } from '@biocad/jfw/geom';
+import { VNode, svg, active } from '@biocad/jfw/vdom';
 
-import { View } from 'jfw/ui'
+import { View } from '@biocad/jfw/ui'
 import LayoutEditor from "biocad/cad/LayoutEditor";
 
-import { mousemove as mousemoveEvent, click as clickEvent, mousewheel as wheelEvent, gesture as gestureEvent, contextMenu as contextMenuEvent, drag } from 'jfw/event'
+import { mousemove as mousemoveEvent, click as clickEvent, mousewheel as wheelEvent, gesture as gestureEvent, contextMenu as contextMenuEvent, drag } from '@biocad/jfw/event'
 import Layout from "biocad/cad/Layout";
 
 import renderHandles from './renderHandles'
@@ -235,49 +235,50 @@ export default class LayoutEditorOverlay extends View {
 
                     let sc = hoveringThing as S3SubComponent
 
-                    for(let mapping of sc.mappings) {
+                    // TODO
+                    // for(let mapping of sc.mappings) {
 
-                        let local = mapping.local
-                        let remote = mapping.remote
+                    //     let local = mapping.local
+                    //     let remote = mapping.remote
 
-                        if(!local || !remote) {
-                            throw new Error('???')
-                        }
+                    //     if(!local || !remote) {
+                    //         throw new Error('???')
+                    //     }
 
-                        let dOfLocal = layout.getDepictionsForUri(local.uri)[0]
-                        let dOfRemote = layout.getDepictionsForUri(remote.uri)[0]
+                    //     let dOfLocal = layout.getDepictionsForUri(local.uri)[0]
+                    //     let dOfRemote = layout.getDepictionsForUri(remote.uri)[0]
 
-                        if(dOfLocal && dOfRemote) {
+                    //     if(dOfLocal && dOfRemote) {
  
 
-                            /*
-                            mappings.push(svg('line', {
-                                x1: localBBox.center().x,
-                                y1: localBBox.center().y,
-                                x2: remoteBBox.center().x,
-                                y2: remoteBBox.center().y,
-                                stroke: 'red',
-                                'stroke-dasharray': '1 1'
-                                //thickness: '2px'
-                            }))*/
+                    //         /*
+                    //         mappings.push(svg('line', {
+                    //             x1: localBBox.center().x,
+                    //             y1: localBBox.center().y,
+                    //             x2: remoteBBox.center().x,
+                    //             y2: remoteBBox.center().y,
+                    //             stroke: 'red',
+                    //             'stroke-dasharray': '1 1'
+                    //             //thickness: '2px'
+                    //         }))*/
 
-                            for(let d of [ dOfLocal, dOfRemote ]) {
+                    //         for(let d of [ dOfLocal, dOfRemote ]) {
 
-                                if (d !== hovering) {
-                                    mappings.push(renderHandles(transform.transformRect(d.absoluteBoundingBox.multiply(layout.gridSize)), true, hovering.isResizeable(), (pos: Vec2, dimensions: string[]) => {
-                                    }, '#ff6961'))
-                                }
+                    //             if (d !== hovering) {
+                    //                 mappings.push(renderHandles(transform.transformRect(d.absoluteBoundingBox.multiply(layout.gridSize)), true, hovering.isResizeable(), (pos: Vec2, dimensions: string[]) => {
+                    //                 }, '#ff6961'))
+                    //             }
 
-                            }
-
-
-                        } else {
-                            throw new Error('???')
-
-                        }
+                    //         }
 
 
-                    }
+                    //     } else {
+                    //         throw new Error('???')
+
+                    //     }
+
+
+                    // }
 
                 }
             }

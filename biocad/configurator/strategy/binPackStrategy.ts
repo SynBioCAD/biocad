@@ -3,7 +3,7 @@ import Depiction, { Orientation, Opacity } from 'biocad/cad/Depiction';
 import GrowingPacker from './binPack'
 
 
-import { Vec2, LinearRange } from 'jfw/geom'
+import { Vec2, LinearRange } from '@biocad/jfw/geom'
 import InteractionDepiction from "biocad/cad/InteractionDepiction";
 import LinearRangeSet from "jfw/geom/LinearRangeSet";
 import ComponentDepiction from "biocad/cad/ComponentDepiction";

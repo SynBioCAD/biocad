@@ -1,5 +1,5 @@
 
-import { svg, VNode } from 'jfw/vdom'
+import { svg, VNode } from '@biocad/jfw/vdom'
 import SequenceEditorLine from "biocad/mode/sequence/SequenceEditorLine";
 
 export default function renderLineNumbers(sequenceEditor) {

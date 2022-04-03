@@ -5,7 +5,7 @@ import { Types, Specifiers } from 'bioterms'
 
 import { Orientation } from 'biocad/cad/Depiction'
 
-import { Vec2 } from 'jfw/geom'
+import { Vec2 } from '@biocad/jfw/geom'
 
 import visbolite from 'visbolite'
 import parts, { shortNameFromTerm } from 'data/parts'

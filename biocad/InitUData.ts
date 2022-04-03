@@ -1,7 +1,7 @@
 
 import BiocadApp from "./BiocadApp";
 
-import UData from 'jfw/udata/UData'
+import UData from '@biocad/jfw/udata/UData'
 
 export default class InitUData {
 

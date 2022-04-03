@@ -2,11 +2,12 @@
 import Dialog from "jfw/ui/dialog/Dialog";
 import BiocadApp from "biocad/BiocadApp";
 import { DialogOptions } from "jfw/ui/dialog";
-import { Repository, S3Component } from "sbolgraph"
-import { SearchQuery, SearchResult } from "sbolgraph"
+import { S3Component } from "sbolgraph"
+import Repository from '../Repository'
+import { SearchQuery, SearchResult } from "../Repository"
 import { Specifiers, Types } from "bioterms";
 import { h, VNode } from "jfw/vdom";
-import { click as clickEvent } from 'jfw/event'
+import { click as clickEvent } from '@biocad/jfw/event'
 import { InspectComponentDialogOptions } from "biocad/dialog/InspectComponentDialog"
 import InspectComponentDialog from "biocad/dialog/InspectComponentDialog"
 import App from "jfw/App";

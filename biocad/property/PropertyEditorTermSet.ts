@@ -1,11 +1,11 @@
 
-import { VNode, h } from 'jfw/vdom'
+import { VNode, h } from '@biocad/jfw/vdom'
 import { Graph, triple } from "sbolgraph";
 import PropertyEditor from "./PropertyEditor";
 import OntologyTermSelectorDialog from 'biocad/dialog/OntologyTermSelectorDialog'
 import BiocadApp from 'biocad/BiocadApp'
 import PropertyAccessor from './PropertyAccessor'
-import { click as clickEvent } from 'jfw/event'
+import { click as clickEvent } from '@biocad/jfw/event'
 
 export default class PropertyEditorTermSet extends PropertyEditor {
 

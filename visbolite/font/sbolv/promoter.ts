@@ -27,8 +27,8 @@
  * SUCH DAMAGE.
  */
 
-import { Vec2, Rect, Matrix } from 'jfw/geom'
-import { svg } from 'jfw/vdom'
+import { Vec2, Rect, Matrix } from '@biocad/jfw/geom'
+import { svg } from '@biocad/jfw/vdom'
 
 function createGeometry(size) {
 

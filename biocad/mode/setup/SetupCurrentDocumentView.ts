@@ -1,13 +1,13 @@
 
-import { View } from 'jfw/ui'
-import { h, VNode } from 'jfw/vdom'
+import { View } from '@biocad/jfw/ui'
+import { h, VNode } from '@biocad/jfw/vdom'
 
 import RemoveURIPrefixDialog from './RemoveURIPrefixDialog'
 
-import { click as clickEvent } from 'jfw/event'
+import { click as clickEvent } from '@biocad/jfw/event'
 import { Graph, sbol3 } from "sbolgraph";
 import BiocadApp from "biocad/BiocadApp";
-import TextInput from 'jfw/ui/form-control/TextInput';
+import TextInput from '@biocad/jfw/ui/form-control/TextInput';
 
 export default class SetupCurrentDocumentView extends View {
 

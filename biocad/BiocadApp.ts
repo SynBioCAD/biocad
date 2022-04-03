@@ -1,5 +1,5 @@
 
-import { App } from 'jfw'
+import { App } from '@biocad/jfw'
 
 import TestDialog from './dialog/TestDialog'
 import BiocadTopbar from './topbar/BiocadTopbar'
@@ -14,7 +14,7 @@ import SequenceMode from './mode/sequence/SequenceMode'
 import SimulatorMode from './mode/simulator/SimulatorMode'
 import LoadSaveMode from './mode/loadsave/LoadSaveMode'
 
-import { Hook } from 'jfw/util'
+import { Hook } from '@biocad/jfw/util'
 
 import DropOverlay from './DropOverlay'
 import { VNode, h, create } from "jfw/vdom";
@@ -23,11 +23,11 @@ import Mode from "jfw/ui/Mode";
 import HeadlessMode from "biocad/mode/headless/HeadlessMode";
 import Layout from "biocad/cad/Layout";
 import Headless from "biocad/Headless";
-import UData from 'jfw/udata/UData';
+import UData from '@biocad/jfw/udata/UData';
 import InitUData from 'biocad/InitUData';
-import GlobalConfig from 'jfw/GlobalConfig';
+import GlobalConfig from '@biocad/jfw/GlobalConfig';
 import PopupMessageDialog from './dialog/PopupMessageDialog';
-import { DialogOptions } from 'jfw/ui/dialog';
+import { DialogOptions } from '@biocad/jfw/ui/dialog';
 
 import uuid = require('uuid')
 import { Graph, sbol3 } from 'sbolgraph'

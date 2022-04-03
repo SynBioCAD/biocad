@@ -1,9 +1,9 @@
 import { Graph, sbol3 } from "sbolgraph";
 
-import { Vec2 } from 'jfw/geom'
-import { View } from 'jfw/ui'
-import { h, svg, VNode} from 'jfw/vdom'
-import { click as clickEvent, contextMenu as contextMenuEvent } from 'jfw/event'
+import { Vec2 } from '@biocad/jfw/geom'
+import { View } from '@biocad/jfw/ui'
+import { h, svg, VNode} from '@biocad/jfw/vdom'
+import { click as clickEvent, contextMenu as contextMenuEvent } from '@biocad/jfw/event'
 
 import visbolite from 'visbolite'
 
@@ -14,7 +14,7 @@ import { Specifiers, Predicates, Types } from "bioterms";
 import { node as graphNode } from "sbolgraph"
 import SBOLDroppable from "biocad/droppable/SBOLDroppable";
 import BrowseSBHDialog, { BrowseSBHDialogOptions } from "biocad/dialog/BrowseSBHDialog";
-import { SearchQuery } from "sbolgraph"
+import { SearchQuery } from "../../Repository"
 
 import { FinalizeEvent } from 'biocad/DropOverlay'
 

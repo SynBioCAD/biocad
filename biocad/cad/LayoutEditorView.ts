@@ -1,10 +1,10 @@
 
 import BiocadApp from 'biocad/BiocadApp';
 
-import { View } from 'jfw/ui'
-import { createGrid } from 'jfw/graphics'
+import { View } from '@biocad/jfw/ui'
+import { createGrid } from '@biocad/jfw/graphics'
 
-import { h, VNode, svg } from 'jfw/vdom'
+import { h, VNode, svg } from '@biocad/jfw/vdom'
 
 import { Types } from 'bioterms'
 
@@ -21,7 +21,7 @@ import Depiction from "biocad/cad/Depiction";
 import CircuitViewLeftSidebar from "biocad/mode/circuit/CircuitViewLeftSidebar";
 import CircuitViewRightSidebar from "biocad/mode/circuit/CircuitViewRightSidebar";
 import LayoutPOD from "biocad/cad/LayoutPOD";
-import GlobalConfig from 'jfw/GlobalConfig';
+import GlobalConfig from '@biocad/jfw/GlobalConfig';
 
 export default abstract class LayoutEditorView extends View {
 

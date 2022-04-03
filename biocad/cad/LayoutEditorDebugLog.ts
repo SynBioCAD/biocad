@@ -1,7 +1,7 @@
 
-import { View } from 'jfw/ui'
+import { View } from '@biocad/jfw/ui'
 import LayoutEditor from './LayoutEditor';
-import { h } from 'jfw/vdom';
+import { h } from '@biocad/jfw/vdom';
 
 export default class LayoutEditorDebugLog extends View {
 

@@ -1,6 +1,6 @@
 
-import { Vec2, Rect, Matrix, getEllipsePoint } from 'jfw/geom'
-import { svg } from 'jfw/vdom'
+import { Vec2, Rect, Matrix, getEllipsePoint } from '@biocad/jfw/geom'
+import { svg } from '@biocad/jfw/vdom'
 
 import extend = require('xtend')
 import sha1 = require('sha1')

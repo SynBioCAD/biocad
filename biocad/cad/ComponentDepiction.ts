@@ -2,9 +2,9 @@ import LabelDepiction from 'biocad/cad/LabelDepiction';
 
 import Depiction, { Opacity, Orientation, Fade }  from './Depiction'
 
-import { VNode, svg } from 'jfw/vdom'
+import { VNode, svg } from '@biocad/jfw/vdom'
 
-import { Matrix, Vec2 } from 'jfw/geom'
+import { Matrix, Vec2 } from '@biocad/jfw/geom'
 
 import {
     S3Identified,
@@ -241,9 +241,9 @@ export default class ComponentDepiction extends LocationableDepiction {
 
         if(dOf instanceof S3SubComponent) {
             let constrainedSCs =
-                dOf.getConstraintsWithThisSubject().map((c) => c.object)
+                dOf.getConstraintsWithThisSubject().map((c) => c.constraintObject)
                     .concat(
-                        dOf.getConstraintsWithThisObject().map((c) => c.subject)
+                        dOf.getConstraintsWithThisObject().map((c) => c.constraintSubject)
                     )
 
             for(let sc of constrainedSCs) {

@@ -1,6 +1,6 @@
 
-import { View } from 'jfw/ui'
-import { h, VNode } from 'jfw/vdom'
+import { View } from '@biocad/jfw/ui'
+import { h, VNode } from '@biocad/jfw/vdom'
 import SequenceEditor from "biocad/mode/sequence/SequenceEditor";
 
 export default class SequenceEditorToolbar extends View {

@@ -13,7 +13,7 @@ import BackboneDepiction from "biocad/cad/BackboneDepiction";
 import CircularBackboneDepiction from 'biocad/cad/CircularBackboneDepiction';
 import InteractionDepiction from './InteractionDepiction';
 import IdentifiedChain from 'biocad/IdentifiedChain';
-import { LinearRange, LinearRangeSet } from 'jfw/geom';
+import { LinearRange, LinearRangeSet } from '@biocad/jfw/geom';
 
 export default class DepictionPOD {
 

@@ -4,7 +4,7 @@ import App from '../../BiocadApp'
 
 import HeadlessView from './HeadlessView'
 
-import Mode from 'jfw/ui/Mode'
+import Mode from '@biocad/jfw/ui/Mode'
 import { VNode, h } from "jfw/vdom";
 
 export default class HeadlessMode extends Mode {

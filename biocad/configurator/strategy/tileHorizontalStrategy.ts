@@ -2,7 +2,7 @@
 
 import assert from 'power-assert'
 
-import { Vec2 } from 'jfw/geom'
+import { Vec2 } from '@biocad/jfw/geom'
 
 export default function tileHorizontalStrategy(parent, children, padding) {
 

@@ -6,7 +6,11 @@ import { Graph, S3Identified, sbol3 } from 'sbolgraph'
 
 // - Need to change their owned objects too
 
+// TODO
+
 export default function copySBOL(graphA:Graph, graphB:Graph, newURIPrefix:string):Map<string,string> {
+
+    /*
 
     let intmGraph = graphA.clone()
     
@@ -34,7 +38,9 @@ export default function copySBOL(graphA:Graph, graphB:Graph, newURIPrefix:string
     // TODO check doesn't exist and make new ids if it does
     graphB.addAll(intmGraph)
 
-    return identityMap
+    return identityMap*/
+
+    return new Map()
 }
 
 

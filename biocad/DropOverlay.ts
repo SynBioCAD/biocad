@@ -7,11 +7,11 @@ import Layout from "biocad/cad/Layout";
 import LayoutThumbnail from "biocad/cad/LayoutThumbnail";
 import BiocadApp from "biocad/BiocadApp";
 import assert from 'power-assert'
-import MouseListener from 'jfw/util/MouseListener'
+import MouseListener from '@biocad/jfw/util/MouseListener'
 import Vec2 from "jfw/geom/Vec2";
 import Rect from "jfw/geom/Rect";
 
-import { contextMenu as contextMenuEvent, click as clickEvent } from 'jfw/event'
+import { contextMenu as contextMenuEvent, click as clickEvent } from '@biocad/jfw/event'
 import Depiction from "biocad/cad/Depiction";
 
 import Droppable from './droppable/Droppable'

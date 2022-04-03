@@ -1,11 +1,11 @@
-import { S3Component, S3Sequence, S3SequenceFeature, S3Range, S3Identified, S3Location, S3SubComponent, S3ThingWithLocation, sbol3 } from "sbolgraph";
+import { S3Component, S3Sequence, S3SequenceFeature, S3Range, S3Identified, S3Location, S3SubComponent, S3Feature, sbol3 } from "sbolgraph";
 
 import assert from 'power-assert'
 
-import { colors } from 'jfw/graphics'
+import { colors } from '@biocad/jfw/graphics'
 import circularIterator = require('circular-iterator')
 
-import { Vec2, Matrix, LinearRangeSet, LinearRange, Rect } from 'jfw/geom'
+import { Vec2, Matrix, LinearRangeSet, LinearRange, Rect } from '@biocad/jfw/geom'
 
 import { Types, Specifiers } from 'bioterms'
 
@@ -39,7 +39,7 @@ export default class SequenceEditorRenderState {
     marginWidth:number
     rangeColors:any
     allLinesBBox:Rect
-    annoLabelBBoxes:Array<[S3ThingWithLocation, Rect]>
+    annoLabelBBoxes:Array<[S3Feature, Rect]>
     annoHoverUris:Set<string>
     rangeDescriptors:Map<string, string>
 
@@ -305,7 +305,7 @@ function getAnnotatedRanges(component:S3Component) {
 
                     case Types.SBOL3.Range:
 
-                        var range:S3Range = new S3Range(sbol3(location.graph), location.uri)
+                        var range:S3Range = new S3Range(sbol3(location.graph), location.subject)
 
                         const start:number|undefined = range.start
                         const end:number|undefined = range.end
@@ -334,7 +334,7 @@ function getAnnotatedRanges(component:S3Component) {
 
                     case Types.SBOL3.Range:
 
-                        var range:S3Range = new S3Range(sbol3(location.graph), location.uri)
+                        var range:S3Range = new S3Range(sbol3(location.graph), location.subject)
 
                         const start:number|undefined = range.start
                         const end:number|undefined = range.end

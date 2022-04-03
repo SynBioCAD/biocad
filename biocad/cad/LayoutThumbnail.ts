@@ -1,10 +1,10 @@
 
 import Depiction from 'biocad/cad/Depiction';
 
-import { View } from 'jfw/ui'
-import { createGrid } from 'jfw/graphics'
+import { View } from '@biocad/jfw/ui'
+import { createGrid } from '@biocad/jfw/graphics'
 
-import { h, svg, VNode } from 'jfw/vdom'
+import { h, svg, VNode } from '@biocad/jfw/vdom'
 
 import { Types } from 'bioterms'
 import Layout from "biocad/cad/Layout";

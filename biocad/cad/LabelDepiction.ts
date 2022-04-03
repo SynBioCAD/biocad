@@ -2,13 +2,13 @@ import { S3Identified, S3Component, S3SubComponent, S3Location, S3SequenceFeatur
 
 import Layout from 'biocad/cad/Layout';
 
-import { VNode } from 'jfw/vdom';
+import { VNode } from '@biocad/jfw/vdom';
 
 import Depiction, { Opacity, Orientation, Fade } from 'biocad/cad/Depiction';
 
-import { Matrix, Vec2, Line } from 'jfw/geom'
+import { Matrix, Vec2, Line } from '@biocad/jfw/geom'
 
-import { svg } from 'jfw/vdom'
+import { svg } from '@biocad/jfw/vdom'
 
 import ComponentDepiction from 'biocad/cad/ComponentDepiction';
 

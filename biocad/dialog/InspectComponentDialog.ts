@@ -11,10 +11,10 @@ import Rect from "jfw/geom/Rect";
 import Vec2 from "jfw/geom/Vec2";
 import InspectComponentThumbnailView from "biocad/dialog/InspectComponentThumbnailView";
 import SequenceEditor from "biocad/mode/sequence/SequenceEditor";
-import { click as clickEvent } from 'jfw/event'
+import { click as clickEvent } from '@biocad/jfw/event'
 import SBOLDroppable from "biocad/droppable/SBOLDroppable";
 import copySBOL from "biocad/util/copySBOL";
-
+import { node } from 'rdfoo'
 export class InspectComponentDialogOptions extends DialogOptions {
 
     uri:string
@@ -40,28 +40,34 @@ export default class InspectComponentDialog extends TabbedDialog {
 
         this.setWidthAndCalcPosition('75%')
 
-        SBOL3GraphView.loadURL(opts.uri + '/sbol').then((gv:SBOL3GraphView) => {
+        fetch(opts.uri + '/sbol').then(async r => {
 
-            this.graph = gv.graph
-            this.component = new S3Component(gv, opts.uri)
+            let str = await r.text()
 
-            const displayName:string|undefined = this.component.displayName
+            SBOL3GraphView.loadString(str).then((gv:SBOL3GraphView) => {
 
-            if(displayName !== undefined)
-                this.setTitle(displayName)
+                this.graph = gv.graph
+                this.component = new S3Component(gv, node.createUriNode(opts.uri))
 
-            const sequenceView:SequenceEditor = new SequenceEditor(app, this)
-            sequenceView.setComponent(this.component)
-            sequenceView.darkMode = true
-            sequenceView.showTopToolbar = false
-            sequenceView.readOnly = true
+                const displayName:string|undefined = this.component.displayName
 
-            this.setTabs([
-                new Tab('Visual', new InspectComponentThumbnailView(app, this.component) , true),
-                new Tab('Sequence', sequenceView, false)
-            ])
+                if(displayName !== undefined)
+                    this.setTitle(displayName)
 
+                const sequenceView:SequenceEditor = new SequenceEditor(app, this)
+                sequenceView.setComponent(this.component)
+                sequenceView.darkMode = true
+                sequenceView.showTopToolbar = false
+                sequenceView.readOnly = true
+
+                this.setTabs([
+                    new Tab('Visual', new InspectComponentThumbnailView(app, this.component) , true),
+                    new Tab('Sequence', sequenceView, false)
+                ])
+
+            })
         })
+
     }
 
     getContentView():VNode {

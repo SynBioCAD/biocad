@@ -4,7 +4,7 @@ import ComponentDepiction from 'biocad/cad/ComponentDepiction';
 
 import LabelDepiction from 'biocad/cad/LabelDepiction';
 
-import { Vec2 } from 'jfw/geom'
+import { Vec2 } from '@biocad/jfw/geom'
 
 import { Specifiers } from 'bioterms'
 

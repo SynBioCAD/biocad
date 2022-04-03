@@ -1,9 +1,9 @@
 
-import { View } from 'jfw/ui'
+import { View } from '@biocad/jfw/ui'
 import { S3Component, Graph, S3Sequence, SBOL3GraphView, sbol3 } from 'sbolgraph';
 import BiocadApp from 'biocad/BiocadApp';
-import { h } from 'jfw/vdom'
-import { click as clickEvent } from 'jfw/event'
+import { h } from '@biocad/jfw/vdom'
+import { click as clickEvent } from '@biocad/jfw/event'
 import fileDialog = require('file-dialog')
 import copySBOL from 'biocad/util/copySBOL';
 import BrowseSBHDialog, { BrowseSBHDialogOptions } from 'biocad/dialog/BrowseSBHDialog';

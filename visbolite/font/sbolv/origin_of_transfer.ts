@@ -1,7 +1,7 @@
 
-import { Vec2, Rect, Matrix } from 'jfw/geom'
-import { svg, VNode } from 'jfw/vdom'
-import { svgMarkerId } from 'jfw/util'
+import { Vec2, Rect, Matrix } from '@biocad/jfw/geom'
+import { svg, VNode } from '@biocad/jfw/vdom'
+import { svgMarkerId } from '@biocad/jfw/util'
 
 function createGeometry(size) {
 

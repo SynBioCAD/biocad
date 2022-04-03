@@ -2,9 +2,9 @@
 import Depiction, { Opacity, Orientation }  from './Depiction'
 import LocationableDepiction from './LocationableDepiction'
 
-import { VNode, svg } from 'jfw/vdom'
+import { VNode, svg } from '@biocad/jfw/vdom'
 
-import { Matrix, Vec2 } from 'jfw/geom'
+import { Matrix, Vec2 } from '@biocad/jfw/geom'
 
 import {
     S3Identified,

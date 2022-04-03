@@ -1,13 +1,13 @@
 
-import Dialog from 'jfw/ui/dialog/Dialog'
+import Dialog from '@biocad/jfw/ui/dialog/Dialog'
 
 import extend = require('xtend')
 
-import { h, VNode } from 'jfw/vdom'
+import { h, VNode } from '@biocad/jfw/vdom'
 import BiocadApp from "biocad/BiocadApp";
 
-import TextInput from 'jfw/ui/form-control/TextInput'
-import Combo from 'jfw/ui/form-control/Combo'
+import TextInput from '@biocad/jfw/ui/form-control/TextInput'
+import Combo from '@biocad/jfw/ui/form-control/Combo'
 
 import roles from 'data/roles'
 import { Specifiers } from "bioterms";

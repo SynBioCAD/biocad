@@ -1,10 +1,10 @@
-import { createGrid } from 'jfw/graphics';
-import { App } from 'jfw';
+import { createGrid } from '@biocad/jfw/graphics';
+import { App } from '@biocad/jfw';
 
 import Layout from './Layout'
-import { View, SubTree } from 'jfw/ui'
+import { View, SubTree } from '@biocad/jfw/ui'
 
-import { VNode, h, svg } from 'jfw/vdom'
+import { VNode, h, svg } from '@biocad/jfw/vdom'
 
 import Depiction from './Depiction'
 import LayoutEditorOverlay from "biocad/cad/LayoutEditorOverlay";

@@ -1,4 +1,4 @@
-import Versioned  from 'jfw/Versioned';
+import Versioned  from '@biocad/jfw/Versioned';
 
 import Depiction, { Opacity, Orientation } from './Depiction'
 
@@ -19,7 +19,7 @@ import BackboneDepiction from './BackboneDepiction'
 
 import { Specifiers } from 'bioterms'
 
-import { Vec2, Rect, LinearRange } from 'jfw/geom'
+import { Vec2, Rect, LinearRange } from '@biocad/jfw/geom'
 
 import configurateLayout from 'biocad/configurator/configurate'
 import LabelDepiction from "biocad/cad/LabelDepiction";
@@ -32,10 +32,10 @@ import FeatureLocationDepiction from "biocad/cad/FeatureLocationDepiction";
 
 import assert from 'power-assert'
 import ComponentDisplayList from "biocad/cad/ComponentDisplayList";
-import { Watcher, S3Identified, S3SequenceConstraint, S3Location, S3OrientedLocation, S3Interaction } from "sbolgraph"
+import { Watcher, S3Identified, S3Constraint, S3Location, S3OrientedLocation, S3Interaction } from "sbolgraph"
 import InteractionDepiction from './InteractionDepiction'
 import BiocadApp from 'biocad/BiocadApp';
-import App from 'jfw/App';
+import App from '@biocad/jfw/App';
 import CircularBackboneDepiction from 'biocad/cad/CircularBackboneDepiction';
 import Instruction from 'biocad/cad/layout-instruction/Instruction';
 import InstructionSet from 'biocad/cad/layout-instruction/InstructionSet';

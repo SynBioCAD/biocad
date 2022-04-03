@@ -17,16 +17,16 @@ export default class PropertyAccessorURISet extends PropertyAccessor<string[]> {
 
     set(graph:Graph, values:string[]) {
 
-        graph.removeMatches(this.object, this.predicate, null)
+        graph.removeMatches(node.createUriNode(this.object), this.predicate, null)
 
         for(let value of values)
-            graph.insert(this.object, this.predicate, node.createUriNode(value))
+            graph.insertTriple(node.createUriNode(this.object), this.predicate, node.createUriNode(value))
 
         if(this.onChange)
             this.onChange()
     }
 
     get(graph:Graph):string[] {
-        return graph.match(this.object, this.predicate, null).map(triple.objectUri) as string[]
+        return graph.match(node.createUriNode(this.object), this.predicate, null).map(triple.objectUri) as string[]
     }
 }

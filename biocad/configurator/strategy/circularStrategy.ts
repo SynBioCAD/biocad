@@ -1,12 +1,12 @@
 
 import assert from 'power-assert'
 
-import { Vec2, LinearRangeSet, LinearRange } from 'jfw/geom'
+import { Vec2, LinearRangeSet, LinearRange } from '@biocad/jfw/geom'
 
 import { Specifiers } from 'bioterms'
 import Depiction, { Orientation } from "biocad/cad/Depiction";
 import ComponentDepiction from "biocad/cad/ComponentDepiction";
-import getEllipsePoint from 'jfw/geom/getEllipsePoint'
+import getEllipsePoint from '@biocad/jfw/geom/getEllipsePoint'
 import FeatureLocationDepiction from "biocad/cad/FeatureLocationDepiction";
 import { S3SequenceFeature, S3Range, S3Component, S3Sequence, S3Identified } from "sbolgraph"
 

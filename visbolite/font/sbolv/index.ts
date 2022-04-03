@@ -1,7 +1,7 @@
 
     
  // silence warning about private name
- import { Vec2 } from 'jfw/geom'
+ import { Vec2 } from '@biocad/jfw/geom'
 
 var prefix = 'http://biocad.io/font/sbolv/'
 

@@ -1,7 +1,7 @@
 
 
-import { h, svg, VNode } from 'jfw/vdom'
-import { View } from 'jfw/ui'
+import { h, svg, VNode } from '@biocad/jfw/vdom'
+import { View } from '@biocad/jfw/ui'
 import BiocadApp from "biocad/BiocadApp";
 import Depiction from "biocad/cad/Depiction";
 import { S3Identified, S3SubComponent, S3Component, S3Interaction, sbol3, S2ExperimentalData } from "sbolgraph"
@@ -13,8 +13,8 @@ import renderCDStrandChooser from "biocad/stateless-ui/renderCDStrandChooser";
 import visbolite from 'visbolite'
 import Vec2 from "jfw/geom/Vec2";
 
-import { click as clickEvent } from 'jfw/event'
-import TextInput from 'jfw/ui/form-control/TextInput';
+import { click as clickEvent } from '@biocad/jfw/event'
+import TextInput from '@biocad/jfw/ui/form-control/TextInput';
 
 import soTrie from 'data/soTrie'
 import { Predicates, Specifiers } from 'bioterms';

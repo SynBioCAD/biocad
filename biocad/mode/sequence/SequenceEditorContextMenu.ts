@@ -1,7 +1,7 @@
 
-import { Vec2 } from 'jfw/geom';
+import { Vec2 } from '@biocad/jfw/geom';
 
-import ContextMenu, { ContextMenuItem } from 'jfw/ui/ContextMenu';
+import ContextMenu, { ContextMenuItem } from '@biocad/jfw/ui/ContextMenu';
 
 import SequenceEditor from './SequenceEditor'
 

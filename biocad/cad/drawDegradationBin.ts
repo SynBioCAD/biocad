@@ -1,6 +1,6 @@
 
-import { Rect, getEllipsePoint } from 'jfw/geom'
-import { VNode, svg } from 'jfw/vdom'
+import { Rect, getEllipsePoint } from '@biocad/jfw/geom'
+import { VNode, svg } from '@biocad/jfw/vdom'
 
 export default function drawDegradationBin(rect:Rect, stroke:string, color:string):VNode {
 

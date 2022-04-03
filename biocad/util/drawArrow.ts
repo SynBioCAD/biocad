@@ -1,6 +1,6 @@
 
-import { Vec2, Line } from 'jfw/geom'
-import { svg } from 'jfw/vdom'
+import { Vec2, Line } from '@biocad/jfw/geom'
+import { svg } from '@biocad/jfw/vdom'
 
 export enum ArrowheadType {
     None,
