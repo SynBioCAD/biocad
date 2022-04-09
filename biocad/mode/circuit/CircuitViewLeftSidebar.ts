@@ -3,7 +3,7 @@
 import { Sidebar, SidebarDivision, SidebarSection } from '@biocad/jfw/ui'
 import PartsListView from './PartsListView'
 import { Specifiers } from "bioterms";
-import GlobalConfig from '@biocad/jfw/GlobalConfig';
+import { GlobalConfig } from '@biocad/jfw';
 
 import palettes from 'data/palettes'
 import parts from 'data/parts';

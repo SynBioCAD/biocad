@@ -7,7 +7,7 @@ import RemoveURIPrefixDialog from './RemoveURIPrefixDialog'
 import { click as clickEvent } from '@biocad/jfw/event'
 import { Graph, sbol3 } from "sbolgraph";
 import BiocadApp from "biocad/BiocadApp";
-import TextInput from '@biocad/jfw/ui/form-control/TextInput';
+import { TextInput } from '@biocad/jfw/ui';
 
 export default class SetupCurrentDocumentView extends View {
 

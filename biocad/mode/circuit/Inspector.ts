@@ -11,10 +11,10 @@ import renderCDTypeChooser from "biocad/stateless-ui/renderCDTypeChooser";
 import renderCDStrandChooser from "biocad/stateless-ui/renderCDStrandChooser";
 
 import visbolite from 'visbolite'
-import Vec2 from "jfw/geom/Vec2";
+import { Vec2 } from "@biocad/jfw/geom";
 
 import { click as clickEvent } from '@biocad/jfw/event'
-import TextInput from '@biocad/jfw/ui/form-control/TextInput';
+import { TextInput } from '@biocad/jfw/ui';
 
 import soTrie from 'data/soTrie'
 import { Predicates, Specifiers } from 'bioterms';

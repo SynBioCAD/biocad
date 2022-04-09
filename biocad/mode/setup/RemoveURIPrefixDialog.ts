@@ -1,8 +1,8 @@
 
 import BiocadApp from 'biocad/BiocadApp'
 
-import { Dialog } from '@biocad/jfw/ui/dialog'
-import { RadioButtons, Combo } from '@biocad/jfw/ui/form-control'
+import { Dialog } from '@biocad/jfw/ui';
+import { RadioButtons, Combo } from '@biocad/jfw/ui';
 
 import { h, VNode } from '@biocad/jfw/vdom'
 

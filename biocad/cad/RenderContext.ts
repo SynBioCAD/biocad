@@ -1,5 +1,5 @@
 
-import { Vec2 } from "jfw/geom";
+import { Vec2 } from "@biocad/jfw/geom";
 import Layout from "biocad/cad/Layout";
 
 interface RenderContext {

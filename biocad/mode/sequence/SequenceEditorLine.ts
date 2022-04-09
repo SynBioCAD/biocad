@@ -1,6 +1,6 @@
 
-import LinearRangeSet from "jfw/geom/LinearRangeSet";
-import Rect from "jfw/geom/Rect";
+import { LinearRangeSet } from "@biocad/jfw/geom";
+import { Rect } from "@biocad/jfw/geom";
 
 export default class SequenceEditorLine {
 

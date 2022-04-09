@@ -4,11 +4,6 @@ import { S3Component } from "sbolgraph"
 import { h, svg } from '@biocad/jfw/vdom'
 
 import { View } from '@biocad/jfw/ui'
-import { click as clickEvent } from '@biocad/jfw/event'
-
-import { Matrix, Vec2, LinearRangeSet, LinearRange } from '@biocad/jfw/geom'
-
-import { Types } from 'bioterms'
 
 import { DetachedSubTree, SubTree } from '@biocad/jfw/ui'
 import SequenceEditorOverlay from './SequenceEditorOverlay'
@@ -16,9 +11,9 @@ import SequenceEditorToolbar from './SequenceEditorToolbar'
 import SequenceEditorBody from './SequenceEditorBody'
 
 import RenderState from './SequenceEditorRenderState'
-import { VNode } from "jfw/vdom"
-import { Dialog } from "jfw/ui/dialog";
-import { App } from "jfw";
+import { VNode } from "@biocad/jfw/vdom"
+import { Dialog } from "@biocad/jfw/ui";
+import { App } from "@biocad/jfw";
 import { S3Sequence } from "sbolgraph"
 
 import getReverseComplementSequenceString = require('ve-sequence-utils/src/getReverseComplementSequenceString')

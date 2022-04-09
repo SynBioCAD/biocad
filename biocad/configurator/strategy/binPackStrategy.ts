@@ -5,7 +5,7 @@ import GrowingPacker from './binPack'
 
 import { Vec2, LinearRange } from '@biocad/jfw/geom'
 import InteractionDepiction from "biocad/cad/InteractionDepiction";
-import LinearRangeSet from "jfw/geom/LinearRangeSet";
+import { LinearRangeSet } from "@biocad/jfw/geom";
 import ComponentDepiction from "biocad/cad/ComponentDepiction";
 import BackboneDepiction from '../../cad/BackboneDepiction';
 import { reverse } from 'dns';

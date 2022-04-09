@@ -1,6 +1,6 @@
 import { App } from '@biocad/jfw';
 
-import { Dialog, DialogOptions } from '@biocad/jfw/ui/dialog'
+import { Dialog, DialogOptions } from '@biocad/jfw/ui';
 import { h } from '@biocad/jfw/vdom'
 
 import extend = require('xtend')
@@ -10,7 +10,7 @@ import componentTypes from 'bioterms/human/componentTypes'
 import { Specifiers, Predicates, Types, Prefixes } from 'bioterms'
 
 import nameToDisplayId from '../util/nameToDisplayId'
-import { TextInput, Combo } from "jfw/ui/form-control";
+import { TextInput, Combo } from "@biocad/jfw/ui";
 
 import cdTypes from 'data/cdTypes'
 

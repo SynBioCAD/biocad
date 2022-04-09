@@ -1,5 +1,5 @@
 
-import { Dialog, DialogOptions } from '@biocad/jfw/ui/dialog'
+import { Dialog, DialogOptions } from '@biocad/jfw/ui';
 import OntologyTreeView from 'biocad/view/OntologyTreeView'
 import { App } from '@biocad/jfw'
 import { h } from '@biocad/jfw/vdom'

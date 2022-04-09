@@ -32,7 +32,7 @@ export default function configurateLabel(label:LabelDepiction, instructions:Inst
 
 
 
-    if(CircularBackboneDepiction.ancestorOf(this)) {
+    if(CircularBackboneDepiction.ancestorOf(label)) {
 
 
     } else {

@@ -1,6 +1,6 @@
 
 import FeatureLocationDepiction from "biocad/cad/FeatureLocationDepiction";
-import Vec2 from "jfw/geom/Vec2";
+import { Vec2 } from "@biocad/jfw/geom";
 import LabelDepiction from "biocad/cad/LabelDepiction";
 import { Orientation } from "biocad/cad/Depiction";
 import { shortNameFromTerm } from "data/parts";

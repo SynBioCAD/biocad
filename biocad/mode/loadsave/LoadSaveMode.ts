@@ -1,8 +1,8 @@
 
 import LoadSaveView from './LoadSaveView'
-import Mode from '@biocad/jfw/ui/Mode'
-import { VNode, h } from "jfw/vdom";
-import { App } from "jfw";
+import { Mode } from '@biocad/jfw/ui';
+import { VNode, h } from "@biocad/jfw/vdom";
+import { App } from "@biocad/jfw";
 
 export default class LoadSaveMode extends Mode {
 

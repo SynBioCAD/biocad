@@ -17,20 +17,19 @@ import LoadSaveMode from './mode/loadsave/LoadSaveMode'
 import { Hook } from '@biocad/jfw/util'
 
 import DropOverlay from './DropOverlay'
-import { VNode, h, create } from "jfw/vdom";
+import { VNode, h, create } from "@biocad/jfw/vdom";
 
-import Mode from "jfw/ui/Mode";
-import HeadlessMode from "biocad/mode/headless/HeadlessMode";
-import Layout from "biocad/cad/Layout";
+import { Mode } from "@biocad/jfw/ui";
 import Headless from "biocad/Headless";
-import UData from '@biocad/jfw/udata/UData';
 import InitUData from 'biocad/InitUData';
-import GlobalConfig from '@biocad/jfw/GlobalConfig';
+import { GlobalConfig } from '@biocad/jfw';
 import PopupMessageDialog from './dialog/PopupMessageDialog';
-import { DialogOptions } from '@biocad/jfw/ui/dialog';
+import { DialogOptions } from '@biocad/jfw/ui';
 
 import uuid = require('uuid')
 import { Graph, sbol3 } from 'sbolgraph'
+
+import '../less/biocad.less'
 
 console.log('BiocadApp.ts')
 

@@ -2,7 +2,7 @@
 import PropertyEditor from "./PropertyEditor";
 import { Graph } from "sbolgraph";
 import Depiction from "biocad/cad/Depiction";
-import { h } from "@biocad/jfw/dist/jfw/vdom";
+import { h } from "@biocad/jfw/vdom";
 import LocationableDepiction from "biocad/cad/LocationableDepiction";
 import LabelDepiction from "biocad/cad/LabelDepiction";
 

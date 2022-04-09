@@ -2,11 +2,11 @@
 import InteractionDepiction from './InteractionDepiction'
 import Depiction from "biocad/cad/Depiction";
 import Layout from "biocad/cad/Layout";
-import { svg, VNode } from "jfw/vdom";
+import { svg, VNode } from "@biocad/jfw/vdom";
 import { S3Interaction, S3Participation, S3SubComponent, S3MapsTo } from "sbolgraph";
 import { Specifiers } from 'bioterms'
 import { assert } from 'power-assert'
-import Vec2 from "jfw/geom/Vec2";
+import { Vec2 } from "@biocad/jfw/geom";
 import RenderContext from './RenderContext'
 import IdentifiedChain from 'biocad/IdentifiedChain';
 

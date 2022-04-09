@@ -14,14 +14,14 @@ import RelayoutDialog from './RelayoutDialog'
 
 import Layout from 'biocad/cad/Layout'
 import LayoutEditor from 'biocad/cad/LayoutEditor'
-import { App } from "jfw";
+import { App } from "@biocad/jfw";
 
 import { Graph } from "sbolgraph"
 import Depiction from "biocad/cad/Depiction";
 import CircuitViewLeftSidebar from "biocad/mode/circuit/CircuitViewLeftSidebar";
 import CircuitViewRightSidebar from "biocad/mode/circuit/CircuitViewRightSidebar";
 import LayoutPOD from "biocad/cad/LayoutPOD";
-import GlobalConfig from '@biocad/jfw/GlobalConfig';
+import { GlobalConfig } from '@biocad/jfw';
 
 export default abstract class LayoutEditorView extends View {
 

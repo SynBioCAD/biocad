@@ -25,7 +25,7 @@ export default function configurateComponent(depiction:ComponentDepiction, instr
 
     console.log('configurating ' + depiction.debugName)
 
-    if(CircularBackboneDepiction.ancestorOf(this)) {
+    if(CircularBackboneDepiction.ancestorOf(depiction)) {
         if(depiction.opacity === Opacity.Whitebox) {
             configurateCircularWhiteboxComponent(depiction)
         } else {

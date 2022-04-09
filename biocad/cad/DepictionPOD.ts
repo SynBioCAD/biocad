@@ -1,5 +1,5 @@
 
-import assert from 'power-assert'
+import assert = require('assert');
 import Layout from "biocad/cad/Layout";
 import { Graph, S3Interaction, Facade } from "sbolgraph"
 import Depiction from "biocad/cad/Depiction";
@@ -8,7 +8,7 @@ import LabelDepiction from "biocad/cad/LabelDepiction";
 import FeatureLocationDepiction from "biocad/cad/FeatureLocationDepiction";
 import extend = require('xtend')
 import { S3Identified, sbol3 } from "sbolgraph"
-import Vec2 from "jfw/geom/Vec2";
+import { Vec2 } from "@biocad/jfw/geom";
 import BackboneDepiction from "biocad/cad/BackboneDepiction";
 import CircularBackboneDepiction from 'biocad/cad/CircularBackboneDepiction';
 import InteractionDepiction from './InteractionDepiction';

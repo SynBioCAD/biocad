@@ -1,15 +1,14 @@
 
 import { S3Identified } from "sbolgraph"
 
-import { h, VNode } from "jfw/vdom";
+import { h, VNode } from "@biocad/jfw/vdom";
 import { Graph } from "sbolgraph"
 import Layout from "biocad/cad/Layout";
 import LayoutThumbnail from "biocad/cad/LayoutThumbnail";
 import BiocadApp from "biocad/BiocadApp";
-import assert from 'power-assert'
-import MouseListener from '@biocad/jfw/util/MouseListener'
-import Vec2 from "jfw/geom/Vec2";
-import Rect from "jfw/geom/Rect";
+import assert = require('assert')
+import { MouseListener } from '@biocad/jfw/util'
+import { Vec2, Rect } from '@biocad/jfw/geom'
 
 import { contextMenu as contextMenuEvent, click as clickEvent } from '@biocad/jfw/event'
 import Depiction from "biocad/cad/Depiction";

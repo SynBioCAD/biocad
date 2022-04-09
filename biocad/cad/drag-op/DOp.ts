@@ -2,7 +2,7 @@
 import Layout from "biocad/cad/Layout";
 import { Graph } from "sbolgraph";
 import Depiction from "biocad/cad/Depiction";
-import { Rect } from "jfw/geom";
+import { Rect } from "@biocad/jfw/geom";
 
 export interface DOpResult {
 

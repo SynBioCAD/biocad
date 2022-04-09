@@ -5,8 +5,8 @@ import CircuitView from './CircuitView'
 import CircuitViewLeftSidebar from './CircuitViewLeftSidebar'
 import CircuitViewRightSidebar from './CircuitViewRightSidebar'
 
-import Mode from '@biocad/jfw/ui/Mode'
-import { VNode, h } from "jfw/vdom";
+import { Mode } from '@biocad/jfw/ui';
+import { VNode, h } from "@biocad/jfw/vdom";
 
 export default class CircuitViewMode extends Mode {
 

@@ -1,7 +1,7 @@
 
 
-import View from "jfw/ui/View";
-import { VNode, h, create, svg } from "jfw/vdom";
+import { View } from "@biocad/jfw/ui";
+import { VNode, h, create, svg } from "@biocad/jfw/vdom";
 import BiocadApp from "biocad/BiocadApp";
 import { Graph, SBOL3GraphView, sbol3 } from "sbolgraph"
 import { Types } from "bioterms";

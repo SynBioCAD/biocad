@@ -1,4 +1,4 @@
-import Versioned  from '@biocad/jfw/Versioned';
+import { Versioned }  from '@biocad/jfw';
 
 import Depiction, { Opacity, Orientation } from './Depiction'
 
@@ -30,12 +30,12 @@ import configurateBackbone from "biocad/configurator/configurateBackbone";
 import LayoutPOD from "biocad/cad/LayoutPOD";
 import FeatureLocationDepiction from "biocad/cad/FeatureLocationDepiction";
 
-import assert from 'power-assert'
+import assert = require('assert')
 import ComponentDisplayList from "biocad/cad/ComponentDisplayList";
 import { Watcher, S3Identified, S3Constraint, S3Location, S3OrientedLocation, S3Interaction } from "sbolgraph"
 import InteractionDepiction from './InteractionDepiction'
 import BiocadApp from 'biocad/BiocadApp';
-import App from '@biocad/jfw/App';
+import { App } from '@biocad/jfw';
 import CircularBackboneDepiction from 'biocad/cad/CircularBackboneDepiction';
 import Instruction from 'biocad/cad/layout-instruction/Instruction';
 import InstructionSet from 'biocad/cad/layout-instruction/InstructionSet';

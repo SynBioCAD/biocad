@@ -1,6 +1,6 @@
 
 import { Sidebar, ListMenu } from '@biocad/jfw/ui'
-import { SidebarSection } from '@biocad/jfw/ui/Sidebar'
+import { SidebarSection } from '@biocad/jfw/ui';
 
 export default class SetupViewSidebar extends Sidebar {
 

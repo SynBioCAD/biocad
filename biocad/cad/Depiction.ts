@@ -4,8 +4,8 @@ import { VNode } from '@biocad/jfw/vdom'
 import { Vec2 } from '@biocad/jfw/geom'
 import Layout from 'biocad/cad/Layout'
 import { S3Identified, Watcher, S3Location, S3SubComponent } from "sbolgraph"
-import Rect from "jfw/geom/Rect";
-import Versioned from "jfw/Versioned";
+import { Rect } from "@biocad/jfw/geom";
+import { Versioned } from "@biocad/jfw";
 import RenderContext from './RenderContext'
 import CircularBackboneDepiction from './CircularBackboneDepiction'
 import IdentifiedChain from '../IdentifiedChain';

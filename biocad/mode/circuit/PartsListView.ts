@@ -7,7 +7,7 @@ import { click as clickEvent, contextMenu as contextMenuEvent } from '@biocad/jf
 
 import visbolite from 'visbolite'
 
-import App from "jfw/App";
+import { App } from "@biocad/jfw";
 import BiocadApp from "biocad/BiocadApp";
 import { Specifiers, Predicates, Types } from "bioterms";
 

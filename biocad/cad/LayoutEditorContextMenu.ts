@@ -6,7 +6,7 @@ import BiocadApp from 'biocad/BiocadApp';
 
 import { Vec2, Matrix } from '@biocad/jfw/geom';
 
-import ContextMenu, { ContextMenuItem } from '@biocad/jfw/ui/ContextMenu';
+import { ContextMenu, ContextMenuItem } from '@biocad/jfw/ui';
 
 import { node as graphNode } from "sbolgraph"
 import { Graph } from "sbolgraph"

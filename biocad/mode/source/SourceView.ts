@@ -1,7 +1,7 @@
 
 import { View } from '@biocad/jfw/ui'
-import { CodeMirrorWidget } from '@biocad/jfw/ui/widget'
-import { h, VNode } from '@biocad/jfw/vdom'
+import { CodeMirrorWidget } from '@biocad/jfw/ui';
+import { h, VNode } from '@biocad/jfw/vdom';
 import BiocadApp from "biocad/BiocadApp";
 import LayoutPOD from "biocad/cad/LayoutPOD";
 import EncodingSelector, { Encoding } from './EncodingSelector';

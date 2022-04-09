@@ -12,8 +12,8 @@ import { mousemove as mousemoveEvent, click as clickEvent, mousewheel as wheelEv
 import Layout from "biocad/cad/Layout";
 
 import renderHandles from './renderHandles'
-import Matrix from "jfw/geom/Matrix";
-import Rect from "jfw/geom/Rect";
+import { Matrix } from "@biocad/jfw/geom";
+import { Rect } from "@biocad/jfw/geom";
 import BiocadApp from "biocad/BiocadApp";
 import Droppable from "biocad/droppable/Droppable";
 import SBOLDroppable from "biocad/droppable/SBOLDroppable";
@@ -24,7 +24,7 @@ import DepictionPOD from "biocad/cad/DepictionPOD";
 import BackboneDepiction from 'biocad/cad/BackboneDepiction';
 import ComponentDepiction from 'biocad/cad/ComponentDepiction';
 
-import assert from 'power-assert'
+import assert = require('assert');
 import Instruction from "biocad/cad/layout-instruction/Instruction";
 import ReplaceInstruction from "biocad/cad/layout-instruction/ReplaceInstruction";
 import { Predicates } from "bioterms";

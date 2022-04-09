@@ -1,6 +1,6 @@
 
 
-import { Rect } from "jfw/geom";
+import { Rect } from "@biocad/jfw/geom";
 import Depiction, { Opacity } from "biocad/cad/Depiction";
 import { Graph, S3Component, S3SubComponent, sbol3 } from "sbolgraph";
 import Layout from "biocad/cad/Layout";

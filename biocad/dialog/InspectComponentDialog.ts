@@ -1,14 +1,9 @@
 
-import TabbedDialog, { Tab } from "jfw/ui/dialog/TabbedDialog";
-import { DialogOptions } from "jfw/ui/dialog";
+import { Tab, TabbedDialog, DialogOptions } from "@biocad/jfw/ui";
 import BiocadApp from "biocad/BiocadApp";
 import { Graph, S3Identified, sbol3, SBOL3GraphView } from "sbolgraph";
-import { VNode, h } from "jfw/vdom";
+import { VNode, h } from "@biocad/jfw/vdom";
 import { S3Component } from "sbolgraph"
-import LayoutThumbnail from "biocad/cad/LayoutThumbnail";
-import Layout from "biocad/cad/Layout";
-import Rect from "jfw/geom/Rect";
-import Vec2 from "jfw/geom/Vec2";
 import InspectComponentThumbnailView from "biocad/dialog/InspectComponentThumbnailView";
 import SequenceEditor from "biocad/mode/sequence/SequenceEditor";
 import { click as clickEvent } from '@biocad/jfw/event'

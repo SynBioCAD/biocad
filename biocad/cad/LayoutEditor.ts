@@ -8,12 +8,12 @@ import { VNode, h, svg } from '@biocad/jfw/vdom'
 
 import Depiction from './Depiction'
 import LayoutEditorOverlay from "biocad/cad/LayoutEditorOverlay";
-import { Rect, Vec2 } from "jfw/geom"
+import { Rect, Vec2 } from "@biocad/jfw/geom"
 
 import ScrollbarWidget from './ScrollbarWidget'
 import BiocadApp from "biocad/BiocadApp";
-import Matrix from "jfw/geom/Matrix";
-import { Hook } from "jfw/util";
+import { Matrix } from "@biocad/jfw/geom";
+import { Hook } from "@biocad/jfw/util";
 import Droppable from "biocad/droppable/Droppable";
 import LayoutPOD from "biocad/cad/LayoutPOD";
 import SVGDefs from "biocad/cad/SVGDefs";

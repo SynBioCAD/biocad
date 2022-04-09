@@ -1,13 +1,8 @@
 
-import LayoutEditorView from 'biocad/cad/LayoutEditorView'
 import BiocadApp from "biocad/BiocadApp";
 
-import Layout from 'biocad/cad/Layout'
-import LayoutPOD from 'biocad/cad/LayoutPOD'
-import LayoutEditor from 'biocad/cad/LayoutEditor'
-import Depiction from 'biocad/cad/Depiction'
-import View from "jfw/ui/View";
-import { VNode, h } from "jfw/vdom";
+import { View } from "@biocad/jfw/ui";
+import { VNode, h } from "@biocad/jfw/vdom";
 
 export default class HeadlessView extends View {
 

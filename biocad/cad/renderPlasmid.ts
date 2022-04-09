@@ -2,7 +2,7 @@
 import { svg, h, VNode } from '@biocad/jfw/vdom'
 import { Vec2, Matrix, LinearRange, LinearRangeSet } from '@biocad/jfw/geom'
 
-import getEllipsePoint from '@biocad/jfw/geom/getEllipsePoint'
+import { getEllipsePoint } from '@biocad/jfw/geom';
 
 import visbolite from 'visbolite'
 

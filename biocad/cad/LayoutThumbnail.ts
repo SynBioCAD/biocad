@@ -9,8 +9,8 @@ import { h, svg, VNode } from '@biocad/jfw/vdom'
 import { Types } from 'bioterms'
 import Layout from "biocad/cad/Layout";
 import BiocadApp from "biocad/BiocadApp";
-import Vec2 from "jfw/geom/Vec2";
-import Rect from "jfw/geom/Rect";
+import { Vec2 } from "@biocad/jfw/geom";
+import { Rect } from "@biocad/jfw/geom";
 import SVGDefs from "biocad/cad/SVGDefs";
 
 import extend = require('xtend')

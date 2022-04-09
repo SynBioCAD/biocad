@@ -1,5 +1,5 @@
 
-import { Dialog } from '@biocad/jfw/ui/dialog'
+import { Dialog } from '@biocad/jfw/ui';
 import { h } from '@biocad/jfw/vdom'
 
 export default class TestDialog extends Dialog {

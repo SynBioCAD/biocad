@@ -1,6 +1,6 @@
 
-import { Rect, Vec2 } from "jfw/geom";
-import { svg, VNode } from "jfw/vdom";
+import { Rect, Vec2 } from "@biocad/jfw/geom";
+import { svg, VNode } from "@biocad/jfw/vdom";
 import { drag as dragEvent } from '@biocad/jfw/event'
 
 export default function renderHandles(rect:Rect, bHover:boolean, bResizeable:boolean, callback:(pos:Vec2, dimensions:string[]) => void, color ?:string) {
