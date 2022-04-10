@@ -33,7 +33,7 @@ export default class LoadSaveView extends View {
 
         let graph = app.graph
 
-        if(graph.graph.toArray().length > 0) {
+        if(graph.toArray().length > 0) {
 
             let circuitMode = app.getCircuitMode()
 

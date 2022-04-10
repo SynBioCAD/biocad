@@ -17,6 +17,7 @@ import BrowseSBHDialog, { BrowseSBHDialogOptions } from "biocad/dialog/BrowseSBH
 import { SearchQuery } from "../../Repository"
 
 import { FinalizeEvent } from 'biocad/DropOverlay'
+import { S3Component } from "sbolgraph";
 
 export default class PartsListView extends View {
 
@@ -154,6 +155,10 @@ function clickSearch(data:any) {
 
     
     const browseDialog:BrowseSBHDialog = new BrowseSBHDialog(app, browseDialogOpts)
+
+    browseDialog.onUsePart = (part:S3Component) => {
+	    app.dropOverlay.startDropping(new SBOLDroppable(app, part.graph, [ part.subject.value ]))
+    }
 
     app.openDialog(browseDialog)
 

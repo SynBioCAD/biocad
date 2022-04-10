@@ -118,7 +118,10 @@ export default class DropOverlay {
 
     startDropping(droppable:Droppable) {
 
-        assert(!this.currentDroppable)
+        //assert(!this.currentDroppable)
+	if(this.currentDroppable) {
+		this.cancelDrop()
+	}
 
         this.startTime = new Date().getTime()
 

@@ -154,8 +154,8 @@ export default class BiocadApp extends App
 
 
         console.time('save state')
-        console.dir(this.graph.graph.toArray())
-        this.udata.set('graph', this.graph.graph.toArray())
+        console.dir(this.graph.toArray())
+        this.udata.set('graph', this.graph.toArray())
         console.timeEnd('save state')
 
     }

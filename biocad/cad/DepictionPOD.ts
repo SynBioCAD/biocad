@@ -104,11 +104,13 @@ export default class DepictionPOD {
 
     static deserialize(layout:Layout, graph:Graph, parent:Depiction|undefined, pod:any, uidToDepiction:Map<number,Depiction>):Depiction {
 
-        let depictionOf:Facade|undefined = sbol3(graph).uriToFacade(pod.depictionOf)
+        let depictionOf:Facade|undefined = pod.depictionOf
+		? sbol3(graph).uriToFacade(pod.depictionOf)
+		: undefined
 
         if(depictionOf !== undefined) {
             if(! (depictionOf instanceof S3Identified)) {
-                throw new Error('???')
+                throw new Error('')
             }
         }
 
