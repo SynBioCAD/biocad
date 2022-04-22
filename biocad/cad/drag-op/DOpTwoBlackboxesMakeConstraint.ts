@@ -1,10 +1,10 @@
 
 import { Rect } from "@biocad/jfw/geom";
-import Depiction, { Opacity, Fade } from "biocad/cad/Depiction";
+import Depiction, { Opacity, Fade } from "biocad/cad/layout/Depiction";
 import { Graph, S3Component, S3SubComponent, Facade, S3Identified, sbol3 } from "sbolgraph";
-import Layout from "biocad/cad/Layout";
+import Layout from "biocad/cad/layout/Layout";
 import DOp, { DOpResult } from "./DOp";
-import ComponentDepiction from "../ComponentDepiction";
+import ComponentDepiction from "../layout/ComponentDepiction";
 import IdentifiedChain from "../../IdentifiedChain";
 
 // Allows a blackbox ComponentD to be dragged onto another blackbox ComponentD to form a constraint

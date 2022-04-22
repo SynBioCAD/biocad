@@ -3,32 +3,29 @@
 import { h, svg, VNode } from '@biocad/jfw/vdom'
 import { View } from '@biocad/jfw/ui'
 import BiocadApp from "biocad/BiocadApp";
-import Depiction from "biocad/cad/Depiction";
+import Depiction from "biocad/cad/layout/Depiction";
 import { S3Identified, S3SubComponent, S3Component, S3Interaction, sbol3, S2ExperimentalData } from "sbolgraph"
 
-import describeSOUri from 'data/describeSOUri'
-import renderCDTypeChooser from "biocad/stateless-ui/renderCDTypeChooser";
-import renderCDStrandChooser from "biocad/stateless-ui/renderCDStrandChooser";
+// import describeSOUri from 'data/describeSOUri'
+// import renderCDTypeChooser from "biocad/stateless-ui/renderCDTypeChooser";
+// import renderCDStrandChooser from "biocad/stateless-ui/renderCDStrandChooser";
 
-import visbolite from 'visbolite'
 import { Vec2 } from "@biocad/jfw/geom";
 
-import { click as clickEvent } from '@biocad/jfw/event'
-import { TextInput } from '@biocad/jfw/ui';
-
 import soTrie from 'data/soTrie'
+
 import { Predicates, Specifiers } from 'bioterms';
 import PropertyEditor from '../../property/PropertyEditor';
-import DepictionRef from 'biocad/cad/DepictionRefByUid';
+import DepictionRef from 'biocad/cad/layout/DepictionRefByUid';
 import PropertyEditorOneline from '../../property/PropertyEditorOneline';
 import PropertyEditorTermSet from '../../property/PropertyEditorTermSet';
 import PropertyEditorCombo from '../../property/PropertyEditorCombo';
 import PropertyEditorInteractionParticipants from '../../property/PropertyEditorInteractionParticipants'
 import LayoutEditorView from '../../cad/LayoutEditorView';
-import InteractionDepiction from '../../cad/InteractionDepiction';
+import InteractionDepiction from '../../cad/layout/InteractionDepiction';
 import PropertyEditorSiblingComponent from '../../property/PropertyEditorSubComponent';
-import ComponentDepiction from '../../cad/ComponentDepiction';
-import BackboneDepiction from '../../cad/BackboneDepiction';
+import ComponentDepiction from '../../cad/layout/ComponentDepiction';
+import BackboneDepiction from '../../cad/layout/BackboneDepiction';
 import PropertyAccessorString from '../../property/PropertyAccessorString';
 import PropertyAccessorStrand from '../../property/PropertyAccessorStrand';
 import PropertyAccessorURI from '../../property/PropertyAccessorURI';

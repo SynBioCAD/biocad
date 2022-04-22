@@ -1,9 +1,7 @@
 
-import { S3Component } from "sbolgraph";
-
 import Droppable from "./Droppable";
 import { Graph } from "sbolgraph"
-import Layout from "biocad/cad/Layout";
+import Layout from "biocad/cad/layout/Layout";
 import LayoutThumbnail from "biocad/cad/LayoutThumbnail";
 import BiocadApp from "biocad/BiocadApp";
 import { VNode } from "@biocad/jfw/vdom";

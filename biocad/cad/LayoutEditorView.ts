@@ -6,21 +6,19 @@ import { createGrid } from '@biocad/jfw/graphics'
 
 import { h, VNode, svg } from '@biocad/jfw/vdom'
 
-import { Types } from 'bioterms'
-
 import LayoutEditorToolbar from './LayoutEditorToolbar'
 
 import RelayoutDialog from './RelayoutDialog'
 
-import Layout from 'biocad/cad/Layout'
+import Layout from 'biocad/cad/layout/Layout'
 import LayoutEditor from 'biocad/cad/LayoutEditor'
 import { App } from "@biocad/jfw";
 
 import { Graph } from "sbolgraph"
-import Depiction from "biocad/cad/Depiction";
+import Depiction from "biocad/cad/layout/Depiction";
 import CircuitViewLeftSidebar from "biocad/mode/circuit/CircuitViewLeftSidebar";
 import CircuitViewRightSidebar from "biocad/mode/circuit/CircuitViewRightSidebar";
-import LayoutPOD from "biocad/cad/LayoutPOD";
+import LayoutPOD from "biocad/cad/layout/LayoutPOD";
 import { GlobalConfig } from '@biocad/jfw';
 
 export default abstract class LayoutEditorView extends View {

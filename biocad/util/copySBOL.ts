@@ -15,7 +15,6 @@ export default function copySBOL(graphA:Graph, graphB:Graph, newURIPrefix:string
     let identityMap:Map<string,string> = sbol3(intmGraph).changeURIPrefix(newURIPrefix)
 
     for(let topLevel of sbol3(intmGraph).topLevels) {
-
         let n = 1
 
         let origUri = topLevel.uri

@@ -1,10 +1,7 @@
 
 import { App } from '@biocad/jfw'
 
-import TestDialog from './dialog/TestDialog'
 import BiocadTopbar from './topbar/BiocadTopbar'
-
-import configurate from './configurator/configurate'
 
 import SetupMode from './mode/setup/SetupMode'
 import LibraryMode from './mode/library/LibraryMode'

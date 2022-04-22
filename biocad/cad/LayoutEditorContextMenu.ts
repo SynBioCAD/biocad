@@ -1,19 +1,16 @@
 import  LayoutEditor  from 'biocad/cad/LayoutEditor';
-import { Specifiers } from 'bioterms';
 import { S3Component, S3SubComponent } from "sbolgraph"
-import { Predicates, Types } from 'bioterms';
 import BiocadApp from 'biocad/BiocadApp';
 
 import { Vec2, Matrix } from '@biocad/jfw/geom';
 
 import { ContextMenu, ContextMenuItem } from '@biocad/jfw/ui';
 
-import { node as graphNode } from "sbolgraph"
 import { Graph } from "sbolgraph"
-import Depiction, { Opacity } from "biocad/cad/Depiction";
+import Depiction, { Opacity } from "biocad/cad/layout/Depiction";
 
 import SequenceMode from 'biocad/mode/sequence/SequenceMode'
-import ComponentDepiction from 'biocad/cad/ComponentDepiction';
+import ComponentDepiction from 'biocad/cad/layout/ComponentDepiction';
 import SBOLDroppable from 'biocad/droppable/SBOLDroppable';
 
 export default class LayoutEditorContextMenu extends ContextMenu {

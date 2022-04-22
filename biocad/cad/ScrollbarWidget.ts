@@ -6,7 +6,7 @@ import RenderContext from './RenderContext'
 import { Vec2, Rect } from "@biocad/jfw/geom";
 
 import { drag as dragHandler } from '@biocad/jfw/event'
-import Layout from "biocad/cad/Layout";
+import Layout from "biocad/cad/layout/Layout";
 import BiocadApp from "biocad/BiocadApp";
 
 import assert = require('assert')

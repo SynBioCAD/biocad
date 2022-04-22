@@ -4,7 +4,7 @@ import { Vec2 } from '@biocad/jfw/geom'
 
 import LayoutThumbnail from 'biocad/cad/LayoutThumbnail';
 import BiocadApp from '../../BiocadApp';
-import Layout from '../../cad/Layout';
+import Layout from '../../cad/layout/Layout';
 
 import fileDialog = require('file-dialog')
 

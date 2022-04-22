@@ -1,12 +1,12 @@
 import { createGrid } from '@biocad/jfw/graphics';
 import { App } from '@biocad/jfw';
 
-import Layout from './Layout'
+import Layout from './layout/Layout'
 import { View, SubTree } from '@biocad/jfw/ui'
 
 import { VNode, h, svg } from '@biocad/jfw/vdom'
 
-import Depiction from './Depiction'
+import Depiction from './layout/Depiction'
 import LayoutEditorOverlay from "biocad/cad/LayoutEditorOverlay";
 import { Rect, Vec2 } from "@biocad/jfw/geom"
 
@@ -15,11 +15,11 @@ import BiocadApp from "biocad/BiocadApp";
 import { Matrix } from "@biocad/jfw/geom";
 import { Hook } from "@biocad/jfw/util";
 import Droppable from "biocad/droppable/Droppable";
-import LayoutPOD from "biocad/cad/LayoutPOD";
+import LayoutPOD from "biocad/cad/layout/LayoutPOD";
 import SVGDefs from "biocad/cad/SVGDefs";
 import { Graph, SBOL3GraphView, sbol3 } from "sbolgraph"
 import LayoutEditorDebugLog from './LayoutEditorDebugLog';
-import DepictionRef from './DepictionRefByUid';
+import DepictionRef from './layout/DepictionRefByUid';
 
 export default class LayoutEditor extends View {
 

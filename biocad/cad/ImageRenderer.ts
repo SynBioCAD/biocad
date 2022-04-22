@@ -1,10 +1,9 @@
 
 import RenderContext from './RenderContext'
-import Layout from './Layout'
+import Layout from './layout/Layout'
 import { Vec2 } from '@biocad/jfw/geom'
 import { VNode, svg, toHTML } from '@biocad/jfw/vdom'
 import SVGDefs from "biocad/cad/SVGDefs";
-import request = require('request')
 
 import TextEncodingShim = require('text-encoding-shim')
 let TextEncoder = TextEncodingShim.TextEncoder

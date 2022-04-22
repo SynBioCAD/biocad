@@ -1,11 +1,11 @@
 
-import Layout from 'biocad/cad/Layout'
+import Layout from 'biocad/cad/layout/Layout'
 import ImageRenderer, { ImageFormat } from 'biocad/cad/ImageRenderer'
 import { Graph, SBOL3GraphView } from 'sbolgraph'
 import { Vec2 } from '@biocad/jfw/geom'
 
 import fs = require('fs')
-import LayoutPOD from 'biocad/cad/LayoutPOD';
+import LayoutPOD from 'biocad/cad/layout/LayoutPOD';
 
 import express = require('express')
 import bodyParser = require('body-parser')

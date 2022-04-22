@@ -3,10 +3,10 @@
 import LayoutEditorView from 'biocad/cad/LayoutEditorView'
 import BiocadApp from "biocad/BiocadApp";
 
-import Layout from 'biocad/cad/Layout'
-import LayoutPOD from 'biocad/cad/LayoutPOD'
+import Layout from 'biocad/cad/layout/Layout'
+import LayoutPOD from 'biocad/cad/layout/LayoutPOD'
 import LayoutEditor from 'biocad/cad/LayoutEditor'
-import Depiction from 'biocad/cad/Depiction'
+import Depiction from 'biocad/cad/layout/Depiction'
 import { Graph } from 'sbolgraph';
 import { Vec2 } from '@biocad/jfw/geom'
 

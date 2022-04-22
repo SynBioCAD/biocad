@@ -1,6 +1,6 @@
 
 
-import { Opacity } from '../Depiction'
+import { Opacity } from '../layout/Depiction'
 
 import {
     S3Component,
