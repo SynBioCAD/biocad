@@ -16,9 +16,9 @@
             "type": "chrome",
             "request": "launch",
             "name": "Launch Chrome against localhost",
-            "url": "http://localhost/biocad/#/*",
-            "webRoot": "${workspaceRoot}/dist/",
-            "runtimeExecutable": "/usr/bin/chromium-browser",
+            "url": "file:///Users/james/biocad/index.html",
+            "webRoot": "${workspaceRoot}",
+        //     "runtimeExecutable": "/usr/bin/chromium-browser",
             "sourceMaps": true,
             "trace": true,
             "runtimeArgs": [
@@ -30,7 +30,7 @@
             "request": "attach",
             "name": "Attach to Chrome",
             "port": 9222,
-            "webRoot": "${workspaceRoot}/dist/",
+            "webRoot": "${workspaceRoot}",
             "sourceMaps": true,
             "trace": true
         },

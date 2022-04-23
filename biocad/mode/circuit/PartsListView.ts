@@ -16,6 +16,7 @@ import { FinalizeEvent } from 'biocad/DropOverlay'
 import { S3Component } from "sbolgraph";
 import Glyph from "biocad/glyph/Glyph";
 import colors from '../../../data/colors'
+import { Prefixes, Specifiers } from "bioterms";
 
 export default class PartsListView extends View {
 
@@ -79,17 +80,13 @@ export default class PartsListView extends View {
 
 	    let ascent = glyph.getAscent(renderOpts)
 
-	    if(glyph.glyphName === 'DNACleavageSite') {
-	    console.log(glyph.glyphName, 'suggestedDefaultAspect ' + suggestedDefaultAspect + ', hasFixedAspect ' + hasFixedAspect + ', ascent ' + ascent)
-	    }
+	//     if(glyph.glyphName === 'DNACleavageSite') {
+	//     console.log(glyph.glyphName, 'suggestedDefaultAspect ' + suggestedDefaultAspect + ', hasFixedAspect ' + hasFixedAspect + ', ascent ' + ascent)
+	//     }
 
 
             //var glyphSvgBW = visbolite.render(glyphInfoBW)
-            var glyphSvgColor = svg('g',{
-		transform: Matrix.translation(Vec2.fromXY(0, ascent)).toSVGString()
-		}, [
-		    Glyph.render(glyph.glyphName, renderOpts)
-		])
+            var glyphSvgColor = Glyph.render(glyph.glyphName, renderOpts)
 
 
             return h('div.sf-plv-entry', {
@@ -164,9 +161,14 @@ function mousedownPart(data:any) {
 
     const graph:Graph = new Graph([])
 
-    let component = sbol3(graph).createComponent(app.defaultPrefix, part.shortName)
-    component.addRole(part.soTerm)
-    component.addType(part.typeUri)
+    let component = sbol3(graph).createComponent(app.defaultPrefix, part.glyphName)
+
+    for(let soTerm of part.soTerms) {
+	component.addRole(Prefixes.sequenceOntologyIdentifiersOrg + soTerm)
+    }
+
+//     component.addType(part.typeUri)
+    component.addType(Specifiers.SBOL3.Type.DNA)
 
     //console.log('uri is ' + uri)
 
@@ -185,7 +187,9 @@ function clickSearch(data:any) {
     const browseDialogOpts:BrowseSBHDialogOptions = new BrowseSBHDialogOptions()
 
     browseDialogOpts.query = new SearchQuery()
-    browseDialogOpts.query.addRole(part.soTerm)
+
+    for(let term of part.soTerms)
+	browseDialogOpts.query.addRole(Prefixes.sequenceOntologyIdentifiersOrg + term)
 
     
     const browseDialog:BrowseSBHDialog = new BrowseSBHDialog(app, browseDialogOpts)

@@ -19,7 +19,7 @@ import Droppable from "biocad/droppable/Droppable";
 import SBOLDroppable from "biocad/droppable/SBOLDroppable";
 
 import { Graph, S3Component, S3SubComponent } from "sbolgraph"
-import LayoutEditorContextMenu from "biocad/cad/LayoutEditorContextMenu";
+import LayoutEditorContextMenu from "biocad/cad/layout-editor/LayoutEditorContextMenu";
 import ComponentDepiction from 'biocad/cad/layout/ComponentDepiction';
 
 import assert from 'power-assert'
@@ -229,49 +229,49 @@ export default class LayoutEditorOverlay extends View {
 
                     let sc = hoveringThing as S3SubComponent
 
-                    for(let mapping of sc.mappings) {
+                //     for(let mapping of sc.mappings) {
 
-                        let local = mapping.local
-                        let remote = mapping.remote
+                //         let local = mapping.local
+                //         let remote = mapping.remote
 
-                        if(!local || !remote) {
-                            throw new Error('???')
-                        }
+                //         if(!local || !remote) {
+                //             throw new Error('???')
+                //         }
 
-                        let dOfLocal = layout.getDepictionsForUri(local.uri)[0]
-                        let dOfRemote = layout.getDepictionsForUri(remote.uri)[0]
+                //         let dOfLocal = layout.getDepictionsForUri(local.uri)[0]
+                //         let dOfRemote = layout.getDepictionsForUri(remote.uri)[0]
 
-                        if(dOfLocal && dOfRemote) {
+                //         if(dOfLocal && dOfRemote) {
  
 
-                            /*
-                            mappings.push(svg('line', {
-                                x1: localBBox.center().x,
-                                y1: localBBox.center().y,
-                                x2: remoteBBox.center().x,
-                                y2: remoteBBox.center().y,
-                                stroke: 'red',
-                                'stroke-dasharray': '1 1'
-                                //thickness: '2px'
-                            }))*/
+                //             /*
+                //             mappings.push(svg('line', {
+                //                 x1: localBBox.center().x,
+                //                 y1: localBBox.center().y,
+                //                 x2: remoteBBox.center().x,
+                //                 y2: remoteBBox.center().y,
+                //                 stroke: 'red',
+                //                 'stroke-dasharray': '1 1'
+                //                 //thickness: '2px'
+                //             }))*/
 
-                            for(let d of [ dOfLocal, dOfRemote ]) {
+                //             for(let d of [ dOfLocal, dOfRemote ]) {
 
-                                if (d !== hovering) {
-                                    mappings.push(renderHandles(transform.transformRect(d.absoluteBoundingBox.multiply(layout.gridSize)), true, hovering.isResizeable(), (pos: Vec2, dimensions: string[]) => {
-                                    }, '#ff6961'))
-                                }
+                //                 if (d !== hovering) {
+                //                     mappings.push(renderHandles(transform.transformRect(d.absoluteBoundingBox.multiply(layout.gridSize)), true, hovering.isResizeable(), (pos: Vec2, dimensions: string[]) => {
+                //                     }, '#ff6961'))
+                //                 }
 
-                            }
-
-
-                        } else {
-                            throw new Error('???')
-
-                        }
+                //             }
 
 
-                    }
+                //         } else {
+                //             throw new Error('???')
+
+                //         }
+
+
+                //     }
 
                 }
             }
@@ -572,7 +572,7 @@ export default class LayoutEditorOverlay extends View {
 
         var transform:Matrix = this.layoutEditor.getTransform().invert()
 
-        console.log('Droppable moved ', _offset)
+        // console.log('Droppable moved ', _offset)
 
         const offset = transform.transformVec2(
             _offset.subtract(this.displayRect.topLeft).divide(this.layoutEditor.layout.gridSize)

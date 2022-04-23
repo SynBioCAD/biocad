@@ -1,4 +1,5 @@
 
+import { Predicates } from 'bioterms'
 import { Graph, S3Identified, sbol3, node, triple, rdf } from 'sbolgraph'
 
 
@@ -31,23 +32,44 @@ export default function copySBOL(graphA:Graph, graphB:Graph, newURIPrefix:string
 
         intmGraph = intmGraph.map(t => {
 		let { subject, predicate, object } = t
-		let uri = node.toString(subject)
-		if (uri && uri.startsWith(origUri)) {
-			let subject2 = newUri + uri.slice(origUri.length)
-			identityMap.set(uri, subject2)
-			subject = node.createUriNode(subject2)
+		if(node.isUri(subject)) {
+			let uri = subject.value
+			if (uri && uri.startsWith(origUri)) {
+				let subject2 = newUri + uri.slice(origUri.length)
+				identityMap.set(uri, subject2)
+				subject = node.createUriNode(subject2)
+			}
 		}
-		let uri2 = node.toString(t.object)
-		if (uri2 && uri2.startsWith(origUri)) {
-			let object2 = newUri + uri2.slice(origUri.length)
-			identityMap.set(uri2, object2)
-			object = node.createUriNode(object2)
+		if(node.isUri(object)) {
+			let uri2 = object.value
+			if (uri2 && uri2.startsWith(origUri)) {
+				let object2 = newUri + uri2.slice(origUri.length)
+				identityMap.set(uri2, object2)
+				object = node.createUriNode(object2)
+			}
 		}
 		return triple.fromSPO(subject, predicate, object)
 	})
 
         identityMap.set(origUri, newUri)
     }
+
+
+    /// update displayIds
+    //
+    for(let oldUri of identityMap.keys()) {
+
+	let newUri = identityMap.get(oldUri)!
+
+	let newDisplayId = newUri.split('/').pop()!
+
+	if(intmGraph.hasMatch(node.createUriNode(newUri), node.createUriNode(Predicates.SBOL3.displayId), null)) {
+		intmGraph.removeMatches(node.createUriNode(newUri), node.createUriNode(Predicates.SBOL3.displayId), null)
+		intmGraph.insertTriple(node.createUriNode(newUri), node.createUriNode(Predicates.SBOL3.displayId), node.createStringNode(newDisplayId))
+	}
+    }
+
+
 
     graphB.addAll(intmGraph)
 

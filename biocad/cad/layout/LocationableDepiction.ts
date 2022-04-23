@@ -37,6 +37,8 @@ export default abstract class LocationableDepiction extends Depiction {
         }
 
 
+	// idk if this is even used? because the psvg glyphs provide their
+	// own anchor now
 
         if(this.backbonePlacement === 'mid') {
 

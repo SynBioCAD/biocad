@@ -25,6 +25,7 @@ import IdentifiedChain from '../../IdentifiedChain';
 
 import LocationableDepiction from './LocationableDepiction'
 import Glyph from 'biocad/glyph/Glyph';
+import colors from '../../../data/colors';
 
 export default class ComponentDepiction extends LocationableDepiction {
 
@@ -49,6 +50,30 @@ export default class ComponentDepiction extends LocationableDepiction {
                 return this.renderBlackbox(renderContext)
             }
         }
+    }
+
+    getAnchorY():number {
+
+	if(this.opacity === Opacity.Blackbox
+		&& !CircularBackboneDepiction.ancestorOf(this)
+	)
+	{
+		let gt = this.getGlyphType()
+		let glyph = Glyph.getGlyph(gt)
+		if(glyph) {
+			return glyph.getAscent({
+				color: 'white',
+				lineColor: 'white',
+				backgroundFill: 'none',
+				thickness: 2,
+				width: this.size.x,
+				height: this.size.y,
+				params: {}
+			})
+		}
+	}
+
+	return super.getAnchorY()
     }
 
     private renderWhitebox(renderContext:RenderContext):VNode {
@@ -114,11 +139,11 @@ export default class ComponentDepiction extends LocationableDepiction {
 
             const shortName = shortNameFromTerm(roles[i])
 
-            if(shortName)
+            if(shortName !== 'Unspecified')
                 return shortName
         }
 
-        return 'user-defined'
+        return 'Unspecified'
     }
 
     private renderBlackbox(renderContext:RenderContext):VNode {
@@ -161,7 +186,13 @@ export default class ComponentDepiction extends LocationableDepiction {
         
         return svg('g', attr, [
             Glyph.render(type, {
-                size: size
+		color: colors[type] || 'black',
+		lineColor: 'black',
+		backgroundFill: 'none',
+                thickness: 2,
+		width: size.x,
+		height: size.y,
+		params: {}
             })
         ])
 
@@ -213,10 +244,13 @@ export default class ComponentDepiction extends LocationableDepiction {
 
         return svg('g', [
             Glyph.render(type, {
-                color: 'white',
-                stroke: 'none',
-                size: size,
-                autoApplyScale: true
+		color: colors[type] || 'white',
+		lineColor: 'white',
+		backgroundFill: 'none',
+                thickness: 2,
+		width: size.x,
+		height: size.y,
+		params: {}
             })
         ])
     }

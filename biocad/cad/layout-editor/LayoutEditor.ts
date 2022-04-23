@@ -7,7 +7,7 @@ import { View, SubTree } from 'jfw/ui'
 import { VNode, h, svg } from 'jfw/vdom'
 
 import Depiction from 'biocad/cad/layout/Depiction'
-import LayoutEditorOverlay from "biocad/cad/LayoutEditorOverlay";
+import LayoutEditorOverlay from "biocad/cad/layout-editor/LayoutEditorOverlay";
 import { Rect, Vec2 } from "jfw/geom"
 
 import ScrollbarWidget from '../ScrollbarWidget'

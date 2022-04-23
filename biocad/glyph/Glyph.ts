@@ -125,6 +125,9 @@ export default class Glyph {
     hasFixedAspect():boolean {
 	    return !this.defaultParameters['height']
     }
+
+
+    getActualSizeForRequested
     getFixedAspectHeight(params:any):number {
         let svgNode = this.svgTree._root
 	let paramMap = { ...this.defaultParameters, ...params }
@@ -287,11 +290,18 @@ export default class Glyph {
 	//      console.log(JSON.stringify(attribs, null, 2))
 	//     }
 
+	return svg(node.tag, attribs, node._children.filter(filterNodes).map(renderNode));
+	}
 
-            return svg(node.tag, attribs, node._children.filter(filterNodes).map(renderNode))
-        };
+        let g = svg('g',{
+		// biocad wants glyphs to render with the top at y=0, not the backbone at y=0
+		//
+		transform: Matrix.translation(Vec2.fromXY(0, this.getAscent(opts))).toSVGString()
+		}, 
+			svgNode._children.filter(filterNodes).map(renderNode)
+		)
 
-	return	 svgNode._children.filter(filterNodes).map(renderNode)
+	return g;
 
         function filterNodes(node:any):boolean {
             return node.attrib.class !== 'baseline' && node.attrib.class !== 'bounding-box'
@@ -302,6 +312,16 @@ export default class Glyph {
     }
 
         private calculate(paramMap:any, expression:string) {
+
+		// let vars = expression.matchAll(/[a-zA-Z]+/g)
+
+		// for(let n = 1; n < vars.length; ++ n) {
+		// 	if(paramMap[n] === undefined) {
+		// 		throw new Error('param ' + vars[n] + ' is missing')
+		// 	}
+		// }
+
+
             return expression.replace(/\{(.+?)\}/g, (match, g1) => {
                 return math.evaluate(g1, paramMap)
             })

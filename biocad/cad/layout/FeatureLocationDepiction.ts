@@ -2,13 +2,17 @@
 import Depiction, { Opacity, Orientation }  from './Depiction'
 import LocationableDepiction from './LocationableDepiction'
 
+import colors from '../../../data/colors';
+
 import { VNode, svg } from '@biocad/jfw/vdom'
 
 import { Matrix, Vec2 } from '@biocad/jfw/geom'
 
 import {
+	S3Component,
     S3Identified,
-    S3SequenceFeature
+    S3SequenceFeature,
+    S3SubComponent
 } from "sbolgraph"
 
 
@@ -65,24 +69,32 @@ export default class FeatureLocationDepiction extends LocationableDepiction {
 
     }
 
+    private getGlyphType():string {
+
+        if(! (this.depictionOf instanceof S3SequenceFeature))
+            throw new Error('???')
+
+        const roles = this.depictionOf.roles
+
+        for(var i = 0; i < roles.length; ++ i) {
+
+            const shortName = shortNameFromTerm(roles[i])
+
+            if(shortName !== 'Unspecified')
+                return shortName
+        }
+
+        return 'Unspecified'
+    }
+
     private renderLinear(renderContext:RenderContext):VNode {
 
-        var type = 'user-defined'
+        var type = this.getGlyphType()
 
         if(! (this.depictionOf instanceof S3SequenceFeature))
             throw new Error('???')
 
         const orientation = this.orientation
-
-        const roles = this.depictionOf.roles
-
-        for(let role of roles) {
-
-            const shortName = shortNameFromTerm(role)
-
-            if(shortName)
-                type = shortName
-        }
 
         var offset = this.absoluteOffset.multiply(renderContext.layout.gridSize)
         const size = this.size.multiply(renderContext.layout.gridSize)
@@ -113,14 +125,38 @@ export default class FeatureLocationDepiction extends LocationableDepiction {
             transform: transform.toSVGString()
         }, [
             Glyph.render(type, {
-                size: size
+		color: colors[type] || 'black',
+		lineColor: 'black',
+		backgroundFill: 'none',
+                thickness: 2,
+		width: size.x,
+		height: size.y,
+		params: {}
             })
         ])
 
     }
 
     renderThumb(size:Vec2):VNode {
-        return svg('g', [])
+
+        const orientation = this.orientation
+
+        const definition:S3Component = this.getDefinition()
+
+        const type = this.getGlyphType()
+
+
+        return svg('g', [
+            Glyph.render(type, {
+		color: colors[type] || 'white',
+		lineColor: 'white',
+		backgroundFill: 'none',
+                thickness: 2,
+		width: size.x,
+		height: size.y,
+		params: {}
+            })
+        ])
     }
 }
 
