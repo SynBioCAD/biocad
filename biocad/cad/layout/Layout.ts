@@ -1,4 +1,4 @@
-import { Versioned }  from '@biocad/jfw';
+import { Versioned }  from '@biocad/jfw/util';
 
 import Depiction, { Opacity, Orientation } from './Depiction'
 
@@ -23,10 +23,6 @@ import { Vec2, Rect, LinearRange } from '@biocad/jfw/geom'
 
 import configurateLayout from './configurator/configurate'
 import LabelDepiction from "biocad/cad/layout/LabelDepiction";
-import configurateComponent from "./configurator/configurateComponent";
-import configurateFeatureLocation from "./configurator/configurateFeatureLocation";
-import configurateLabel from "./configurator/configurateLabel";
-import configurateBackbone from "./configurator/configurateBackbone";
 import LayoutPOD from "biocad/cad/layout/LayoutPOD";
 import FeatureLocationDepiction from "biocad/cad/layout/FeatureLocationDepiction";
 
@@ -34,8 +30,6 @@ import assert = require('assert')
 import ComponentDisplayList from "./ComponentDisplayList"
 import { Watcher, S3Identified, S3Constraint, S3Location, S3OrientedLocation, S3Interaction } from "sbolgraph"
 import InteractionDepiction from './InteractionDepiction'
-import BiocadApp from 'biocad/BiocadApp';
-import { App } from '@biocad/jfw';
 import Instruction from 'biocad/cad/layout-instruction/Instruction';
 import InstructionSet from 'biocad/cad/layout-instruction/InstructionSet';
 import IdentifiedChain from '../../IdentifiedChain';
@@ -520,7 +514,8 @@ export default class Layout extends Versioned {
 
     }
 
-    startWatchingGraph(updateContext:App) {
+//     startWatchingGraph(updateContext:App) {
+//     startWatchingGraph(updateContext:App) {
 
         /*
 
@@ -536,7 +531,6 @@ export default class Layout extends Versioned {
             })
         })*/
 
-    }
 
     configurate(instructions:Array<Instruction>) {
 

@@ -1,5 +1,5 @@
 
-FROM node:10.15.0-alpine
+FROM node:16-alpine3.14
 
 RUN apk add git python make g++ yarn
 RUN yarn global add forever webpack webpack-cli
@@ -11,10 +11,9 @@ RUN chown -R node:node /opt/biocad
 USER node
 
 RUN cd /opt/biocad && yarn install
-
-RUN cd /opt/biocad && webpack --config webpack_nodejs_nologs.config.js && ls
+RUN cd /opt/biocad && node build_cli.js && ls
 
 WORKDIR /opt/biocad
-CMD forever ./dist/bundle_cli.js server 8888
+CMD forever bundle_cli.js server 8888
 
 

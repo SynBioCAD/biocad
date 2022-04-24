@@ -10,7 +10,7 @@ import { h, VNode } from "@biocad/jfw/vdom";
 import { click as clickEvent } from '@biocad/jfw/event'
 import { InspectComponentDialogOptions } from "biocad/dialog/InspectComponentDialog"
 import InspectComponentDialog from "biocad/dialog/InspectComponentDialog"
-import { App } from "@biocad/jfw";
+import { App } from "@biocad/jfw/ui";
 
 export class BrowseSBHDialogOptions extends DialogOptions {
 

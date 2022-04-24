@@ -1,7 +1,7 @@
 
 import { TreeView, TreeNode } from '@biocad/jfw/ui';
 import { Dialog } from '@biocad/jfw/ui';
-import { App } from '@biocad/jfw'
+import { App } from '@biocad/jfw/ui'
 
 export default class OntologyTreeView extends TreeView {
 

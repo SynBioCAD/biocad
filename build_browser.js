@@ -48,7 +48,7 @@ build({
 	// 	}
 	// }
     ],
-    outfile: 'bundle.js',
+    outfile: 'bundle_browser.js',
     sourcemap: true,
     loader: {
 	    '.woff': 'dataurl',

@@ -1,5 +1,5 @@
 
-import { GlobalConfig } from '@biocad/jfw'
+import { GlobalConfig } from '@biocad/jfw/ui'
 import BiocadApp from './BiocadApp'
 
 import config from '../configs/default'

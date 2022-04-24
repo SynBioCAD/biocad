@@ -13,7 +13,7 @@ import SequenceEditorBody from './SequenceEditorBody'
 import RenderState from './SequenceEditorRenderState'
 import { VNode } from "@biocad/jfw/vdom"
 import { Dialog } from "@biocad/jfw/ui";
-import { App } from "@biocad/jfw";
+import { App } from "@biocad/jfw/ui";
 import { S3Sequence } from "sbolgraph"
 
 import getReverseComplementSequenceString = require('ve-sequence-utils/src/getReverseComplementSequenceString')

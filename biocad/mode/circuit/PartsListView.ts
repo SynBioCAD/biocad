@@ -5,7 +5,7 @@ import { View } from '@biocad/jfw/ui'
 import { h, svg, VNode} from '@biocad/jfw/vdom'
 import { click as clickEvent, contextMenu as contextMenuEvent } from '@biocad/jfw/event'
 
-import { App } from "@biocad/jfw";
+import { App } from "@biocad/jfw/ui";
 import BiocadApp from "biocad/BiocadApp";
 
 import SBOLDroppable from "biocad/droppable/SBOLDroppable";

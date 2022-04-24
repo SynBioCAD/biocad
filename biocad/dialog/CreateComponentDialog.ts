@@ -1,4 +1,4 @@
-import { App } from '@biocad/jfw';
+import { App } from '@biocad/jfw/ui';
 
 import { Dialog, DialogOptions } from '@biocad/jfw/ui';
 import { h } from '@biocad/jfw/vdom'

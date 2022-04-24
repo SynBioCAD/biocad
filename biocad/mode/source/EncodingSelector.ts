@@ -1,7 +1,7 @@
 
 import { VNode, h } from '@biocad/jfw/vdom'
 import { View } from '@biocad/jfw/ui'
-import { App } from '@biocad/jfw'
+import { App } from '@biocad/jfw/ui'
 import { click as clickEvent } from '@biocad/jfw/event'
 
 export enum Encoding {

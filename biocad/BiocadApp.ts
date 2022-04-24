@@ -1,5 +1,5 @@
 
-import { App } from '@biocad/jfw'
+import { App } from '@biocad/jfw/ui'
 
 import BiocadTopbar from './topbar/BiocadTopbar'
 
@@ -19,7 +19,7 @@ import { VNode, h, create } from "@biocad/jfw/vdom";
 import { Mode } from "@biocad/jfw/ui";
 import Headless from "biocad/Headless";
 import InitUData from 'biocad/InitUData';
-import { GlobalConfig } from '@biocad/jfw';
+import { GlobalConfig } from '@biocad/jfw/ui';
 import PopupMessageDialog from './dialog/PopupMessageDialog';
 import { DialogOptions } from '@biocad/jfw/ui';
 

@@ -156,9 +156,6 @@ export default class ComponentDepiction extends LocationableDepiction {
 
         const orientation = this.orientation
 
-
-        const definition:S3Component = this.getDefinition()
-
         const type = this.getGlyphType()
 
         var offset = this.absoluteOffset.multiply(renderContext.layout.gridSize)
