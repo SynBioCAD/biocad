@@ -36,8 +36,13 @@ export default class SourceView extends View {
 
         const graph = app.graph
 
-        let sbol2Graph = new SBOL2GraphView(new Graph())
+	try {
+        var sbol2Graph = new SBOL2GraphView(new Graph())
         await sbol2Graph.loadString(sbol3(graph).serializeXML())
+	var sbol2xml:any = sbol2Graph.serializeXML()
+	} catch(e) {
+		var sbol2xml = e.toString()
+	}
 
         switch(this.encodingSelector.currentEncoding) {
             case Encoding.SBOL3:
@@ -45,7 +50,7 @@ export default class SourceView extends View {
                 this.editorMode = 'xml'
                 break
             case Encoding.SBOL2:
-                this.source = sbol2Graph.serializeXML()
+                this.source = sbol2xml
                 this.editorMode = 'xml'
                 break
             case Encoding.Graph:

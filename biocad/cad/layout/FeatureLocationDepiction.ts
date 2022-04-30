@@ -139,10 +139,6 @@ export default class FeatureLocationDepiction extends LocationableDepiction {
 
     renderThumb(size:Vec2):VNode {
 
-        const orientation = this.orientation
-
-        const definition:S3Component = this.getDefinition()
-
         const type = this.getGlyphType()
 
 

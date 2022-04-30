@@ -1,4 +1,4 @@
-SynBioCAD is an open-source, Web-based computer aided design (CAD) tool for [synthetic biology](http://www.synbioproject.org/topics/synbio101/definition/) built on the [SBOL standard](http://sbolstandard.org/).
+SynBioCAD is an open-source, Web-based computer aided design (CAD) tool for [synthetic biology](http://www.synbioproject.org/topics/synbio101/definition/) built on the [SBOL standard](http://sbolstandard.org/) and [Parametric SBOLv](https://github.com/jamesscottbrown/parametric-sbolv).
 
 Things you can do so far:
 

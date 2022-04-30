@@ -24,7 +24,7 @@ export default class CircuitView extends LayoutEditorView {
         layout.syncAllDepictions(5)
         layout.configurate([])
         layout.size = layout.getBoundingSize().add(Vec2.fromXY(2, 2)).max(layout.size)
-        layout.startWatchingGraph(this.app)
+        // layout.startWatchingGraph(this.app)
 
         if(this.layoutEditor)
             this.layoutEditor.cleanup()

@@ -26,7 +26,7 @@ export default class ComponentBrowser extends View {
         this.tree.setEditable(true)
 
         this.tree.onSelect.listen((uri:string) => {
-            //fn(new S3Component(app.graph, uri))
+            this.onSelect.fire(new S3Component(sbol3(app.graph), uri))
         })
 
         this.tree.onCreate.listen((uri:string) => {
