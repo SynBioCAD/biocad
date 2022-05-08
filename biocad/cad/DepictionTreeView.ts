@@ -14,7 +14,7 @@ export default class DepictionTreeView extends TreeView {
 
         super(app, dialog)
 
-        this.setNodeFetcher(():TreeNode[] => {
+        this.setNodeFetcher(():Promise<TreeNode[]> => {
 
             let nodes:TreeNode[] = []
 
@@ -28,7 +28,7 @@ export default class DepictionTreeView extends TreeView {
 
             }
 
-            return nodes
+            return Promise.resolve(nodes)
 
         })
 

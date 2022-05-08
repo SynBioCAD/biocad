@@ -326,8 +326,8 @@ export default class SequenceEditorOverlay extends View {
 
             const [ thing, rect ] = bbox
 
-            console.dir(rect)
-            console.dir(o)
+        //     console.dir(rect)
+        //     console.dir(o)
 
             if(rect.intersectsPoint(o)) {
                 

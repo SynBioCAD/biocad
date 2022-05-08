@@ -5,6 +5,7 @@ export default {
 	"biocad.feature.mode.setup": true,
 	"biocad.feature.mode.source": true,
 	"biocad.feature.mode.library": false,
+	"biocad.feature.mode.repository": true,
 	"biocad.feature.mode.circuit": true,
 	"biocad.feature.mode.sequence": true,
 	"biocad.feature.mode.simulator": false,

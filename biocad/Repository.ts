@@ -39,7 +39,7 @@ export class SearchResult {
 
 }
 
-export default class Repository {
+export default class Repo {
 
     url:string
 

@@ -25,6 +25,8 @@ build({
 	    Buffer: 'Buffer'
     },
 
+    watch: true,
+
 
     plugins: [
 	plugin(stdLibBrowser),

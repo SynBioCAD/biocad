@@ -193,8 +193,6 @@ export default class SequenceEditorRenderState {
             this.allLinesBBox = new Rect()
         }
 
-
-
     }
 
     offsetToElementOffset(offset:Vec2, bWithMargins:boolean):number {
@@ -283,7 +281,22 @@ export default class SequenceEditorRenderState {
         )
     }
 
+
+    totalSize() {
+
+	let everythingBBox = this.allLinesBBox
+
+	console.log('argaaa')
+	console.dir(this.annoLabelBBoxes)
+
+	for(let alb of this.annoLabelBBoxes) {
+		everythingBBox = everythingBBox.surround(alb[1])
+	}
+
+	return everythingBBox.size()
+	}
 }
+
 
 function getAnnotatedRanges(component:S3Component) {
 

@@ -34,13 +34,13 @@ export default class ComponentBrowser extends View {
         })
 
 
-        const fetchTreeNodes = ():TreeNode[] => {
+        const fetchTreeNodes = async ():Promise<TreeNode[]> => {
 
             const graph:Graph = app.graph
 
             const nodes = []
 
-            return sbol3(graph).rootComponents.filter(this.filter).map(S3ComponentToNode)
+            return Promise.resolve( sbol3(graph).rootComponents.filter(this.filter).map(S3ComponentToNode) )
 
             function S3ComponentToNode(component:S3Component):TreeNode {
 

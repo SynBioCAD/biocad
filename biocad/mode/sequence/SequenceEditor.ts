@@ -124,7 +124,12 @@ export default class SequenceEditor extends View {
         if(this.showTopToolbar) {
             elems.unshift( this.toolbar.render())
         }
+
         return h('div.sf-sequence-editor', {
+		style: {
+			width: this.currentRenderState.totalSize().x + 'px',
+			height: this.currentRenderState.totalSize().y + 'px',
+		}
         }, elems)
     }
 

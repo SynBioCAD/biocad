@@ -10,6 +10,7 @@ import CircuitMode from './mode/circuit/CircuitMode'
 import SequenceMode from './mode/sequence/SequenceMode'
 import SimulatorMode from './mode/simulator/SimulatorMode'
 import LoadSaveMode from './mode/loadsave/LoadSaveMode'
+import RepoMode from './mode/repository/RepoMode'
 
 import { Hook } from '@biocad/jfw/util'
 
@@ -105,11 +106,14 @@ export default class BiocadApp extends App
             if(GlobalConfig.get('biocad.feature.mode.source'))
                 modes.push(new SourceMode(this, false))
 
+            if(GlobalConfig.get('biocad.feature.mode.repository'))
+                modes.push(new RepoMode(this, true))
+
             if(GlobalConfig.get('biocad.feature.mode.library'))
                 modes.push(new LibraryMode(this, false))
 
             if(GlobalConfig.get('biocad.feature.mode.circuit'))
-                modes.push(new CircuitMode(this, true))
+                modes.push(new CircuitMode(this, false))
 
             if(GlobalConfig.get('biocad.feature.mode.sequence'))
                 modes.push(new SequenceMode(this, false))
