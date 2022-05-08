@@ -188,13 +188,13 @@ export default class LoadSaveView extends View {
                     'ev-click': clickEvent(clickTakePicture, { view: this })
                 }, [
                     h('span.fa.fa-image', []),
-                    h('span.icon-text', 'Take a Picture')
+                    h('span.icon-text.jfw-no-select', 'Take a Picture')
                 ]),
                 h('br'),
                 h('a', {
                 }, [
                     h('span.fa.fa-plus', []),
-                    h('span.icon-text', ' Create New')
+                    h('span.icon-text.jfw-no-select', ' Create New')
                 ]),
                 h('br'),
                 h('a', {
@@ -205,7 +205,7 @@ export default class LoadSaveView extends View {
                     'ev-click': clickEvent(clickImport, { view: this })
                 }, [
                     h('span.fa.fa-folder-open', []),
-                    h('span.icon-text', ' Import')
+                    h('span.icon-text.jfw-no-select', ' Import')
                 ]),
                 h('br'),
                 h('a' + (this.section === 'export' ? '.active' : ''), {
@@ -216,7 +216,7 @@ export default class LoadSaveView extends View {
                     'ev-click': clickEvent(clickExport, { view: this })
                 }, [
                     h('span.fa.fa-file-export', []),
-                    h('span.icon-text', ' Export')
+                    h('span.icon-text.jfw-no-select', ' Export')
                 ])
             ]),
             h('div.jfw-flow-grow', {

@@ -8,12 +8,11 @@ import { h, VNode, svg } from 'jfw/vdom'
 
 import LayoutEditorToolbar from './LayoutEditorToolbar'
 
-import LayoutEditor from 'biocad/cad/LayoutEditor'
-
 import { Graph } from "sbolgraph"
 import CircuitViewLeftSidebar from "biocad/mode/circuit/CircuitViewLeftSidebar";
 import CircuitViewRightSidebar from "biocad/mode/circuit/CircuitViewRightSidebar";
-import GlobalConfig from 'jfw/GlobalConfig';
+import { GlobalConfig } from '@biocad/jfw/ui'
+import LayoutEditor from './LayoutEditor';
 
 export default abstract class LayoutEditorView extends View {
 

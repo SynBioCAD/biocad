@@ -140,9 +140,9 @@ export default class BiocadApp extends App
         }*/
     }
 
-    loadGraph(graph:Graph):void {
+    loadGraph(graph:Graph, asCopy?:boolean):void {
 
-        this.graph = graph
+        this.graph = asCopy === true ? graph.clone() : graph
 
         this.onLoadGraph.fire(graph)
 

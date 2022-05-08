@@ -286,9 +286,6 @@ export default class SequenceEditorRenderState {
 
 	let everythingBBox = this.allLinesBBox
 
-	console.log('argaaa')
-	console.dir(this.annoLabelBBoxes)
-
 	for(let alb of this.annoLabelBBoxes) {
 		everythingBBox = everythingBBox.surround(alb[1])
 	}

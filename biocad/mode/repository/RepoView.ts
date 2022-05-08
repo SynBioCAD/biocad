@@ -5,8 +5,6 @@ import BiocadApp from "biocad/BiocadApp";
 
 import { search, SearchResult } from 'sbh-proxy-client'
 
-import SVGScrollerWidget from './SVGScrollerWidget'
-import RepoViewPartScroller from "biocad/mode/repository/RepoViewPartScroller";
 import { Graph, S3Collection, S3Component, S3Identified, sbol2, sbol3, SBOLConverter } from "sbolgraph";
 import getNameFromRole from "../../util/getNameFromRole";
 import RepoCollectionMembersView, { MemberType } from "./RepoCollectionMembersView";
@@ -14,6 +12,11 @@ import { Types } from "bioterms";
 import RepoComponentVisualView from "./RepoComponentVisualView";
 import RepoComponentSeqView from "./RepoComponentSeqView";
 import SequenceEditor from "../sequence/SequenceEditor";
+
+import { click as clickEvent } from '@biocad/jfw/event'
+import assert from "assert";
+import SBOLDroppable from "../../droppable/SBOLDroppable";
+import CircuitMode from "../circuit/CircuitMode";
 
 
 /* Shows a top level from a repo
@@ -25,7 +28,9 @@ could be a collection or a component etc
 export default class RepoView extends View {
 
 	loading:boolean
+
 	g:Graph|undefined
+	uri:string
 
 	tabs:TabbedView
 
@@ -45,7 +50,33 @@ export default class RepoView extends View {
 		return h('div.loader')
 	}
 
-	let tl = sbol3(this.g!).topLevels[0]
+	let tl = sbol3(this.g!).uriToFacade(this.uri)
+
+	let actions:any = []
+
+	if(tl instanceof S3Component) {
+
+		actions.push(h('div.sf-biglighticons', {
+			style: {
+				position: 'absolute',
+				top: 0,
+				right: 0
+			}
+            }, [
+                h('a', {
+			'ev-click': clickEvent(clickOpen, { view: this })
+                }, [
+                    h('span.fa.fa-folder-open', []),
+                    h('span.icon-text.jfw-no-select', ' Open')
+                ]),
+                h('a', {
+			'ev-click': clickEvent(clickAdd, { view: this })
+                }, [
+                    h('span.fa.fa-plus', []),
+                    h('span.icon-text.jfw-no-select', ' Add to Design')
+                ])
+	    ]))
+	}
 
         return h('div', {
 		style: {
@@ -56,12 +87,17 @@ export default class RepoView extends View {
 			flex: 1
 		}
 	},[
-		h('div', [
+		h('div', {
+			style: {
+				position: 'relative'
+			}
+		},[
 				h('h1', tl.displayName),
 				h('p', [
 					h('a', { href: tl.uri, target: '_blank' }, h('code', tl.uri))
 				]),
 				h('p', tl.description),
+				...actions
 			]),
 		 this.tabs.render()
 			])
@@ -77,6 +113,8 @@ export default class RepoView extends View {
     }
 
     async load(uri:string) {
+
+	this.uri = uri
 
 	this.loading = true
 	this.update()
@@ -117,7 +155,7 @@ export default class RepoView extends View {
 			runCount(Types.SBOL2.Collection),
 		])
 
-		this.tabs = new TabbedView(this.app)
+		this.tabs = new TabbedView(this.app, {})
 
 		let tabs:any = []
 
@@ -200,8 +238,30 @@ export default class RepoView extends View {
 
     }
 
+    clickOpen() {
 
+	assert(this.g)
 
+	let app = this.app as BiocadApp
+
+	app.loadGraph(this.g, true)
+	app.setMode(app.modes.filter((mode) => mode instanceof CircuitMode)[0])
+
+    }
+
+    clickAdd() {
+
+	assert(this.g)
+
+	let app = this.app as BiocadApp
+
+	app.setMode(app.modes.filter((mode) => mode instanceof CircuitMode)[0])
+
+	;(this.app as BiocadApp).dropOverlay.startDropping(
+		new SBOLDroppable(this.app, this.g, [this.uri])
+	)
+
+    }
 }
 
 
@@ -245,4 +305,12 @@ function CountQuery(uri:string, type:string) {
 	}
     `
 
+}
+
+function clickOpen({view}) {
+	view.clickOpen()
+}
+
+function clickAdd({view}) {
+	view.clickAdd()
 }
