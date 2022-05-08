@@ -1,8 +1,6 @@
-
-import View from "jfw/ui/View";
-import TreeView, { TreeNode } from "jfw/ui/TreeView";
+import { View, TreeView, TreeNode } from "@biocad/jfw/ui";
 import BiocadApp from "biocad/BiocadApp";
-import { VNode } from "jfw/vdom";
+import { VNode } from "@biocad/jfw/vdom";
 
 export default class LibraryTree extends View {
 

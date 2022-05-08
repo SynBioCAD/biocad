@@ -1,6 +1,6 @@
 
-import { VNode } from "jfw/vdom";
-import Vec2 from "jfw/geom/Vec2";
+import { VNode } from "@biocad/jfw/vdom";
+import { Vec2 } from "@biocad/jfw/geom";
 
 export default abstract class Droppable {
 

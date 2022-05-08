@@ -1,15 +1,15 @@
 
 
-import { h, main, diff, patch, create, VNode } from 'jfw/vdom'
+import { h, main, diff, patch, create, VNode } from '@biocad/jfw/vdom'
 
 import RenderContext from './RenderContext'
-import { Vec2, Rect } from "jfw/geom";
+import { Vec2, Rect } from "@biocad/jfw/geom";
 
-import { drag as dragHandler } from 'jfw/event'
-import Layout from "biocad/cad/Layout";
+import { drag as dragHandler } from '@biocad/jfw/event'
+import Layout from "biocad/cad/layout/Layout";
 import BiocadApp from "biocad/BiocadApp";
 
-import assert from 'power-assert'
+import assert = require('assert')
 
 const scrollbarThickness = 16
 

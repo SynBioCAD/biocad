@@ -1,10 +1,7 @@
 
-import { App } from 'jfw'
+import { App } from '@biocad/jfw/ui'
 
-import TestDialog from './dialog/TestDialog'
 import BiocadTopbar from './topbar/BiocadTopbar'
-
-import configurate from './configurator/configurate'
 
 import SetupMode from './mode/setup/SetupMode'
 import LibraryMode from './mode/library/LibraryMode'
@@ -13,24 +10,24 @@ import CircuitMode from './mode/circuit/CircuitMode'
 import SequenceMode from './mode/sequence/SequenceMode'
 import SimulatorMode from './mode/simulator/SimulatorMode'
 import LoadSaveMode from './mode/loadsave/LoadSaveMode'
+import RepoMode from './mode/repository/RepoMode'
 
-import { Hook } from 'jfw/util'
+import { Hook } from '@biocad/jfw/util'
 
 import DropOverlay from './DropOverlay'
-import { VNode, h, create } from "jfw/vdom";
+import { VNode, h, create } from "@biocad/jfw/vdom";
 
-import Mode from "jfw/ui/Mode";
-import HeadlessMode from "biocad/mode/headless/HeadlessMode";
-import Layout from "biocad/cad/Layout";
+import { Mode } from "@biocad/jfw/ui";
 import Headless from "biocad/Headless";
-import UData from 'jfw/udata/UData';
 import InitUData from 'biocad/InitUData';
-import GlobalConfig from 'jfw/GlobalConfig';
+import { GlobalConfig } from '@biocad/jfw/ui';
 import PopupMessageDialog from './dialog/PopupMessageDialog';
-import { DialogOptions } from 'jfw/ui/dialog';
+import { DialogOptions } from '@biocad/jfw/ui';
 
 import uuid = require('uuid')
 import { Graph, sbol3 } from 'sbolgraph'
+
+import '../less/biocad.less'
 
 console.log('BiocadApp.ts')
 
@@ -109,11 +106,14 @@ export default class BiocadApp extends App
             if(GlobalConfig.get('biocad.feature.mode.source'))
                 modes.push(new SourceMode(this, false))
 
+            if(GlobalConfig.get('biocad.feature.mode.repository'))
+                modes.push(new RepoMode(this, true))
+
             if(GlobalConfig.get('biocad.feature.mode.library'))
                 modes.push(new LibraryMode(this, false))
 
             if(GlobalConfig.get('biocad.feature.mode.circuit'))
-                modes.push(new CircuitMode(this, true))
+                modes.push(new CircuitMode(this, false))
 
             if(GlobalConfig.get('biocad.feature.mode.sequence'))
                 modes.push(new SequenceMode(this, false))
@@ -155,8 +155,8 @@ export default class BiocadApp extends App
 
 
         console.time('save state')
-        console.dir(this.graph.graph.toArray())
-        this.udata.set('graph', this.graph.graph.toArray())
+        console.dir(this.graph.toArray())
+        this.udata.set('graph', this.graph.toArray())
         console.timeEnd('save state')
 
     }

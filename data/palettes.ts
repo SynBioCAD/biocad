@@ -8,21 +8,28 @@ export default [
                 "name": "Transcription",
                 "description": "Fundamental transcription machinery such as promoters, RBSs, CDSs and terminators.",
                 "members": [
-                    "cds",
-                    "rbs",
-                    "promoter",
-                    "operator",
-                    "terminator"
+                    "Promoter",
+                    "RibosomeEntrySite",
+                    "CDS",
+                    "Terminator",
+                    "Insulator",
+                    "NonCodingRNA",
+                    "Operator"
                 ]
             },
             {
                 "id": "biocad.palette.sbolv",
-                "name": "Restriction",
+                "name": "Recombination",
                 "icon": "scissors",
-                "description": "Sites for recognition of restriction endonucleases.",
+                "description": "",
                 "members": [
-                    "restriction_site",
-                    "blunt_restriction_site",
+                    "BluntRestrictionSite",
+                    "DNACleavageSite",
+                    "OverhangSite3",
+                    "OverhangSite5",
+                    "RecombinationSite",
+                    "StickyEndRestrictionEnzymeCleavageSite3",
+                    "StickyEndRestrictionEnzymeCleavageSite5"
                 ]
             },
             {
@@ -37,7 +44,29 @@ export default [
                 "name": "Molecules",
                 "description": "Molecular species such as small molecules, complexes, macromolecules.",
                 "members": [
-                    "protein"
+                    "Aptamer"
+                ]
+            },
+            {
+                "id": "biocad.palette.other",
+                "name": "Other",
+                "description": "Other parts",
+                "members": [
+                    "AssemblyScar",
+                    "Composite",
+                    "DNALocation",
+                    "DNAStabilityElement",
+                    "EngineeredRegion",
+                    "NoGlyph",
+                    "NucleicAcidOneStrand",
+                    "OmittedDetail",
+                    "OriginOfReplication",
+                    "OriginOfTransfer",
+                    "PolyASite",
+                    "Primer",
+                    "Signature",
+                    "Spacer",
+                    "Unspecified"
                 ]
             }
         ]
@@ -50,18 +79,6 @@ export default [
                 "name": "protlang",
                 "description": "protlang stuff",
                 "members": [
-                    "linker",
-                    "stability-element",
-                    "localization-tag-reversible",
-                    "localization-tag-irreversible",
-                    "covalent-modification",
-                    "catalytic-site",
-                    "binding-site",
-                    "biochemical-tag",
-                    "protein-cleavage-site",
-                    "degradation-tag",
-                    "defined-region",
-                    "membrane-static"
                 ]
             }
         ]

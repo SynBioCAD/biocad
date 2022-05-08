@@ -1,5 +1,5 @@
 
-import { Hook } from "jfw/util";
+import { Hook } from "@biocad/jfw/util";
 
 const svgNS = 'http://www.w3.org/2000/svg'
 

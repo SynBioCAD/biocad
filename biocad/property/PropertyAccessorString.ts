@@ -15,8 +15,8 @@ export default class PropertyAccessorSimple extends PropertyAccessor<string> {
     }
 
     set(graph:Graph, value:string) {
-        graph.removeMatches(this.object, this.predicate, null)
-        graph.insert(this.object, this.predicate, node.createStringNode(value))
+        graph.removeMatches(node.createUriNode(this.object), this.predicate, null)
+        graph.insertTriple(node.createUriNode(this.object), this.predicate, node.createStringNode(value))
 
         if(this.onChange)
             this.onChange()
@@ -24,7 +24,7 @@ export default class PropertyAccessorSimple extends PropertyAccessor<string> {
 
     get(graph:Graph):string {
         let value:string|undefined = triple.objectString(
-            graph.matchOne(this.object, this.predicate, null)
+            graph.matchOne(node.createUriNode(this.object), this.predicate, null)
         )
         return value || ''
     }

@@ -1,6 +1,6 @@
 
-import { Dialog, DialogOptions } from 'jfw/ui/dialog'
-import { h } from 'jfw/vdom'
+import { Dialog, DialogOptions } from '@biocad/jfw/ui';
+import { h } from '@biocad/jfw/vdom'
 
 export default class PopupMessageDialog extends Dialog {
 

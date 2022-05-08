@@ -1,17 +1,17 @@
 
-import Dialog from 'jfw/ui/dialog/Dialog'
+import { Dialog } from '@biocad/jfw/ui';
 
 import extend = require('xtend')
 
-import { h, VNode } from 'jfw/vdom'
+import { h, VNode } from '@biocad/jfw/vdom'
 import BiocadApp from "biocad/BiocadApp";
 
-import TextInput from 'jfw/ui/form-control/TextInput'
-import Combo from 'jfw/ui/form-control/Combo'
+import { TextInput } from '@biocad/jfw/ui';
+import { Combo } from '@biocad/jfw/ui';
 
 import roles from 'data/roles'
 import { Specifiers } from "bioterms";
-import Button from "jfw/ui/form-control/Button";
+import Button from "@biocad/jfw/ui";
 import { S3Sequence, S3Component } from "sbolgraph"
 
 export default class CreateAnnotationDialog extends Dialog {

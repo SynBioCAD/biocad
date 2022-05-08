@@ -1,5 +1,6 @@
 bundle_*
 *_bundle
+bundle.js
 *.log
 node_modules
 dist/css

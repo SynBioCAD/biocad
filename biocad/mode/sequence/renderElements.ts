@@ -1,7 +1,7 @@
 
 
-import { svg, VNode } from 'jfw/vdom'
-import { Matrix, Vec2 } from 'jfw/geom'
+import { svg, VNode } from '@biocad/jfw/vdom'
+import { Matrix, Vec2 } from '@biocad/jfw/geom'
 import SequenceEditorLine from "biocad/mode/sequence/SequenceEditorLine";
 
 export default function renderElements(sequenceEditor) {

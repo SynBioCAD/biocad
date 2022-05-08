@@ -78,7 +78,7 @@ export default class CytoscapeRDFWidget {
             }
         }
 
-        let triples = this.graph.graph._graph
+        let triples = this.graph.toArray()
 
         console.log(triples.length + ' triples')
 
@@ -86,20 +86,20 @@ export default class CytoscapeRDFWidget {
 
             console.log(JSON.stringify(triple))
 
-            createSubject(triple.subject.nominalValue)
+            createSubject(triple.subject.value)
 
             let id = 'edge' + (++n)
 
-            if(triple.object.interfaceName === 'NamedNode') {
-                createSubject(triple.object.nominalValue)
+            if(triple.object.termType === 'NamedNode') {
+                createSubject(triple.object.value)
 
                 elems.push({
                     group: 'edges',
                     data: {
                         id: id,
-                        name: nameFromURI(triple.predicate.nominalValue),
-                        source: triple.subject.nominalValue,
-                        target: triple.object.nominalValue
+                        name: nameFromURI(triple.predicate.value),
+                        source: triple.subject.value,
+                        target: triple.object.value
                     }
                 })
             } else {
@@ -110,7 +110,7 @@ export default class CytoscapeRDFWidget {
                     group: 'nodes',
                     data: {
                         id: targId,
-                        name: nameFromURI(triple.object.nominalValue)
+                        name: nameFromURI(triple.object.value)
                     }
                 })
 
@@ -118,8 +118,8 @@ export default class CytoscapeRDFWidget {
                     group: 'edges',
                     data: {
                         id: id,
-                        name: nameFromURI(triple.predicate.nominalValue),
-                        source: triple.subject.nominalValue,
+                        name: nameFromURI(triple.predicate.value),
+                        source: triple.subject.value,
                         target: targId
                     },
                 })

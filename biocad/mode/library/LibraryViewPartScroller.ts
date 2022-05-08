@@ -1,14 +1,14 @@
 
 
-import View from "jfw/ui/View";
-import { VNode, h, create, svg } from "jfw/vdom";
+import { View } from "@biocad/jfw/ui";
+import { VNode, h, create, svg } from "@biocad/jfw/vdom";
 import BiocadApp from "biocad/BiocadApp";
 
 import { search, SearchResult } from 'sbh-proxy-client'
 
 import SVGScrollerWidget, { SVGScrollerEntry } from './SVGScrollerWidget'
 import LibraryView from "biocad/mode/library/LibraryView";
-import { Hook } from "jfw/util";
+import { Hook } from "@biocad/jfw/util";
 
 export default class LibraryViewPartScroller extends View {
 

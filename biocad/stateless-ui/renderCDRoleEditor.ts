@@ -1,13 +1,10 @@
 
 
-import Combo from 'jfw/ui/form-control/Combo'
-
-import { Specifiers } from 'bioterms'
-import { h, VNode } from "jfw/vdom";
+import { h, VNode } from "@biocad/jfw/vdom";
 
 import { S3Component } from "sbolgraph"
 
-import { change as changeEvent } from 'jfw/event'
+import { change as changeEvent } from '@biocad/jfw/event'
 
 import cdRoles from 'data/roles'
 

@@ -1,12 +1,12 @@
 
-import  { h } from 'jfw/vdom'
+import  { h } from '@biocad/jfw/vdom'
 
-import { View, TreeView } from 'jfw/ui'
+import { View, TreeView } from '@biocad/jfw/ui'
 import BiocadApp from "biocad/BiocadApp";
 import { S3Component, Graph, sbol3 } from "sbolgraph";
-import { TreeNode } from 'jfw/ui/TreeView';
+import { TreeNode } from '@biocad/jfw/ui';
 
-import { Hook } from 'jfw/util'
+import { Hook } from '@biocad/jfw/util'
 
 export default class ComponentBrowser extends View {
 
@@ -26,7 +26,7 @@ export default class ComponentBrowser extends View {
         this.tree.setEditable(true)
 
         this.tree.onSelect.listen((uri:string) => {
-            //fn(new S3Component(app.graph, uri))
+            this.onSelect.fire(new S3Component(sbol3(app.graph), uri))
         })
 
         this.tree.onCreate.listen((uri:string) => {
@@ -34,13 +34,13 @@ export default class ComponentBrowser extends View {
         })
 
 
-        const fetchTreeNodes = ():TreeNode[] => {
+        const fetchTreeNodes = async ():Promise<TreeNode[]> => {
 
             const graph:Graph = app.graph
 
             const nodes = []
 
-            return sbol3(graph).rootComponents.filter(this.filter).map(S3ComponentToNode)
+            return Promise.resolve( sbol3(graph).rootComponents.filter(this.filter).map(S3ComponentToNode) )
 
             function S3ComponentToNode(component:S3Component):TreeNode {
 

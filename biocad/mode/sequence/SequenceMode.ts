@@ -3,8 +3,8 @@ import App from '../../BiocadApp'
 
 import SequenceView from './SequenceView'
 import SequenceViewSidebar from './SequenceViewSidebar'
-import Mode from 'jfw/ui/Mode'
-import { VNode, h } from "jfw/vdom";
+import { Mode } from '@biocad/jfw/ui';
+import { VNode, h } from "@biocad/jfw/vdom";
 
 export default class SequenceViewMode extends Mode {
 

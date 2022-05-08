@@ -1,14 +1,14 @@
-import { View } from 'jfw/ui'
-import { VNode, h } from 'jfw/vdom'
-import { Vec2 } from 'jfw/geom'
+import { View } from '@biocad/jfw/ui'
+import { VNode, h } from '@biocad/jfw/vdom'
+import { Vec2 } from '@biocad/jfw/geom'
 
 import LayoutThumbnail from 'biocad/cad/LayoutThumbnail';
 import BiocadApp from '../../BiocadApp';
-import Layout from '../../cad/Layout';
+import Layout from '../../cad/layout/Layout';
 
 import fileDialog = require('file-dialog')
 
-import { click as clickEvent } from 'jfw/event'
+import { click as clickEvent } from '@biocad/jfw/event'
 import { Graph, SBOL2GraphView, SBOL3GraphView, sbol3 } from 'sbolgraph';
 
 import ImageRenderer, { ImageFormat } from 'biocad/cad/ImageRenderer'
@@ -33,7 +33,7 @@ export default class LoadSaveView extends View {
 
         let graph = app.graph
 
-        if(graph.graph.toArray().length > 0) {
+        if(graph.toArray().length > 0) {
 
             let circuitMode = app.getCircuitMode()
 

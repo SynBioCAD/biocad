@@ -1,12 +1,10 @@
 
 
-import { Sidebar, SidebarDivision, SidebarSection } from 'jfw/ui'
+import { Sidebar, SidebarDivision, SidebarSection } from '@biocad/jfw/ui'
 import PartsListView from './PartsListView'
-import { Specifiers } from "bioterms";
-import GlobalConfig from 'jfw/GlobalConfig';
 
 import palettes from 'data/palettes'
-import parts from 'data/parts';
+import Glyph from 'biocad/glyph/Glyph'
 
 export default class CircuitViewLeftSidebar extends Sidebar {
 
@@ -28,11 +26,11 @@ export default class CircuitViewLeftSidebar extends Sidebar {
 
             for(let palette of _division.sections) {
 
-                let p = palette.members.map((member) => {
+                let p = (palette.members as string[]).map((member) => {
 
-                    for(let part of parts) {
-                        if(part.shortName === member) {
-                            return part
+                    for(let glyph of Glyph.glyphs) {
+                        if(glyph.glyphName === member) {
+                            return glyph
                         }
                     }
 

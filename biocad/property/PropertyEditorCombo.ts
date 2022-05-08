@@ -1,8 +1,8 @@
 
-import { VNode, h } from 'jfw/vdom'
+import { VNode, h } from '@biocad/jfw/vdom'
 import { Graph, triple, node } from "sbolgraph";
 import PropertyEditor from "./PropertyEditor";
-import { change as changeEvent } from 'jfw/event'
+import { change as changeEvent } from '@biocad/jfw/event'
 import PropertyAccessor from './PropertyAccessor';
 
 export default class PropertyEditorCombo extends PropertyEditor {

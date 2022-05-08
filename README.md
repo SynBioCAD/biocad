@@ -1,10 +1,10 @@
-SynBioCAD is an open-source, Web-based computer aided design (CAD) tool for [synthetic biology](http://www.synbioproject.org/topics/synbio101/definition/) built on the [SBOL standard](http://sbolstandard.org/).
+SynBioCAD is an open-source, Web-based computer aided design (CAD) tool for [synthetic biology](http://www.synbioproject.org/topics/synbio101/definition/) built on the [SBOL standard](http://sbolstandard.org/) and [Parametric SBOLv](https://github.com/jamesscottbrown/parametric-sbolv).
 
 <img src="screenshot.png" />
 
 Things you can do so far:
 
-* Visualization of SBOL2 designs inc. ModuleDefinitions and interactions
+* Visualization of SBOL3 designs
 * Drag and drop modification of designs
 * Sequence editing
 
@@ -14,17 +14,17 @@ Many more features are planned.  Watch this space!
 
 SynBioCAD can run in several different configurations.
 
-## Local webapp
-
-    yarn
-    node dev-server.js ./webpack_browser.config.js
-
-Then load `http://localhost:9999/index.html` in a Web browser
-
-## Local offline
+## Local interactive
 
     yarn install
-    node dev-server.js ./webpack_nodejs.config.js
+    node build_browser.js
+
+This will generate a file called `bundle_browser.js` which contains the biocad webapp and all of its dependencies. Open `index.html` in a Web browser to use it.
+
+## Local non-interactive
+
+    yarn install
+    node build_cli.js
     
 Then run `node bundle_cli.js testall` to test all examples in testfiles
 
@@ -32,8 +32,8 @@ Then run `node bundle_cli.js testall` to test all examples in testfiles
 
 As a Web service, SynBioCAD accepts POSTed SBOL/GenBank files and returns SVG.
 
-First follow the local offline instructions, then run:
-
+    yarn install
+    node build_cli.js
     node bundle_cli.js server 8080
 
 Or use the provided Dockerfile.

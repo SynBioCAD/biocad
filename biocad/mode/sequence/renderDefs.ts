@@ -1,6 +1,6 @@
 
-import { svg } from 'jfw/vdom'
-import { Matrix, Vec2 } from 'jfw/geom'
+import { svg } from '@biocad/jfw/vdom'
+import { Matrix, Vec2 } from '@biocad/jfw/geom'
 
 export default function renderDefs(sequenceEditor) {
 

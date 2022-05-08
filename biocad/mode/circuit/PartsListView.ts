@@ -1,30 +1,30 @@
 import { Graph, sbol3 } from "sbolgraph";
 
-import { Vec2 } from 'jfw/geom'
-import { View } from 'jfw/ui'
-import { h, svg, VNode} from 'jfw/vdom'
-import { click as clickEvent, contextMenu as contextMenuEvent } from 'jfw/event'
+import { Vec2, Matrix } from '@biocad/jfw/geom'
+import { View } from '@biocad/jfw/ui'
+import { h, svg, VNode} from '@biocad/jfw/vdom'
+import { click as clickEvent, contextMenu as contextMenuEvent } from '@biocad/jfw/event'
 
-import visbolite from 'visbolite'
-
-import App from "jfw/App";
+import { App } from "@biocad/jfw/ui";
 import BiocadApp from "biocad/BiocadApp";
-import { Specifiers, Predicates, Types } from "bioterms";
 
-import { node as graphNode } from "sbolgraph"
 import SBOLDroppable from "biocad/droppable/SBOLDroppable";
 import BrowseSBHDialog, { BrowseSBHDialogOptions } from "biocad/dialog/BrowseSBHDialog";
-import { SearchQuery } from "sbolgraph"
+import { SearchQuery } from "../../Repository"
 
 import { FinalizeEvent } from 'biocad/DropOverlay'
+import { S3Component } from "sbolgraph";
+import Glyph from "biocad/glyph/Glyph";
+import colors from '../../../data/colors'
+import { Prefixes, Specifiers } from "bioterms";
 
 export default class PartsListView extends View {
 
     app:App
 
-    parts:any[]
+    parts:Glyph[]
 
-    constructor(app:App, parts:any[]) {
+    constructor(app:App, parts:Glyph[]) {
 
         super(app)
 
@@ -34,12 +34,9 @@ export default class PartsListView extends View {
 
     render():VNode {
 
-        var rowHeight = 34
-        var svgPadding = 4
-        var boxSize = Vec2.fromXY(rowHeight * 0.7, rowHeight * 0.7)
         var app:App = this.app
 
-        function renderPartEntry(part) {
+        function renderPartEntry(glyph:Glyph) {
 
             /*
             var glyphInfoBW = {
@@ -51,21 +48,50 @@ export default class PartsListView extends View {
                 autoApplyScale: true
             }*/
 
-            var glyphInfoColor = {
-                defaultColor: '#ddd',
-                type: part.shortName,
-                stroke: 'none',
-                size: boxSize,
+	    const baseSize = 30
+
+	    let suggestedDefaultAspect = glyph.getSuggestedDefaultAspect()
+	    let hasFixedAspect = glyph.hasFixedAspect()
+
+	    if(hasFixedAspect) {
+		    var width = baseSize
+		    var height = glyph.getFixedAspectHeight({ width })
+	    } else {
+		if(suggestedDefaultAspect < 1) {
+			var width = baseSize
+			var height = width * suggestedDefaultAspect
+		} else {
+			var height = baseSize
+			var width = height / suggestedDefaultAspect
+		}
+		}
+
+
+            var renderOpts = {
+		color: colors[glyph.glyphName] || 'white',
+		lineColor: 'white',
+		backgroundFill: 'none',
                 thickness: 2,
-                autoApplyScale: true
+		width,
+		height,
+		params: {}
             }
 
+
+	    let ascent = glyph.getAscent(renderOpts)
+
+	//     if(glyph.glyphName === 'DNACleavageSite') {
+	//     console.log(glyph.glyphName, 'suggestedDefaultAspect ' + suggestedDefaultAspect + ', hasFixedAspect ' + hasFixedAspect + ', ascent ' + ascent)
+	//     }
+
+
             //var glyphSvgBW = visbolite.render(glyphInfoBW)
-            var glyphSvgColor = visbolite.render(glyphInfoColor)
+            var glyphSvgColor = Glyph.render(glyph.glyphName, renderOpts)
+
 
             return h('div.sf-plv-entry', {
-                'ev-mousedown': clickEvent(mousedownPart, { app: app, part: part }),
-                'ev-contextmenu': contextMenuEvent(clickSearch, { app: app, part: part })
+                'ev-mousedown': clickEvent(mousedownPart, { app: app, part: glyph }),
+                'ev-contextmenu': contextMenuEvent(clickSearch, { app: app, part: glyph })
             }, [
                 /*svg('svg', {
                     'class': 'sf-plv-bw',
@@ -78,23 +104,29 @@ export default class PartsListView extends View {
                 }, [
                     glyphSvgBW
                 ]),*/
-                svg('svg', {
-                    'class': 'sf-plv-color',
-                    'viewBox': [
-                        0,
-                        0,
-                        boxSize.x,
-                        boxSize.y
-                    ].join(' ')
-                }, [
-                    glyphSvgColor
-                ]),
+		h('div.glyph', [
+			svg('svg', {
+			'class': 'sf-plv-color',
+
+			width,
+			height,
+
+			'viewBox': [
+				0,
+				0,
+				width,
+				height
+			].join(' ')
+			}, [
+			glyphSvgColor
+			])
+		]),
 
                 h('div.sf-plv-entry-label', [
-                    part.longName,
+                    glyph.glyphName,
 
                     h('span.fa.fa-search.sf-part-search-button', {
-                        'ev-mousedown': clickEvent(clickSearch, { app: app, part: part })
+                        'ev-mousedown': clickEvent(clickSearch, { app: app, part: glyph })
                     }, [
                     ])
                 ])
@@ -129,9 +161,14 @@ function mousedownPart(data:any) {
 
     const graph:Graph = new Graph([])
 
-    let component = sbol3(graph).createComponent(app.defaultPrefix, part.shortName)
-    component.addRole(part.soTerm)
-    component.addType(part.typeUri)
+    let component = sbol3(graph).createComponent(app.defaultPrefix, part.glyphName)
+
+    for(let soTerm of part.soTerms) {
+	component.addRole(Prefixes.sequenceOntologyIdentifiersOrg + soTerm)
+    }
+
+//     component.addType(part.typeUri)
+    component.addType(Specifiers.SBOL3.Type.DNA)
 
     //console.log('uri is ' + uri)
 
@@ -150,10 +187,16 @@ function clickSearch(data:any) {
     const browseDialogOpts:BrowseSBHDialogOptions = new BrowseSBHDialogOptions()
 
     browseDialogOpts.query = new SearchQuery()
-    browseDialogOpts.query.addRole(part.soTerm)
+
+    for(let term of part.soTerms)
+	browseDialogOpts.query.addRole(Prefixes.sequenceOntologyIdentifiersOrg + term)
 
     
     const browseDialog:BrowseSBHDialog = new BrowseSBHDialog(app, browseDialogOpts)
+
+    browseDialog.onUsePart = (part:S3Component) => {
+	    app.dropOverlay.startDropping(new SBOLDroppable(app, part.graph, [ part.subject.value ]))
+    }
 
     app.openDialog(browseDialog)
 

@@ -1,4 +1,4 @@
-import Depiction from "./Depiction";
+import Depiction from "./layout/Depiction";
 import { Specifiers } from "bioterms";
 import { S3Component, S3SubComponent, S3Interaction } from "sbolgraph";
 import LayoutEditor from "./LayoutEditor";

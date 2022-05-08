@@ -1,10 +1,10 @@
 
-import TreeView, { TreeNode } from 'jfw/ui/TreeView'
-import { VNode, h } from 'jfw/vdom'
-import Layout from 'biocad/cad/Layout';
-import App from 'jfw/App'
-import Dialog from 'jfw/ui/dialog/Dialog'
-import Depiction from 'biocad/cad/Depiction';
+import { TreeView, TreeNode } from '@biocad/jfw/ui';
+import { VNode, h } from '@biocad/jfw/vdom'
+import Layout from 'biocad/cad/layout/Layout';
+import App from '@biocad/jfw/App'
+import { Dialog } from '@biocad/jfw/ui';
+import Depiction from 'biocad/cad/layout/Depiction';
 
 export default class DepictionTreeView extends TreeView {
 
@@ -14,7 +14,7 @@ export default class DepictionTreeView extends TreeView {
 
         super(app, dialog)
 
-        this.setNodeFetcher(():TreeNode[] => {
+        this.setNodeFetcher(():Promise<TreeNode[]> => {
 
             let nodes:TreeNode[] = []
 
@@ -28,7 +28,7 @@ export default class DepictionTreeView extends TreeView {
 
             }
 
-            return nodes
+            return Promise.resolve(nodes)
 
         })
 

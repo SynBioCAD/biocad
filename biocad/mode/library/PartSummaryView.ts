@@ -1,17 +1,18 @@
 
 
-import View from "jfw/ui/View";
-import { VNode, h, create, svg } from "jfw/vdom";
+import { View } from "@biocad/jfw/ui";
+import { VNode, h, create, svg } from "@biocad/jfw/vdom";
 import BiocadApp from "biocad/BiocadApp";
 import { Graph, SBOL3GraphView, sbol3 } from "sbolgraph"
 import { Types } from "bioterms";
 import { S3Component } from "sbolgraph";
-import Layout from "biocad/cad/Layout";
+import Layout from "biocad/cad/layout/Layout";
 import LayoutThumbnail from "biocad/cad/LayoutThumbnail";
 import SBOLDroppable from "biocad/droppable/SBOLDroppable";
 import CircuitMode from 'biocad/mode/circuit/CircuitMode'
+import { node } from 'rdfoo'
 
-import { click as clickEvent } from 'jfw/event'
+import { click as clickEvent } from '@biocad/jfw/event'
 
 export default class PartSummaryView extends View {
 
@@ -32,21 +33,27 @@ export default class PartSummaryView extends View {
         this.layoutThumbnail = null
 
 
-        SBOL3GraphView.loadURL(uri + '/sbol').then((gv:SBOL3GraphView) => {
+        fetch(uri + '/sbol').then(async r => {
 
-            this.graph = gv.graph
-            this.layout = new Layout(gv.graph)
-            this.layout.syncAllDepictions(5)
-            this.layout.configurate([])
-            this.layoutThumbnail = new LayoutThumbnail(app, this.layout)
+            let str = await r.text()
 
-            this.layoutThumbnail.attr = {
-                style: {
-                    'max-width': '100%'
+            SBOL3GraphView.loadString(str).then((gv:SBOL3GraphView) => {
+
+                this.graph = gv.graph
+                this.layout = new Layout(gv.graph)
+                this.layout.syncAllDepictions(5)
+                this.layout.configurate([])
+                this.layoutThumbnail = new LayoutThumbnail(app, this.layout)
+
+                this.layoutThumbnail.attr = {
+                    style: {
+                        'max-width': '100%'
+                    }
                 }
-            }
 
-            this.update()
+                this.update()
+
+            })
 
         })
 
@@ -68,7 +75,7 @@ export default class PartSummaryView extends View {
 
         } else {
 
-            const type:string|undefined = sbol3(this.graph).getType(this.uri)
+            const type:string|undefined = sbol3(this.graph).getType(node.createUriNode(this.uri))
 
             elements.push(this.renderComponent())
         }
@@ -84,7 +91,7 @@ export default class PartSummaryView extends View {
         if(this.graph === null || this.layoutThumbnail === null)
             throw new Error('???')
 
-        const cd:S3Component = new S3Component(sbol3(this.graph), this.uri)
+        const cd:S3Component = new S3Component(sbol3(this.graph), node.createUriNode(this.uri))
 
         const elements:VNode[] = []
 

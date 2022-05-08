@@ -1,10 +1,8 @@
 
-import { svg, h, VNode } from 'jfw/vdom'
-import { Vec2, Matrix, LinearRange, LinearRangeSet } from 'jfw/geom'
+import { svg, h, VNode } from '@biocad/jfw/vdom'
+import { Vec2, Matrix, LinearRange, LinearRangeSet } from '@biocad/jfw/geom'
 
-import getEllipsePoint from 'jfw/geom/getEllipsePoint'
-
-import visbolite from 'visbolite'
+import { getEllipsePoint } from '@biocad/jfw/geom';
 
 class LinearRangeWithHeight extends LinearRange {
 
@@ -101,38 +99,38 @@ export default function renderPlasmid(transform:Matrix, diameter:Vec2, numBp:num
         var startPoint = getEllipsePoint(centerPoint, contractedRadius, normalizedStart)
         var endPoint = getEllipsePoint(centerPoint, contractedRadius, normalizedEnd)
 
-        glyphs.push(visbolite.render({
+        // glyphs.push(visbolite.render({
 
-            uri: annotation.uri,
+        //     uri: annotation.uri,
 
-            type: annotation.type,
+        //     type: annotation.type,
 
-            plasmidMetrics: {
+        //     plasmidMetrics: {
 
-                centerPoint: centerPoint,
-                radius: contractedRadius,
+        //         centerPoint: centerPoint,
+        //         radius: contractedRadius,
 
-            },
+        //     },
 
-            normalizedStart: normalizedStart,
-            normalizedEnd: normalizedEnd,
+        //     normalizedStart: normalizedStart,
+        //     normalizedEnd: normalizedEnd,
 
-            startPoint: startPoint,
-            endPoint: endPoint,
+        //     startPoint: startPoint,
+        //     endPoint: endPoint,
 
-            height: annotation.height,
+        //     height: annotation.height,
 
-            /*
-            attr: {
+        //     /*
+        //     attr: {
 
-                title: 'moo',
-                /className: 'hint--top',
-                dataset: {
-                    hint: 'moo'
-                }
+        //         title: 'moo',
+        //         /className: 'hint--top',
+        //         dataset: {
+        //             hint: 'moo'
+        //         }
 
-            }*/
-        }))
+        //     }*/
+        // }))
 
 
         if(annotation.label) {
@@ -144,29 +142,29 @@ export default function renderPlasmid(transform:Matrix, diameter:Vec2, numBp:num
             //startPoint = getEllipsePoint(centerPoint, labelRingRadius, normalizedStart)
             //endPoint = getEllipsePoint(centerPoint, labelRingRadius, normalizedEnd)
 
-            glyphs.push(visbolite.render({
+            // glyphs.push(visboli.render({
 
-                uri: annotation.uri,
+            //     uri: annotation.uri,
 
-                type: 'plasmid-annotation-label',
+            //     type: 'plasmid-annotation-label',
 
-                plasmidMetrics: {
+            //     plasmidMetrics: {
 
-                    centerPoint: centerPoint,
-                    radius: contractedRadius,
+            //         centerPoint: centerPoint,
+            //         radius: contractedRadius,
 
-                },
+            //     },
 
-                normalizedStart: normalizedStart,
-                normalizedEnd: normalizedEnd,
+            //     normalizedStart: normalizedStart,
+            //     normalizedEnd: normalizedEnd,
 
-                startPoint: startPoint,
-                endPoint: endPoint,
+            //     startPoint: startPoint,
+            //     endPoint: endPoint,
 
-                height: annotation.height,
+            //     height: annotation.height,
 
-                label: annotation.label
-            }))
+            //     label: annotation.label
+            // }))
 
         }
 

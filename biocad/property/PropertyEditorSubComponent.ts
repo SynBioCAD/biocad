@@ -1,8 +1,8 @@
 import PropertyEditor from "./PropertyEditor";
 import { Graph, triple, node, S3Component, S3SubComponent, sbol3 } from "sbolgraph";
-import { VNode, h } from 'jfw/vdom'
+import { VNode, h } from '@biocad/jfw/vdom'
 import PropertyEditorCombo from "./PropertyEditorCombo";
-import { change as changeEvent } from 'jfw/event'
+import { change as changeEvent } from '@biocad/jfw/event'
 
 export default class PropertyEditorSubComponent extends PropertyEditor {
 
@@ -25,7 +25,7 @@ export default class PropertyEditorSubComponent extends PropertyEditor {
     render(graph:Graph):VNode {
 
         let value:string|undefined = triple.objectUri(
-            graph.matchOne(this.objectURI, this.predicate, null)
+            graph.matchOne(node.createUriNode(this.objectURI), this.predicate, null)
         )
 
         let parentComponent = sbol3(graph).uriToFacade(this.componentURI)
@@ -63,7 +63,7 @@ function onChange(data:any) {
 
     console.log(data.value)
 
-    graph.removeMatches(editor.objectURI, editor.predicate, null)
-    graph.insert(editor.objectURI, editor.predicate, node.createUriNode(data.value))
+    graph.removeMatches(node.createUriNode(editor.objectURI), editor.predicate, null)
+    graph.insertTriple(node.createUriNode(editor.objectURI), editor.predicate, node.createUriNode(data.value))
 
 }

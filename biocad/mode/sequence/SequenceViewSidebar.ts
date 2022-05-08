@@ -1,16 +1,16 @@
 
-import { Sidebar, SidebarSection } from 'jfw/ui'
+import { Sidebar, SidebarSection } from '@biocad/jfw/ui'
 
 import ComponentBrowser from './ComponentBrowser'
 
 import { Specifiers } from 'bioterms'
 import { S3Component } from "sbolgraph";
 
-import { Hook } from 'jfw/util'
+import { Hook } from '@biocad/jfw/util'
 
 export default class SequenceViewSidebar extends Sidebar {
 
-    onCreate: Hook<{ type:string, uri:string }>
+    onCreate: Hook<{ /*type:string,*/ uri:string }>
     onSelect: Hook<S3Component>
 
     browser:ComponentBrowser
@@ -31,7 +31,7 @@ export default class SequenceViewSidebar extends Sidebar {
             })
 
             browser.onCreate.listen((uri) => {
-                //this.onCreate.fire({ type: browser.type, uri })
+                this.onCreate.fire({ /*type: browser.type,*/ uri })
                 app.update()
             })
 

@@ -1,14 +1,14 @@
 
 
-import LayoutEditorView from 'biocad/cad/LayoutEditorView'
+import LayoutEditorView from 'biocad/cad/layout-editor/LayoutEditorView'
 import BiocadApp from "biocad/BiocadApp";
 
-import Layout from 'biocad/cad/Layout'
-import LayoutPOD from 'biocad/cad/LayoutPOD'
-import LayoutEditor from 'biocad/cad/LayoutEditor'
-import Depiction from 'biocad/cad/Depiction'
+import Layout from 'biocad/cad/layout/Layout'
+import LayoutPOD from 'biocad/cad/layout/LayoutPOD'
+import LayoutEditor from 'biocad/cad/layout-editor/LayoutEditor'
+import Depiction from 'biocad/cad/layout/Depiction'
 import { Graph } from 'sbolgraph';
-import { Vec2 } from 'jfw/geom'
+import { Vec2 } from '@biocad/jfw/geom'
 
 export default class CircuitView extends LayoutEditorView {
 
@@ -24,7 +24,7 @@ export default class CircuitView extends LayoutEditorView {
         layout.syncAllDepictions(5)
         layout.configurate([])
         layout.size = layout.getBoundingSize().add(Vec2.fromXY(2, 2)).max(layout.size)
-        layout.startWatchingGraph(this.app)
+        // layout.startWatchingGraph(this.app)
 
         if(this.layoutEditor)
             this.layoutEditor.cleanup()

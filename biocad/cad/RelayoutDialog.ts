@@ -1,12 +1,12 @@
 
-import { Dialog } from 'jfw/ui/dialog'
-import { h, VNode } from 'jfw/vdom'
+import { Dialog } from '@biocad/jfw/ui'
+import { h, VNode } from '@biocad/jfw/vdom'
 
 //import LayoutMinimap from 'biocad/cad/LayoutMinimap'
 
 import extend = require('xtend')
 
-import { Slider, Button } from 'jfw/ui/form-control'
+import { Slider, Button } from '@biocad/jfw/ui';
 
 import detailLevels from 'data/detailLevels'
 

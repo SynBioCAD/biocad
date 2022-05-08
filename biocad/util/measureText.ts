@@ -1,5 +1,5 @@
 
-import { Rect, Vec2 } from 'jfw/geom'
+import { Rect, Vec2 } from '@biocad/jfw/geom'
 
 import stringPixelWidth = require('string-pixel-width')
 

@@ -1,8 +1,8 @@
 
 import App from '../../BiocadApp'
 
-import Mode from 'jfw/ui/Mode'
-import { VNode, h } from "jfw/vdom";
+import { Mode } from '@biocad/jfw/ui';
+import { VNode, h } from "@biocad/jfw/vdom";
 import LibraryView from "biocad/mode/library/LibraryView";
 import LibraryViewLeftSidebar from 'biocad/mode/library/LibraryViewLeftSidebar';
 

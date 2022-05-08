@@ -1,5 +1,5 @@
 
-import { svg, VNode } from "jfw/vdom";
+import { svg, VNode } from "@biocad/jfw/vdom";
 
 export default class SVGDefs {
 

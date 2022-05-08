@@ -1,8 +1,8 @@
 
-import { Dialog, DialogOptions } from 'jfw/ui/dialog'
+import { Dialog, DialogOptions } from '@biocad/jfw/ui';
 import OntologyTreeView from 'biocad/view/OntologyTreeView'
-import { App } from 'jfw'
-import { h } from 'jfw/vdom'
+import { App } from '@biocad/jfw/ui'
+import { h } from '@biocad/jfw/vdom'
 
 export default class OntologyTermSelectorDialog extends Dialog {
 

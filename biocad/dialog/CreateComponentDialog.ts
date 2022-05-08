@@ -1,7 +1,7 @@
-import { App } from 'jfw';
+import { App } from '@biocad/jfw/ui';
 
-import { Dialog, DialogOptions } from 'jfw/ui/dialog'
-import { h } from 'jfw/vdom'
+import { Dialog, DialogOptions } from '@biocad/jfw/ui';
+import { h } from '@biocad/jfw/vdom'
 
 import extend = require('xtend')
 
@@ -10,11 +10,11 @@ import componentTypes from 'bioterms/human/componentTypes'
 import { Specifiers, Predicates, Types, Prefixes } from 'bioterms'
 
 import nameToDisplayId from '../util/nameToDisplayId'
-import { TextInput, Combo } from "jfw/ui/form-control";
+import { TextInput, Combo } from "@biocad/jfw/ui";
 
 import cdTypes from 'data/cdTypes'
 
-import { click as clickEvent } from 'jfw/event'
+import { click as clickEvent } from '@biocad/jfw/event'
 import { Graph, sbol3 } from "sbolgraph";
 import BiocadApp from "biocad/BiocadApp";
 
@@ -112,7 +112,7 @@ export default class CreateComponentDialog extends Dialog {
         const graph:Graph = app.graph
 
 
-        let roles = new S3Component(sbol3(this.tempGraph), 'temp').roles
+        let roles = [] // TODO?
 
         let prefix = sbol3(graph).mostPopularUriPrefix
 

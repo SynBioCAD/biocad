@@ -1,19 +1,19 @@
 
-import { h, svg, VNode } from 'jfw/vdom'
+import { h, svg, VNode } from '@biocad/jfw/vdom'
 
 import extend = require('xtend')
 
-import { Vec2, Rect, LinearRange } from 'jfw/geom'
+import { Vec2, Rect, LinearRange } from '@biocad/jfw/geom'
 
-import { View } from 'jfw/ui'
+import { View } from '@biocad/jfw/ui'
 
-import { mousemove as mousemoveEvent, click as clickEvent, contextMenu as contextMenuEvent } from 'jfw/event'
+import { mousemove as mousemoveEvent, click as clickEvent, contextMenu as contextMenuEvent } from '@biocad/jfw/event'
 
 import SequenceEditor from './SequenceEditor'
 import SequenceEditorContextMenu from './SequenceEditorContextMenu'
 
-import KeyboardListener from 'jfw/util/KeyboardListener'
-import { S3Sequence, S3ThingWithLocation } from "sbolgraph"
+import { KeyboardListener } from '@biocad/jfw/util';
+import { S3Sequence, S3Feature } from "sbolgraph"
 import { Specifiers } from "bioterms";
 import SequenceEditorLine from "biocad/mode/sequence/SequenceEditorLine";
 
@@ -326,8 +326,8 @@ export default class SequenceEditorOverlay extends View {
 
             const [ thing, rect ] = bbox
 
-            console.dir(rect)
-            console.dir(o)
+        //     console.dir(rect)
+        //     console.dir(o)
 
             if(rect.intersectsPoint(o)) {
                 

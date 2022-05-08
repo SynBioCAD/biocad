@@ -1,6 +1,6 @@
 
 import PropertyAccessor from "./PropertyAccessor";
-import { triple, Graph, node, S3SubComponent, S3SequenceFeature, S3ThingWithLocation, sbol3 } from 'sbolgraph'
+import { triple, Graph, node, S3SubComponent, S3SequenceFeature, S3Feature, sbol3 } from 'sbolgraph'
 
 export default class PropertyAccessorStrand extends PropertyAccessor<string> {
 
@@ -17,10 +17,10 @@ export default class PropertyAccessorStrand extends PropertyAccessor<string> {
 
         let scOrSeqFeature = sbol3(graph).uriToFacade(this.object)
 
-        if(! (scOrSeqFeature instanceof S3ThingWithLocation))
+        if(! (scOrSeqFeature instanceof S3Feature))
             return
 
-        scOrSeqFeature.setOrientation(value)
+        scOrSeqFeature.orientation = value
 
         if(this.onChange)
             this.onChange()
@@ -29,9 +29,9 @@ export default class PropertyAccessorStrand extends PropertyAccessor<string> {
     get(graph:Graph):string {
         let scOrSeqFeature = sbol3(graph).uriToFacade(this.object)
 
-        if(! (scOrSeqFeature instanceof S3ThingWithLocation))
+        if(! (scOrSeqFeature instanceof S3Feature))
             return ''
 
-        return scOrSeqFeature.getOrientation() || ''
+        return scOrSeqFeature.orientation || ''
     }
 }
