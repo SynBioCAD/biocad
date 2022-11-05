@@ -6,9 +6,9 @@ export default class PopupMessageDialog extends Dialog {
 
     message:any
 
-    constructor(app, title:string, message:any, opts:DialogOptions) {
+    constructor(project, title:string, message:any, opts:DialogOptions) {
 
-        super(app, opts)
+        super(project, project.dialogs, opts)
 
         this.message = message
         this.setTitle(title)

@@ -4,9 +4,9 @@ import { h } from '@biocad/jfw/vdom'
 
 export default class TestDialog extends Dialog {
 
-    constructor(app, parent) {
+    constructor(project, opts) {
 
-        super(app, parent)
+        super(project, project.dialogs, opts)
 
     }
 

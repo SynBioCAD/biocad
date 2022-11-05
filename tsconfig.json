@@ -9,8 +9,8 @@
         "alwaysStrict": true,
         "strictNullChecks": true,
         "paths": {
-            "jfw/*": [ "./node_modules/@biocad/jfw/dist/jfw/*" ],
-            "jfw": [ "./node_modules/@biocad/jfw/dist/jfw" ]
+        //     "jfw/*": [ "./node_modules/@biocad/jfw/dist/jfw/*" ],
+        //     "jfw": [ "./node_modules/@biocad/jfw/dist/jfw" ]
         },
 	"moduleResolution": "Node16"
     },

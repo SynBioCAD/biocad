@@ -17,6 +17,7 @@ import { click as clickEvent } from '@biocad/jfw/event'
 import assert from "assert";
 import SBOLDroppable from "../../droppable/SBOLDroppable";
 import CircuitMode from "../circuit/CircuitMode";
+import BiocadProject from "../../BiocadProject";
 
 
 /* Shows a top level from a repo
@@ -27,6 +28,8 @@ could be a collection or a component etc
 
 export default class RepoView extends View {
 
+	project:BiocadProject
+
 	loading:boolean
 
 	g:Graph|undefined
@@ -34,9 +37,11 @@ export default class RepoView extends View {
 
 	tabs:TabbedView
 
-    constructor(app:BiocadApp) {
+    constructor(project:BiocadProject) {
 
-        super(app)
+        super(project)
+
+	this.project = project
 
 
 	this.loading = false
@@ -107,7 +112,7 @@ export default class RepoView extends View {
 
     onClickPart(uri:string) {
 
-        // this.app.openOrphanView(new PartSummaryView(this.app as BiocadApp, uri))
+        // this.project.openOrphanView(new PartSummaryView(this.project, uri))
 
 
     }
@@ -155,7 +160,7 @@ export default class RepoView extends View {
 			runCount(Types.SBOL2.Collection),
 		])
 
-		this.tabs = new TabbedView(this.app, {})
+		this.tabs = new TabbedView(this.project, {})
 
 		let tabs:any = []
 
@@ -242,10 +247,10 @@ export default class RepoView extends View {
 
 	assert(this.g)
 
-	let app = this.app as BiocadApp
+	let project = this.project
 
-	app.loadGraph(this.g, true)
-	app.setMode(app.modes.filter((mode) => mode instanceof CircuitMode)[0])
+	project.loadGraph(this.g, true)
+	project.setMode(project.modes.filter((mode) => mode instanceof CircuitMode)[0])
 
     }
 
@@ -253,12 +258,12 @@ export default class RepoView extends View {
 
 	assert(this.g)
 
-	let app = this.app as BiocadApp
+	let project = this.project
 
-	app.setMode(app.modes.filter((mode) => mode instanceof CircuitMode)[0])
+	project.setMode(project.modes.filter((mode) => mode instanceof CircuitMode)[0])
 
-	;(this.app as BiocadApp).dropOverlay.startDropping(
-		new SBOLDroppable(this.app, this.g, [this.uri])
+	;((this.project).app as BiocadApp).dropOverlay.startDropping(
+		new SBOLDroppable(this.project, this.g, [this.uri])
 	)
 
     }

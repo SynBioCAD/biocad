@@ -1,22 +1,27 @@
 import { View, TreeView, TreeNode } from "@biocad/jfw/ui";
 import BiocadApp from "biocad/BiocadApp";
 import { VNode } from "@biocad/jfw/vdom";
+import BiocadProject from "../../BiocadProject";
 
 export default class LibraryTree extends View {
 
+	project:BiocadProject
+
     treeView:TreeView
 
-    constructor(app:BiocadApp) {
+    constructor(project:BiocadProject) {
 
-        super(app)
+        super(project)
 
-        this.treeView = new TreeView(app)
+	this.project = project
+
+        this.treeView = new TreeView(project)
 
         this.treeView.setNodeFetcher(fetchNodes)
 
         function fetchNodes():TreeNode[] {
 
-            const libraries:any[] = app.udata.get('libraries')
+            const libraries:any[] = project.udata.get('libraries')
 
             const nodes = libraries.map((library:any) => {
 

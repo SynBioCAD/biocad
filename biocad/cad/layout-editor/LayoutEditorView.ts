@@ -1,10 +1,10 @@
 
 import BiocadApp from 'biocad/BiocadApp';
 
-import { View } from 'jfw/ui'
-import { createGrid } from 'jfw/graphics'
+import { View } from '@biocad/jfw/ui'
+import { createGrid } from '@biocad/jfw/graphics'
 
-import { h, VNode, svg } from 'jfw/vdom'
+import { h, VNode, svg } from '@biocad/jfw/vdom'
 
 import LayoutEditorToolbar from './LayoutEditorToolbar'
 
@@ -13,8 +13,11 @@ import CircuitViewLeftSidebar from "biocad/mode/circuit/CircuitViewLeftSidebar";
 import CircuitViewRightSidebar from "biocad/mode/circuit/CircuitViewRightSidebar";
 import { GlobalConfig } from '@biocad/jfw/ui'
 import LayoutEditor from './LayoutEditor';
+import BiocadProject from '../../BiocadProject';
 
 export default abstract class LayoutEditorView extends View {
+
+	project:BiocadProject
 
     toolbar: View
 
@@ -23,11 +26,13 @@ export default abstract class LayoutEditorView extends View {
     leftSidebar:CircuitViewLeftSidebar
     rightSidebar:CircuitViewRightSidebar
 
-    constructor(app:BiocadApp) {
+    constructor(project:BiocadProject) {
 
-        super(app)
+        super(project)
 
-        this.leftSidebar = new CircuitViewLeftSidebar(app)
+	this.project = project
+
+        this.leftSidebar = new CircuitViewLeftSidebar(project)
         this.rightSidebar = new CircuitViewRightSidebar(this)
 
         this.toolbar = new LayoutEditorToolbar(this)
@@ -35,7 +40,7 @@ export default abstract class LayoutEditorView extends View {
         this.createLayout()
 
 
-        app.onLoadGraph.listen((graph:Graph) => {
+        project.onLoadGraph.listen((graph:Graph) => {
             this.createLayout()
         })
 

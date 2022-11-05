@@ -25,6 +25,7 @@ import PropertyAccessorURISet from 'biocad/property/PropertyAccessorURISet';
 
 import so from 'data/sequence-ontology'
 import systemsBiologyOntology from 'data/systems-biology-ontology';
+import BiocadProject from '../BiocadProject';
 
 export class CreateComponentDialogDefaults {
 
@@ -59,9 +60,9 @@ export default class CreateComponentDialog extends Dialog {
 
     onCreate:(c:S3Component)=>void
 
-    constructor(app:App, opts:CreateComponentDialogOptions, defs:CreateComponentDialogDefaults) {
+    constructor(project:BiocadProject, opts:CreateComponentDialogOptions, defs:CreateComponentDialogDefaults) {
 
-        super(app, opts)
+        super(project, project.dialogs, opts)
 
         this.onCreate = opts.onCreate
         
@@ -84,7 +85,7 @@ export default class CreateComponentDialog extends Dialog {
         }), defs.type)
 
         this.roleBox = new PropertyEditorTermSet(
-            app as BiocadApp,
+            project,
             'Roles',
             new PropertyAccessorURISet('temp', Predicates.SBOL3.role),
             Prefixes.sequenceOntologyIdentifiersOrg,
@@ -108,8 +109,8 @@ export default class CreateComponentDialog extends Dialog {
 
     onClickCreate() {
 
-        const app:BiocadApp = this.app as BiocadApp
-        const graph:Graph = app.graph
+        const project:BiocadProject = this.project
+        const graph:Graph = project.graph
 
 
         let roles = [] // TODO?
@@ -126,7 +127,7 @@ export default class CreateComponentDialog extends Dialog {
             c.addRole(role)
         }
 
-        app.closeDialog(this)
+        project.dialogs.closeDialog(this)
 
         this.onCreate(c)
 

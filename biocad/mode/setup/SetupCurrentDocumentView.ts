@@ -8,14 +8,19 @@ import { click as clickEvent } from '@biocad/jfw/event'
 import { Graph, sbol3 } from "sboljs";
 import BiocadApp from "biocad/BiocadApp";
 import { TextInput } from '@biocad/jfw/ui';
+import BiocadProject from '../../BiocadProject';
 
 export default class SetupCurrentDocumentView extends View {
 
+	project:BiocadProject
+
     organism:TextInput
 
-    constructor(app) {
+    constructor(project) {
 
-        super(app)
+        super(project)
+
+	this.project = project
 
         this.organism = new TextInput(this, '')
 
@@ -28,8 +33,8 @@ export default class SetupCurrentDocumentView extends View {
 
     render():VNode {
 
-        const app:BiocadApp = this.app as BiocadApp
-        const graph:Graph = app.graph
+        const project:BiocadProject = this.project
+        const graph:Graph = project.graph
 
 
         return h('div.jfw-main-view.sf-setup-view', {
@@ -84,9 +89,9 @@ function clickRemoveURIPrefix(data) {
 
     const { view, uriPrefix } = data
 
-    const app = view.app
+    const project = view.project
 
-    app.openDialog(new RemoveURIPrefixDialog(app, {
+    project.dialogs.openDialog(new RemoveURIPrefixDialog(project, {
 
         removeUriPrefix: {
             uriPrefix: uriPrefix

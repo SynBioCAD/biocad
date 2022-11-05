@@ -17,7 +17,7 @@ export default class SBOLDroppable extends Droppable {
     layout:Layout
     thumb:LayoutThumbnail
 
-    constructor(app:BiocadApp, graph:Graph, topLevelURIs?:string[], ignoreForDragOps?:string[]) {
+    constructor(project:BiocadProject, graph:Graph, topLevelURIs?:string[], ignoreForDragOps?:string[]) {
 
         super()
 
@@ -37,7 +37,7 @@ export default class SBOLDroppable extends Droppable {
         ])
         this.layout.size = this.layout.getBoundingSize()
 
-        this.thumb = new LayoutThumbnail(app, this.layout)
+        this.thumb = new LayoutThumbnail(project, this.layout)
     }
 
     render():VNode {

@@ -17,6 +17,7 @@ import Droppable from './droppable/Droppable'
 import SBOLDroppable from "biocad/droppable/SBOLDroppable";
 
 import DropReceiver from './DropReceiver'
+import BiocadProject from "./BiocadProject";
 
 export enum FinalizeEvent {
     MouseDown,
@@ -27,7 +28,7 @@ export default class DropOverlay {
 
     private currentDroppable:Droppable|null
 
-    app:BiocadApp
+    app: BiocadApp
 
     receivers:DropReceiver[]
 
@@ -118,6 +119,8 @@ export default class DropOverlay {
 
     startDropping(droppable:Droppable) {
 
+	let overlay = this
+
         //assert(!this.currentDroppable)
 	if(this.currentDroppable) {
 		this.cancelDrop()
@@ -139,7 +142,7 @@ export default class DropOverlay {
                 receiver.onDroppableMoved(MouseListener.mousePos, droppable)
             }
 
-            this.app.update()
+            overlay.app.update()
         }
 
         MouseListener.listen('DropOverlay', () => {
@@ -236,7 +239,7 @@ function drop(data) {
 
     const dropping:Droppable|null = overlay.getCurrentDroppable()
 
-    const app:BiocadApp = overlay.app as BiocadApp
+    const project:BiocadProject = overlay.app as BiocadApp
 
     //console.log('drop overlay onclick, dropping ' + dropping)
 

@@ -4,6 +4,7 @@ import { VNode, h, create, svg } from "@biocad/jfw/vdom";
 
 import { Graph, S3Collection, S3Component, S3Identified, sbol2, sbol3, SBOLConverter } from "sboljs";
 import BiocadApp from "../../BiocadApp";
+import BiocadProject from "../../BiocadProject";
 import getNameFromRole from "../../util/getNameFromRole";
 import RepoView from "./RepoView";
 
@@ -23,6 +24,8 @@ export enum MemberType {
 
 export default class RepoCollectionMembersView extends View {
 
+	project:BiocadProject
+
 	repoView:RepoView
 
 	collection: S3Collection
@@ -35,7 +38,8 @@ export default class RepoCollectionMembersView extends View {
 
 	constructor(repoView:RepoView, collection: S3Collection, type: MemberType) {
 
-		super(repoView.app)
+		super(repoView.project)
+		this.project = repoView.project
 
 		this.repoView = repoView
 		this.collection = collection
@@ -58,7 +62,7 @@ export default class RepoCollectionMembersView extends View {
 
 	onClickPart(uri: string) {
 
-		// this.app.openOrphanView(new PartSummaryView(this.app as BiocadApp, uri))
+		// this.project.openOrphanView(new PartSummaryView(this.project, uri))
 
 
 	}
@@ -101,7 +105,7 @@ export default class RepoCollectionMembersView extends View {
 					...(await this.doQuery((uri, offset, limit) => ComponentsQuery(uri, offset, limit))),
 					...(await this.doQuery((uri, offset, limit) => ModulesQuery(uri, offset, limit))),
 				}
-				this.dt = new DataTable(this.app, [
+				this.dt = new DataTable(this.project, [
 					{
 						title: 'Type',
 						getValue: (row: any) => displayType(row)
@@ -129,7 +133,7 @@ export default class RepoCollectionMembersView extends View {
 				allres = {
 					...(await this.doQuery((uri, offset, limit) => SequencesQuery(uri, offset, limit))),
 				}
-				this.dt = new DataTable(this.app, [
+				this.dt = new DataTable(this.project, [
 					{
 						title: 'Identifier',
 						getValue: (row: any) => row['http://sbols.org/v2#displayId']?.[0]?.value
@@ -152,7 +156,7 @@ export default class RepoCollectionMembersView extends View {
 				allres = {
 					...(await this.doQuery((uri, offset, limit) => CollectionsQuery(uri, offset, limit))),
 				}
-				this.dt = new DataTable(this.app, [
+				this.dt = new DataTable(this.project, [
 					{
 						title: 'Identifier',
 						getValue: (row: any) => row['http://sbols.org/v2#displayId']?.[0]?.value
@@ -175,7 +179,7 @@ export default class RepoCollectionMembersView extends View {
 				allres = {
 					// ...(await this.doQuery((uri, offset, limit) => OtherQuery(uri, offset, limit))),
 				}
-				this.dt = new DataTable(this.app, [
+				this.dt = new DataTable(this.project, [
 					{
 						title: 'Identifier',
 						getValue: (row: any) => row['http://sbols.org/v2#displayId']?.[0]?.value

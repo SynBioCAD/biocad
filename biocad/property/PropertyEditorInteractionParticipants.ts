@@ -10,14 +10,14 @@ import { h } from '@biocad/jfw/vdom'
 
 export default class PropertyEditorInteractionParticipants extends PropertyEditor {
 
-    app:BiocadApp
+    project:BiocadProject
     interactionURI:string
     onChange:undefined|(()=>void)
 
-    constructor(app:BiocadApp, interactionURI:string, onChange?:()=>void) {
+    constructor(project:BiocadProject, interactionURI:string, onChange?:()=>void) {
         super()
         this.interactionURI = interactionURI
-        this.app = app
+        this.project = project
         this.onChange = onChange
     }
 
@@ -90,9 +90,9 @@ async function clickChooseRole(data) {
     let editor:PropertyEditorInteractionParticipants = data.editor
     let participation:S3Participation = data.participation
 
-    let app = editor.app
+    let project = editor.project
 
-    let term:string|null = await OntologyTermSelectorDialog.selectTerm(app, 'Choose participant role', null, sbo, 'SBO:0000003')
+    let term:string|null = await OntologyTermSelectorDialog.selectTerm(project, 'Choose participant role', null, sbo, 'SBO:0000003')
 
     if(term !== null) {
         participation.addRole(term)

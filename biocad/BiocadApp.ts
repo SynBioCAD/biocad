@@ -28,13 +28,13 @@ import uuid = require('uuid')
 import { Graph, sbol3 } from 'sboljs'
 
 import '../less/biocad.less'
+import BiocadProject from './BiocadProject'
+import BiocadProjectbar from './projectbar/BiocadProjectbar'
 
 console.log('BiocadApp.ts')
 
 export default class BiocadApp extends App
 {
-    graph:Graph
-
     dropOverlay:DropOverlay
 
     constructor(elem) {
@@ -47,12 +47,6 @@ export default class BiocadApp extends App
     }
 
 
-    onLoadGraph:Hook<Graph> = new Hook<Graph>()
-
-
-    defaultPrefix:string
-
-
     init():void {
 
         super.init()
@@ -62,34 +56,25 @@ export default class BiocadApp extends App
 
 
 
-        //const saved = this.udata.get('graph')
-
-        const saved = false
+        // const saved:any = this.udata.get('biocad')
+        const saved:any = false
 
         if(saved) {
 
             console.info('I have saved state! ' + typeof(saved))
             console.dir(saved)
 
-            this.graph = new Graph(saved)
-            this.defaultPrefix = sbol3(this.graph).uriPrefixes[0]
+	    for(let projectPOD of saved['projects']) {
+		this.addProject(BiocadProject.fromPOD(this, projectPOD))
+	    }
 
         } else {
 
             console.info('Nothing was saved :-(')
 
-            this.graph = new Graph([])
+	    this.addProject(new BiocadProject(this))
         }
 
-        if(!this.defaultPrefix) {
-            this.defaultPrefix = 'http://' + uuid.v4() + '/'
-        }
-
-        if(GlobalConfig.get('biocad.feature.ui.modeswitcher')) {
-            this.setTopbar(new BiocadTopbar(this))
-        }
-
-        const modes:Mode[] = []
 
         if(GlobalConfig.get('biocad.headless')) {
 
@@ -97,35 +82,9 @@ export default class BiocadApp extends App
 
         } else {
 
-            if(GlobalConfig.get('biocad.feature.mode.loadsave'))
-                modes.push(new LoadSaveMode(this, false))
-
-            if(GlobalConfig.get('biocad.feature.mode.setup'))
-                modes.push(new SetupMode(this, false))
-
-            if(GlobalConfig.get('biocad.feature.mode.source'))
-                modes.push(new SourceMode(this, false))
-
-            if(GlobalConfig.get('biocad.feature.mode.repository'))
-                modes.push(new RepoMode(this, true))
-
-            if(GlobalConfig.get('biocad.feature.mode.library'))
-                modes.push(new LibraryMode(this, false))
-
-            if(GlobalConfig.get('biocad.feature.mode.circuit'))
-                modes.push(new CircuitMode(this, false))
-
-            if(GlobalConfig.get('biocad.feature.mode.sequence'))
-                modes.push(new SequenceMode(this, false))
-
-            if(GlobalConfig.get('biocad.feature.mode.simulator'))
-                modes.push(new SimulatorMode(this, false))
-
         }
 
-        console.log(modes.length + ' mode(s) enabled')
-
-        this.setModes(modes)
+	this.setProjectBar(new BiocadProjectbar(this))
 
 
         /*
@@ -140,23 +99,13 @@ export default class BiocadApp extends App
         }*/
     }
 
-    loadGraph(graph:Graph, asCopy?:boolean):void {
-
-        this.graph = asCopy === true ? graph.clone() : graph
-
-        this.onLoadGraph.fire(graph)
-
-        this.update()
-
-    }
-
-
     saveState():void {
 
 
         console.time('save state')
-        console.dir(this.graph.toArray())
-        this.udata.set('graph', this.graph.toArray())
+        this.udata.set('biocad', {
+		projects: this.projects.map(p => (p as BiocadProject).toPOD())
+	})
         console.timeEnd('save state')
 
     }
@@ -183,14 +132,6 @@ export default class BiocadApp extends App
 
     }
 
-    getCircuitMode():CircuitMode|undefined {
-
-        for(let mode of this.modes) {
-            if(mode instanceof CircuitMode) {
-                return mode
-            }
-        }
-    }
 }
 
 

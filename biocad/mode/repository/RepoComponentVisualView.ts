@@ -4,20 +4,24 @@ import { View } from '@biocad/jfw/ui'
 import Layout from "../../cad/layout/Layout";
 import LayoutThumbnail from "../../cad/LayoutThumbnail";
 import { h} from '@biocad/jfw/vdom'
+import BiocadProject from "../../BiocadProject";
 
 export default class RepoComponentVisualView extends View {
+
+	project:BiocadProject
 
 	layout: Layout | null
 	layoutThumbnail: LayoutThumbnail | null
 
 	constructor(repoView:RepoView, g:Graph, c:S3Component) {
 
-		super(repoView.app)
+		super(repoView.project)
+		this.project = repoView.project
 
                 this.layout = new Layout(g)
                 this.layout.syncAllDepictions(5)
                 this.layout.configurate([])
-                this.layoutThumbnail = new LayoutThumbnail(repoView.app, this.layout)
+                this.layoutThumbnail = new LayoutThumbnail(repoView.project, this.layout)
 
                 this.layoutThumbnail.attr = {
                     style: {

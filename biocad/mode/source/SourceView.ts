@@ -9,21 +9,25 @@ import { SBOL2GraphView, Graph, sbol3 } from 'sboljs';
 import CytoscapeRDFWidget from 'biocad/view/CytoscapeRDFWidget'
 import CircuitViewMode from '../circuit/CircuitMode';
 import CircuitView from '../circuit/CircuitView';
+import BiocadProject from '../../BiocadProject';
 
 export default class SourceView extends View {
+
+	project:BiocadProject
 
     encodingSelector:EncodingSelector
     source:string
     editorMode:string
     graph:Graph|undefined
 
-    constructor(app) {
+    constructor(project) {
 
-        super(app)
+        super(project)
+	this.project = project
 
         this.source = ''
         this.editorMode = 'xml'
-        this.encodingSelector = new EncodingSelector(app)
+        this.encodingSelector = new EncodingSelector(project)
 
         this.encodingSelector.onChangeEncoding = (encoding:Encoding) => {
             this.updateSerialization()
@@ -32,9 +36,9 @@ export default class SourceView extends View {
 
     async updateSerialization() {
 
-        const app:BiocadApp = this.app as BiocadApp
+        const project:BiocadProject = this.project
 
-        const graph = app.graph
+        const graph = project.graph
 
 	try {
         var sbol2Graph = new SBOL2GraphView(new Graph())
@@ -62,7 +66,7 @@ export default class SourceView extends View {
                 this.graph = sbol2Graph.graph
                 break
             case Encoding.Layout:
-                for(let mode of (this.app as BiocadApp).modes) {
+                for(let mode of (this.project).modes) {
                     if(mode instanceof CircuitViewMode) {
                         this.source = JSON.stringify(
                             LayoutPOD.serialize((mode.view as CircuitView).layoutEditor.layout),
@@ -87,8 +91,8 @@ export default class SourceView extends View {
 
     render() {
 
-        const app = this.app as BiocadApp
-        const graph = app.graph
+        const project = this.project
+        const graph = project.graph
 
         var widget:any
 

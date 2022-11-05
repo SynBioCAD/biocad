@@ -2,24 +2,29 @@ import { View, TreeView, TreeNode } from "@biocad/jfw/ui";
 import BiocadApp from "biocad/BiocadApp";
 import { VNode } from "@biocad/jfw/vdom";
 import { Hook } from "@biocad/jfw/util";
+import BiocadProject from "../../BiocadProject";
 
 export default class RepoTree extends View {
+
+	project:BiocadProject
 
     treeView:TreeView
 
     onSelectCollection:Hook<string> = new Hook()
 
-    constructor(app:BiocadApp) {
+    constructor(project:BiocadProject) {
 
-        super(app)
+        super(project)
 
-
-
-
+	this.project = project
 
 
 
-        this.treeView = new TreeView(app)
+
+
+
+
+        this.treeView = new TreeView(project)
 
 	this.treeView.onSelect.listen((uri:string) => {
 		this.onSelectCollection.fire(uri)

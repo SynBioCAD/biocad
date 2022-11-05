@@ -7,8 +7,11 @@ import { click as clickEvent } from '@biocad/jfw/event'
 import fileDialog = require('file-dialog')
 import copySBOL from 'biocad/util/copySBOL';
 import BrowseSBHDialog, { BrowseSBHDialogOptions } from 'biocad/dialog/BrowseSBHDialog';
+import BiocadProject from '../../BiocadProject';
 
 export default class SequenceWizard extends View {
+
+	project:BiocadProject
 
     component:S3Component
 
@@ -17,9 +20,11 @@ export default class SequenceWizard extends View {
     //
     onLoadedPart:(component:S3Component)=>void
 
-    constructor(app:BiocadApp, component:S3Component) {
+    constructor(project:BiocadProject, component:S3Component) {
 
-        super(app)
+        super(project)
+
+	this.project = project
 
         this.component = component
     }
@@ -119,8 +124,8 @@ async function clickSearch(data) {
 
     let view:SequenceWizard = data.view
 
-    let app = view.app as BiocadApp
-    let graph = app.graph
+    let project = view.project
+    let graph = project.graph
     let component = view.component
  
     let opts = new BrowseSBHDialogOptions()
@@ -131,9 +136,9 @@ async function clickSearch(data) {
         opts.query.addRole(role)
     }
 
-    let dialog = new BrowseSBHDialog(app, opts)
+    let dialog = new BrowseSBHDialog(project, opts)
 
-    app.openDialog(dialog)
+    project.dialogs.openDialog(dialog)
 
     dialog.onUsePart = (c:S3Component) => {
         view.onLoadedPart(c)
@@ -144,8 +149,8 @@ async function clickEdit(data) {
 
     let view:SequenceWizard = data.view
 
-    let app = view.app as BiocadApp
-    let graph = app.graph
+    let project = view.project
+    let graph = project.graph
     let component = view.component
 
     let newSeq = sbol3(graph).createSequence(component.uriPrefix, component.displayId + '_sequence')

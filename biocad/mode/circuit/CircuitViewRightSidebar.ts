@@ -14,11 +14,13 @@ export default class CircuitViewRightSidebar extends Sidebar {
 
     constructor(circuitView:CircuitView) {
 
-        super(circuitView.app)
+        super(circuitView)
+
+	let project = circuitView.project
 
         this.inspector = new Inspector(circuitView)
 
-        this.debugDepictionTreeView = new DepictionTreeView(this.app)
+        this.debugDepictionTreeView = new DepictionTreeView(project)
 
         let sections = [
             new SidebarSection(

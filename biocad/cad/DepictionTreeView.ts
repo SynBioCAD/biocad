@@ -2,17 +2,20 @@
 import { TreeView, TreeNode } from '@biocad/jfw/ui';
 import { VNode, h } from '@biocad/jfw/vdom'
 import Layout from 'biocad/cad/layout/Layout';
-import App from '@biocad/jfw/App'
 import { Dialog } from '@biocad/jfw/ui';
 import Depiction from 'biocad/cad/layout/Depiction';
+import BiocadProject from '../BiocadProject';
 
 export default class DepictionTreeView extends TreeView {
 
     layout:Layout
+    project:BiocadProject
 
-    constructor(app:App, dialog?:Dialog|undefined) {
+    constructor(project:BiocadProject) {
 
-        super(app, dialog)
+        super(project)
+
+	this.project = project
 
         this.setNodeFetcher(():Promise<TreeNode[]> => {
 
@@ -55,7 +58,7 @@ export default class DepictionTreeView extends TreeView {
     setLayout(layout:Layout) {
 
         this.layout = layout
-        this.app.update()
+        this.update()
 
     }
 

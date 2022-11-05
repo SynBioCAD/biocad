@@ -1,12 +1,16 @@
 
 import { Topbar } from '@biocad/jfw/ui'
 import { h } from '@biocad/jfw/vdom'
+import BiocadProject from '../BiocadProject'
 
 export default class BiocadTopbar extends Topbar {
 
-    constructor(app) {
+	project:BiocadProject
 
-        super(app)
+    constructor(project) {
+
+        super(project)
+	this.project = project
 
     }
 
@@ -16,7 +20,7 @@ export default class BiocadTopbar extends Topbar {
         }, [
             /*
             h('label.jfw-checkbox', [
-                h('input.jfw-checkbox', checkIf(app.opts.showGrid, {
+                h('input.jfw-checkbox', checkIf(project.opts.showGrid, {
                     type: 'checkbox',
                     name: 'showGrid',
                     'ev-change': hg.sendChange(changeShowGrid, { graph: graph })
@@ -27,7 +31,7 @@ export default class BiocadTopbar extends Topbar {
             h('span.jfw-spacer', ' '),
 
             h('label.jfw-checkbox', [
-                h('input.jfw-checkbox', checkIf(app.opts.showGrid, {
+                h('input.jfw-checkbox', checkIf(project.opts.showGrid, {
                     type: 'checkbox',
                     name: 'darkMode',
                     'ev-change': hg.sendChange(changeDarkMode, { graph: graph })
@@ -40,26 +44,26 @@ export default class BiocadTopbar extends Topbar {
             /*
             h('div.jfw-topbar-config-button.fa.fa-cog', {
 
-                'ev-click': clickEvent(clickConfig, { app: app })
+                'ev-click': clickEvent(clickConfig, { project: project })
              
             }),
             h('span.jfw-spacer', ' '),
             h('div.jfw-topbar-config-button.fa.fa-share', {
 
-                'ev-click': clickEvent(clickShare, { app: app })
+                'ev-click': clickEvent(clickShare, { project: project })
              
             }),
             h('span.jfw-spacer', ' '),*/
 
             /*
             h('button.jfw-input.jfw-button', {
-                'ev-click': hg.sendClick(clickSave, { app: app })
+                'ev-click': hg.sendClick(clickSave, { project: project })
             }, 'Save'),
 
             h('span.jfw-spacer', ' '),
 
             h('button.jfw-input.jfw-button', {
-                'ev-click': hg.sendClick(clickDebug, { app: app })
+                'ev-click': hg.sendClick(clickDebug, { project: project })
             }, 'Debug')*/
         ])
     }
@@ -71,8 +75,8 @@ function changeShowGrid(data) {
 
     const graph = data.graph
 
-    //app.opts.showGrid = data.showGrid
-    //app.requestRenderUI()
+    //project.opts.showGrid = data.showGrid
+    //project.requestRenderUI()
 
 }
 
@@ -80,40 +84,40 @@ function changeDarkMode(data) {
 
     const graph = data.graph
 
-    //app.opts.darkMode = data.darkMode
-    //app.requestRenderUI()
+    //project.opts.darkMode = data.darkMode
+    //project.requestRenderUI()
 
 }
 
 function clickSave(data) {
 
-    const app = data.app
+    const project = data.project
 
 }
 
 
 function clickDebug(data) {
 
-    const app = data.app
+    const project = data.project
 
-    //app.openDialog(new DebugDialog(app))
+    //project.dialogs.openDialog(new DebugDialog(project))
 
 }
 
 function clickConfig(data) {
     
-    const app = data.app
+    const project = data.project
 
-    //app.openDialog(new ConfigDialog(app))
+    //project.dialogs.openDialog(new ConfigDialog(project))
 
 
 }
 
 function clickShare(data) {
     
-    const app = data.app
+    const project = data.project
 
-    //app.openDialog(new ShareDialog(app))
+    //project.dialogs.openDialog(new ShareDialog(project))
 
 
 }

@@ -8,16 +8,21 @@ import { search, SearchResult } from 'sbh-proxy-client'
 import SVGScrollerWidget from './SVGScrollerWidget'
 import LibraryViewPartScroller from "biocad/mode/library/LibraryViewPartScroller";
 import PartSummaryView from "biocad/mode/library/PartSummaryView";
+import BiocadProject from "../../BiocadProject";
 
 export default class LibraryView extends View {
 
+	project:BiocadProject
+
     partScroller:LibraryViewPartScroller
 
-    constructor(app:BiocadApp) {
+    constructor(project:BiocadProject) {
 
-        super(app)
+        super(project)
 
-        this.partScroller = new LibraryViewPartScroller(app, this)
+	this.project = project
+
+        this.partScroller = new LibraryViewPartScroller(project, this)
 
         this.partScroller.onClickPart.listen((uri:string) => {
 
@@ -45,7 +50,7 @@ export default class LibraryView extends View {
 
     onClickPart(uri:string) {
 
-        this.app.openOrphanView(new PartSummaryView(this.app as BiocadApp, uri))
+        this.project.openOrphanView(new PartSummaryView(this.project, uri))
 
 
     }

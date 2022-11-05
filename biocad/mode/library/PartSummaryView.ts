@@ -13,8 +13,11 @@ import CircuitMode from 'biocad/mode/circuit/CircuitMode'
 import { node } from 'rdfoo'
 
 import { click as clickEvent } from '@biocad/jfw/event'
+import BiocadProject from "../../BiocadProject";
 
 export default class PartSummaryView extends View {
+
+	project:BiocadProject
 
     graph:Graph|null
     uri:string
@@ -22,10 +25,11 @@ export default class PartSummaryView extends View {
     layout:Layout|null
     layoutThumbnail:LayoutThumbnail|null
 
-    constructor(app:BiocadApp, uri:string) {
+    constructor(project:BiocadProject, uri:string) {
 
-        super(app)
+        super(project)
 
+	this.project = project
 
         this.graph = null
         this.uri = uri
@@ -43,7 +47,7 @@ export default class PartSummaryView extends View {
                 this.layout = new Layout(gv.graph)
                 this.layout.syncAllDepictions(5)
                 this.layout.configurate([])
-                this.layoutThumbnail = new LayoutThumbnail(app, this.layout)
+                this.layoutThumbnail = new LayoutThumbnail(project, this.layout)
 
                 this.layoutThumbnail.attr = {
                     style: {
@@ -125,12 +129,12 @@ export default class PartSummaryView extends View {
         if(this.graph === null)
             throw new Error('???')
 
-        const app:BiocadApp = this.app as BiocadApp
+        const project:BiocadProject = this.project
 
         if(part instanceof S3Component) {
 
-            app.setMode(app.modes.filter((mode) => mode instanceof CircuitMode)[0])
-            app.dropOverlay.startDropping(new SBOLDroppable(app, this.graph, [ part.uri ]))
+            project.setMode(project.modes.filter((mode) => mode instanceof CircuitMode)[0])
+            project.dropOverlay.startDropping(new SBOLDroppable(project, this.graph, [ part.uri ]))
 
         }
 

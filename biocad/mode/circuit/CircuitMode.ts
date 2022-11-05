@@ -7,15 +7,17 @@ import CircuitViewRightSidebar from './CircuitViewRightSidebar'
 
 import { Mode } from '@biocad/jfw/ui';
 import { VNode, h } from "@biocad/jfw/vdom";
+import BiocadProject from '../../BiocadProject';
 
 export default class CircuitViewMode extends Mode {
 
-    constructor(app:App, active:boolean) {
+    constructor(app:App, project:BiocadProject, active:boolean) {
 
-        const view:CircuitView = new CircuitView(app)
+        const view:CircuitView = new CircuitView(project)
 
         super(
             app,
+	    project,
             active,
             view,
             view.leftSidebar,

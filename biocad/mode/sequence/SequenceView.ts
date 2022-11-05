@@ -6,29 +6,32 @@ import SequenceViewSidebar from './SequenceViewSidebar'
 import SequenceEditor from './SequenceEditor'
 
 import CreateComponentDialog, { CreateComponentDialogDefaults } from '../../dialog/CreateComponentDialog'
-import { App } from "jfw";
 import BiocadApp from "biocad/BiocadApp";
 import { S3Component } from "sboljs";
 import SequenceWizard from './SequenceWizard';
+import BiocadProject from '../../BiocadProject'
 
 var n = 0
 
 export default class SequenceView extends View {
+
+	project:BiocadProject
 
     source:string
     sidebar:SequenceViewSidebar
     sequenceEditor:SequenceEditor
     sequenceWizard:SequenceWizard|null
 
-    constructor(_app:App) {
+    constructor(_project:BiocadProject) {
 
-        const app = _app as BiocadApp
+        const project = _project
 
-        super(app)
+        super(project)
+	this.project = project
 
         this.source = ''
-        this.sidebar = new SequenceViewSidebar(app)
-        this.sequenceEditor = new SequenceEditor(app)
+        this.sidebar = new SequenceViewSidebar(project)
+        this.sequenceEditor = new SequenceEditor(project)
 
 
         let select = (component:S3Component) => {
@@ -38,7 +41,7 @@ export default class SequenceView extends View {
                 this.sequenceEditor.setComponent(component)
                 this.sequenceWizard = null
             } else {
-                this.sequenceWizard = new SequenceWizard(app, component)
+                this.sequenceWizard = new SequenceWizard(project, component)
                 this.sequenceWizard.onLoadedPart = (c:S3Component) => {
                     this.sequenceEditor.setComponent(c)
                     this.sequenceWizard = null
@@ -52,7 +55,7 @@ export default class SequenceView extends View {
 
             let { type, parentUri } = created
 
-            app.openDialog(new CreateComponentDialog(app, {
+            project.dialogs.openDialog(new CreateComponentDialog(project, {
 
                 modal: true,
                 parent: null,
@@ -71,9 +74,10 @@ export default class SequenceView extends View {
 
     activate():void {
 
-        //const app = this.app
-        //const graph = app.graph
+        //const project = this.project
+        //const graph = project.graph
 
+	this.sidebar.browser.tree.refresh()
     }
 
     render():VNode {

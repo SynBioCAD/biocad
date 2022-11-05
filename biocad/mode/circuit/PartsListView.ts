@@ -17,24 +17,26 @@ import { S3Component } from "sboljs";
 import Glyph from "biocad/glyph/Glyph";
 import colors from '../../../data/colors'
 import { Prefixes, Specifiers } from "bioterms";
+import BiocadProject from "../../BiocadProject";
 
 export default class PartsListView extends View {
 
-    app:App
+    project:BiocadProject
 
     parts:Glyph[]
 
-    constructor(app:App, parts:Glyph[]) {
+    constructor(project:BiocadProject, parts:Glyph[]) {
 
-        super(app)
+        super(project)
 
+	this.project = project
         this.parts = parts
 
     }
 
     render():VNode {
 
-        var app:App = this.app
+        var project:BiocadProject = this.project
 
         function renderPartEntry(glyph:Glyph) {
 
@@ -90,8 +92,8 @@ export default class PartsListView extends View {
 
 
             return h('div.sf-plv-entry', {
-                'ev-mousedown': clickEvent(mousedownPart, { app: app, part: glyph }),
-                'ev-contextmenu': contextMenuEvent(clickSearch, { app: app, part: glyph })
+                'ev-mousedown': clickEvent(mousedownPart, { project: project, part: glyph }),
+                'ev-contextmenu': contextMenuEvent(clickSearch, { project: project, part: glyph })
             }, [
                 /*svg('svg', {
                     'class': 'sf-plv-bw',
@@ -126,20 +128,20 @@ export default class PartsListView extends View {
                     glyph.glyphName,
 
                     h('span.fa.fa-search.sf-part-search-button', {
-                        'ev-mousedown': clickEvent(clickSearch, { app: app, part: glyph })
+                        'ev-mousedown': clickEvent(clickSearch, { project: project, part: glyph })
                     }, [
                     ])
                 ])
             ])
         }
 
-        return renderSection(app, [
+        return renderSection(project, [
 
             h('div.sf-plv', this.parts.map(renderPartEntry))
 
         ])
 
-        function renderSection(app, children) {
+        function renderSection(project, children) {
 
             return h('div.jfw-sidebar-section', {
 
@@ -156,12 +158,14 @@ function mousedownPart(data:any) {
 
     console.log('foomd')
 
-    const app:BiocadApp = data.app
+    const project:BiocadProject = data.project
+    let app:BiocadApp = project.app as BiocadApp
+
     const part = data.part
 
     const graph:Graph = new Graph([])
 
-    let component = sbol3(graph).createComponent(app.defaultPrefix, part.glyphName)
+    let component = sbol3(graph).createComponent(project.defaultPrefix, part.glyphName)
 
     for(let soTerm of part.soTerms) {
 	component.addRole(Prefixes.sequenceOntologyIdentifiersOrg + soTerm)
@@ -172,7 +176,7 @@ function mousedownPart(data:any) {
 
     //console.log('uri is ' + uri)
 
-    const droppable:SBOLDroppable = new SBOLDroppable(app, graph, [ component.uri ])
+    const droppable:SBOLDroppable = new SBOLDroppable(project, graph, [ component.uri ])
     app.dropOverlay.setFinalizeEvent(FinalizeEvent.MouseUp)
     app.dropOverlay.startDropping(droppable)
 
@@ -180,7 +184,7 @@ function mousedownPart(data:any) {
 
 function clickSearch(data:any) {
 
-    const app:BiocadApp = data.app
+    const project:BiocadProject = data.project
     const part = data.part
 
 
@@ -192,13 +196,13 @@ function clickSearch(data:any) {
 	browseDialogOpts.query.addRole(Prefixes.sequenceOntologyIdentifiersOrg + term)
 
     
-    const browseDialog:BrowseSBHDialog = new BrowseSBHDialog(app, browseDialogOpts)
+    const browseDialog:BrowseSBHDialog = new BrowseSBHDialog(project, browseDialogOpts)
 
     browseDialog.onUsePart = (part:S3Component) => {
-	    app.dropOverlay.startDropping(new SBOLDroppable(app, part.graph, [ part.subject.value ]))
+	    project.dropOverlay.startDropping(new SBOLDroppable(project, part.graph, [ part.subject.value ]))
     }
 
-    app.openDialog(browseDialog)
+    project.dialogs.openDialog(browseDialog)
 
 
 }

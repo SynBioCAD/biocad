@@ -7,22 +7,23 @@ import Layout from "biocad/cad/layout/Layout";
 import LayoutThumbnail from "biocad/cad/LayoutThumbnail";
 import { Vec2 } from "@biocad/jfw/geom";
 import { Rect } from "@biocad/jfw/geom";
+import BiocadProject from '../BiocadProject';
 
 export default class InspectComponentThumbnailView extends View {
 
     layout:Layout
     thumb:LayoutThumbnail
 
-    constructor(app:BiocadApp, component:S3Component) {
+    constructor(project:BiocadProject, component:S3Component) {
 
-        super(app)
+        super(project)
 
         this.layout = new Layout(component.graph)
         this.layout.gridSize = Vec2.fromXY(8, 8)
         this.layout.syncAllDepictions(5)
         this.layout.configurate([])
 
-        this.thumb = new LayoutThumbnail(app, this.layout)
+        this.thumb = new LayoutThumbnail(project, this.layout)
     }
 
     render():VNode {

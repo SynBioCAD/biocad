@@ -24,9 +24,9 @@ export default class CreateAnnotationDialog extends Dialog {
     saveButton:Button
     cancelButton:Button
 
-    constructor(app:BiocadApp, opts:any) {
+    constructor(project:BiocadProject, opts:any) {
 
-        super(app, extend({
+        super(project, extend({
 
             modal: true,
             annoStart: 0,
@@ -62,7 +62,7 @@ export default class CreateAnnotationDialog extends Dialog {
         this.cancelButton.setText('Cancel')
 
         this.cancelButton.onClick(() => {
-            this.app.closeDialog(this)
+            this.project.dialogs.closeDialog(this)
         })
     }
 

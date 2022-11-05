@@ -16,9 +16,9 @@ export default class RemoveURIPrefixDialog extends Dialog {
     topLevelsWithPrefix:any
     newPrefixCombo:Combo
 
-    constructor(app, opts) {
+    constructor(project, opts) {
 
-        super(app, extend({
+        super(project, extend({
 
             modal: true
             
@@ -34,13 +34,13 @@ export default class RemoveURIPrefixDialog extends Dialog {
         }, opts.removeUriPrefix  || {})
 
         this.topLevelsWithPrefix =
-            app.graph.getTopLevelsWithPrefix(opts.removeUriPrefix.uriPrefix)
+            project.graph.getTopLevelsWithPrefix(opts.removeUriPrefix.uriPrefix)
 
-        this.actionRadio = new RadioButtons(app, 'nop')
+        this.actionRadio = new RadioButtons(project, 'nop')
 
-        const prefixes = app.graph.uriPrefixes
+        const prefixes = project.graph.uriPrefixes
 
-        this.newPrefixCombo = new Combo(app, prefixes.map((prefix) => {
+        this.newPrefixCombo = new Combo(project, prefixes.map((prefix) => {
             return {
                 name: prefix,
                 value: prefix
@@ -70,8 +70,8 @@ export default class RemoveURIPrefixDialog extends Dialog {
 
     getContentView():VNode {
 
-        const app:BiocadApp = this.app as BiocadApp
-        const graph = app.graph
+        const project:BiocadProject = this.project
+        const graph = project.graph
 
         const opts = this.removeUriPrefixOpts
 

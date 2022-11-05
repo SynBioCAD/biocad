@@ -27,18 +27,22 @@ export default class SequenceEditorContextMenu extends ContextMenu {
         if(component === null)
             throw new Error('???')
 
-        const app:BiocadApp = overlay.app as BiocadApp
+        const project:BiocadProject = overlay.project
+	let app:BiocadApp = project.app as BiocadApp
 
         const items:ContextMenuItem[] = []
 
-        items.push(new ContextMenuItem('span.fa.fa-undo', 'Undo', (pos:Vec2) => {
+	if(!sequenceEditor.readOnly) {
 
-            //sequenceEditor.popUndoLevel()
+		items.push(new ContextMenuItem('span.fa.fa-undo', 'Undo', (pos:Vec2) => {
 
-            app.closeContextMenu()
+		//sequenceEditor.popUndoLevel()
+
+		app.closeContextMenu()
 
 
-        }))
+		}))
+	}
 
         if(sequence !== null && overlay.selectionStart && overlay.selectionEnd) {
 
@@ -54,28 +58,32 @@ export default class SequenceEditorContextMenu extends ContextMenu {
                 units = ' aa'
             }
 
-            items.push(new ContextMenuItem('span.fa.fa-undo', 'Annotate ' + numBp + units, (pos: Vec2) => {
+	    if(!sequenceEditor.readOnly) {
 
-                //sequenceEditor.popUndoLevel()
+		items.push(new ContextMenuItem('span.fa.fa-undo', 'Annotate ' + numBp + units, (pos: Vec2) => {
 
-                /*
-                app.openDialog(new CreateAnnotationDialog(app, {
-                    component:S3Component,
-                    sequence: sequence,
-                    annoStart: overlay.selectionStart,
-                    annoEnd: overlay.selectionEnd
-                }))*/
+			//sequenceEditor.popUndoLevel()
 
-                if(overlay.selectionStart === null || overlay.selectionEnd === null || S3Component === null)
-                    throw new Error('???')
+			/*
+			project.dialogs.openDialog(new CreateAnnotationDialog(project, {
+			component:S3Component,
+			sequence: sequence,
+			annoStart: overlay.selectionStart,
+			annoEnd: overlay.selectionEnd
+			}))*/
 
-                component.createFeatureWithRange(overlay.selectionStart + 1, overlay.selectionEnd, 'Untitled Feature')
+			if(overlay.selectionStart === null || overlay.selectionEnd === null || S3Component === null)
+			throw new Error('???')
+
+			component.createFeatureWithRange(overlay.selectionStart + 1, overlay.selectionEnd, 'Untitled Feature')
 
 
-                app.closeContextMenu()
+			app.closeContextMenu()
 
 
-            }))
+		}))
+
+	}
 
             items.push(new ContextMenuItem('span.fa.fa-copy', 'Copy', (pos: Vec2) => {
 
@@ -89,32 +97,35 @@ export default class SequenceEditorContextMenu extends ContextMenu {
 
         }
 
-        items.push(new ContextMenuItem('span.fa.fa-paste', 'Paste', async (pos: Vec2) => {
 
-            //let str = await clipboad.readText()
+	if(!sequenceEditor.readOnly) {
+		items.push(new ContextMenuItem('span.fa.fa-paste', 'Paste', async (pos: Vec2) => {
 
-            let str = ''
+		//let str = await clipboad.readText()
 
-            let caretPos = sequenceEditor.getCaretPos()
-            let sequence = sequenceEditor.sequence
+		let str = ''
 
-            if(caretPos !== null && sequence) {
-                let elements = sequence.elements
-                if(!elements) {
-                    sequence.elements = str
-                } else {
-                    sequence.elements = [
-                        elements.substring(0, caretPos),
-                        str,
-                        elements.substring(caretPos)
-                    ].join('')
-                    sequenceEditor.update()
-                }
-            }
+		let caretPos = sequenceEditor.getCaretPos()
+		let sequence = sequenceEditor.sequence
 
-            app.closeContextMenu()
+		if(caretPos !== null && sequence) {
+			let elements = sequence.elements
+			if(!elements) {
+			sequence.elements = str
+			} else {
+			sequence.elements = [
+				elements.substring(0, caretPos),
+				str,
+				elements.substring(caretPos)
+			].join('')
+			sequenceEditor.update()
+			}
+		}
 
-        }))
+		app.closeContextMenu()
+
+		}))
+	}
 
 
         super(pos, items)

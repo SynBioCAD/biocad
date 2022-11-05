@@ -5,12 +5,17 @@ import PartsListView from './PartsListView'
 
 import palettes from 'data/palettes'
 import Glyph from 'biocad/glyph/Glyph'
+import BiocadProject from '../../BiocadProject'
 
 export default class CircuitViewLeftSidebar extends Sidebar {
 
-    constructor(app) {
+	project:BiocadProject
 
-        super(app)
+    constructor(project) {
+
+        super(project)
+
+	this.project = project
 
         let divisions:Array<SidebarDivision> = []
 
@@ -40,7 +45,7 @@ export default class CircuitViewLeftSidebar extends Sidebar {
 
                 division.sections.push(
                     new SidebarSection(
-                        new PartsListView(app, p),
+                        new PartsListView(project, p),
                         palette.name
                     )
                 )
@@ -54,7 +59,7 @@ export default class CircuitViewLeftSidebar extends Sidebar {
         if(GlobalConfig.get("biocad.palette.sbolv")) {
             sections.push(
                 new SidebarSection(
-                    new PartsListView(app, (part:any) => (part.typeUri === Specifiers.SBOL2.Type.DNA)),
+                    new PartsListView(project, (part:any) => (part.typeUri === Specifiers.SBOL2.Type.DNA)),
                     'SBOL Visual'
                 )
             )
@@ -64,7 +69,7 @@ export default class CircuitViewLeftSidebar extends Sidebar {
 
             sections.push(
                 new SidebarSection(
-                    new PartsListView(app, (part:any) => (part.typeUri === Specifiers.SBOL2.Type.Protein)),
+                    new PartsListView(project, (part:any) => (part.typeUri === Specifiers.SBOL2.Type.Protein)),
                     'Protein'
                 )
             )

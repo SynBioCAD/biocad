@@ -9,8 +9,12 @@ import { search, SearchResult } from 'sbh-proxy-client'
 import SVGScrollerWidget, { SVGScrollerEntry } from './SVGScrollerWidget'
 import LibraryView from "biocad/mode/library/LibraryView";
 import { Hook } from "@biocad/jfw/util";
+import BiocadProject from "../../BiocadProject";
 
 export default class LibraryViewPartScroller extends View {
+
+
+	project:BiocadProject
 
     results:SearchResult[]|null
     resultsSVG:SVGScrollerEntry[]
@@ -19,9 +23,11 @@ export default class LibraryViewPartScroller extends View {
 
     public onClickPart:Hook<string>
 
-    constructor(app:BiocadApp, libraryView:LibraryView) {
+    constructor(project:BiocadProject, libraryView:LibraryView) {
 
-        super(app)
+        super(project)
+
+	this.project = project
 
         this.onClickPart = new Hook<string>()
 
@@ -48,7 +54,7 @@ export default class LibraryViewPartScroller extends View {
                 svg: result.svg
             }))
 
-            this.app.update()
+            this.update()
         })
 
     }

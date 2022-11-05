@@ -7,14 +7,17 @@ import renderAnnotations from './renderAnnotations'
 import renderElements from './renderElements'
 import renderLineNumbers from './renderLineNumbers'
 import SequenceEditor from "./SequenceEditor";
+import BiocadProject from '../../BiocadProject'
 
 export default class SequenceEditorBody extends View {
 
+	project:BiocadProject
     sequenceEditor: SequenceEditor
 
     constructor(sequenceEditor) {
 
-        super(sequenceEditor.app)
+        super(sequenceEditor.project)
+	this.project = sequenceEditor.project
 
         this.sequenceEditor = sequenceEditor
 

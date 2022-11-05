@@ -1,4 +1,4 @@
-import { View } from '@biocad/jfw/ui'
+import { Project, View } from '@biocad/jfw/ui'
 import { VNode, h } from '@biocad/jfw/vdom'
 import { Vec2 } from '@biocad/jfw/geom'
 
@@ -15,32 +15,37 @@ import ImageRenderer, { ImageFormat } from 'biocad/cad/ImageRenderer'
 
 import SBOLConverterValidator from 'biocad/util/SBOLConverterValidator'
 import CircuitView from '../circuit/CircuitView';
+import BiocadProject from '../../BiocadProject';
 
 export default class LoadSaveView extends View {
+
+	project:BiocadProject
 
     layout:Layout|undefined
     thumb:LayoutThumbnail|undefined
     section:string
 
-    constructor(app) {
+    constructor(project) {
 
-        super(app)
+        super(project)
+
+	this.project = project
     }
 
     activate():void {
 
-        let app = this.app as BiocadApp
+        let project = this.project
 
-        let graph = app.graph
+        let graph = project.graph
 
         if(graph.toArray().length > 0) {
 
-            let circuitMode = app.getCircuitMode()
+            let circuitMode = project.getCircuitMode()
 
             if(circuitMode) {
                 this.layout = (circuitMode.view as CircuitView).layoutEditor.layout.clone()
             } else {
-                this.layout = new Layout(app.graph)
+                this.layout = new Layout(project.graph)
                 this.layout.syncAllDepictions(5)
                 this.layout.configurate([])
             }
@@ -48,7 +53,7 @@ export default class LoadSaveView extends View {
 
             this.layout.crop(Vec2.fromXY(3, 2))
 
-            this.thumb = new LayoutThumbnail(app, this.layout)
+            this.thumb = new LayoutThumbnail(project, this.layout)
         }
 
         if(this.thumb && this.layout) {
@@ -253,10 +258,10 @@ async function clickImport(data)  {
             if(!ev.target)
                 return
 
-            let app = view.app as BiocadApp
+            let project = view.project
 
             let g = await SBOL3GraphView.loadString(reader.result + '', file[0].type)
-            app.loadGraph(g.graph)
+            project.loadGraph(g.graph)
         }
 
         reader.readAsText(file[0])
@@ -274,7 +279,7 @@ async function clickExport(data)  {
     view.update()
 
     /*
-    let graph = (view.app as BiocadApp).graph
+    let graph = (view.project).graph
 
     let graph2 = new SBOL2Graph()
     
@@ -296,7 +301,7 @@ async function clickExportBiocad(data)  {
 
     let view:LoadSaveView = data.view
 
-    let graph = (view.app as BiocadApp).graph
+    let graph = (view.project).graph
 
     let xml = sbol3(graph).serializeXML()
 
@@ -312,7 +317,7 @@ async function clickExportSBOL2(data)  {
 
     let view:LoadSaveView = data.view
 
-    let graph = (view.app as BiocadApp).graph
+    let graph = (view.project).graph
 
     let graph2 = new SBOL2GraphView(new Graph())
     await graph2.loadString(sbol3(graph).serializeXML())
@@ -330,7 +335,7 @@ async function clickExportGenBank(data)  {
 
     let view:LoadSaveView = data.view
 
-    let graph = (view.app as BiocadApp).graph
+    let graph = (view.project).graph
 
     try {
         let gb = await SBOLConverterValidator.sxToGenbank(graph)
@@ -340,7 +345,7 @@ async function clickExportGenBank(data)  {
 
         downloadBlob('biocad.gb', blob)
     } catch(e) {
-        (view.app as BiocadApp).popupMessage('GenBank conversion failed', e)
+        (view.project).popupMessage('GenBank conversion failed', e)
     }
 
 }
@@ -349,7 +354,7 @@ async function clickExportFASTA(data)  {
 
     let view:LoadSaveView = data.view
 
-    let graph = (view.app as BiocadApp).graph
+    let graph = (view.project).graph
 
     try {
         let gb = await SBOLConverterValidator.sxToFASTA(graph)
@@ -359,7 +364,7 @@ async function clickExportFASTA(data)  {
 
         downloadBlob('biocad.fasta', blob)
     } catch(e) {
-        (view.app as BiocadApp).popupMessage('FASTA conversion failed', e)
+        (view.project).popupMessage('FASTA conversion failed', e)
     }
 
 }

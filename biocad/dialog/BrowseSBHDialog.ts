@@ -11,6 +11,7 @@ import { click as clickEvent } from '@biocad/jfw/event'
 import { InspectComponentDialogOptions } from "biocad/dialog/InspectComponentDialog"
 import InspectComponentDialog from "biocad/dialog/InspectComponentDialog"
 import { App } from "@biocad/jfw/ui";
+import BiocadProject from "../BiocadProject";
 
 export class BrowseSBHDialogOptions extends DialogOptions {
 
@@ -39,9 +40,9 @@ export default class BrowseSBHDialog extends Dialog {
 
     onUsePart:(part:S3Component)=>void
 
-    constructor(app:BiocadApp, opts:BrowseSBHDialogOptions) {
+    constructor(project:BiocadProject, opts:BrowseSBHDialogOptions) {
 
-        super(app, opts)
+        super(project, project.dialogs, opts)
 
         this.query = opts.query
         this.targetComponent = opts.targetComponent
@@ -139,14 +140,14 @@ function clickResult(data) {
     inspectDialogOpts.parent = dialog
     inspectDialogOpts.targetComponent = dialog.targetComponent
 
-    const app:App = dialog.app
+    const project:BiocadProject = dialog.project
 
-    const inspectDialog:InspectComponentDialog = new InspectComponentDialog(app as BiocadApp, inspectDialogOpts)
+    const inspectDialog:InspectComponentDialog = new InspectComponentDialog(project, inspectDialogOpts)
 
     if(dialog.onUsePart)
         inspectDialog.onUsePart = dialog.onUsePart
 
-    app.openDialog(inspectDialog)
+    project.dialogs.openDialog(inspectDialog)
 
 
 }

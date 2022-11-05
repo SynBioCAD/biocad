@@ -36,6 +36,7 @@ import { Prefixes } from 'bioterms'
 import so from 'data/sequence-ontology'
 import systemsBiologyOntology from 'data/systems-biology-ontology';
 import PropertyEditorDebug from '../../property/PropertyEditorDebug';
+import BiocadProject from '../../BiocadProject';
 
 const strands = [
     {
@@ -77,6 +78,9 @@ const types = [
 
 export default class Inspector extends View {
 
+
+    project: BiocadProject
+
     private inspecting:{ uri:string, depiction:DepictionRef }[]
 
     renderThumb:any
@@ -87,11 +91,13 @@ export default class Inspector extends View {
 
     constructor(layoutEditorView:LayoutEditorView) {
 
-        if(!layoutEditorView.app) {
-            throw new Error('lev has no app?')
-        }
+	super(layoutEditorView.project)
 
-        super(layoutEditorView.app)
+	this.project = layoutEditorView.project
+
+        if(!this.project) {
+            throw new Error('lev has no project?')
+        }
 
         this.layoutEditorView = layoutEditorView
 
@@ -187,7 +193,7 @@ export default class Inspector extends View {
             if(effectiveComponent) {
 
                 this.editors.push(new PropertyEditorCombo('Type', new PropertyAccessorURI(effectiveComponent.uri, Predicates.SBOL3.type), types))
-                this.editors.push(new PropertyEditorTermSet(this.app as BiocadApp, 'Roles', new PropertyAccessorURISet(effectiveComponent.uri, Predicates.SBOL3.role, changeNonRecursive), Prefixes.sequenceOntologyIdentifiersOrg, so, 'SO:0000110'))
+                this.editors.push(new PropertyEditorTermSet(this.project, 'Roles', new PropertyAccessorURISet(effectiveComponent.uri, Predicates.SBOL3.role, changeNonRecursive), Prefixes.sequenceOntologyIdentifiersOrg, so, 'SO:0000110'))
                 //this.editors.push(new PropertyEditorTermSet('Roles', dOf.uri, Predicates.SBOL3.hasRole, strands))
 
             }
@@ -208,10 +214,10 @@ export default class Inspector extends View {
                     this.update()
                 }
 
-                this.editors.push(new PropertyEditorTermSet(this.app as BiocadApp, 'Roles', new PropertyAccessorURISet(interaction.uri, Predicates.SBOL3.type, changeNonRecursive), Prefixes.sbo, systemsBiologyOntology, 'SBO:0000231'))
+                this.editors.push(new PropertyEditorTermSet(this.project, 'Roles', new PropertyAccessorURISet(interaction.uri, Predicates.SBOL3.type, changeNonRecursive), Prefixes.sbo, systemsBiologyOntology, 'SBO:0000231'))
 
                 //this.editors.push(new PropertyEditorSiblingComponent('Participant', interaction.containingModule.uri, participation.uri, Predicates.SBOL3.participant))
-                this.editors.push(new PropertyEditorInteractionParticipants(this.app as BiocadApp, interaction.uri, changeInteraction))
+                this.editors.push(new PropertyEditorInteractionParticipants(this.project, interaction.uri, changeInteraction))
             }
 
             this.editors.push(new PropertyEditorDebug(depiction))
@@ -223,7 +229,7 @@ export default class Inspector extends View {
 
     render():VNode {
 
-        let graph = (this.app as BiocadApp).graph
+        let graph = (this.project).graph
 
         let elements:any[] = []
 

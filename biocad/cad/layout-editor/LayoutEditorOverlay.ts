@@ -2,18 +2,17 @@ import  { S3Identified, S3Interaction, sbol3 }  from "sboljs"
 
 import LabelDepiction from 'biocad/cad/layout/LabelDepiction';
 import Depiction, { Opacity } from 'biocad/cad/layout/Depiction';
-import { Vec2 } from 'jfw/geom';
-import { VNode, svg, active } from 'jfw/vdom';
+import { Vec2 } from '@biocad/jfw/geom';
+import { VNode, svg, active } from '@biocad/jfw/vdom';
 
-import { View } from 'jfw/ui'
-import LayoutEditor from "biocad/cad/LayoutEditor";
+import { View } from '@biocad/jfw/ui'
+import LayoutEditor from '../layout-editor/LayoutEditor'
 
-import { mousemove as mousemoveEvent, click as clickEvent, mousewheel as wheelEvent, gesture as gestureEvent, contextMenu as contextMenuEvent, drag } from 'jfw/event'
+import { mousemove as mousemoveEvent, click as clickEvent, mousewheel as wheelEvent, gesture as gestureEvent, contextMenu as contextMenuEvent, drag } from '@biocad/jfw/event'
 import Layout from "biocad/cad/layout/Layout";
 
 import renderHandles from '../renderHandles'
-import Matrix from "jfw/geom/Matrix";
-import Rect from "jfw/geom/Rect";
+import { Rect, Matrix } from "@biocad/jfw/geom";
 import BiocadApp from "biocad/BiocadApp";
 import Droppable from "biocad/droppable/Droppable";
 import SBOLDroppable from "biocad/droppable/SBOLDroppable";
@@ -37,8 +36,12 @@ import DepictionRef from "biocad/cad/layout/DepictionRefByUid";
 import copySBOL from 'biocad/util/copySBOL'
 import createInteraction from "../createInteraction";
 import DepictionRefByChain from "biocad/cad/layout/DepictionRefByChain";
+import BiocadProject from "../../BiocadProject";
 
 export default class LayoutEditorOverlay extends View {
+
+	project:BiocadProject
+	app:BiocadApp
 
     mouseGridPos: Vec2 = Vec2.fromXY(-1, -1)
     layoutEditor:LayoutEditor
@@ -62,9 +65,11 @@ export default class LayoutEditorOverlay extends View {
 
     constructor(layoutEditor:LayoutEditor) {
 
-        super(layoutEditor.app)
+        super(layoutEditor.project)
         
         this.layoutEditor = layoutEditor
+	this.project = layoutEditor.project
+	this.app = layoutEditor.project.app
 
 
         this.proposingResult = null
@@ -191,7 +196,7 @@ export default class LayoutEditorOverlay extends View {
         if(stuffChanged)
             depiction.touch()
 
-        this.app.update()
+        this.update()
         
 
     }
@@ -423,7 +428,7 @@ export default class LayoutEditorOverlay extends View {
 
     receiveDroppable(offset:Vec2, _droppable:Droppable):void {
 
-        const app:BiocadApp = this.app as BiocadApp
+	let project = this.project
 
         //console.log('receive at')
         //console.log(offset)
@@ -442,14 +447,14 @@ export default class LayoutEditorOverlay extends View {
                 //;(_droppable as SBOLDroppable).finalizeDrop(this.layoutEditor.layout.graph, this.proposingDepiction)
                 //this.proposingDepiction = null
                 
-                this.app.update()
+                this.update()
 
                 return
             }
 
             const droppable:SBOLDroppable = _droppable as SBOLDroppable
 
-            let identityMap = copySBOL(droppable.graph, app.graph, app.defaultPrefix)
+            let identityMap = copySBOL(droppable.graph, project.graph, project.defaultPrefix)
 
             // TODO
             const newUri = identityMap.get(sbol3(droppable.graph).topLevels[0].uri)
@@ -731,7 +736,7 @@ export default class LayoutEditorOverlay extends View {
 
             this.proposingResult = null
             
-            this.app.update()
+            this.update()
 
             return
         }
@@ -830,7 +835,7 @@ export default class LayoutEditorOverlay extends View {
 
         assert(!isNaN(this.layoutEditor.scaleFactor))
 
-        this.app.update()
+        this.update()
     }
 
     private onClickLabel(label:LabelDepiction) {
@@ -848,7 +853,7 @@ export default class LayoutEditorOverlay extends View {
         if(labelFor.isExpandable) {
 
             labelFor.toggleOpacity()
-            this.app.update()
+            this.update()
 
         }
     }

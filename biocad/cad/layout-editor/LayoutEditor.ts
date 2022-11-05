@@ -1,27 +1,30 @@
-import { createGrid } from 'jfw/graphics';
-import { App } from 'jfw';
+import { createGrid } from '@biocad/jfw/graphics';
+import { App } from '@biocad/jfw';
 
 import Layout from 'biocad/cad/layout/Layout'
-import { View, SubTree } from 'jfw/ui'
+import { View, SubTree } from '@biocad/jfw/ui'
 
-import { VNode, h, svg } from 'jfw/vdom'
+import { VNode, h, svg } from '@biocad/jfw/vdom'
 
 import Depiction from 'biocad/cad/layout/Depiction'
 import LayoutEditorOverlay from "biocad/cad/layout-editor/LayoutEditorOverlay";
-import { Rect, Vec2 } from "jfw/geom"
+import { Rect, Vec2 } from "@biocad/jfw/geom"
 
 import ScrollbarWidget from '../ScrollbarWidget'
 import BiocadApp from "biocad/BiocadApp";
-import Matrix from "jfw/geom/Matrix";
-import { Hook } from "jfw/util";
+import { Matrix } from "@biocad/jfw/geom";
+import { Hook } from "@biocad/jfw/util";
 import Droppable from "biocad/droppable/Droppable";
 import LayoutPOD from "biocad/cad/layout/LayoutPOD";
 import SVGDefs from "biocad/cad/SVGDefs";
 import { Graph, SBOL3GraphView, sbol3 } from "sboljs"
 import LayoutEditorDebugLog from './LayoutEditorDebugLog';
 import DepictionRef from 'biocad/cad/layout/DepictionRefByUid';
+import BiocadProject from '../../BiocadProject';
 
 export default class LayoutEditor extends View {
+
+	project:BiocadProject
 
     layout:Layout
 
@@ -58,9 +61,11 @@ export default class LayoutEditor extends View {
 
 
 
-    constructor(app:App, layout:Layout) {
+    constructor(project:BiocadProject, layout:Layout) {
 
-        super(app)
+        super(project)
+
+	this.project = project
 
         this.selectedDepictions = []
         this.onSelectDepictions = new Hook<Depiction[]>()
@@ -69,7 +74,7 @@ export default class LayoutEditor extends View {
         this.onNewGraph = new Hook<Graph>()
 
         this.layout = layout
-        this.layout.versionChangedCallback = () => this.app.update()
+        this.layout.versionChangedCallback = () => this.update()
 
         this.interactive = true
         this.overlay = new LayoutEditorOverlay(this)
@@ -96,7 +101,7 @@ export default class LayoutEditor extends View {
 
         this.undoLevels.push({ layout, graph })
 
-        ;(this.app as BiocadApp).saveState()
+        ;(this.project.app as BiocadApp).saveState()
 
         console.timeEnd('push undo level')
     }
@@ -191,7 +196,7 @@ export default class LayoutEditor extends View {
             }, [
                 this.overlaySubtree.render()
             ]),
-            new ScrollbarWidget(this.app as BiocadApp, this),
+            new ScrollbarWidget(this.project, this),
         ]) 
     }
 
@@ -218,7 +223,7 @@ export default class LayoutEditor extends View {
             this.selectedDepictions.push(new DepictionRef(depiction))
         }
 
-        this.app.update()
+        this.update()
         
 
     }
@@ -297,7 +302,7 @@ export default class LayoutEditor extends View {
 
         this.layout.cleanup()
         this.layout = this.proposedLayout
-        this.layout.versionChangedCallback = () => this.app.update()
+        this.layout.versionChangedCallback = () => this.update()
 
         this.proposedLayout = null
 
@@ -311,7 +316,7 @@ export default class LayoutEditor extends View {
 
         this.layout.cleanup()
         this.layout = layout
-        this.layout.versionChangedCallback = () => this.app.update()
+        this.layout.versionChangedCallback = () => this.update()
 
         this.onNewGraph.fire(this.layout.graph)
 

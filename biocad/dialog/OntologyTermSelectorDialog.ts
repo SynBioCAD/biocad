@@ -3,16 +3,17 @@ import { Dialog, DialogOptions } from '@biocad/jfw/ui';
 import OntologyTreeView from 'biocad/view/OntologyTreeView'
 import { App } from '@biocad/jfw/ui'
 import { h } from '@biocad/jfw/vdom'
+import BiocadProject from '../BiocadProject';
 
 export default class OntologyTermSelectorDialog extends Dialog {
 
     treeView:OntologyTreeView
 
-    constructor(app:App, opts:DialogOptions, ontology:any, rootTermID:string|null) {
+    constructor(project:BiocadProject, opts:DialogOptions, ontology:any, rootTermID:string|null) {
 
-        super(app, opts)
+        super(project, project.dialogs, opts)
 
-        this.treeView = new OntologyTreeView(app, this, ontology, rootTermID)
+        this.treeView = new OntologyTreeView(project, this, ontology, rootTermID)
         this.treeView.setSearchable(true)
     }
 
@@ -29,22 +30,22 @@ export default class OntologyTermSelectorDialog extends Dialog {
     }
 
 
-    static async selectTerm(app:App, dialogTitle:string, dialogParent:Dialog|null, ontology:any, rootTermID:string|null):Promise<string|null> {
+    static async selectTerm(project:BiocadProject, dialogTitle:string, dialogParent:Dialog|null, ontology:any, rootTermID:string|null):Promise<string|null> {
 
         let dialogOpts = new DialogOptions()
         dialogOpts.parent = dialogParent
         dialogOpts.modal = true
 
-        let dialog = new OntologyTermSelectorDialog(app, dialogOpts, ontology, rootTermID)
+        let dialog = new OntologyTermSelectorDialog(project, dialogOpts, ontology, rootTermID)
         dialog.setTitle(dialogTitle)
 
-        app.openDialog(dialog)
+        project.dialogs.openDialog(dialog)
 
         return new Promise<string|null>((resolve, reject) => {
             let selected = false
             dialog.treeView.onSelect.listen((id) => {
                 selected = true
-                app.closeDialog(dialog)
+                project.dialogs.closeDialog(dialog)
                 resolve(id)
             })
             dialog.onClose.listen(() => {

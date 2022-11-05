@@ -3,6 +3,7 @@ import { VNode, h } from '@biocad/jfw/vdom'
 import { View } from '@biocad/jfw/ui'
 import { App } from '@biocad/jfw/ui'
 import { click as clickEvent } from '@biocad/jfw/event'
+import BiocadProject from '../../BiocadProject'
 
 export enum Encoding {
     SBOL3,
@@ -17,11 +18,16 @@ let encodingNames:string[] =
 
 export default class EncodingSelector extends View {
 
+	project:BiocadProject
+
     currentEncoding:Encoding
     onChangeEncoding:(encoding:Encoding)=>void
 
-    constructor(app:App) {
-        super(app)
+    constructor(project:BiocadProject) {
+
+        super(project)
+	this.project = project
+
         this.currentEncoding = Encoding.SBOL3
     }
 

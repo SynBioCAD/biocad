@@ -1,18 +1,23 @@
 
 import { Sidebar, ListMenu } from '@biocad/jfw/ui'
 import { SidebarSection } from '@biocad/jfw/ui';
+import BiocadProject from '../../BiocadProject';
 
 export default class SetupViewSidebar extends Sidebar {
+
+	project:BiocadProject
 
     curDocSetup: ListMenu
     globalSetup: ListMenu
 
-    constructor(app) {
+    constructor(project) {
 
-        super(app)
+        super(project)
 
-        this.curDocSetup = new ListMenu(app)
-        this.globalSetup = new ListMenu(app)
+	this.project = project
+
+        this.curDocSetup = new ListMenu(project)
+        this.globalSetup = new ListMenu(project)
 
 
         this.curDocSetup.setItems([

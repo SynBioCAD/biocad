@@ -12,20 +12,20 @@ export default class PropertyEditorTermSet extends PropertyEditor {
 
     title:string
 
-    app:BiocadApp
+    project:BiocadProject
 
     ontology:any
     ontologyNamespace:string
     rootTermURI:string|null
     accessor:PropertyAccessor<string[]>
 
-    constructor(app:BiocadApp, title:string, accessor:PropertyAccessor<string[]>, ontologyNamespace:string, ontology:any, rootTermURI:string) {
+    constructor(project:BiocadProject, title:string, accessor:PropertyAccessor<string[]>, ontologyNamespace:string, ontology:any, rootTermURI:string) {
 
         super()
 
         this.accessor = accessor
         this.title = title
-        this.app = app
+        this.project = project
         this.ontology = ontology
         this.rootTermURI = rootTermURI
         this.ontologyNamespace = ontologyNamespace
@@ -70,9 +70,9 @@ async function clickChoose(data) {
 
     let graph:Graph = data.graph
 
-    let app = editor.app
+    let project = editor.project
 
-    let term:string|null = await OntologyTermSelectorDialog.selectTerm(app, 'Choose role', null, editor.ontology, editor.rootTermURI)
+    let term:string|null = await OntologyTermSelectorDialog.selectTerm(project, 'Choose role', null, editor.ontology, editor.rootTermURI)
 
     if(term !== null) {
 

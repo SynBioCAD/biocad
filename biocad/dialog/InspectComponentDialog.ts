@@ -10,6 +10,7 @@ import { click as clickEvent } from '@biocad/jfw/event'
 import SBOLDroppable from "biocad/droppable/SBOLDroppable";
 import copySBOL from "biocad/util/copySBOL";
 import { node } from 'rdfoo'
+import BiocadProject from "../BiocadProject";
 export class InspectComponentDialogOptions extends DialogOptions {
 
     uri:string
@@ -26,9 +27,9 @@ export default class InspectComponentDialog extends TabbedDialog {
 
     onUsePart:null|((part:S3Component)=>void)
 
-    constructor(app:BiocadApp, opts:InspectComponentDialogOptions) {
+    constructor(project:BiocadProject, opts:InspectComponentDialogOptions) {
 
-        super(app, opts)
+        super(project, project.dialogs, opts)
 
 
         this.targetComponent = opts.targetComponent
@@ -49,14 +50,14 @@ export default class InspectComponentDialog extends TabbedDialog {
                 if(displayName !== undefined)
                     this.setTitle(displayName)
 
-                const sequenceView:SequenceEditor = new SequenceEditor(app, this)
+                const sequenceView:SequenceEditor = new SequenceEditor(project, this)
                 sequenceView.setComponent(this.component)
                 sequenceView.darkMode = true
                 sequenceView.showTopToolbar = false
                 sequenceView.readOnly = true
 
                 this.setTabs([
-                    new Tab('Visual', new InspectComponentThumbnailView(app, this.component) , true),
+                    new Tab('Visual', new InspectComponentThumbnailView(project, this.component) , true),
                     new Tab('Sequence', sequenceView, false)
                 ])
 
@@ -95,7 +96,7 @@ function clickInsert(data) {
 
     const component:S3Component = dialog.component
 
-    const app:BiocadApp = dialog.app as BiocadApp
+    const project:BiocadProject = dialog.project
 
     if(dialog.targetComponent) {
 
@@ -122,7 +123,7 @@ function clickInsert(data) {
         dialog.targetComponent.destroy()
 
     } else {
-        const droppable:SBOLDroppable = new SBOLDroppable(app, component.graph, [ component.uri ])
+        const droppable:SBOLDroppable = new SBOLDroppable(project, component.graph, [ component.uri ])
 
         app.dropOverlay.startDropping(droppable)
     }
@@ -131,5 +132,5 @@ function clickInsert(data) {
         dialog.onUsePart(component)
     }
 
-    app.closeDialogAndParents(dialog)
+    project.dialogs.closeDialogAndParents(dialog)
 }

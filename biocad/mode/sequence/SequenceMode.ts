@@ -5,17 +5,19 @@ import SequenceView from './SequenceView'
 import SequenceViewSidebar from './SequenceViewSidebar'
 import { Mode } from '@biocad/jfw/ui';
 import { VNode, h } from "@biocad/jfw/vdom";
+import BiocadProject from '../../BiocadProject';
 
 export default class SequenceViewMode extends Mode {
 
     seqView:SequenceView
 
-    constructor(app:App, active:boolean) {
+    constructor(app:App, project:BiocadProject, active:boolean) {
            
-        const seqView = new SequenceView(app)
+        const seqView = new SequenceView(project)
 
         super(
-            app,
+	app,
+            project,
             active,
             seqView,
             seqView.sidebar,
@@ -31,7 +33,6 @@ export default class SequenceViewMode extends Mode {
     getName():VNode {
         return h('span', 'Sequence View')
     }
-
 }
 
 

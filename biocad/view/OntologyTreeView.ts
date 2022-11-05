@@ -5,9 +5,9 @@ import { App } from '@biocad/jfw/ui'
 
 export default class OntologyTreeView extends TreeView {
 
-    constructor(app:App, dialog:Dialog|undefined, ontology:any, rootTermID:string|null) {
+    constructor(project:BiocadProject, dialog:Dialog|undefined, ontology:any, rootTermID:string|null) {
 
-        super(app, dialog)
+        super(project, dialog)
 
         this.setNodeFetcher(fetchNodes)
 

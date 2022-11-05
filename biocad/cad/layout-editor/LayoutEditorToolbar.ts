@@ -1,11 +1,11 @@
 
 
-import { View } from 'jfw/ui'
-import { h } from 'jfw/vdom'
+import { View } from '@biocad/jfw/ui'
+import { h } from '@biocad/jfw/vdom'
 
-//import { Slider } from 'jfw/ui/form-control'
+//import { Slider } from '@biocad/jfw/ui/form-control'
 
-import { click as clickEvent } from 'jfw/event'
+import { click as clickEvent } from '@biocad/jfw/event'
 
 import RelayoutDialog from '../RelayoutDialog'
 import LayoutEditorView from "./LayoutEditorView";
@@ -16,20 +16,20 @@ export default class CircuitViewToolbar extends View {
 
     constructor(layoutEditorView) {
 
-        super(layoutEditorView.app)
+        super(layoutEditorView.project)
 
         this.layoutEditorView = layoutEditorView
 
-        const app = layoutEditorView.app
+        const project = layoutEditorView.project
 
         /*
-        this.detailSlider = new Slider(app, parseInt(app.detailLevel))
+        this.detailSlider = new Slider(project, parseInt(project.detailLevel))
 
         this.detailSlider.setMin(1)
         this.detailSlider.setMax(5)
 
         this.detailSlider.onChange((newValue) => {
-            app.setDetailLevel(newValue)
+            project.setDetailLevel(newValue)
         })*/
 
     }
@@ -61,9 +61,9 @@ function clickLayout(data) {
 
     const { view } = data
 
-    const app = view.app
+    const project = view.project
 
-    app.openDialog(new RelayoutDialog(app, {
+    project.dialogs.openDialog(new RelayoutDialog(project, {
         //modal: true
     }))
 

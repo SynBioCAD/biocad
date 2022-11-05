@@ -3,11 +3,15 @@ import BiocadApp from "biocad/BiocadApp";
 
 import { View } from "@biocad/jfw/ui";
 import { VNode, h } from "@biocad/jfw/vdom";
+import BiocadProject from "../../BiocadProject";
 
 export default class HeadlessView extends View {
 
-    constructor(app:BiocadApp) {
-        super(app)
+	project:BiocadProject
+
+    constructor(project:BiocadProject) {
+        super(project)
+	this.project = project
     }
 
     render():VNode {
@@ -20,11 +24,11 @@ export default class HeadlessView extends View {
 /*
     createLayout():void {
 
-        const app = this.app as BiocadApp
+        const project = this.project
 
-        this.layout = new Layout(app.graph)
+        this.layout = new Layout(project.graph)
         this.layout.syncAllDepictions(5, true)
-        this.layoutEditor = new LayoutEditor(app, this.layout)
+        this.layoutEditor = new LayoutEditor(project, this.layout)
     
         this.layoutEditor.onSelectDepictions.listen((depictions:Depiction[]) => {
 

@@ -9,7 +9,7 @@ export default class SequenceEditorToolbar extends View {
 
     constructor(sequenceEditor) {
 
-        super(sequenceEditor.app)
+        super(sequenceEditor.project)
 
         this.sequenceEditor = sequenceEditor
 

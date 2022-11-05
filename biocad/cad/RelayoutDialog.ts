@@ -14,36 +14,36 @@ export default class RelayoutDialog extends Dialog {
 
     //minimap: LayoutMinimap
     detailSlider: Slider
-    applyButton: Button
+    projectlyButton: Button
 
-    constructor(app, opts) {
+    constructor(project, opts) {
 
 
-        super(app, extend({
+        super(project, extend({
             modal: true
         }, opts))
         
         this.setTitle('Layout')
         this.setWidthAndCalcPosition('60%')
 
-        //this.minimap = new CircuitViewMinimap(app, this.tempGraph)
+        //this.minimap = new CircuitViewMinimap(project, this.tempGraph)
 
         this.detailSlider = new Slider(this, 5)
         this.detailSlider.setMin(0)
         this.detailSlider.setMax(detailLevels.length - 1)
-        this.detailSlider.setValue(parseInt(app.detailLevel))
+        this.detailSlider.setValue(parseInt(project.detailLevel))
 
-        this.applyButton = new Button(this)
-        this.applyButton.setText('Apply')
+        this.projectlyButton = new Button(this)
+        this.projectlyButton.setText('Apply')
 
         this.detailSlider.onChange(() => {
             //layout(this.tempGraph, this.detailSlider.getValue())
         })
 
-        this.applyButton.onClick(() => {
-            app.detailLevel = this.detailSlider.getValue() + ''
-            //layout(app.graph, this.detailSlider.getValue())
-            app.closeDialog(this)
+        this.projectlyButton.onClick(() => {
+            project.detailLevel = this.detailSlider.getValue() + ''
+            //layout(project.graph, this.detailSlider.getValue())
+            project.dialogs.closeDialog(this)
         })
     }
 
@@ -79,7 +79,7 @@ export default class RelayoutDialog extends Dialog {
                 ])
             ]),
 
-            this.applyButton.render()
+            this.projectlyButton.render()
         ])
 
     }

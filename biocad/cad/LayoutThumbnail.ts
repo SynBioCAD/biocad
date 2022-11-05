@@ -14,8 +14,11 @@ import { Rect } from "@biocad/jfw/geom";
 import SVGDefs from "biocad/cad/SVGDefs";
 
 import extend = require('xtend')
+import BiocadProject from '../BiocadProject';
 
 export default class LayoutThumbnail extends View {
+
+	project:BiocadProject
 
     layout:Layout
 
@@ -24,9 +27,11 @@ export default class LayoutThumbnail extends View {
     interactive:boolean
     attr:any
 
-    constructor(app:BiocadApp, layout:Layout) {
+    constructor(project:BiocadProject, layout:Layout) {
 
-        super(app)
+        super(project)
+
+	this.project = project
 
         this.layout = layout
         this.scrollOffset = Vec2.fromScalar(0)

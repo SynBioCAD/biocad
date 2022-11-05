@@ -10,6 +10,7 @@ import Layout from "biocad/cad/layout/Layout";
 import BiocadApp from "biocad/BiocadApp";
 
 import assert = require('assert')
+import BiocadProject from '../BiocadProject';
 
 const scrollbarThickness = 16
 
@@ -18,14 +19,14 @@ export default class ScrollbarWidget {
     _stateToken:object
     _mainLoop:any
 
-    app:BiocadApp
+    project:BiocadProject
     viewportSize:Vec2 = Vec2.fromXY(0, 0)
     renderContext:RenderContext
     isFirstRender:boolean
 
-    constructor(app:BiocadApp, renderContext:RenderContext) {
+    constructor(project:BiocadProject, renderContext:RenderContext) {
 
-        this.app = app
+        this.project = project
         this.renderContext = renderContext
         this._stateToken = { ref: this }
         this.isFirstRender = false
@@ -54,8 +55,8 @@ export default class ScrollbarWidget {
     render():any {
 
         if(this.viewportSize.x === 0 && this.viewportSize.y === 0) {
-            setTimeout(() => this.app.update(), 0)
-            console.log('viewport had no size, so scheduled an app.update instead of rendering scrollbars')
+            setTimeout(() => this.project.update(), 0)
+            console.log('viewport had no size, so scheduled an project.update instead of rendering scrollbars')
             return h('div', '')
         }
 
@@ -87,7 +88,7 @@ export default class ScrollbarWidget {
             
                 assert(!isNaN(renderContext.scaleFactor))
 
-                this.app.update()
+                this.project.update()
             }
         }
 
@@ -221,7 +222,7 @@ function onDragHorizontal(data) {
 
     //update()
     
-    widget.app.update()
+    widget.project.update()
 }
 
 
@@ -252,5 +253,5 @@ function onDragVertical(data) {
 
     //update()
     
-    widget.app.update()
+    widget.project.update()
 }

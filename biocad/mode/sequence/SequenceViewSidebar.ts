@@ -7,17 +7,22 @@ import { Specifiers } from 'bioterms'
 import { S3Component } from "sboljs";
 
 import { Hook } from '@biocad/jfw/util'
+import BiocadProject from '../../BiocadProject';
 
 export default class SequenceViewSidebar extends Sidebar {
+
+	project:BiocadProject
 
     onCreate: Hook<{ /*type:string,*/ uri:string }>
     onSelect: Hook<S3Component>
 
     browser:ComponentBrowser
 
-    constructor(app) {
+    constructor(project) {
 
-        super(app)
+        super(project)
+
+	this.project = project
 
         this.onCreate = new Hook()
         this.onSelect = new Hook()
@@ -27,17 +32,17 @@ export default class SequenceViewSidebar extends Sidebar {
             browser.onSelect.listen((component:S3Component) => {
                 console.log('sequenceViewSidebar: selected ' + component.displayName)
                 this.onSelect.fire(component)
-                app.update()
+                project.update()
             })
 
             browser.onCreate.listen((uri) => {
                 this.onCreate.fire({ /*type: browser.type,*/ uri })
-                app.update()
+                project.update()
             })
 
         }
 
-        let browser = new ComponentBrowser(app, (cd) => true)
+        let browser = new ComponentBrowser(project, (cd) => true)
         this.browser = browser
 
         connectBrowser(browser)

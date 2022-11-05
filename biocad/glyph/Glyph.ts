@@ -63,7 +63,7 @@ let glyphSvgs = {
     Unspecified
 }
 
-import { VNode, svg } from 'jfw/vdom'
+import { VNode, svg } from '@biocad/jfw/vdom'
 
 import * as math from 'mathjs'
 

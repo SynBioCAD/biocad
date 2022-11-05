@@ -16,10 +16,13 @@ import { KeyboardListener } from '@biocad/jfw/util';
 import { S3Sequence, S3Feature } from "sboljs"
 import { Specifiers } from "bioterms";
 import SequenceEditorLine from "biocad/mode/sequence/SequenceEditorLine";
+import BiocadProject from '../../BiocadProject'
 
 /* used as a subtree
  */
 export default class SequenceEditorOverlay extends View {
+
+	project:BiocadProject
 
     sequenceEditor: SequenceEditor
 
@@ -33,7 +36,8 @@ export default class SequenceEditorOverlay extends View {
 
     constructor(sequenceEditor:SequenceEditor) {
 
-        super(sequenceEditor.app)
+        super(sequenceEditor.project)
+	this.project = sequenceEditor.project
 
         this.sequenceEditor = sequenceEditor
 
@@ -385,7 +389,7 @@ export default class SequenceEditorOverlay extends View {
         this.selectionStart = elementOffset
         this.selectionEnd = elementOffset
 
-        this.app.closeContextMenu()
+        this.project.app.closeContextMenu()
 
         this.update()
     }
@@ -427,7 +431,7 @@ export default class SequenceEditorOverlay extends View {
 
     onRightClick(offset:Vec2) {
 
-        this.app.openContextMenu(new SequenceEditorContextMenu(
+        this.project.app.openContextMenu(new SequenceEditorContextMenu(
             this,
             offset
         ))

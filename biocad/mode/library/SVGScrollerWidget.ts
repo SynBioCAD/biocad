@@ -118,7 +118,7 @@ class SVGScrollerWidget {
                 this.animate()
             }
 
-            container.appendChild(svgContainer)
+            container.projectendChild(svgContainer)
 
         }
 

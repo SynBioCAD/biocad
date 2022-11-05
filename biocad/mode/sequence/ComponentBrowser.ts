@@ -7,26 +7,31 @@ import { S3Component, Graph, sbol3 } from "sboljs";
 import { TreeNode } from '@biocad/jfw/ui';
 
 import { Hook } from '@biocad/jfw/util'
+import BiocadProject from '../../BiocadProject';
 
 export default class ComponentBrowser extends View {
+	
+	project:BiocadProject
 
     filter:(S3Component)=>boolean
     tree:TreeView
 
     onCreate:Hook<string> = new Hook()
-    onSelect:Hook<string> = new Hook()
+    onSelect:Hook<S3Component> = new Hook()
 
-    constructor(app, filter) {
+    constructor(project, filter) {
 
-        super(app)
+        super(project)
+
+	this.project = project
 
         this.filter = filter
 
-        this.tree = new TreeView(app)
+        this.tree = new TreeView(project)
         this.tree.setEditable(true)
 
         this.tree.onSelect.listen((uri:string) => {
-            this.onSelect.fire(new S3Component(sbol3(app.graph), uri))
+            this.onSelect.fire(sbol3(project.graph).uriToFacade(uri) as S3Component)
         })
 
         this.tree.onCreate.listen((uri:string) => {
@@ -36,7 +41,7 @@ export default class ComponentBrowser extends View {
 
         const fetchTreeNodes = async ():Promise<TreeNode[]> => {
 
-            const graph:Graph = app.graph
+            const graph:Graph = project.graph
 
             const nodes = []
 
