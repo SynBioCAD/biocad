@@ -5,7 +5,7 @@ import BiocadApp from "biocad/BiocadApp";
 
 import { search, SearchResult } from 'sbh-proxy-client'
 
-import { Graph, S3Collection, S3Component, S3Identified, sbol2, sbol3, SBOLConverter } from "sbolgraph";
+import { Graph, S3Collection, S3Component, S3Identified, sbol2, sbol3, SBOLConverter } from "sboljs";
 import getNameFromRole from "../../util/getNameFromRole";
 import RepoCollectionMembersView, { MemberType } from "./RepoCollectionMembersView";
 import { Types } from "bioterms";

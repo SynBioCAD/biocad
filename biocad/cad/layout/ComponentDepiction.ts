@@ -11,7 +11,7 @@ import {
     S3Identified,
     S3Component,
     S3SubComponent
-} from "sbolgraph"
+} from "sboljs"
 
 import Layout from './Layout'
 

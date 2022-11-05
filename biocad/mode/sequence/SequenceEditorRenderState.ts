@@ -1,4 +1,4 @@
-import { S3Component, S3Sequence, S3SequenceFeature, S3Range, S3Identified, S3Location, S3SubComponent, S3Feature, sbol3 } from "sbolgraph";
+import { S3Component, S3Sequence, S3SequenceFeature, S3Range, S3Identified, S3Location, S3SubComponent, S3Feature, sbol3 } from "sboljs";
 
 import assert = require('assert')
 

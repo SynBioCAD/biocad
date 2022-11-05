@@ -6,7 +6,7 @@ import { VNode, svg } from '@biocad/jfw/vdom'
 
 import { Matrix, Vec2, LinearRangeSet } from '@biocad/jfw/geom'
 
-import { S3Identified } from "sbolgraph"
+import { S3Identified } from "sboljs"
 
 import Layout from './Layout'
 

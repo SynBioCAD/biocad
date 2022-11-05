@@ -1,6 +1,6 @@
 import Depiction from "./layout/Depiction";
 import { Specifiers } from "bioterms";
-import { S3Component, S3SubComponent, S3Interaction } from "sbolgraph";
+import { S3Component, S3SubComponent, S3Interaction } from "sboljs";
 import LayoutEditor from "./LayoutEditor";
 
 export default function createInteraction(layoutEditor:LayoutEditor, from:Depiction, to:Depiction) {

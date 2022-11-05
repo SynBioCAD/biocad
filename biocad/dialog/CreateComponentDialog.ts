@@ -15,11 +15,11 @@ import { TextInput, Combo } from "@biocad/jfw/ui";
 import cdTypes from 'data/cdTypes'
 
 import { click as clickEvent } from '@biocad/jfw/event'
-import { Graph, sbol3 } from "sbolgraph";
+import { Graph, sbol3 } from "sboljs";
 import BiocadApp from "biocad/BiocadApp";
 
-import { node as graphNode } from "sbolgraph"
-import { S3Component, S3Sequence } from "sbolgraph"
+import { node as graphNode } from "sboljs"
+import { S3Component, S3Sequence } from "sboljs"
 import PropertyEditorTermSet from 'biocad/property/PropertyEditorTermSet';
 import PropertyAccessorURISet from 'biocad/property/PropertyAccessorURISet';
 

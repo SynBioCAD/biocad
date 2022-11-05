@@ -1,6 +1,6 @@
 
 import Layout from "biocad/cad/layout/Layout";
-import { Graph } from "sbolgraph";
+import { Graph } from "sboljs";
 import Depiction from "biocad/cad/layout/Depiction";
 import { Rect } from "@biocad/jfw/geom";
 

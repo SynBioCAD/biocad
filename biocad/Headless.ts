@@ -1,5 +1,5 @@
 
-import { Graph, SBOL3GraphView } from "sbolgraph"
+import { Graph, SBOL3GraphView } from "sboljs"
 import LayoutThumbnail from "biocad/cad/LayoutThumbnail";
 import Layout from "biocad/cad/layout/Layout";
 import { create } from "@biocad/jfw/vdom";

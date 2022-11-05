@@ -1,4 +1,4 @@
-import  { S3Identified, S3Interaction, sbol3 }  from "sbolgraph"
+import  { S3Identified, S3Interaction, sbol3 }  from "sboljs"
 
 import LabelDepiction from 'biocad/cad/layout/LabelDepiction';
 import Depiction, { Opacity } from 'biocad/cad/layout/Depiction';
@@ -18,7 +18,7 @@ import BiocadApp from "biocad/BiocadApp";
 import Droppable from "biocad/droppable/Droppable";
 import SBOLDroppable from "biocad/droppable/SBOLDroppable";
 
-import { Graph, S3Component, S3SubComponent } from "sbolgraph"
+import { Graph, S3Component, S3SubComponent } from "sboljs"
 import LayoutEditorContextMenu from "biocad/cad/layout-editor/LayoutEditorContextMenu";
 import ComponentDepiction from 'biocad/cad/layout/ComponentDepiction';
 

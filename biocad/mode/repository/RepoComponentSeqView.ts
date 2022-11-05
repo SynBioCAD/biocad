@@ -1,4 +1,4 @@
-import { Graph, S3Component } from "sbolgraph";
+import { Graph, S3Component } from "sboljs";
 import RepoView from "./RepoView";
 import { View } from '@biocad/jfw/ui'
 import Layout from "../../cad/layout/Layout";

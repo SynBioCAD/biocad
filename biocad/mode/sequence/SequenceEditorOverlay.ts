@@ -13,7 +13,7 @@ import SequenceEditor from './SequenceEditor'
 import SequenceEditorContextMenu from './SequenceEditorContextMenu'
 
 import { KeyboardListener } from '@biocad/jfw/util';
-import { S3Sequence, S3Feature } from "sbolgraph"
+import { S3Sequence, S3Feature } from "sboljs"
 import { Specifiers } from "bioterms";
 import SequenceEditorLine from "biocad/mode/sequence/SequenceEditorLine";
 

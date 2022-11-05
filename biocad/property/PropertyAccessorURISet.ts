@@ -1,6 +1,6 @@
 
 import PropertyAccessor from "./PropertyAccessor";
-import { triple, Graph, node } from 'sbolgraph'
+import { triple, Graph, node } from 'sboljs'
 
 export default class PropertyAccessorURISet extends PropertyAccessor<string[]> {
 

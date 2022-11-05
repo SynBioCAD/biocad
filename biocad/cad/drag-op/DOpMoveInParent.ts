@@ -1,7 +1,7 @@
 
 import { Rect } from "@biocad/jfw/geom";
 import Depiction, { Opacity } from "biocad/cad/layout/Depiction";
-import { Graph, S3Component, S3SubComponent } from "sbolgraph";
+import { Graph, S3Component, S3SubComponent } from "sboljs";
 import Layout from "biocad/cad/layout/Layout";
 import DOp, { DOpResult } from "./DOp";
 import BackboneDepiction from "../layout/BackboneDepiction";

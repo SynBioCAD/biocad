@@ -6,7 +6,7 @@ import Depiction, { Orientation } from "biocad/cad/layout/Depiction";
 import ComponentDepiction from "biocad/cad/layout/ComponentDepiction";
 import { getEllipsePoint } from '@biocad/jfw/geom';
 import FeatureLocationDepiction from "biocad/cad/layout/FeatureLocationDepiction";
-import { S3SequenceFeature, S3Range, S3Component, S3Sequence, S3Identified } from "sbolgraph"
+import { S3SequenceFeature, S3Range, S3Component, S3Sequence, S3Identified } from "sboljs"
 
 export default function circularStrategy(parent:ComponentDepiction, children:Depiction[], padding) {
 

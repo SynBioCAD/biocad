@@ -13,7 +13,7 @@ import {
     S3Identified,
     S3SequenceFeature,
     S3SubComponent
-} from "sbolgraph"
+} from "sboljs"
 
 
 import Layout from './Layout'

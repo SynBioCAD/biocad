@@ -1,5 +1,5 @@
 import LabelDepiction from 'biocad/cad/layout/LabelDepiction';
-import { S3Component, S3SubComponent, S3Range } from "sbolgraph";
+import { S3Component, S3SubComponent, S3Range } from "sboljs";
 
 import { Types, Specifiers } from 'bioterms'
 

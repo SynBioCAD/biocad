@@ -1,4 +1,4 @@
-import { S3Identified, S3Component, S3SubComponent, S3Location, S3SequenceFeature } from "sbolgraph";
+import { S3Identified, S3Component, S3SubComponent, S3Location, S3SequenceFeature } from "sboljs";
 
 import Layout from 'biocad/cad/layout/Layout';
 

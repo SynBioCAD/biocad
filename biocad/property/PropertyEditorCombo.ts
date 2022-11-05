@@ -1,6 +1,6 @@
 
 import { VNode, h } from '@biocad/jfw/vdom'
-import { Graph, triple, node } from "sbolgraph";
+import { Graph, triple, node } from "sboljs";
 import PropertyEditor from "./PropertyEditor";
 import { change as changeEvent } from '@biocad/jfw/event'
 import PropertyAccessor from './PropertyAccessor';

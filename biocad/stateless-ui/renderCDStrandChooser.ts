@@ -2,7 +2,7 @@
 import { Specifiers } from 'bioterms'
 import { h, VNode } from "@biocad/jfw/vdom";
 
-import { S3Component } from "sbolgraph"
+import { S3Component } from "sboljs"
 
 import { change as changeEvent } from '@biocad/jfw/event'
 

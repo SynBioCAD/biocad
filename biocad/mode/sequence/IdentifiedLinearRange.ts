@@ -1,6 +1,6 @@
 
 import { LinearRange } from "@biocad/jfw/geom";
-import { S3Range, S3Feature } from "sbolgraph"
+import { S3Range, S3Feature } from "sboljs"
 
 export default class IdentifiedLinearRange extends LinearRange
 {

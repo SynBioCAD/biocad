@@ -1,5 +1,5 @@
 
-import { Graph, SBOL2GraphView, sbol3 } from "sbolgraph";
+import { Graph, SBOL2GraphView, sbol3 } from "sboljs";
 
 export default class SBOLConverterValidator {
 

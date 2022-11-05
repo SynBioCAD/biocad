@@ -7,7 +7,7 @@ import { Vec2, LinearRangeSet, LinearRange } from '@biocad/jfw/geom'
 import { Specifiers } from 'bioterms'
 import Depiction, { Orientation } from "biocad/cad/layout/Depiction";
 import ComponentDepiction from "biocad/cad/layout/ComponentDepiction";
-import { S3SequenceFeature, S3Range, S3SubComponent, S3Constraint, S3Identified, S3Component, S3Location } from "sbolgraph"
+import { S3SequenceFeature, S3Range, S3SubComponent, S3Constraint, S3Identified, S3Component, S3Location } from "sboljs"
 import Layout from "biocad/cad/layout/Layout";
 import BackboneDepiction from '../../BackboneDepiction';
 import FeatureLocationDepiction from 'biocad/cad/layout/FeatureLocationDepiction';

@@ -3,7 +3,7 @@ import InteractionDepiction from './InteractionDepiction'
 import Depiction from "biocad/cad/layout/Depiction";
 import Layout from "biocad/cad/layout/Layout";
 import { svg, VNode } from "@biocad/jfw/vdom";
-import { S3Interaction, S3Participation, S3SubComponent, S3MapsTo } from "sbolgraph";
+import { S3Interaction, S3Participation, S3SubComponent, S3MapsTo } from "sboljs";
 import { Specifiers } from 'bioterms'
 import { assert } from 'power-assert'
 import { Vec2 } from "@biocad/jfw/geom";

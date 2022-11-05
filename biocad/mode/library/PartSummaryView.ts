@@ -3,9 +3,9 @@
 import { View } from "@biocad/jfw/ui";
 import { VNode, h, create, svg } from "@biocad/jfw/vdom";
 import BiocadApp from "biocad/BiocadApp";
-import { Graph, SBOL3GraphView, sbol3 } from "sbolgraph"
+import { Graph, SBOL3GraphView, sbol3 } from "sboljs"
 import { Types } from "bioterms";
-import { S3Component } from "sbolgraph";
+import { S3Component } from "sboljs";
 import Layout from "biocad/cad/layout/Layout";
 import LayoutThumbnail from "biocad/cad/LayoutThumbnail";
 import SBOLDroppable from "biocad/droppable/SBOLDroppable";

@@ -1,7 +1,7 @@
 
 import cytoscape = require('cytoscape')
 
-import { Graph } from 'sbolgraph'
+import { Graph } from 'sboljs'
 
 export default class CytoscapeRDFWidget {
 

@@ -1,6 +1,6 @@
 
 import PropertyAccessor from "./PropertyAccessor";
-import { triple, Graph, node, S3SubComponent, S3SequenceFeature, S3Feature, sbol3 } from 'sbolgraph'
+import { triple, Graph, node, S3SubComponent, S3SequenceFeature, S3Feature, sbol3 } from 'sboljs'
 
 export default class PropertyAccessorStrand extends PropertyAccessor<string> {
 

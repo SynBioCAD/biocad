@@ -7,7 +7,7 @@ import Layout from 'biocad/cad/layout/Layout'
 import LayoutPOD from 'biocad/cad/layout/LayoutPOD'
 import LayoutEditor from 'biocad/cad/layout-editor/LayoutEditor'
 import Depiction from 'biocad/cad/layout/Depiction'
-import { Graph } from 'sbolgraph';
+import { Graph } from 'sboljs';
 import { Vec2 } from '@biocad/jfw/geom'
 
 export default class CircuitView extends LayoutEditorView {

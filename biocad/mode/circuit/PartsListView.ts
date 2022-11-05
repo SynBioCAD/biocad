@@ -1,4 +1,4 @@
-import { Graph, sbol3 } from "sbolgraph";
+import { Graph, sbol3 } from "sboljs";
 
 import { Vec2, Matrix } from '@biocad/jfw/geom'
 import { View } from '@biocad/jfw/ui'
@@ -13,7 +13,7 @@ import BrowseSBHDialog, { BrowseSBHDialogOptions } from "biocad/dialog/BrowseSBH
 import { SearchQuery } from "../../Repository"
 
 import { FinalizeEvent } from 'biocad/DropOverlay'
-import { S3Component } from "sbolgraph";
+import { S3Component } from "sboljs";
 import Glyph from "biocad/glyph/Glyph";
 import colors from '../../../data/colors'
 import { Prefixes, Specifiers } from "bioterms";

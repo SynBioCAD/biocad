@@ -2,7 +2,7 @@
 import { View, TabbedView, Tab, DataTable } from "@biocad/jfw/ui";
 import { VNode, h, create, svg } from "@biocad/jfw/vdom";
 
-import { Graph, S3Collection, S3Component, S3Identified, sbol2, sbol3, SBOLConverter } from "sbolgraph";
+import { Graph, S3Collection, S3Component, S3Identified, sbol2, sbol3, SBOLConverter } from "sboljs";
 import BiocadApp from "../../BiocadApp";
 import getNameFromRole from "../../util/getNameFromRole";
 import RepoView from "./RepoView";

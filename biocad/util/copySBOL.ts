@@ -1,6 +1,6 @@
 
 import { Predicates } from 'bioterms'
-import { Graph, S3Identified, sbol3, node, triple, rdf } from 'sbolgraph'
+import { Graph, S3Identified, sbol3, node, triple } from 'sboljs'
 
 
 // All the SBOL is copied but only things speciifed by topLevelURIs get renamed
@@ -11,7 +11,7 @@ import { Graph, S3Identified, sbol3, node, triple, rdf } from 'sbolgraph'
 
 export default function copySBOL(graphA:Graph, graphB:Graph, newURIPrefix:string):Map<string,string> {
 
-    let intmGraph = graphA.clone()
+    let intmGraph:Graph = graphA.clone()
     
     let identityMap:Map<string,string> = sbol3(intmGraph).changeURIPrefix(newURIPrefix)
 
@@ -67,6 +67,7 @@ export default function copySBOL(graphA:Graph, graphB:Graph, newURIPrefix:string
 		intmGraph.removeMatches(node.createUriNode(newUri), node.createUriNode(Predicates.SBOL3.displayId), null)
 		intmGraph.insertTriple(node.createUriNode(newUri), node.createUriNode(Predicates.SBOL3.displayId), node.createStringNode(newDisplayId))
 	}
+
     }
 
 

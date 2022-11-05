@@ -1,6 +1,6 @@
 
 import PropertyEditor from "./PropertyEditor";
-import { Graph } from "sbolgraph";
+import { Graph } from "sboljs";
 import Depiction from "biocad/cad/layout/Depiction";
 import { h } from "@biocad/jfw/vdom";
 import LocationableDepiction from "biocad/cad/layout/LocationableDepiction";

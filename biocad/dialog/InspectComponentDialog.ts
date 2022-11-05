@@ -1,9 +1,9 @@
 
 import { Tab, TabbedDialog, DialogOptions } from "@biocad/jfw/ui";
 import BiocadApp from "biocad/BiocadApp";
-import { Graph, S3Identified, sbol3, SBOL3GraphView } from "sbolgraph";
+import { Graph, S3Identified, sbol3, SBOL3GraphView } from "sboljs";
 import { VNode, h } from "@biocad/jfw/vdom";
-import { S3Component } from "sbolgraph"
+import { S3Component } from "sboljs"
 import InspectComponentThumbnailView from "biocad/dialog/InspectComponentThumbnailView";
 import SequenceEditor from "biocad/mode/sequence/SequenceEditor";
 import { click as clickEvent } from '@biocad/jfw/event'

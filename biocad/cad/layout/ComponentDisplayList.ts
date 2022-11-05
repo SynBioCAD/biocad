@@ -1,5 +1,5 @@
 
-import { S3SequenceFeature, S3SubComponent, S3Constraint, S3Component, S3Identified, S3Location, Graph, Facade, sbol3 } from "sbolgraph"
+import { S3SequenceFeature, S3SubComponent, S3Constraint, S3Component, S3Identified, S3Location, Graph, Facade, sbol3 } from "sboljs"
 
 export default class ComponentDisplayList {
 

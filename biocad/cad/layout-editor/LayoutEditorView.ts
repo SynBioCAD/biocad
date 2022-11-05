@@ -8,7 +8,7 @@ import { h, VNode, svg } from 'jfw/vdom'
 
 import LayoutEditorToolbar from './LayoutEditorToolbar'
 
-import { Graph } from "sbolgraph"
+import { Graph } from "sboljs"
 import CircuitViewLeftSidebar from "biocad/mode/circuit/CircuitViewLeftSidebar";
 import CircuitViewRightSidebar from "biocad/mode/circuit/CircuitViewRightSidebar";
 import { GlobalConfig } from '@biocad/jfw/ui'

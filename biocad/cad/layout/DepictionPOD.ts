@@ -1,13 +1,13 @@
 
 import assert = require('assert');
 import Layout from "biocad/cad/layout/Layout";
-import { Graph, S3Interaction, Facade } from "sbolgraph"
+import { Graph, S3Interaction, Facade } from "sboljs"
 import Depiction from "biocad/cad/layout/Depiction";
 import ComponentDepiction from "biocad/cad/layout/ComponentDepiction";
 import LabelDepiction from "biocad/cad/layout/LabelDepiction";
 import FeatureLocationDepiction from "biocad/cad/layout/FeatureLocationDepiction";
 import extend = require('xtend')
-import { S3Identified, sbol3 } from "sbolgraph"
+import { S3Identified, sbol3 } from "sboljs"
 import { Vec2 } from "@biocad/jfw/geom";
 import BackboneDepiction from "biocad/cad/layout/BackboneDepiction";
 import CircularBackboneDepiction from 'biocad/cad/layout/CircularBackboneDepiction';

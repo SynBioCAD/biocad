@@ -17,7 +17,7 @@ import { Hook } from "jfw/util";
 import Droppable from "biocad/droppable/Droppable";
 import LayoutPOD from "biocad/cad/layout/LayoutPOD";
 import SVGDefs from "biocad/cad/SVGDefs";
-import { Graph, SBOL3GraphView, sbol3 } from "sbolgraph"
+import { Graph, SBOL3GraphView, sbol3 } from "sboljs"
 import LayoutEditorDebugLog from './LayoutEditorDebugLog';
 import DepictionRef from 'biocad/cad/layout/DepictionRefByUid';
 

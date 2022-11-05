@@ -4,7 +4,7 @@ import { Vec2 } from "@biocad/jfw/geom";
 import LabelDepiction from "biocad/cad/layout/LabelDepiction";
 import { Orientation } from "biocad/cad/layout/Depiction";
 import { shortNameFromTerm } from "data/parts";
-import { S3SequenceFeature, S3Range } from "sbolgraph"
+import { S3SequenceFeature, S3Range } from "sboljs"
 import CircularBackboneDepiction from "biocad/cad/layout/CircularBackboneDepiction";
 import InstructionSet from "biocad/cad/layout-instruction/InstructionSet";
 

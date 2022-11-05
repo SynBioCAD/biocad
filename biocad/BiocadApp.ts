@@ -25,7 +25,7 @@ import PopupMessageDialog from './dialog/PopupMessageDialog';
 import { DialogOptions } from '@biocad/jfw/ui';
 
 import uuid = require('uuid')
-import { Graph, sbol3 } from 'sbolgraph'
+import { Graph, sbol3 } from 'sboljs'
 
 import '../less/biocad.less'
 

@@ -6,7 +6,7 @@ import {
     S3Component,
     S3SubComponent,
     S3SequenceFeature
-} from "sbolgraph"
+} from "sboljs"
 
 export default abstract class DetailPreset {
     

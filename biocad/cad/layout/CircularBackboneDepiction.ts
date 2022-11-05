@@ -12,7 +12,7 @@ import {
     S3Identified,
     S3SubComponent,
     S3Component
-} from 'sbolgraph'
+} from 'sboljs'
 
 import { Types } from 'bioterms'
 
@@ -21,7 +21,7 @@ import Layout from './Layout'
 import { shortNameFromTerm } from 'data/parts'
 
 import RenderContext from '../RenderContext'
-import { S3Range, Watcher } from "sbolgraph";
+import { S3Range, Watcher } from "sboljs";
 import BackboneDepiction from 'biocad/cad/layout/BackboneDepiction';
 
 export default class CircularBackboneDepiction extends BackboneDepiction {

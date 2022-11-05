@@ -1,6 +1,6 @@
 
 import Droppable from "./Droppable";
-import { Graph } from "sbolgraph"
+import { Graph } from "sboljs"
 import Layout from "biocad/cad/layout/Layout";
 import LayoutThumbnail from "biocad/cad/LayoutThumbnail";
 import BiocadApp from "biocad/BiocadApp";

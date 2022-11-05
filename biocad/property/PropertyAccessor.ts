@@ -1,4 +1,4 @@
-import { Graph } from "sbolgraph";
+import { Graph } from "sboljs";
 
 export default abstract class PropertyAccessor<T> {
 

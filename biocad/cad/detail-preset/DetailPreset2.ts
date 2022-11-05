@@ -9,7 +9,7 @@ import {
     S3SubComponent,
     S3Component,
     S3SequenceFeature
-} from "sbolgraph"
+} from "sboljs"
 
 export default class DetailPreset2 extends DetailPreset {
 

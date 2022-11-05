@@ -5,7 +5,7 @@ import { h, VNode } from '@biocad/jfw/vdom';
 import BiocadApp from "biocad/BiocadApp";
 import LayoutPOD from "biocad/cad/layout/LayoutPOD";
 import EncodingSelector, { Encoding } from './EncodingSelector';
-import { SBOL2GraphView, Graph, sbol3 } from 'sbolgraph';
+import { SBOL2GraphView, Graph, sbol3 } from 'sboljs';
 import CytoscapeRDFWidget from 'biocad/view/CytoscapeRDFWidget'
 import CircuitViewMode from '../circuit/CircuitMode';
 import CircuitView from '../circuit/CircuitView';

@@ -7,7 +7,7 @@ import SequenceEditorLine from './SequenceEditorLine'
 import { LinearRangeSet } from "@biocad/jfw/geom";
 import IdentifiedLinearRange from "biocad/mode/sequence/IdentifiedLinearRange";
 import getNameFromRole from 'biocad/util/getNameFromRole'
-import { S3SequenceFeature, S3Range, S3Location, S3Feature, S3SubComponent } from "sbolgraph"
+import { S3SequenceFeature, S3Range, S3Location, S3Feature, S3SubComponent } from "sboljs"
 import { LinearRangeTree, LinearRangeTreeNode } from '@biocad/jfw/geom';
 
 export default function renderAnnotations(sequenceEditor) {

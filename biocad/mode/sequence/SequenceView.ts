@@ -8,7 +8,7 @@ import SequenceEditor from './SequenceEditor'
 import CreateComponentDialog, { CreateComponentDialogDefaults } from '../../dialog/CreateComponentDialog'
 import { App } from "jfw";
 import BiocadApp from "biocad/BiocadApp";
-import { S3Component } from "sbolgraph";
+import { S3Component } from "sboljs";
 import SequenceWizard from './SequenceWizard';
 
 var n = 0

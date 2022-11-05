@@ -2,7 +2,7 @@
 import Layout from "biocad/cad/layout/Layout";
 import Depiction from "biocad/cad/layout/Depiction";
 import DepictionPOD from "biocad/cad/layout/DepictionPOD";
-import { Graph, S3Interaction } from "sbolgraph";
+import { Graph, S3Interaction } from "sboljs";
 import InteractionDepiction from "./InteractionDepiction";
 import { Vec2 } from '@biocad/jfw/geom'
 

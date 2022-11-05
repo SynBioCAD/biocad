@@ -1,5 +1,5 @@
 import PropertyEditor from "./PropertyEditor";
-import { Graph, triple, node, S3Component, S3SubComponent, sbol3 } from "sbolgraph";
+import { Graph, triple, node, S3Component, S3SubComponent, sbol3 } from "sboljs";
 import { VNode, h } from '@biocad/jfw/vdom'
 import PropertyEditorCombo from "./PropertyEditorCombo";
 import { change as changeEvent } from '@biocad/jfw/event'

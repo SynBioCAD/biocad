@@ -9,7 +9,7 @@ import {
     S3SequenceFeature,
     S3Range,
     sbol3
-} from "sbolgraph"
+} from "sboljs"
 
 import DetailPreset from '../detail-preset/DetailPreset'
 import levelToPreset from '../detail-preset/levelToPreset'
@@ -28,7 +28,7 @@ import FeatureLocationDepiction from "biocad/cad/layout/FeatureLocationDepiction
 
 import assert = require('assert')
 import ComponentDisplayList from "./ComponentDisplayList"
-import { Watcher, S3Identified, S3Constraint, S3Location, S3OrientedLocation, S3Interaction } from "sbolgraph"
+import { Watcher, S3Identified, S3Constraint, S3Location, S3OrientedLocation, S3Interaction } from "sboljs"
 import InteractionDepiction from './InteractionDepiction'
 import Instruction from 'biocad/cad/layout-instruction/Instruction';
 import InstructionSet from 'biocad/cad/layout-instruction/InstructionSet';

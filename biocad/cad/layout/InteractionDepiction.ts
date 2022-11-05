@@ -3,7 +3,7 @@
 import Depiction from "biocad/cad/layout/Depiction";
 import Layout from "biocad/cad/layout/Layout";
 import { svg, VNode } from "@biocad/jfw/vdom";
-import { S3Interaction, S3Participation, S3SubComponent } from "sbolgraph";
+import { S3Interaction, S3Participation, S3SubComponent } from "sboljs";
 import { Specifiers, Prefixes } from 'bioterms'
 import { Vec2, Rect } from "@biocad/jfw/geom";
 import RenderContext from '../RenderContext'

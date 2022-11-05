@@ -1,6 +1,6 @@
 
 import { VNode, h } from '@biocad/jfw/vdom'
-import { Graph, triple } from "sbolgraph";
+import { Graph, triple } from "sboljs";
 import PropertyEditor from "./PropertyEditor";
 import OntologyTermSelectorDialog from 'biocad/dialog/OntologyTermSelectorDialog'
 import BiocadApp from 'biocad/BiocadApp'

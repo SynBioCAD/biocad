@@ -1,7 +1,7 @@
 
 import Depiction, { Orientation } from './Depiction'
 import Layout from './Layout';
-import { S3Identified, S3Range, S3Location } from 'sbolgraph'
+import { S3Identified, S3Range, S3Location } from 'sboljs'
 import IdentifiedChain from 'biocad/IdentifiedChain';
 import LabelDepiction from './LabelDepiction';
 import BackboneDepiction from './BackboneDepiction';

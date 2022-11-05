@@ -1,5 +1,5 @@
 
-import { S3Component } from "sbolgraph"
+import { S3Component } from "sboljs"
 
 import { h, svg } from '@biocad/jfw/vdom'
 
@@ -14,7 +14,7 @@ import RenderState from './SequenceEditorRenderState'
 import { VNode } from "@biocad/jfw/vdom"
 import { Dialog } from "@biocad/jfw/ui";
 import { App } from "@biocad/jfw/ui";
-import { S3Sequence } from "sbolgraph"
+import { S3Sequence } from "sboljs"
 
 import getReverseComplementSequenceString = require('ve-sequence-utils/src/getReverseComplementSequenceString')
 

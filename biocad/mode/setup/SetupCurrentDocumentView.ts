@@ -5,7 +5,7 @@ import { h, VNode } from '@biocad/jfw/vdom'
 import RemoveURIPrefixDialog from './RemoveURIPrefixDialog'
 
 import { click as clickEvent } from '@biocad/jfw/event'
-import { Graph, sbol3 } from "sbolgraph";
+import { Graph, sbol3 } from "sboljs";
 import BiocadApp from "biocad/BiocadApp";
 import { TextInput } from '@biocad/jfw/ui';
 

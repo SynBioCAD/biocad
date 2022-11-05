@@ -4,7 +4,7 @@ import { Sidebar, SidebarSection } from '@biocad/jfw/ui'
 import ComponentBrowser from './ComponentBrowser'
 
 import { Specifiers } from 'bioterms'
-import { S3Component } from "sbolgraph";
+import { S3Component } from "sboljs";
 
 import { Hook } from '@biocad/jfw/util'
 

@@ -16,7 +16,7 @@ import configurateLabel from './configurateLabel'
 import configurateBackbone from './configurateBackbone'
 import BackboneDepiction from "biocad/cad/layout/BackboneDepiction";
 import InstructionSet from 'biocad/cad/layout-instruction/InstructionSet';
-import { S3Identified } from 'sbolgraph';
+import { S3Identified } from 'sboljs';
 import Instruction from 'biocad/cad/layout-instruction/Instruction';
 import ReplaceInstruction from 'biocad/cad/layout-instruction/ReplaceInstruction';
 

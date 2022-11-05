@@ -1,6 +1,6 @@
 
 import Instruction from './Instruction'
-import { S3Identified } from 'sbolgraph';
+import { S3Identified } from 'sboljs';
 
 export default class PinInstruction extends Instruction {
 

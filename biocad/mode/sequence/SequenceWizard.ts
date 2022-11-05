@@ -1,6 +1,6 @@
 
 import { View } from '@biocad/jfw/ui'
-import { S3Component, Graph, S3Sequence, SBOL3GraphView, sbol3 } from 'sbolgraph';
+import { S3Component, Graph, S3Sequence, SBOL3GraphView, sbol3 } from 'sboljs';
 import BiocadApp from 'biocad/BiocadApp';
 import { h } from '@biocad/jfw/vdom'
 import { click as clickEvent } from '@biocad/jfw/event'

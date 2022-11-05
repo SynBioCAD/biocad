@@ -1,4 +1,4 @@
-import { S3Identified, Graph, sbol3 } from "sbolgraph";
+import { S3Identified, Graph, sbol3 } from "sboljs";
 
 export default class IdentifiedChain {
 

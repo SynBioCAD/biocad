@@ -9,7 +9,7 @@ import Layout from '../../cad/layout/Layout';
 import fileDialog = require('file-dialog')
 
 import { click as clickEvent } from '@biocad/jfw/event'
-import { Graph, SBOL2GraphView, SBOL3GraphView, sbol3 } from 'sbolgraph';
+import { Graph, SBOL2GraphView, SBOL3GraphView, sbol3 } from 'sboljs';
 
 import ImageRenderer, { ImageFormat } from 'biocad/cad/ImageRenderer'
 

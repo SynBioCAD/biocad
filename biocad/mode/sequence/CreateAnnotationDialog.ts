@@ -12,7 +12,7 @@ import { Combo } from '@biocad/jfw/ui';
 import roles from 'data/roles'
 import { Specifiers } from "bioterms";
 import Button from "@biocad/jfw/ui";
-import { S3Sequence, S3Component } from "sbolgraph"
+import { S3Sequence, S3Component } from "sboljs"
 
 export default class CreateAnnotationDialog extends Dialog {
 

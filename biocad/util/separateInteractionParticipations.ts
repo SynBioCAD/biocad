@@ -1,5 +1,5 @@
 
-import { S3Interaction, S3Participation } from "sbolgraph";
+import { S3Interaction, S3Participation } from "sboljs";
 import { Prefixes, Specifiers } from "bioterms";
 
 export interface SeparateResult {

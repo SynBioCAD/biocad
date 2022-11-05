@@ -1,13 +1,13 @@
 
 import  LayoutEditor  from 'biocad/cad/LayoutEditor';
-import { S3Component, S3SubComponent } from "sbolgraph"
+import { S3Component, S3SubComponent } from "sboljs"
 import BiocadApp from 'biocad/BiocadApp';
 
 import { Vec2, Matrix } from 'jfw/geom';
 
 import ContextMenu, { ContextMenuItem } from 'jfw/ui/ContextMenu';
 
-import { Graph } from "sbolgraph"
+import { Graph } from "sboljs"
 import Depiction, { Opacity } from "biocad/cad/layout/Depiction";
 
 import SequenceMode from 'biocad/mode/sequence/SequenceMode'

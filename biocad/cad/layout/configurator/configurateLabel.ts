@@ -1,4 +1,4 @@
-import { S3Identified } from "sbolgraph";
+import { S3Identified } from "sboljs";
 import Depiction, { Orientation } from 'biocad/cad/layout/Depiction';
 import ComponentDepiction from 'biocad/cad/layout/ComponentDepiction';
 

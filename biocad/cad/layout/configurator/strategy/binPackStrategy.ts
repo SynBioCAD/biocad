@@ -10,7 +10,7 @@ import ComponentDepiction from "biocad/cad/layout/ComponentDepiction";
 import BackboneDepiction from '../../BackboneDepiction'
 import { reverse } from 'dns';
 import LabelDepiction from 'biocad/cad/layout/LabelDepiction';
-import { S3Interaction } from 'sbolgraph';
+import { S3Interaction } from 'sboljs';
 import { Specifiers } from 'bioterms';
 
 

@@ -1,7 +1,7 @@
 
 import Layout from 'biocad/cad/layout/Layout'
 import ImageRenderer, { ImageFormat } from 'biocad/cad/ImageRenderer'
-import { Graph, SBOL3GraphView } from 'sbolgraph'
+import { Graph, SBOL3GraphView } from 'sboljs'
 import { Vec2 } from '@biocad/jfw/geom'
 
 import fs = require('fs')

@@ -9,7 +9,7 @@ import BiocadApp from '../../BiocadApp'
 import SequenceEditorOverlay from "biocad/mode/sequence/SequenceEditorOverlay";
 
 import CreateAnnotationDialog from './CreateAnnotationDialog'
-import { S3Sequence, S3Component } from "sbolgraph"
+import { S3Sequence, S3Component } from "sboljs"
 import { Specifiers } from "bioterms";
 
 //import clipboad = require('clipboard-polyfill')

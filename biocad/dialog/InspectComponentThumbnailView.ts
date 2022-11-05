@@ -1,7 +1,7 @@
 
 import { View } from '@biocad/jfw/ui';
 import BiocadApp from "biocad/BiocadApp";
-import { S3Component } from "sbolgraph"
+import { S3Component } from "sboljs"
 import { VNode, h } from "@biocad/jfw/vdom";
 import Layout from "biocad/cad/layout/Layout";
 import LayoutThumbnail from "biocad/cad/LayoutThumbnail";

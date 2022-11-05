@@ -3,7 +3,7 @@ import  { h } from '@biocad/jfw/vdom'
 
 import { View, TreeView } from '@biocad/jfw/ui'
 import BiocadApp from "biocad/BiocadApp";
-import { S3Component, Graph, sbol3 } from "sbolgraph";
+import { S3Component, Graph, sbol3 } from "sboljs";
 import { TreeNode } from '@biocad/jfw/ui';
 
 import { Hook } from '@biocad/jfw/util'

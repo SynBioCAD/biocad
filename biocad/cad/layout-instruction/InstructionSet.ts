@@ -1,5 +1,5 @@
 import Instruction from "biocad/cad/layout-instruction/Instruction";
-import { S3Identified } from "sbolgraph";
+import { S3Identified } from "sboljs";
 import PinInstruction from "biocad/cad/layout-instruction/PinInstruction";
 import ReplaceInstruction from "biocad/cad/layout-instruction/ReplaceInstruction";
 import { inspect } from "util";

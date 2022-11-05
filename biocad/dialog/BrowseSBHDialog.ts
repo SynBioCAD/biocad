@@ -2,7 +2,7 @@
 import { Dialog } from "@biocad/jfw/ui";
 import BiocadApp from "biocad/BiocadApp";
 import { DialogOptions } from "@biocad/jfw/ui";
-import { S3Component } from "sbolgraph"
+import { S3Component } from "sboljs"
 import Repository from '../Repository'
 import { SearchQuery, SearchResult } from "../Repository"
 import { Specifiers, Types } from "bioterms";

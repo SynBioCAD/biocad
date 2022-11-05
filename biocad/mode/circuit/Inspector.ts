@@ -4,7 +4,7 @@ import { h, svg, VNode } from '@biocad/jfw/vdom'
 import { View } from '@biocad/jfw/ui'
 import BiocadApp from "biocad/BiocadApp";
 import Depiction from "biocad/cad/layout/Depiction";
-import { S3Identified, S3SubComponent, S3Component, S3Interaction, sbol3, S2ExperimentalData } from "sbolgraph"
+import { S3Identified, S3SubComponent, S3Component, S3Interaction, sbol3, S2ExperimentalData } from "sboljs"
 
 // import describeSOUri from 'data/describeSOUri'
 // import renderCDTypeChooser from "biocad/stateless-ui/renderCDTypeChooser";
