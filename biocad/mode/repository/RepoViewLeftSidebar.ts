@@ -1,25 +1,27 @@
 
-import RepoView from "biocad/mode/repository/RepoView";
 import { Sidebar, SidebarSection } from "@biocad/jfw/ui";
-import RepoTree from "biocad/mode/repository/RepoTree";
 import { Hook } from "@biocad/jfw/util";
 import BiocadProject from "../../BiocadProject";
+import RepoBrowser from "../../repo-browser/RepoBrowser";
+import RepoTree from "../../repo-browser/RepoTree";
 
 export default class RepoViewLeftSidebar extends Sidebar {
 
 	project:BiocadProject
 
-    repositoryView:RepoView
+repoBrowser:RepoBrowser
 
     tree:RepoTree
 
     onSelectCollection:Hook<string> = new Hook()
 
-    constructor(project, repositoryView:RepoView) {
+    constructor(project, repoBrowser:RepoBrowser) {
 
         super(project)
 
 	this.project = project
+
+	this.repoBrowser = repoBrowser
 
 	this.tree = new RepoTree(project)
 

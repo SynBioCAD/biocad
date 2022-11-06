@@ -6,18 +6,17 @@ import BiocadApp from "biocad/BiocadApp";
 import { search, SearchResult } from 'sbh-proxy-client'
 
 import { Graph, S3Collection, S3Component, S3Identified, sbol2, sbol3, SBOLConverter } from "sboljs";
-import getNameFromRole from "../../util/getNameFromRole";
+import getNameFromRole from "../util/getNameFromRole";
 import RepoCollectionMembersView, { MemberType } from "./RepoCollectionMembersView";
 import { Types } from "bioterms";
 import RepoComponentVisualView from "./RepoComponentVisualView";
 import RepoComponentSeqView from "./RepoComponentSeqView";
-import SequenceEditor from "../sequence/SequenceEditor";
 
 import { click as clickEvent } from '@biocad/jfw/event'
 import assert from "assert";
-import SBOLDroppable from "../../droppable/SBOLDroppable";
-import CircuitMode from "../circuit/CircuitMode";
-import BiocadProject from "../../BiocadProject";
+import SBOLDroppable from "../droppable/SBOLDroppable";
+import CircuitMode from "../mode/circuit/CircuitMode";
+import BiocadProject from "../BiocadProject";
 
 
 /* Shows a top level from a repo
@@ -26,9 +25,9 @@ could be a collection or a component etc
 
 */
 
-export default class RepoView extends View {
+export default class RepoBrowser extends View {
 
-	project:BiocadProject
+	project?:BiocadProject
 
 	loading:boolean
 
@@ -37,21 +36,23 @@ export default class RepoView extends View {
 
 	tabs:TabbedView
 
-    constructor(project:BiocadProject) {
+    constructor(updateable, project?:BiocadProject) {
 
-        super(project)
-
-	this.project = project
-
+        super(updateable)
 
 	this.loading = false
+	this.project = project
 
 
     }
 
     render():VNode {
 
-	if(!this.g|| this.loading) {
+	if(!this.g) {
+		return h('div')
+	}
+
+	if(this.loading) {
 		return h('div.loader')
 	}
 
@@ -61,6 +62,29 @@ export default class RepoView extends View {
 
 	if(tl instanceof S3Component) {
 
+		let elements:VNode[] = []
+
+		if(this.project) {
+
+			elements.push(
+				h('a', {
+					'ev-click': clickEvent(clickAdd, { view: this })
+				}, [
+				h('span.fa.fa-plus', []),
+				h('span.icon-text.jfw-no-select', ' Add to Design')
+				])
+			)
+		} else {
+			elements.push(
+				h('a', {
+					'ev-click': clickEvent(clickOpen, { view: this })
+				}, [
+				h('span.fa.fa-folder-open', []),
+				h('span.icon-text.jfw-no-select', ' Open')
+				])
+			)
+		}
+
 		actions.push(h('div.sf-biglighticons', {
 			style: {
 				position: 'absolute',
@@ -68,18 +92,6 @@ export default class RepoView extends View {
 				right: 0
 			}
             }, [
-                h('a', {
-			'ev-click': clickEvent(clickOpen, { view: this })
-                }, [
-                    h('span.fa.fa-folder-open', []),
-                    h('span.icon-text.jfw-no-select', ' Open')
-                ]),
-                h('a', {
-			'ev-click': clickEvent(clickAdd, { view: this })
-                }, [
-                    h('span.fa.fa-plus', []),
-                    h('span.icon-text.jfw-no-select', ' Add to Design')
-                ])
 	    ]))
 	}
 
@@ -160,7 +172,7 @@ export default class RepoView extends View {
 			runCount(Types.SBOL2.Collection),
 		])
 
-		this.tabs = new TabbedView(this.project, {})
+		this.tabs = new TabbedView(this, {})
 
 		let tabs:any = []
 
@@ -249,8 +261,10 @@ export default class RepoView extends View {
 
 	let project = this.project
 
-	project.loadGraph(this.g, true)
-	project.setMode(project.modes.filter((mode) => mode instanceof CircuitMode)[0])
+	if(project) {
+		project.loadGraph(this.g, true)
+		project.setMode(project.modes.filter((mode) => mode instanceof CircuitMode)[0])
+	}
 
     }
 
@@ -260,11 +274,13 @@ export default class RepoView extends View {
 
 	let project = this.project
 
-	project.setMode(project.modes.filter((mode) => mode instanceof CircuitMode)[0])
+	if(project) {
+		project.setMode(project.modes.filter((mode) => mode instanceof CircuitMode)[0])
 
-	;((this.project).app as BiocadApp).dropOverlay.startDropping(
-		new SBOLDroppable(this.project, this.g, [this.uri])
-	)
+		;(project.app as BiocadApp).dropOverlay.startDropping(
+			new SBOLDroppable(this.project, this.g, [this.uri])
+		)
+	}
 
     }
 }

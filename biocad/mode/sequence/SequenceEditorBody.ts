@@ -11,13 +11,11 @@ import BiocadProject from '../../BiocadProject'
 
 export default class SequenceEditorBody extends View {
 
-	project:BiocadProject
     sequenceEditor: SequenceEditor
 
     constructor(sequenceEditor) {
 
-        super(sequenceEditor.project)
-	this.project = sequenceEditor.project
+        super(sequenceEditor)
 
         this.sequenceEditor = sequenceEditor
 

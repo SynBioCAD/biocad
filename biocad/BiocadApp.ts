@@ -1,5 +1,5 @@
 
-import { App } from '@biocad/jfw/ui'
+import { App, View } from '@biocad/jfw/ui'
 
 import BiocadTopbar from './topbar/BiocadTopbar'
 
@@ -30,6 +30,8 @@ import { Graph, sbol3 } from 'sboljs'
 import '../less/biocad.less'
 import BiocadProject from './BiocadProject'
 import BiocadProjectbar from './projectbar/BiocadProjectbar'
+import ZeroProjectsView from './ZeroProjectsView'
+import AddProjectView from './AddProjectView'
 
 console.log('BiocadApp.ts')
 
@@ -46,34 +48,17 @@ export default class BiocadApp extends App
         console.log('construct app')
     }
 
+    createZeroProjectsView():View {
+	return new ZeroProjectsView(this)
+    }
+    createAddProjectView(): View {
+	return new AddProjectView(this)
+    }
 
     init():void {
 
-        super.init()
-
-
         InitUData.init(this)
 
-
-
-        // const saved:any = this.udata.get('biocad')
-        const saved:any = false
-
-        if(saved) {
-
-            console.info('I have saved state! ' + typeof(saved))
-            console.dir(saved)
-
-	    for(let projectPOD of saved['projects']) {
-		this.addProject(BiocadProject.fromPOD(this, projectPOD))
-	    }
-
-        } else {
-
-            console.info('Nothing was saved :-(')
-
-	    this.addProject(new BiocadProject(this))
-        }
 
 
         if(GlobalConfig.get('biocad.headless')) {
@@ -97,6 +82,35 @@ export default class BiocadApp extends App
             })
 
         }*/
+
+        super.init()
+
+    }
+
+    getInitialProjects() {
+
+        // const saved:any = this.udata.get('biocad')
+        const saved:any = false
+
+	let projects:BiocadProject[] = []
+
+        if(saved) {
+
+            console.info('I have saved state! ' + typeof(saved))
+            console.dir(saved)
+
+	    for(let projectPOD of saved['projects']) {
+		projects.push(BiocadProject.fromPOD(this, projectPOD))
+	    }
+
+        } else {
+
+            console.info('Nothing was saved :-(')
+
+	//     projects.push(new BiocadProject(this))
+        }
+
+	return projects
     }
 
     saveState():void {

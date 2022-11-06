@@ -27,8 +27,7 @@ export default class SequenceEditorContextMenu extends ContextMenu {
         if(component === null)
             throw new Error('???')
 
-        const project:BiocadProject = overlay.project
-	let app:BiocadApp = project.app as BiocadApp
+	let app:BiocadApp = overlap.app
 
         const items:ContextMenuItem[] = []
 

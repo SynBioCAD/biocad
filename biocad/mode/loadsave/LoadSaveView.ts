@@ -197,15 +197,9 @@ export default class LoadSaveView extends View {
                 ]),
                 h('br'),
                 h('a', {
-                }, [
-                    h('span.fa.fa-plus', []),
-                    h('span.icon-text.jfw-no-select', ' Create New')
-                ]),
-                h('br'),
-                h('a', {
                     attributes: {
                         'data-balloon-pos': 'right',
-                        'data-balloon': 'Import GenBank, FASTA, or SBOL2 files from your computer',
+                        'data-balloon': 'Import GenBank, FASTA, or SBOL files from your computer',
                     },
                     'ev-click': clickEvent(clickImport, { view: this })
                 }, [

@@ -18,8 +18,6 @@ import BiocadProject from '../BiocadProject';
 
 export default class LayoutThumbnail extends View {
 
-	project:BiocadProject
-
     layout:Layout
 
     scrollOffset:Vec2
@@ -27,11 +25,9 @@ export default class LayoutThumbnail extends View {
     interactive:boolean
     attr:any
 
-    constructor(project:BiocadProject, layout:Layout) {
+    constructor(updateable, layout:Layout) {
 
-        super(project)
-
-	this.project = project
+        super(updateable)
 
         this.layout = layout
         this.scrollOffset = Vec2.fromScalar(0)

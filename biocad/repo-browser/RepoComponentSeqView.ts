@@ -1,25 +1,25 @@
 import { Graph, S3Component } from "sboljs";
-import RepoView from "./RepoView";
 import { View } from '@biocad/jfw/ui'
-import Layout from "../../cad/layout/Layout";
-import LayoutThumbnail from "../../cad/LayoutThumbnail";
+import Layout from "../cad/layout/Layout";
+import LayoutThumbnail from "../cad/LayoutThumbnail";
 import { h} from '@biocad/jfw/vdom'
-import SequenceEditor from "../sequence/SequenceEditor";
-import BiocadProject from "../../BiocadProject";
+import SequenceEditor from "../mode/sequence/SequenceEditor";
+import BiocadProject from "../BiocadProject";
+import RepoBrowser from "./RepoBrowser";
 
 export default class RepoComponentSeqView extends View {
 
-	project:BiocadProject
+	project?:BiocadProject
 
 	layout: Layout | null
 	layoutThumbnail: LayoutThumbnail | null
 
 	sequenceView:SequenceEditor
 
-	constructor(repoView:RepoView, g:Graph, c:S3Component) {
+	constructor(repoBrowser:RepoBrowser, g:Graph, c:S3Component) {
 
-		super(repoView.project)
-		this.project = repoView.project
+		super(repoBrowser)
+		this.project = repoBrowser.project
 
 		this.sequenceView = new SequenceEditor(this.project, this)
 		this.sequenceView.setComponent(c)

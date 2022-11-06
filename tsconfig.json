@@ -8,6 +8,7 @@
         "baseUrl": ".",
         "alwaysStrict": true,
         "strictNullChecks": true,
+	"allowSyntheticDefaultImports": true,
         "paths": {
         //     "jfw/*": [ "./node_modules/@biocad/jfw/dist/jfw/*" ],
         //     "jfw": [ "./node_modules/@biocad/jfw/dist/jfw" ]

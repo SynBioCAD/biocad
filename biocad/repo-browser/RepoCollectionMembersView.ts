@@ -3,10 +3,10 @@ import { View, TabbedView, Tab, DataTable } from "@biocad/jfw/ui";
 import { VNode, h, create, svg } from "@biocad/jfw/vdom";
 
 import { Graph, S3Collection, S3Component, S3Identified, sbol2, sbol3, SBOLConverter } from "sboljs";
-import BiocadApp from "../../BiocadApp";
-import BiocadProject from "../../BiocadProject";
-import getNameFromRole from "../../util/getNameFromRole";
-import RepoView from "./RepoView";
+import BiocadApp from "../BiocadApp";
+import BiocadProject from "../BiocadProject";
+import getNameFromRole from "../util/getNameFromRole";
+import RepoBrowser from "./RepoBrowser";
 
 
 /* Shows a top level from a repo
@@ -24,9 +24,9 @@ export enum MemberType {
 
 export default class RepoCollectionMembersView extends View {
 
-	project:BiocadProject
+	project?:BiocadProject
 
-	repoView:RepoView
+	repoBrowser:RepoBrowser
 
 	collection: S3Collection
 	type: MemberType
@@ -36,12 +36,12 @@ export default class RepoCollectionMembersView extends View {
 	dt:DataTable
 
 
-	constructor(repoView:RepoView, collection: S3Collection, type: MemberType) {
+	constructor(repoBrowser:RepoBrowser, collection: S3Collection, type: MemberType) {
 
-		super(repoView.project)
-		this.project = repoView.project
+		super(repoBrowser)
+		this.project = repoBrowser.project
 
-		this.repoView = repoView
+		this.repoBrowser = this.repoBrowser
 		this.collection = collection
 		this.type = type
 
@@ -105,7 +105,7 @@ export default class RepoCollectionMembersView extends View {
 					...(await this.doQuery((uri, offset, limit) => ComponentsQuery(uri, offset, limit))),
 					...(await this.doQuery((uri, offset, limit) => ModulesQuery(uri, offset, limit))),
 				}
-				this.dt = new DataTable(this.project, [
+				this.dt = new DataTable(this, [
 					{
 						title: 'Type',
 						getValue: (row: any) => displayType(row)
@@ -133,7 +133,7 @@ export default class RepoCollectionMembersView extends View {
 				allres = {
 					...(await this.doQuery((uri, offset, limit) => SequencesQuery(uri, offset, limit))),
 				}
-				this.dt = new DataTable(this.project, [
+				this.dt = new DataTable(this, [
 					{
 						title: 'Identifier',
 						getValue: (row: any) => row['http://sbols.org/v2#displayId']?.[0]?.value
@@ -156,7 +156,7 @@ export default class RepoCollectionMembersView extends View {
 				allres = {
 					...(await this.doQuery((uri, offset, limit) => CollectionsQuery(uri, offset, limit))),
 				}
-				this.dt = new DataTable(this.project, [
+				this.dt = new DataTable(this, [
 					{
 						title: 'Identifier',
 						getValue: (row: any) => row['http://sbols.org/v2#displayId']?.[0]?.value
@@ -179,7 +179,7 @@ export default class RepoCollectionMembersView extends View {
 				allres = {
 					// ...(await this.doQuery((uri, offset, limit) => OtherQuery(uri, offset, limit))),
 				}
-				this.dt = new DataTable(this.project, [
+				this.dt = new DataTable(this, [
 					{
 						title: 'Identifier',
 						getValue: (row: any) => row['http://sbols.org/v2#displayId']?.[0]?.value
@@ -223,7 +223,7 @@ export default class RepoCollectionMembersView extends View {
 		this.dt.setRows(m)
 
 		this.dt.onClickRow.listen((row) => {
-			this.repoView.load(row.uri)
+			this.repoBrowser.load(row.uri)
 			
 		})
 

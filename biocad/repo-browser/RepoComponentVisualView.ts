@@ -1,21 +1,21 @@
 import { Graph, S3Component } from "sboljs";
-import RepoView from "./RepoView";
+import RepoBrowser from "./RepoBrowser";
 import { View } from '@biocad/jfw/ui'
-import Layout from "../../cad/layout/Layout";
-import LayoutThumbnail from "../../cad/LayoutThumbnail";
+import Layout from "../cad/layout/Layout";
+import LayoutThumbnail from "../cad/LayoutThumbnail";
 import { h} from '@biocad/jfw/vdom'
-import BiocadProject from "../../BiocadProject";
+import BiocadProject from "../BiocadProject";
 
 export default class RepoComponentVisualView extends View {
 
-	project:BiocadProject
+	project?:BiocadProject
 
 	layout: Layout | null
 	layoutThumbnail: LayoutThumbnail | null
 
-	constructor(repoView:RepoView, g:Graph, c:S3Component) {
+	constructor(repoView:RepoBrowser, g:Graph, c:S3Component) {
 
-		super(repoView.project)
+		super(repoView)
 		this.project = repoView.project
 
                 this.layout = new Layout(g)

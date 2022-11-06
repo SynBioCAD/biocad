@@ -17,11 +17,11 @@ import { App } from "@biocad/jfw/ui";
 import { S3Sequence } from "sboljs"
 
 import getReverseComplementSequenceString = require('ve-sequence-utils/src/getReverseComplementSequenceString')
-import BiocadProject from "../../BiocadProject"
+import BiocadApp from "../../BiocadApp"
 
 export default class SequenceEditor extends View {
 
-	project:BiocadProject
+	app:BiocadApp
 
     component:S3Component|null
     sequence:S3Sequence|null
@@ -48,10 +48,10 @@ export default class SequenceEditor extends View {
     currentRenderState: RenderState
 
 
-    constructor(project:BiocadProject) {
+    constructor(app:BiocadApp) {
 
-        super(project)
-	this.project = project
+        super(app)
+	this.app = app
 
         this.darkMode = false
         this.showTopToolbar = true

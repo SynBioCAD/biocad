@@ -22,7 +22,7 @@ import BiocadProject from '../../BiocadProject'
  */
 export default class SequenceEditorOverlay extends View {
 
-	project:BiocadProject
+	app:BiocadApp
 
     sequenceEditor: SequenceEditor
 
@@ -36,8 +36,8 @@ export default class SequenceEditorOverlay extends View {
 
     constructor(sequenceEditor:SequenceEditor) {
 
-        super(sequenceEditor.project)
-	this.project = sequenceEditor.project
+        super(sequenceEditor)
+	this.app = sequenceEditor.app
 
         this.sequenceEditor = sequenceEditor
 

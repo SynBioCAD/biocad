@@ -3,28 +3,28 @@ import App from '../../BiocadApp'
 
 import { Mode } from '@biocad/jfw/ui';
 import { VNode, h } from "@biocad/jfw/vdom";
-import RepoView from "biocad/mode/repository/RepoView";
 import RepoViewLeftSidebar from 'biocad/mode/repository/RepoViewLeftSidebar';
 import BiocadProject from '../../BiocadProject';
+import RepoBrowser from '../../repo-browser/RepoBrowser';
 
 export default class RepoMode extends Mode {
 
     constructor(app:App, project:BiocadProject, active:boolean) {
 
-        const repositoryView:RepoView = new RepoView(project)
-	const sidebar = new RepoViewLeftSidebar(project, repositoryView)
+        const repoBrowser = new RepoBrowser(app, project)
+	const sidebar = new RepoViewLeftSidebar(project, repoBrowser)
 
         super(
             app,
 	    project,
             active,
-            repositoryView,
+            repoBrowser,
             sidebar,
             null
         )
 
 	sidebar.onSelectCollection.listen((uri:string) => {
-		repositoryView.load(uri)
+		repoBrowser.load(uri)
 	})
 
 
