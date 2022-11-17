@@ -12,7 +12,7 @@ async function main() {
 
     const app = new BiocadApp(document.getElementsByTagName('body')[0])
 
-    app.init()
+    await app.init()
 }
 
 main()

@@ -54,7 +54,8 @@ export default class LayoutThumbnail extends View {
 
         size = size.multiply(this.layout.gridSize)
 
-        return svg('svg.sf-circuit-view', extend({
+        return svg('svg', extend({
+	    class: 'sf-circuit-view',
             width: size.x + 'px',
             height: size.y + 'px',
         }, this.attr), svgElements)

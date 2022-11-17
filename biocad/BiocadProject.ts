@@ -23,15 +23,20 @@ export default class BiocadProject extends Project {
 
 	onLoadGraph: Hook<Graph> = new Hook<Graph>()
 
-	constructor(app:BiocadApp) {
+	constructor(app:BiocadApp, id?:string, defaultPrefix?:string, title?:string) {
 
 		super(app)
 
-		this.id = uuid.v4()
+		this.id = id || uuid.v4()
 		this.graph = new Graph([])
-		this.defaultPrefix = 'http://' + this.id + '/'
-		this.title = 'Untitled'
+		this.defaultPrefix = defaultPrefix || 'http://' + this.id + '/'
+		this.title = title || 'Untitled'
 		this.active = true
+	}
+
+	init() {
+
+		let app = this.app as BiocadApp
 
 		let modes:Mode[] = []
 
@@ -50,13 +55,13 @@ export default class BiocadProject extends Project {
 				modes.push(new SourceMode(app, this, false))
 
 			if(GlobalConfig.get('biocad.feature.mode.repository'))
-				modes.push(new RepoMode(app, this, true))
+				modes.push(new RepoMode(app, this, false))
 
 			if(GlobalConfig.get('biocad.feature.mode.library'))
 				modes.push(new LibraryMode(app, this, false))
 
 			if(GlobalConfig.get('biocad.feature.mode.circuit'))
-				modes.push(new CircuitMode(app, this, false))
+				modes.push(new CircuitMode(app, this, true))
 
 			if(GlobalConfig.get('biocad.feature.mode.sequence'))
 				modes.push(new SequenceMode(app, this, false))
@@ -68,20 +73,27 @@ export default class BiocadProject extends Project {
 		this.setModes(modes)
 	}
 
-	static fromPOD(app:BiocadApp, projPOD:any) {
+	static async fromPOD(app:BiocadApp, projPOD:any) {
 
 		let p = new BiocadProject(app)
-		p.graph = new Graph(projPOD.graph)
-		p.defaultPrefix = sbol3(p.graph).uriPrefixes[0]
+		p.id = projPOD.id
+		p.title = projPOD.title
+		p.defaultPrefix = projPOD.defaultPrefix
+		p.graph = await Graph.loadString(projPOD.graph)
+
+		p.init()
+
 		return p
 
 	}
 
-	toPOD():string {
-		return JSON.stringify({
+	toPOD():any {
+		return {
 			graph: this.graph.serializeXML(),
-			defaultPrefix: this.defaultPrefix
-		})
+			defaultPrefix: this.defaultPrefix,
+			id: this.id,
+			title: this.title
+		}
 	}
 
     loadGraph(graph:Graph, asCopy?:boolean):void {

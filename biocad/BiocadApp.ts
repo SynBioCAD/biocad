@@ -1,5 +1,5 @@
 
-import { App, View } from '@biocad/jfw/ui'
+import { App, Project, View } from '@biocad/jfw/ui'
 
 import BiocadTopbar from './topbar/BiocadTopbar'
 
@@ -55,7 +55,7 @@ export default class BiocadApp extends App
 	return new AddProjectView(this)
     }
 
-    init():void {
+    init():Promise<void> {
 
         InitUData.init(this)
 
@@ -83,11 +83,11 @@ export default class BiocadApp extends App
 
         }*/
 
-        super.init()
+        return super.init()
 
     }
 
-    getInitialProjects() {
+    async getInitialProjects():Promise<Project[]> {
 
         // const saved:any = this.udata.get('biocad')
         const saved:any = false
@@ -100,7 +100,7 @@ export default class BiocadApp extends App
             console.dir(saved)
 
 	    for(let projectPOD of saved['projects']) {
-		projects.push(BiocadProject.fromPOD(this, projectPOD))
+		projects.push(await BiocadProject.fromPOD(this, projectPOD))
 	    }
 
         } else {
@@ -110,7 +110,7 @@ export default class BiocadApp extends App
 	//     projects.push(new BiocadProject(this))
         }
 
-	return projects
+	return Promise.resolve(projects)
     }
 
     saveState():void {

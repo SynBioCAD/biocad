@@ -347,6 +347,8 @@ export default class Layout extends Versioned {
         let graph:Graph = this.graph
         let rootComponents:Array<S3Component> = sbol3(graph).rootComponents
 
+	console.log('syncAllDepictions: rootComponents are ' + rootComponents.map(c => c.uri).join(','))
+
         this.syncDepictions(detailLevel, rootComponents.map((c) => c.uri))
     }
 

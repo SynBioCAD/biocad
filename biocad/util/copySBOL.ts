@@ -11,9 +11,21 @@ import { Graph, S3Identified, sbol3, node, triple } from 'sboljs'
 
 export default function copySBOL(graphA:Graph, graphB:Graph, newURIPrefix:string):Map<string,string> {
 
+    console.log('copySBOL before copying')
+    console.log('graphA')
+    console.log(graphA.serializeXML())
+    console.log('graphB')
+    console.log(graphB.serializeXML())
+
     let intmGraph:Graph = graphA.clone()
     
+    console.log('intmGraph = graphA.clone()')
+    console.log(intmGraph.serializeXML())
+
     let identityMap:Map<string,string> = sbol3(intmGraph).changeURIPrefix(newURIPrefix)
+
+    console.log('intmGraph after changeURIPrefix to ' + newURIPrefix)
+    console.log(intmGraph.serializeXML())
 
     for(let topLevel of sbol3(intmGraph).topLevels) {
         let n = 1
@@ -61,7 +73,16 @@ export default function copySBOL(graphA:Graph, graphB:Graph, newURIPrefix:string
 
 	let newUri = identityMap.get(oldUri)!
 
+	if(!newUri) {
+		throw new Error('newUri was null')
+	}
+
 	let newDisplayId = newUri.split('/').pop()!
+
+	if(!newDisplayId) {
+		// uri of a namespace?
+		continue;
+	}
 
 	if(intmGraph.hasMatch(node.createUriNode(newUri), node.createUriNode(Predicates.SBOL3.displayId), null)) {
 		intmGraph.removeMatches(node.createUriNode(newUri), node.createUriNode(Predicates.SBOL3.displayId), null)
@@ -72,7 +93,16 @@ export default function copySBOL(graphA:Graph, graphB:Graph, newURIPrefix:string
 
 
 
+    console.log('copySBOL intmGraph before adding it to graphB')
+    console.log(intmGraph.serializeXML())
     graphB.addAll(intmGraph)
+
+
+    console.log('copySBOL finished copying')
+    console.log('graphA')
+    console.log(graphA.serializeXML())
+    console.log('graphB')
+    console.log(graphB.serializeXML())
 
     return identityMap
 }

@@ -469,8 +469,9 @@ export default class LayoutEditorOverlay extends View {
 
             const depiction:Depiction|undefined = layout.getDepictionsForUri(newUri)[0]
 
-            if(depiction === undefined)
-                throw new Error('???')
+            if(depiction === undefined) {
+                throw new Error('There were no depiction for the URI ' + newUri + ' in the layout after syncing.')
+	    }
 
             depiction.offsetExplicit = true
             //depiction.offset = offset.divide(this.layoutEditor.layout.gridSize).divideScalar(this.layoutEditor.scaleFactor).round()

@@ -18,8 +18,12 @@ export default class ZeroProjectsView extends View {
 
 
 	// new project
+	projectId:string
+	idHasBeenEdited:boolean
+	nameHasBeenEdited:boolean
 	projectName:string
 	uriPrefix:string
+
 	repoView:NewProjectRepoView
 
 
@@ -108,16 +112,29 @@ export default class ZeroProjectsView extends View {
 		
 		let buttonEnabled = true
 		let errorMessage = ''
+		let nameValid = true
+		let prefixValid = true
+		let idValid = true
 		
 		if(this.projectName === '') {
 			buttonEnabled = false
-			errorMessage = 'I need a project name'
-		} else if(this.uriPrefix === '') {
+			errorMessage = 'Missing project name'
+			nameValid = false
+		}
+		if(this.projectId === '') {
 			buttonEnabled = false
-			errorMessage = 'I need a URI prefix'
-		} else if(!this.uriPrefix.endsWith('/')) {
+			errorMessage = 'Missing URI prefix'
+			idValid = false
+		}
+		if(this.uriPrefix === '') {
+			buttonEnabled = false
+			errorMessage = 'Missing URI prefix'
+			prefixValid = false
+		}
+		if(!this.uriPrefix.endsWith('/')) {
 			buttonEnabled = false
 			errorMessage = 'URI prefix looks invalid'
+			prefixValid = false
 		}
 
 		return [ h('div.synbiocad-welcome-container.jfw-flow-grow.jfw-flow-ttb', [
@@ -140,22 +157,35 @@ export default class ZeroProjectsView extends View {
 					'font-size': 'large'
 					}
 				 }, [
-					'To create your new project, SynBioCAD needs a ',
-					h('b', 'name'),
-					' and optionally a ',
-					h('b', 'URI prefix'),
-					'. If you don\'t know (or care) what a URI prefix is, don\'t worry; a randomized one has been generated for you so you can get straight down to the biology!'
+					'To create your new project, SynBioCAD needs a few details.',
 				]),
 
 					h('h2', 'Project Name'),
-					h('input.biocad-projcreate-input', {
+					h('input.biocad-projcreate-input' + (!nameValid ? '.jfw-invalid' : ''), {
 						placeholder: 'My Groundbreaking Project',
 						value: this.projectName,
 						'ev-keyup': keyupChangeEvent(changeProjectName, { view: this} )
 					}),
 
-					h('h2', 'URI Prefix'),
-					h('input.biocad-projcreate-input', {
+					...(
+						(this.projectId != '' || this.projectName != '') ? [
+
+					h('h2', 'Project ID'),
+					h('input.biocad-projcreate-input' + (!idValid ? '.jfw-invalid' : ''), {
+						style: {
+							'font-family': 'monospace'
+						},
+						value: this.projectId,
+						spellcheck: false,
+						'ev-keyup': keyupChangeEvent(changeId, { view: this} )
+					})
+
+				] : []),
+
+					h('h2', [
+						'URI Prefix',
+					]),
+					h('input.biocad-projcreate-input' + (!prefixValid ? '.jfw-invalid' : ''), {
 						style: {
 							'font-family': 'monospace'
 						},
@@ -166,9 +196,13 @@ export default class ZeroProjectsView extends View {
 
 					h('br'),
 
-					h('button.biocad-projcreate-go', {
-						disabled: !buttonEnabled
-					 }, errorMessage ? errorMessage : h('b', 'Let\'s go! »'))
+					...(
+						buttonEnabled ? [
+							h('button.biocad-projcreate-go', {
+								'ev-click': clickEvent(clickGo, { view: this })
+							 }, h('b', 'Let\'s go! »'))
+						] : []
+					)
 			])
 
 		]
@@ -210,6 +244,9 @@ function clickWelcomeNew(data) {
 	view.selection = 'new'
 	view.projectName = ''
 	view.uriPrefix = 'urn:uri:' + uuid.v4() + '/'
+	view.projectId = ''
+	view.idHasBeenEdited = false
+	view.nameHasBeenEdited = false
 	view.update()
 }
 
@@ -276,6 +313,20 @@ function changeProjectName(data) {
 	let { view } = data
 
 	view.projectName = data.value
+
+	if(!view.idHasBeenEdited) {
+		view.projectId = view.projectName.replace(/[^A-z0-9]/g, '').toLowerCase()
+	}
+
+	view.update()
+}
+
+function changeId(data) {
+
+	let { view } = data
+
+	view.projectId = data.value
+	view.idHasBeenEdited = true
 	view.update()
 }
 
@@ -287,3 +338,15 @@ function changeUriPrefix(data) {
 	view.update()
 }
 
+function clickGo(data) {
+
+	let view: ZeroProjectsView = data.view
+
+
+	let proj = new BiocadProject(view.app, view.id, view.uriPrefix, view.projectName)
+	view.app.addProject(proj)
+	view.app.saveState()
+	
+
+
+}
