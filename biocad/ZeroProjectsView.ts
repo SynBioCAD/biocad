@@ -343,7 +343,8 @@ function clickGo(data) {
 	let view: ZeroProjectsView = data.view
 
 
-	let proj = new BiocadProject(view.app, view.id, view.uriPrefix, view.projectName)
+	let proj = new BiocadProject(view.app, view.projectId, view.uriPrefix, view.projectName)
+	proj.init()
 	view.app.addProject(proj)
 	view.app.saveState()
 	

@@ -92,6 +92,8 @@ export default class BiocadApp extends App
         // const saved:any = this.udata.get('biocad')
         const saved:any = false
 
+	console.log(saved)
+
 	let projects:BiocadProject[] = []
 
         if(saved) {

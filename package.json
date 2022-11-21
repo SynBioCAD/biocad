@@ -18,7 +18,7 @@
 	"dependencies": {
 		"@biocad/jfw": "=0.6.1",
 		"@types/codemirror": "0.0.76",
-		"@types/node": "^12.6.8",
+		"@types/node": "^14.6.0",
 		"almost-equal": "^1.1.0",
 		"assert": "^2.0.0",
 		"async": "^3.1.0",
@@ -46,7 +46,6 @@
 		"main-loop": "git+https://github.com/udp/main-loop.git",
 		"node-stdlib-browser": "^1.2.0",
 		"node-uuid": "^1.4.7",
-		"rdf-ext": "^0.3.0",
 		"rdf-parser-n3": "^0.3.0",
 		"rdf-parser-rdfxml": "^0.3.1",
 		"rdf-serializer-ntriples": "^1.0.0",
@@ -78,6 +77,8 @@
 		"typescript": "^4.8.4"
 	},
 	"resolutions": {
-		"@biocad/jfw": "portal:/Users/james/jfw"
+		"@biocad/jfw": "portal:/Users/james/jfw",
+		"rdfoo": "portal:/Users/james/rdfoo",
+		"rdfoo-prov": "portal:/Users/james/rdfoo-prov"
 	}
 }

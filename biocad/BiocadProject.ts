@@ -88,6 +88,9 @@ export default class BiocadProject extends Project {
 	}
 
 	toPOD():any {
+
+		console.log(this.graph.serializeXML())
+
 		return {
 			graph: this.graph.serializeXML(),
 			defaultPrefix: this.defaultPrefix,
