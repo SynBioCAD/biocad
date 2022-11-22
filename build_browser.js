@@ -25,7 +25,7 @@ build({
 	    Buffer: 'Buffer'
     },
 
-    watch: true,
+    //watch: true,
 
 
     plugins: [
