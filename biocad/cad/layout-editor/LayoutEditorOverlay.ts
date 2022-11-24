@@ -135,6 +135,8 @@ export default class LayoutEditorOverlay extends View {
         // boundingBox is literally { offset, offset + size }
 
 
+	console.log('!!!!!! resize, orig bbox ' + bbox)
+
         if(dimensions.indexOf('south') !== -1) {
             bbox.bottomRight = Vec2.fromXY(bbox.bottomRight.x, relPos.y)
         }
@@ -151,7 +153,12 @@ export default class LayoutEditorOverlay extends View {
         bbox.topLeft = bbox.topLeft.max(Vec2.fromXY(0, 0))
         bbox.bottomRight = bbox.bottomRight.max(Vec2.fromXY(1, 1))
 
+	console.log('!!!!!! resize, new bbox ' + bbox)
 
+	// delta left, top, right, bottom
+	// difference between the target bbox and depiction's bbox
+	// positive to add to the x/y, negative otherwise
+	//
         let dL = bbox.topLeft.x - depiction.boundingBox.topLeft.x
         let dT = bbox.topLeft.y - depiction.boundingBox.topLeft.y
         let dR = bbox.bottomRight.x - depiction.boundingBox.bottomRight.x
@@ -166,18 +173,34 @@ export default class LayoutEditorOverlay extends View {
             return
         }
 
+	// the new (user requested) size is calculated by adding the delta to
+	// the existing size
+	// 
+	// * flip dL because if it goes up (our left X increases) we will shrink
+	//    so to get the effect on size we - it
+	//       |---  |
+	// 
+	// * then add dR (the top right) because if it goes up we always grow
+	//     |   |+++
+	// 
+	// this gives us the delta, which we add to the current size to get the
+	// new size
+	// 
+
         let newSize = depiction.size.add(Vec2.fromXY(
             (- dL) + dR,
             (- dT) + dB
         ))
+
+	let newActualSize = depiction.getSizeForRequested(newSize)
         
-        if (newSize.x !== depiction.size.x) {
-            depiction.minSize = Vec2.fromXY(newSize.x, depiction.minSize.y)
+        if (newActualSize.x !== depiction.size.x) {
+            depiction.userDefinedSize = Vec2.fromXY(newActualSize.x, depiction.size.y)
             stuffChanged = true
         }
 
-        if (newSize.y !== depiction.size.y) {
-            depiction.minSize = Vec2.fromXY(depiction.minSize.x, newSize.y)
+        if (newActualSize.y !== depiction.size.y) {
+            depiction.userDefinedSize = Vec2.fromXY(depiction.size.x, newActualSize.y)
             stuffChanged = true
         }
 
@@ -190,6 +213,7 @@ export default class LayoutEditorOverlay extends View {
             //
             depiction.offset = bbox.topLeft
             depiction.offsetExplicit = true
+	    depiction.userDefinedSize = newActualSize
             stuffChanged = true
         }
 

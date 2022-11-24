@@ -35,6 +35,23 @@ export default class ComponentDepiction extends LocationableDepiction {
 
     }
 
+    getSizeForRequested(requestedSize: Vec2): Vec2 {
+
+            if(this.opacity === Opacity.Whitebox) {
+		return requestedSize
+	    } else {
+		let gt = this.getGlyphType()
+		let glyph = Glyph.getGlyph(gt)
+		if(glyph) {
+			return glyph.getSizeForRequested(requestedSize)
+		} else {
+			return requestedSize.max(Vec2.fromXY(2, 2))
+		}
+	    }
+
+	
+    }
+
     render(renderContext:RenderContext):VNode {
 
         if(CircularBackboneDepiction.ancestorOf(this)) {

@@ -89,8 +89,8 @@ export default class BiocadApp extends App
 
     async getInitialProjects():Promise<Project[]> {
 
-        const saved:any = this.udata.get('biocad')
-        // const saved:any = false
+        // const saved:any = this.udata.get('biocad')
+        const saved:any = false
 
 	console.log(saved)
 

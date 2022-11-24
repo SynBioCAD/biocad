@@ -88,7 +88,7 @@ export default function binPackStrategy(parent:Depiction|null, children:Depictio
     packer.fit(groups)
 
     if(parent) {
-        parent.size = Vec2.fromXY(padding + packer.root.w, padding + packer.root.h).max(parent.minSize)
+        parent.size = Vec2.fromXY(padding + packer.root.w, padding + packer.root.h).max(parent.getMinSize())
     }
 
     for(let group of groups) {

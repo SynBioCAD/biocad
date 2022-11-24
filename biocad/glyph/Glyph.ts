@@ -127,7 +127,20 @@ export default class Glyph {
     }
 
 
-    getActualSizeForRequested
+    getSizeForRequested(requestedSize:Vec2):Vec2 {
+	if(!this.hasFixedAspect()) {
+		// glyphs without a fixed aspect ratio
+		// can fill any bbox. I think ??
+		//
+		console.log('Glyph ' + this.glyphName + ' has no fixed aspect')
+		return requestedSize
+	} else {
+		console.log('Glyph ' + this.glyphName + ' has fixed aspect')
+		let height = this.getFixedAspectHeight({width: requestedSize.x})
+		return Vec2.fromXY(requestedSize.x, height)
+	}
+    }
+
     getFixedAspectHeight(params:any):number {
         let svgNode = this.svgTree._root
 	let paramMap = { ...this.defaultParameters, ...params }

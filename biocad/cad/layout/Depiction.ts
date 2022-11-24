@@ -44,7 +44,14 @@ export default abstract class Depiction extends Versioned {
     offsetExplicit:boolean
 
     size: Vec2 = new Vec2(0, 0)
-    minSize:Vec2 = new Vec2(0, 0)
+    userDefinedSize:Vec2|null = null
+
+    // overridden for depictions that impose aspect ratios,
+    // minimum sizes, etc.
+    //
+    getSizeForRequested(requestedSize:Vec2):Vec2 {
+	return requestedSize
+    }
 
 
     uid:number

@@ -83,13 +83,19 @@ function configurateWhiteboxComponent(depiction:ComponentDepiction):void {
 
     } else {
 
-        depiction.size = Vec2.fromXY(2, 2).max(depiction.minSize)
+	if(depiction.userDefinedSize) {
+		depiction.size = depiction.getSizeForRequested(depiction.userDefinedSize)
+						.max(Vec2.fromXY(displayWidth, 0))
+	} else {
+		depiction.size = depiction.getSizeForRequested(Vec2.fromXY(displayWidth, 2))
+	}
+
 
     }
 
     depiction.proportionalWidth = proportionalWidth
 
-    depiction.size = depiction.size.max(Vec2.fromXY(displayWidth, 0))
+//     depiction.size = depiction.size.max(Vec2.fromXY(displayWidth, 0))
 }
 
 function configurateBlackboxComponent(depiction:ComponentDepiction):void {
@@ -133,7 +139,14 @@ function configurateBlackboxComponent(depiction:ComponentDepiction):void {
 
     depiction.proportionalWidth = proportionalWidth
     // depiction.size = Vec2.fromXY(displayWidth, 2 * visbolite.glyphScaleFromType(type).y)
-    depiction.size = Vec2.fromXY(displayWidth, 2)
+    
+    if(depiction.userDefinedSize) {
+	depiction.size = depiction.getSizeForRequested(depiction.userDefinedSize)
+	console.log('configurateComponent: I requested user defined size ' + depiction.userDefinedSize + ' and got ' + depiction.size)
+    } else {
+	depiction.size = depiction.getSizeForRequested(Vec2.fromXY(displayWidth, 2))
+    }
+
 
     depiction.backbonePlacement = backbonePlacement
 }

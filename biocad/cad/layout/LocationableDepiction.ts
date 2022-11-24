@@ -74,7 +74,7 @@ export default abstract class LocationableDepiction extends Depiction {
         }
 
         let w = Math.max(proportionalWidth, layout.minGlyphWidth)
-        w = Math.max(w, this.minSize.x)
+        w = Math.max(w, 2)
 
         if(!hasFixedLoc) {
             proportionalWidth = w
