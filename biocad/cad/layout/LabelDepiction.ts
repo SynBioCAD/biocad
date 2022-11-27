@@ -82,7 +82,9 @@ export default class LabelDepiction extends Depiction {
         }
 
         return svg('g', {
+		attributes: {
             transform: transform.toSVGString()
+		}
         }, [
             Glyph.render(
                  'plasmid-annotation-label'
@@ -225,7 +227,9 @@ export default class LabelDepiction extends Depiction {
 
         let svgText = svg('text', extend(svgAttr, {
 
+		attributes: {
             transform: transform.toSVGString(),
+		},
             'text-anchor': 'start',
             'alignment-baseline': 'start',
             'dominant-baseline': 'text-before-edge',

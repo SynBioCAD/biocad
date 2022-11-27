@@ -2,7 +2,7 @@ import { createGrid } from '@biocad/jfw/graphics';
 import { App } from '@biocad/jfw';
 
 import Layout from 'biocad/cad/layout/Layout'
-import { View, SubTree } from '@biocad/jfw/ui'
+import { View, SubTree, GlobalConfig } from '@biocad/jfw/ui'
 
 import { VNode, h, svg } from '@biocad/jfw/vdom'
 
@@ -137,6 +137,18 @@ export default class LayoutEditor extends View {
 
             if(depiction.isVisible()) {
                 svgElements.push(depiction.render(this))
+
+		if (GlobalConfig.get('biocad.debug.outlineDepictions')) {
+			svgElements.push(svg('rect', {
+				x: depiction.absoluteOffset.multiply(this.layout.gridSize).x,
+				y:depiction. absoluteOffset.multiply(this.layout.gridSize).y,
+				width: depiction.size.multiply(this.layout.gridSize).x,
+				height: depiction.size.multiply(this.layout.gridSize).y,
+				stroke: 'red',
+				strokeWidth: '1px',
+				fill: 'none'
+			}))
+		}
             }
         }
 
@@ -171,7 +183,9 @@ export default class LayoutEditor extends View {
                     height: 'calc(100% - ' + this.scrollbarSize + 'px)'
                 }
             }, svg('g', {
+		attributes: {
                 transform: transform.toSVGString()
+		}
             }, svgElements)),
             h('div', {
                 style: {

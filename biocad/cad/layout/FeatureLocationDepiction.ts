@@ -55,7 +55,9 @@ export default class FeatureLocationDepiction extends LocationableDepiction {
             throw new Error('need parent')
 
         return svg('g', {
+		attributes: {
             transform: transform.toSVGString()
+		}
         }, [
             Glyph.render('plasmid-annotation', {
                 startPoint: Vec2.fromXY(0, 0),
@@ -122,7 +124,9 @@ export default class FeatureLocationDepiction extends LocationableDepiction {
 
         
         return svg('g', {
+		attributes: {
             transform: transform.toSVGString()
+		}
         }, [
             Glyph.render(type, {
 		color: colors[type] || 'black',

@@ -35,6 +35,7 @@ interface Positioned {
 
 export default function backboneStrategy(_parent:Depiction, children:Depiction[], padding) {
 
+	console.log('⚙️ Executing BackboneStrategy for parent ' + _parent.debugName + ' with ' + children.length + ' children [ ' + children.map(c => c.debugName).join(', ') + ' ]')
     let opts = {
         forceMinWidth: true,
         omitEmptySpace: true
@@ -587,6 +588,7 @@ export default function backboneStrategy(_parent:Depiction, children:Depiction[]
         }
 
         child.offset = Vec2.fromXY(x, y)
+	console.log('Set backbone child offset to ' + child.offset)
     }
 
 

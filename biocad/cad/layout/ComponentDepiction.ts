@@ -112,7 +112,9 @@ export default class ComponentDepiction extends LocationableDepiction {
         }
 
         return svg('rect', extend(attr, {
+	attributes: {
             transform: transform.toSVGString(),
+	},
             width: size.x,
             height: size.y,
             fill: 'none',
@@ -189,7 +191,9 @@ export default class ComponentDepiction extends LocationableDepiction {
              
 
         const attr = {
+	attributes: {
             transform: transform.toSVGString()
+	}
         }
 
         if(this.fade === Fade.Full) {
@@ -234,7 +238,9 @@ export default class ComponentDepiction extends LocationableDepiction {
         const transform = Matrix.translation(offset)
 
         return svg('rect', {
+		attributes: {
             transform: transform.toSVGString(),
+		},
             width: size.x,
             height: size.y,
             fill: 'none',

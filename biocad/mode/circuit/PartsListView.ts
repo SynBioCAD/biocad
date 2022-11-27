@@ -120,7 +120,16 @@ export default class PartsListView extends View {
 				height
 			].join(' ')
 			}, [
-			glyphSvgColor
+			glyphSvgColor,
+			svg('rect', {
+				x: 0,
+				y: 0,
+				width: width,
+				height: height,
+				strokeWidth: 1,
+				stroke: 'red',
+				fill: 'none'
+			})
 			])
 		]),
 

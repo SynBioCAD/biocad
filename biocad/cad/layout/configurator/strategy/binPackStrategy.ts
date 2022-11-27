@@ -60,6 +60,8 @@ class Group {
 
 export default function binPackStrategy(parent:Depiction|null, children:Depiction[], padding:number) {
 
+	console.log('⚙️ Executing BinPackStrategy for parent ' + parent?.debugName + ' with ' + children.length + ' children [ ' + children.map(c => c.debugName).join(', ') + ' ]')
+
     let groups = createInteractionGroups(parent, children)
 
     console.log('binPackStrategy: Created ' + groups.length + ' interaction group(s)')
@@ -88,7 +90,9 @@ export default function binPackStrategy(parent:Depiction|null, children:Depictio
     packer.fit(groups)
 
     if(parent) {
-        parent.size = Vec2.fromXY(padding + packer.root.w, padding + packer.root.h).max(parent.getMinSize())
+	// TODO
+        //parent.size = Vec2.fromXY(padding + packer.root.w, padding + packer.root.h).max(parent.getMinSize())
+        parent.size = Vec2.fromXY(padding + packer.root.w, padding + packer.root.h)
     }
 
     for(let group of groups) {

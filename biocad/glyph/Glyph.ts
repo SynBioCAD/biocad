@@ -179,6 +179,20 @@ export default class Glyph {
 
 	let bboxY = this.calculate(paramMap, bboxNode.attrib['parametric:y'])
 
+	// The bboxNode should be a bounding box rect of the whole glyph.
+	//
+	// So if the glyph is rendeded at Y 0, and its Y position is < 0, its Y position is the ascent
+	//   i.e. if we render it at Y 0 and the Y pos is -50, the ascent is 50
+	//   then if we want to draw it at some arbitrary position like Y 100, we actually need to draw it at Y-ascent=50 to make it appear where we want
+	//
+	// We handle this ascent in two places. First, the render function here always renders where you ask it to exactly. It does this by subtracting
+	// the ascent.
+	//
+	// Secondly, the backbone strategy uses the ascent to determine where to place the glyph relative to the backbone line.
+	//
+
+	// console.log('Ascent of glyph ' + this.glyphName + ' is ' + -bboxY);
+
 	return -bboxY;
     }
 

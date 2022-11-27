@@ -12,6 +12,7 @@ import Layout from './Layout'
 
 
 import RenderContext from '../RenderContext'
+import { GlobalConfig } from '@biocad/jfw/ui'
 
 
 export default class BackboneDepiction extends Depiction {
@@ -37,7 +38,6 @@ export default class BackboneDepiction extends Depiction {
         let leftOrigin:Vec2 = Vec2.fromXY(offset.x, offset.y + this.backboneY)
 
         let elements:VNode[] = []
-
 
         let drawSingleBackbone = (start:Vec2, startWithExtension:Vec2, end:Vec2) => {
 

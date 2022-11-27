@@ -11,5 +11,6 @@ export default {
 	"biocad.feature.mode.simulator": false,
 	"biocad.palette.sbolv": true,
 	"biocad.palette.protlang": false,
-	"biocad.layoutEditor.showToolbar": false
+	"biocad.layoutEditor.showToolbar": false,
+	"biocad.debug.outlineDepictions": true
 }
