@@ -30,6 +30,7 @@ export default class DepictionPOD {
             additionalProps['orientation'] = depiction.orientation
             additionalProps['backbonePlacement'] = depiction.backbonePlacement
             additionalProps['proportionalWidth'] = depiction.proportionalWidth
+            additionalProps['component'] = depiction.component.uri
 
             if(depiction.location)
                 additionalProps['location'] = depiction.location.uri

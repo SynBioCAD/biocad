@@ -732,10 +732,10 @@ function score(obj: S3Identified) {
         roles = obj.instanceOf.soTerms
     } else {
         console.dir(obj)
-        throw new Error('obj was not a feature or a subcomponent')
+        throw new Error('obj ' + obj.uri + ' was not a feature or a subcomponent')
     }
 
-    console.log('roles', roles)
+//     console.log('roles', roles)
 
     let max = 0
 

@@ -1,5 +1,6 @@
 
 import { S3SequenceFeature, S3SubComponent, S3Constraint, S3Component, S3Identified, S3Location, Graph, Facade, sbol3 } from "sboljs"
+import S3ComponentReference from "sboljs/dist/sbol3/S3ComponentReference"
 
 export default class ComponentDisplayList {
 
@@ -60,6 +61,12 @@ export default class ComponentDisplayList {
         /* now we need to group together things linked by constraints
          */
         for(let sc of cd.sequenceConstraints) {
+
+		// these constraints have no effect on visual positioning
+		if(sc.constraintRestriction === 'http://sbols.org/v3#verifyIdentical' ||
+		   sc.constraintRestriction === 'http://sbols.org/v3#differentFrom') {
+			continue
+		}
 
            let firstSet:Set<string>|null = null
 
@@ -171,9 +178,15 @@ export default class ComponentDisplayList {
 
                 locations = (child as S3SubComponent).locations
 
+            } else if(child instanceof S3ComponentReference) {
+
+		let refersTo = child.refersTo
+
+                locations = refersTo.locations
+
             } else {
 
-                throw new Error('???')
+		console.log('Child ' + child.uri + ' is not a SequenceFeature or a SubComponent')
             
             }
 

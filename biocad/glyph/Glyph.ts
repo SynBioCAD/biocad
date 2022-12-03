@@ -132,10 +132,10 @@ export default class Glyph {
 		// glyphs without a fixed aspect ratio
 		// can fill any bbox. I think ??
 		//
-		console.log('Glyph ' + this.glyphName + ' has no fixed aspect')
+		// console.log('Glyph ' + this.glyphName + ' has no fixed aspect')
 		return requestedSize
 	} else {
-		console.log('Glyph ' + this.glyphName + ' has fixed aspect')
+		// console.log('Glyph ' + this.glyphName + ' has fixed aspect')
 		let height = this.getFixedAspectHeight({width: requestedSize.x})
 		return Vec2.fromXY(requestedSize.x, height)
 	}
@@ -359,7 +359,11 @@ export default class Glyph {
 
     static async loadGlyphs():Promise<void> {
 
+	console.log('loadGlyphs')
+
         Glyph.glyphs = await Promise.all(Object.keys(glyphSvgs).map(glyphName => Glyph.load(glyphName)))
+
+	console.log('loadGlyphs done')
 
     }
 

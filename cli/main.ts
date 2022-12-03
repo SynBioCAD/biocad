@@ -11,6 +11,7 @@ import express = require('express')
 import bodyParser = require('body-parser')
 
 import yargs = require('yargs')
+import Glyph from '../biocad/glyph/Glyph'
 
 yargs
 .option('out', {
@@ -33,19 +34,30 @@ yargs
 .help()
 .argv
 
+async function init() {
+	await Glyph.loadGlyphs()
+}
+
 async function testall(argv) {
+
+    await init()
 
     for(let file of fs.readdirSync('testfiles')) {
 
-        if(!file.endsWith('.xml') || file.endsWith('_sbol3.xml'))
+        if(!file.endsWith('.ttl'))
             continue
 
         let path = 'testfiles/' + file
+        let outPath = 'testfiles_out/'
 
-        await doFile(path, null, ImageFormat.SVG)
+	console.log('*** testall: running test: ' + path)
+
+        await doFile(path, outPath, null, ImageFormat.SVG)
     }
 }
 async function server(argv) {
+
+    await init()
 
     let server = express()
     server.use(bodyParser.text({
@@ -55,7 +67,7 @@ async function server(argv) {
 
     server.use(async (req, res, next) => {
 
-        let gv = await SBOL3GraphView.loadString(req.body, 'application/rdf+xml')
+        let gv = await SBOL3GraphView.loadString(req.body, 'text/turtle')
         let layout = new Layout(gv.graph)
 
         layout.syncAllDepictions(5)
@@ -74,6 +86,8 @@ async function server(argv) {
 
 async function render(argv) {
 
+    await init()
+
     let outfmt = ImageFormat.SVG
 
     if(argv.outfmt === 'pdf') {
@@ -82,19 +96,24 @@ async function render(argv) {
         outfmt = ImageFormat.PPTX
     }
 
-    await doFile(argv.file, argv.out, outfmt)
+    await doFile(argv.file, null, argv.out, outfmt)
 
 }
 
-async function doFile(path, out, outfmt) {
+async function doFile(path, outPath, out, outfmt) {
 
-    let gv = await SBOL3GraphView.loadString(fs.readFileSync(path) + '', 'application/rdf+xml')
+    let gv = await SBOL3GraphView.loadString(fs.readFileSync(path) + '', 'text/turtle')
 
-    //fs.writeFileSync('testfiles/' + file + '_sbol3.xml', graph.serializeXML())
+    if(outPath)
+	fs.writeFileSync(outPath + path.split('/').pop().split('.').shift() + '_sbol3.xml', gv.serializeXML())
 
     let layout = new Layout(gv.graph)
 
     layout.syncAllDepictions(5)
+
+    if(outPath)
+	fs.writeFileSync(outPath + path.split('/').pop().split('.').shift() + '_layout_before_configurate.json', JSON.stringify(LayoutPOD.serialize(layout), null, 2))
+
     layout.configurate([])
     layout.size = layout.getBoundingSize().add(Vec2.fromXY(1, 1))
 
@@ -102,11 +121,12 @@ async function doFile(path, out, outfmt) {
 
     let svg = await renderer.render(outfmt)
 
-    out = out || path + '.svg'
+    out = out || outPath + path.split('/').pop().split('.').shift() + '.svg'
 
-    fs.writeFileSync(out, svg)
+    fs.writeFileSync(out, new TextDecoder().decode(svg))
 
-    fs.writeFileSync(out + '_layout.json', JSON.stringify(LayoutPOD.serialize(layout), null, 2))
+    if(outPath)
+	fs.writeFileSync(outPath + path.split('/').pop().split('.').shift() + '_layout_after_configurate.json', JSON.stringify(LayoutPOD.serialize(layout), null, 2))
 }
 
 

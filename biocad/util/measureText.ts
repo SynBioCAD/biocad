@@ -20,7 +20,9 @@ export default function measureText(text, attr) {
         return cache[cacheKey]
     }
 
-    if(typeof document !== 'undefined') {
+    let isNode = (typeof process !== 'undefined') && (process.release.name === 'node')
+
+    if(!isNode) {
         return (cache[cacheKey] = measureTextBrowser(text, attr))
     } else {
         return (cache[cacheKey] = measureTextNode(text, attr))

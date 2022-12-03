@@ -26,12 +26,23 @@ import IdentifiedChain from '../../IdentifiedChain';
 import LocationableDepiction from './LocationableDepiction'
 import Glyph from 'biocad/glyph/Glyph';
 import colors from '../../../data/colors';
+import S3ComponentReference from 'sboljs/dist/sbol3/S3ComponentReference';
 
 export default class ComponentDepiction extends LocationableDepiction {
 
-    constructor(layout:Layout, depictionOf:S3Identified|undefined, identifiedChain:IdentifiedChain|undefined, parent?:Depiction, uid?:number) {
+	component:S3Component
+
+    constructor(
+	layout:Layout,
+	depictionOf:S3Component|S3SubComponent|S3ComponentReference,
+	component:S3Component,
+	identifiedChain:IdentifiedChain|undefined,
+	parent?:Depiction,
+	uid?:number)
+	{
 
         super(layout, depictionOf, identifiedChain, parent, uid)
+	this.component = component
 
     }
 

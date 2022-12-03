@@ -14,21 +14,19 @@ import drawDegradationBin from "../drawDegradationBin";
 
 export default class InteractionDepiction extends Depiction {
 
-    sourceDepictions:Array<Depiction>
-    destDepictions:Array<Depiction>
-    otherDepictions:Array<Depiction>
+    sourceDepictions:Array<Depiction> = []
+    destDepictions:Array<Depiction> = []
+    otherDepictions:Array<Depiction> = []
 
-    ambiguousDirection:boolean
+    ambiguousDirection:boolean = false
 
-    waypoints:Vec2[]
+    waypoints:Vec2[] = []
 
 
     constructor(layout:Layout, depictionOf:S3Interaction, identifiedChain:IdentifiedChain, parent?:Depiction, uid?:number) {
 
         super(layout, depictionOf, identifiedChain, parent, uid)
         
-        this.waypoints = []
-
     }
 
     mapParticipationsToDepictions() {
@@ -50,7 +48,7 @@ export default class InteractionDepiction extends Depiction {
         function participationToDepiction(participation) {
             let depiction:Depiction|undefined = layout.getDepictionsForUri(participation.participant.uri)[0]
             if(!depiction) {
-                throw new Error('missing depiction')
+                throw new Error('missing depiction for participation ' + participation.uri + ' participant ' + participation.participant.uri)
             }
             return depiction
         }

@@ -8,7 +8,8 @@ import {
     S3SubComponent,
     S3SequenceFeature,
     S3Range,
-    sbol3
+    sbol3,
+    S3Feature
 } from "sboljs"
 
 import DetailPreset from '../detail-preset/DetailPreset'
@@ -27,13 +28,14 @@ import LayoutPOD from "biocad/cad/layout/LayoutPOD";
 import FeatureLocationDepiction from "biocad/cad/layout/FeatureLocationDepiction";
 
 import assert = require('assert')
-import ComponentDisplayList from "./ComponentDisplayList"
 import { Watcher, S3Identified, S3Constraint, S3Location, S3OrientedLocation, S3Interaction } from "sboljs"
 import InteractionDepiction from './InteractionDepiction'
 import Instruction from 'biocad/cad/layout-instruction/Instruction';
 import InstructionSet from 'biocad/cad/layout-instruction/InstructionSet';
 import IdentifiedChain from '../../IdentifiedChain';
 import WhitelistInstruction from '../layout-instruction/WhitelistInstruction';
+import S3ComponentReference from 'sboljs/dist/sbol3/S3ComponentReference';
+import syncDepictions from './sync/syncDepictions';
 
 
 export default class Layout extends Versioned {
@@ -90,7 +92,7 @@ export default class Layout extends Versioned {
         }
     }
 
-    private detachFromParent(depiction:Depiction) {
+    detachFromParent(depiction:Depiction) {
 
         if(!depiction.parent)
             return
@@ -110,7 +112,7 @@ export default class Layout extends Versioned {
 
     }
 
-    private attachToParent(depiction:Depiction, parent:Depiction) {
+    attachToParent(depiction:Depiction, parent:Depiction) {
 
         if(depiction.isDescendentOf(parent)) {
             if(! (depiction.parent === parent)) {
@@ -342,6 +344,10 @@ export default class Layout extends Versioned {
 
     }
 
+    syncDepictions(detailLevel: number, URIs: string[]): void {
+	syncDepictions(this, detailLevel, URIs)
+    }
+
     syncAllDepictions(detailLevel:number): void {
 
         let graph:Graph = this.graph
@@ -352,169 +358,6 @@ export default class Layout extends Versioned {
         this.syncDepictions(detailLevel, rootComponents.map((c) => c.uri))
     }
 
-    syncDepictions(detailLevel:number, URIs:string[]): void {
-
-        console.log('syncDepictions', URIs.join(', '))
-
-        ++ Layout.nextStamp
-
-        this.detailLevel = detailLevel
-
-        const graph:Graph = this.graph
-
-
-
-        /* Create depictions for anything that doesn't already have one
-         */
-
-        const preset:DetailPreset = levelToPreset(detailLevel)
-
-        let components:Array<S3Component> = []
-
-        for(let uri of URIs) {
-
-            let c = sbol3(graph).uriToFacade(uri)
-
-            if(c instanceof S3Component) {
-                components.push(c)
-            }
-        }
-
-        //console.log('Layout: I have ' + rootComponents.length + ' root component(s)')
-        //console.dir(rootComponents)
-
-        for(let component of components) {
-
-            let chain = new IdentifiedChain()
-            chain = chain.extend(component)
-
-            const opacity:Opacity = preset.getComponentOpacity(component, 0)
-
-            var cdDepiction:ComponentDepiction
-
-            var depiction:Depiction|undefined = this.identifiedChainToDepiction.get(chain.stringify())
-
-            if(depiction !== undefined) {
-
-                console.log(component.uri + ' found in depictionMap; uid ' + depiction.uid)
-
-                assert(depiction instanceof ComponentDepiction)
-
-                depiction.stamp = Layout.nextStamp
-
-                cdDepiction = depiction as ComponentDepiction
-
-                depiction.parent = null
-
-                // TODO label?
-
-            } else {
-
-                console.log(component.uri + ' not found in depictionMap')
-
-                cdDepiction = new ComponentDepiction(this, component, chain, undefined)
-                cdDepiction.setSameVersionAs(this)
-
-                this.addDepiction(cdDepiction, undefined)
-
-                cdDepiction.opacity = opacity
-            }
-
-            cdDepiction.orientation = Orientation.Forward
-            cdDepiction.isExpandable = component.subComponents.length > 0
-
-            this.syncLabel(preset, undefined, cdDepiction, 0)
-
-            if(cdDepiction.opacity === Opacity.Whitebox) {
-
-                var displayList:ComponentDisplayList = ComponentDisplayList.fromComponent(this.graph, component)
-
-                for(let backboneGroup of displayList.backboneGroups) {
-                    //console.log('BB GROUP LEN ' + backboneGroup.length)
-                    this.syncBackboneGroup(preset, backboneGroup, chain, cdDepiction, 1, Orientation.Forward)
-                }
-
-                for(let child of displayList.ungrouped) {
-
-                    if(! (child instanceof S3SubComponent))
-                        throw new Error('???')
-
-                    let nextChain = chain.extend(child)
-
-                    let ci = this.syncComponentInstanceDepiction(preset, child as S3SubComponent, nextChain, cdDepiction, 1, Orientation.Forward)
-                    this.syncLabel(preset, cdDepiction, ci, 1)
-                }
-
-                //console.log(component.displayName + ' has ' + component.interactions.length + ' interactions')
-
-                for(let interaction of component.interactions) {
-
-                    let nextChain = chain.extend(interaction)
-
-                    this.createInteractionDepiction(preset, interaction, nextChain, cdDepiction)
-                }
-            }
-        }
-
-
-
-
-        this.verifyAcyclic()
-
-        this.depthSort()
-
-
-
-
-        /// remove any depictions that weren't touched by this sweep
-
-        /// needs to be leaves first because removeDepiction updates child offsets
-
-        // doesn't work because the parent has already been changed to not be the BB that
-        // will be deleted
-
-        // could do it at the time we change the parent?
-        // or do a dry run and touch everything first before actually doing anything?
-
-        for(var i = this.depictions.length - 1; i >= 0
-            // removeDepiction might remove the last one
-            && i < this.depictions.length; ) {
-
-            let d = this.depictions[i]
-
-            //console.log('checking ' + d.debugName + ' depth' + d.calcDepth())
-
-            if(d.stamp !== Layout.nextStamp) {
-
-                console.log(`syncDepictions ${i}/${this.depictions.length}: `, d.debugName + ' is gone')
-
-                this.removeDepiction(d)
-
-            } else {
-
-                console.log(`syncDepictions ${i}/${this.depictions.length}: `, d.debugName + ' is still here')
-
-            }
-
-            -- i
-
-        }
-
-
-        ///
-
-
-
-
-
-
-        this.verifyAcyclic()
-
-        this.depthSort()
-
-        console.timeEnd('syncAllDepictions')
-
-    }
 
 //     startWatchingGraph(updateContext:App) {
 //     startWatchingGraph(updateContext:App) {
@@ -542,156 +385,6 @@ export default class Layout extends Versioned {
 
     }
 
-    private syncLocationDepiction(preset:DetailPreset, location:S3Location, chain:IdentifiedChain, parent:BackboneDepiction, nestDepth:number, orientation:Orientation) {
-
-        //const sequenceAnnotation:S3SequenceFeature = location.containingSequenceFeature
-
-        const containingObject:S3Identified|undefined = location.containingObject
-
-        if(containingObject === undefined)
-            throw new Error('???')
-
-        //const opacity:Opacity = preset.getSequenceFeatureOpacity(sequenceAnnotation, nestDepth)
-
-        const opacity = Opacity.Blackbox
-
-        var nestedOrientation:Orientation
-
-        if(location instanceof S3OrientedLocation) {
-
-            nestedOrientation = (location as S3OrientedLocation).orientation ===
-                Specifiers.SBOL3.Orientation.ReverseComplement ?
-                    reverse(orientation) : orientation
-
-        } else {
-
-            nestedOrientation = orientation
-
-        }
-
-
-        if(containingObject instanceof S3SubComponent) {
-
-            const cDepiction:ComponentDepiction = this.syncComponentInstanceDepiction(preset, containingObject, chain, parent, nestDepth, nestedOrientation)
-            cDepiction.location = location
-
-            return cDepiction
-
-        } else if(containingObject instanceof S3SequenceFeature) {
-
-            var depiction:Depiction|undefined = this.identifiedChainToDepiction.get(chain.stringify())
-            var salDepiction
-
-            if(depiction !== undefined) {
-
-                assert(depiction instanceof FeatureLocationDepiction)
-
-                depiction.stamp = Layout.nextStamp
-    
-                salDepiction = depiction as FeatureLocationDepiction
-    
-                this.attachToParent(depiction, parent)
-
-            } else {
-
-                depiction = salDepiction = new FeatureLocationDepiction(this, containingObject, chain, parent)
-                salDepiction.setSameVersionAs(this)
-
-                this.addDepiction(depiction, parent)
-
-                salDepiction.opacity = Opacity.Blackbox
-            }
-
-            salDepiction.location = location
-            salDepiction.depictionOf = containingObject
-            salDepiction.orientation = nestedOrientation
-            salDepiction.isExpandable = false
-
-            return salDepiction
-
-        } else {
-
-            throw new Error('???')
-
-        }
-
-    }
-
-    private syncComponentInstanceDepiction(preset:DetailPreset, component:S3SubComponent, chain:IdentifiedChain, parent:Depiction, nestDepth:number, orientation:Orientation):ComponentDepiction {
-
-        if(!component.instanceOf)
-            throw new Error('Component has no definition')
-
-        const opacity:Opacity = preset.getComponentOpacity(component.instanceOf, nestDepth)
-
-        //console.error('syncing CID with orientation ' + orientation)
-        
-        const definition:S3Component = component.instanceOf
-
-
-        var cDepiction:ComponentDepiction
-
-        var depiction:Depiction|undefined = this.identifiedChainToDepiction.get(chain.stringify())
-
-        if(depiction !== undefined) {
-
-            assert(depiction instanceof ComponentDepiction)
-
-            depiction.stamp = Layout.nextStamp
-
-            cDepiction = depiction as ComponentDepiction
-
-            this.attachToParent(depiction, parent)
-
-        } else {
-
-            cDepiction = new ComponentDepiction(this, component, chain, parent)
-            cDepiction.setSameVersionAs(this)
-
-            this.addDepiction(cDepiction, parent)
-
-            cDepiction.opacity = opacity
-
-        }
-
-        cDepiction.orientation = orientation
-        cDepiction.depictionOf = component
-        cDepiction.isExpandable = definition.subComponents.length > 0
-
-        if(cDepiction.opacity === Opacity.Whitebox) {
-
-            var displayList:ComponentDisplayList = ComponentDisplayList.fromComponent(this.graph, component.instanceOf)
-
-            //console.log(displayList.backboneGroups.length + ' bb groups for ' + component.uriChain)
-
-            for(let backboneGroup of displayList.backboneGroups) {
-                this.syncBackboneGroup(preset, backboneGroup, chain, cDepiction, nestDepth + 1, orientation)
-            }
-
-            for(let child of displayList.ungrouped) {
-
-                if(! (child instanceof S3SubComponent))
-                    throw new Error('???')
-
-                let nextChain = chain.extend(child)
-
-                let ci = this.syncComponentInstanceDepiction(preset, child, nextChain, cDepiction, nestDepth + 1, orientation)
-                this.syncLabel(preset, cDepiction, ci, nestDepth)
-
-            }
-
-            //console.log(definition.displayName + ' has ' + definition.interactions.length + ' interactions')
-
-            for(let interaction of definition.interactions) {
-
-                let newChain = chain.extend(interaction)
-
-                this.createInteractionDepiction(preset, interaction, newChain, cDepiction)
-            }
-        }
-
-        return cDepiction
-    }
 
     createInteractionDepiction(preset:DetailPreset, interaction:S3Interaction, chain:IdentifiedChain, parent:ComponentDepiction) {
 
@@ -713,88 +406,6 @@ export default class Layout extends Versioned {
 
             if(iDepiction)
                 this.addDepiction(iDepiction, parent)
-        }
-    }
-
-
-    private syncBackboneGroup(preset:DetailPreset, dlGroup:Array<S3Identified>, chain:IdentifiedChain, parent:Depiction, nestDepth:number, orientation:Orientation):void {
-
-        // parent is a depiction of an S3Component or S3SubComponent (i.e., a ComponentDepiction)
-
-        if(! (parent instanceof ComponentDepiction)) {
-            throw new Error('???')
-        }
-
-        let backbone:BackboneDepiction|null = null
-
-        for(let child of parent.children) {
-            if(child instanceof BackboneDepiction) {
-                backbone = child
-                break
-            }
-        }
-
-        if(!backbone) {
-            backbone = new BackboneDepiction(this, parent)
-            backbone.setSameVersionAs(this)
-            this.addDepiction(backbone, parent)
-        }
-
-        backbone.stamp = Layout.nextStamp
-
-        var c:ComponentDepiction = parent as ComponentDepiction
-
-        let circular:boolean = c.getDefinition().hasType(Specifiers.SBOL2.Type.Circular)
-
-        for(let child of dlGroup) {
-
-            /*
-            if(!forward) {
-                orientation = reverse(orientation)
-            }*/
-
-            let newChain = chain.extend(child)
-
-            var obj
-
-            if(child instanceof S3SubComponent) {
-                obj = this.syncComponentInstanceDepiction(preset, child, newChain, backbone, nestDepth + 1, orientation)
-            } else if (child instanceof S3Location) {
-                obj = this.syncLocationDepiction(preset, child, newChain, backbone, nestDepth + 1, orientation)
-            } else {
-                throw new Error('???')
-            }
-
-            this.syncLabel(preset, backbone, obj, nestDepth)
-        }
-
-    }
-
-    private syncLabel(preset:DetailPreset, parent:Depiction|undefined, labelFor:Depiction, nestDepth:number):void {
-
-        let label:LabelDepiction|undefined = undefined
-
-        let siblings = parent ? parent.children : this.depictions // todo?
-
-        for(let child of siblings) {
-            if(child instanceof LabelDepiction && child.labelFor) {
-                let existingChain = child.labelFor.identifiedChain
-                let newChain = labelFor.identifiedChain
-                if(existingChain && newChain && existingChain.stringify() === newChain.stringify()) {
-                    label = child
-                    break
-                }
-            }
-        }
-
-        if(label) {
-            label.labelFor = labelFor
-            labelFor.label = label
-            label.setSameVersionAs(this)
-            label.stamp = Layout.nextStamp
-        } else {
-            label = new LabelDepiction(this, labelFor, parent)
-            this.addDepiction(label, parent)
         }
     }
 
@@ -961,14 +572,5 @@ export default class Layout extends Versioned {
             }
         }
     }
-
-}
-
-
-function reverse(orientation:Orientation):Orientation {
-
-    return orientation === Orientation.Forward ?
-                Orientation.Reverse :
-                Orientation.Forward
 
 }

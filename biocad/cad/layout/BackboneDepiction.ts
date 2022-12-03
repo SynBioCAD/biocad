@@ -29,6 +29,8 @@ export default class BackboneDepiction extends Depiction {
 
         super(layout, undefined, undefined, parent, uid)
 
+	this.locationsOfOmittedRegions = new LinearRangeSet()
+
     }
 
     render(renderContext:RenderContext):VNode {

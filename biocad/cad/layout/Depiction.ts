@@ -204,7 +204,8 @@ export default abstract class Depiction extends Versioned {
 
         for(let p = this.parent; p !== ancestor; p = p.parent) {
             if(!p) {
-                throw new Error('offsetRelativeTo ran out of parents before it found the ancestor')
+                throw new Error('offsetRelativeTo ran out of parents before it found the ancestor.\n'+
+		'We were looking for the offset of ' + this.debugName + ' relative to its supposed ancestor ' + ancestor.debugName)
             }
             offset = offset.add(p.offset)
         }
