@@ -48,7 +48,8 @@ export default function syncDepictions(layout:Layout, detailLevel:number, URIs:s
             let chain = new IdentifiedChain()
             chain = chain.extend(component)
 
-	    syncComponentDepiction(layout, preset, component, component, chain, undefined, 0, Orientation.Forward)
+	    let componentDepiction = syncComponentDepiction(layout, preset, component, component, chain, undefined, 0, Orientation.Forward)
+	    syncLabel(layout, preset, undefined, componentDepiction, 0)
         }
 
 

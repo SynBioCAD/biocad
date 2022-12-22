@@ -36,7 +36,7 @@ import IdentifiedChain from '../../IdentifiedChain';
 import WhitelistInstruction from '../layout-instruction/WhitelistInstruction';
 import S3ComponentReference from 'sboljs/dist/sbol3/S3ComponentReference';
 import syncDepictions from './sync/syncDepictions';
-
+import ConfigurateDebugRect from './configurator/ConfigurateDebugRect';
 
 export default class Layout extends Versioned {
 

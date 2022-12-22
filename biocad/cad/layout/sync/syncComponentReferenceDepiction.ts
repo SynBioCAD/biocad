@@ -4,7 +4,6 @@ import S3ComponentReference from "sboljs/dist/sbol3/S3ComponentReference"
 import IdentifiedChain from "../../../IdentifiedChain"
 import DetailPreset from "../../detail-preset/DetailPreset"
 import ComponentDepiction from "../ComponentDepiction"
-import ComponentDisplayList from "./ComponentDisplayList"
 import Depiction, { Orientation, Opacity } from "../Depiction"
 import Layout from "../Layout"
 import syncBackboneGroup from "./syncBackboneGroup"
@@ -12,6 +11,8 @@ import syncComponentDepiction from "./syncComponentDepiction"
 import syncLabel from "./syncLabel"
 
 export default function syncComponentReferenceDepiction(layout:Layout, preset:DetailPreset, ref:S3ComponentReference, chain:IdentifiedChain, parent:Depiction, nestDepth:number, orientation:Orientation):ComponentDepiction {
+
+	console.log('syncComponentReferenceDepiction')
 
 	let feature:S3Feature = ref.refersTo
 

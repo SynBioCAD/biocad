@@ -12,6 +12,7 @@ import { reverse } from 'dns';
 import LabelDepiction from 'biocad/cad/layout/LabelDepiction';
 import { S3Interaction } from 'sboljs';
 import { Specifiers } from 'bioterms';
+import Layout from '../../Layout';
 
 
 const INTERACTION_HEIGHT:number = 1
@@ -58,7 +59,7 @@ class Group {
     numInteractionsBelow:number
 }
 
-export default function binPackStrategy(parent:Depiction|null, children:Depiction[], padding:number) {
+export default function binPackStrategy(layout:Layout, parent:Depiction|null, children:Depiction[], padding:number) {
 
 	console.log('⚙️ Executing BinPackStrategy for parent ' + parent?.debugName + ' with ' + children.length + ' children [ ' + children.map(c => c.debugName).join(', ') + ' ]')
 
@@ -68,17 +69,22 @@ export default function binPackStrategy(parent:Depiction|null, children:Depictio
 
     for(let group of groups) {
         console.log('Group has ' + group.depictions.size + ' depictions and ' + group.interactions.size + ' interactions')
+        console.log('Depictions ' + Array.from(group.depictions).map(d => d.debugName))
+        console.log('Interactions ' + Array.from(group.interactions).map(d => d.debugName))
     }
 
     horizontallyTileChildrenOfGroups(parent, groups, padding)
 
-    const packer = new GrowingPacker()
-
+    // adjusts group height to account for interactions
+    //
     let interactionToLayer = createABInteractionLayers(parent, groups)
 
     // padding
     for(let group of groups) {
         group.h += padding
+
+	// 2022
+	group.w += padding
     }
 
     // binpack all groups
@@ -87,7 +93,18 @@ export default function binPackStrategy(parent:Depiction|null, children:Depictio
         return Math.max(b.w, b.h) - Math.max(a.w, a.h)
     })
 
+    const packer = new GrowingPacker()
     packer.fit(groups)
+
+    if(parent){
+    for(let g of groups) {
+	parent.debugRects.push({
+		offset: Vec2.fromXY(g.fit.x, g.fit.y),
+		size: Vec2.fromXY(g.w, g.h),
+		label: 'BinPackGroup'
+	})
+    }
+	}
 
     if(parent) {
 	// TODO
@@ -113,6 +130,8 @@ export default function binPackStrategy(parent:Depiction|null, children:Depictio
         group.numInteractionsAbove = numAbove
         group.numInteractionsBelow = numBelow
     }
+
+    console.dir(groups)
 
     for(let group of groups) {
 
@@ -421,7 +440,7 @@ function createABInteractionLayers(parent:Depiction|null, groups:Group[]):Map<In
                 curLayer += layerDir
             }
 
-            //console.log('placing ' + interaction.debugName + ' in ' + curLayer)
+            console.log('placing ' + interaction.debugName + ' in ' + curLayer)
 
             layer.push(range)
 
@@ -439,7 +458,11 @@ function createABInteractionLayers(parent:Depiction|null, groups:Group[]):Map<In
                 ++ numBelow
         }
 
+	console.log('Group has ' + numAbove + ' interactions above, ' + numBelow + ' below')
+
         group.h += (numAbove + numBelow) * INTERACTION_HEIGHT
+
+	console.log('Increasing group height by ' + group.h + ' to account for interactions above/below')
 
         if(numAbove > 0) {
             group.h += INTERACTION_OFFSET
@@ -505,6 +528,7 @@ function routeABInteractions(parent:Depiction|null, groups:Group[], interactionT
             let a = interaction.sourceDepictions[0]
             let b = interaction.destDepictions[0]
 
+	    // x midpoints of the depictions, which seems to work fine
             let { xA, xB } = horizPoints(parent, takenPoints, a, b)
 
             if(layerN < 0) {

@@ -141,6 +141,19 @@ export default class ComponentDisplayList {
             return !visited.has(c.uri)
         })
 
+	/* add any componentReferences.
+	   if they were in interactions they are already in interaction groups
+	   they never have locations so they aren't in any backbone groups.
+	   */
+	this.ungrouped = this.ungrouped.concat(
+
+		cd.componentReferences.filter((c:S3ComponentReference) => {
+			return !visited.has(c.uri)
+		})
+
+	)
+
+
         console.dir(this.backboneGroups)
 
 

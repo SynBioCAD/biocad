@@ -20,21 +20,21 @@ import CircularBackboneDepiction from 'biocad/cad/layout/CircularBackboneDepicti
 import InstructionSet from 'biocad/cad/layout-instruction/InstructionSet';
 import Layout from 'biocad/cad/layout/Layout';
 
-export default function configurateComponent(depiction:ComponentDepiction, instructions:InstructionSet):void {
+export default function configurateComponent(layout:Layout, depiction:ComponentDepiction, instructions:InstructionSet):void {
 
     console.log('configurating ' + depiction.debugName)
 
     if(CircularBackboneDepiction.ancestorOf(depiction)) {
         if(depiction.opacity === Opacity.Whitebox) {
-            configurateCircularWhiteboxComponent(depiction)
+            configurateCircularWhiteboxComponent(layout, depiction)
         } else {
-            configurateCircularBlackboxComponent(depiction)
+            configurateCircularBlackboxComponent(layout, depiction)
         }
     } else {
         if(depiction.opacity === Opacity.Whitebox) {
-            configurateWhiteboxComponent(depiction)
+            configurateWhiteboxComponent(layout, depiction)
         } else {
-            configurateBlackboxComponent(depiction)
+            configurateBlackboxComponent(layout, depiction)
         }
     }
 
@@ -69,7 +69,7 @@ export default function configurateComponent(depiction:ComponentDepiction, instr
     */
 }
 
-function configurateWhiteboxComponent(depiction:ComponentDepiction):void {
+function configurateWhiteboxComponent(layout:Layout, depiction:ComponentDepiction):void {
 
     const children = depiction.children.filter((child:Depiction) => !(child instanceof LabelDepiction))
 
@@ -79,7 +79,7 @@ function configurateWhiteboxComponent(depiction:ComponentDepiction):void {
 
         const padding = 1
 
-        binPackStrategy(depiction, children, padding)
+        binPackStrategy(layout, depiction, children, padding)
 
     } else {
 
@@ -98,9 +98,7 @@ function configurateWhiteboxComponent(depiction:ComponentDepiction):void {
 //     depiction.size = depiction.size.max(Vec2.fromXY(displayWidth, 0))
 }
 
-function configurateBlackboxComponent(depiction:ComponentDepiction):void {
-
-    let layout = depiction.layout
+function configurateBlackboxComponent(layout:Layout, depiction:ComponentDepiction):void {
 
     var type = 'user-defined'
 
@@ -151,7 +149,7 @@ function configurateBlackboxComponent(depiction:ComponentDepiction):void {
     depiction.backbonePlacement = backbonePlacement
 }
 
-function configurateCircularWhiteboxComponent(depiction:ComponentDepiction):void {
+function configurateCircularWhiteboxComponent(layout:Layout, depiction:ComponentDepiction):void {
 
     depiction.size = Vec2.fromXY(20, 20)
 
@@ -163,7 +161,7 @@ function configurateCircularWhiteboxComponent(depiction:ComponentDepiction):void
 
 }
 
-function configurateCircularBlackboxComponent(depiction:ComponentDepiction):void {
+function configurateCircularBlackboxComponent(layout:Layout, depiction:ComponentDepiction):void {
 
     depiction.size = Vec2.fromXY(2, 2)
 

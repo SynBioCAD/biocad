@@ -46,6 +46,10 @@ export default class InteractionDepiction extends Depiction {
         this.otherDepictions = separatedParticipants.others.map(participationToDepiction)
 
         function participationToDepiction(participation) {
+		let participant = participation.participant
+		if(!participant) {
+			throw new Error('missing participant for participation ' + participation.uri)
+		}
             let depiction:Depiction|undefined = layout.getDepictionsForUri(participation.participant.uri)[0]
             if(!depiction) {
                 throw new Error('missing depiction for participation ' + participation.uri + ' participant ' + participation.participant.uri)

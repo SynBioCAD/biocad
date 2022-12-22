@@ -41,7 +41,7 @@
 		"html2hscript": "^2.0.1",
 		"is-event-supported": "^1.0.1",
 		"jquery": "^3.1.0",
-		"jsdom": "^19.0.0",
+		"jsdom": "^20.0.3",
 		"left-pad": "^1.1.1",
 		"main-loop": "git+https://github.com/udp/main-loop.git",
 		"mathjs": "^11.4.0",

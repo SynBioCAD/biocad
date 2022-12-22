@@ -88,7 +88,26 @@ export default class ImageRenderer implements RenderContext {
             if(depiction.isVisible()) {
                 svgElements.push(depiction.render(this))
             }
+
+		for(let debugRect of depiction.debugRects) {
+
+			let offset = depiction.absoluteOffset.add(debugRect.offset).multiply(this.layout.gridSize)
+			let size = debugRect.size.multiply(this.layout.gridSize)
+
+			console.log('drawing debug rect ' + offset + size)
+
+			svgElements.push(svg('rect', {
+				x: offset.x,
+				y: offset.y,
+				width: size.x,
+				height: size.y,
+				stroke: 'red',
+				'stroke-width': '4px',
+				fill: 'none'
+			}))
+		}
         }
+
 
         let size:Vec2 = this.layout.getSize()
 

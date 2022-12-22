@@ -73,6 +73,8 @@ export default function configurate(layout:Layout, instructions:InstructionSet) 
 
     for(let depiction of layout.depictions) {
 
+	depiction.debugRects = []
+
         if(whitelistUIDs) {
             if(!whitelistUIDs.has(depiction.uid)) {
                 continue
@@ -80,7 +82,7 @@ export default function configurate(layout:Layout, instructions:InstructionSet) 
         }
 
         if(depiction instanceof ComponentDepiction) {
-            configurateComponent(depiction, instructions)
+            configurateComponent(layout, depiction, instructions)
         } else if(depiction instanceof FeatureLocationDepiction) {
             configurateFeatureLocation(depiction, instructions)
         } else if(depiction instanceof LabelDepiction) {
@@ -99,7 +101,7 @@ export default function configurate(layout:Layout, instructions:InstructionSet) 
 
     let bpo = 1
 
-    binPackStrategy(null, rootDepictions, bpo)
+    binPackStrategy(layout, null, rootDepictions, bpo)
 
     for(let d of rootDepictions) {
         d.offset = d.offset.subtractScalar(bpo)

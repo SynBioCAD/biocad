@@ -11,6 +11,7 @@ import CircularBackboneDepiction from '../CircularBackboneDepiction'
 import IdentifiedChain from '../../IdentifiedChain';
 import LabelDepiction from './LabelDepiction';
 import { sbol3 } from 'sboljs'
+import ConfigurateDebugRect from './configurator/ConfigurateDebugRect';
 
 export enum Opacity {
     Blackbox,
@@ -45,6 +46,8 @@ export default abstract class Depiction extends Versioned {
 
     size: Vec2 = new Vec2(0, 0)
     userDefinedSize:Vec2|null = null
+
+    debugRects:ConfigurateDebugRect[] = []
 
     // overridden for depictions that impose aspect ratios,
     // minimum sizes, etc.

@@ -64,14 +64,29 @@ export default function syncComponentDepiction(
 
             for(let child of displayList.ungrouped) {
 
-                if(! (child instanceof S3SubComponent))
-                    throw new Error('???')
-
                 let nextChain = chain.extend(child)
 
-                let ci = syncComponentDepiction(layout, preset, child, child.instanceOf, nextChain, cDepiction, nestDepth + 1, orientation)
-                syncLabel(layout, preset, cDepiction, ci, nestDepth)
+		if(child instanceof S3SubComponent) {
 
+			let ci = syncComponentDepiction(layout, preset, child, child.instanceOf, nextChain, cDepiction, nestDepth + 1, orientation)
+			syncLabel(layout, preset, cDepiction, ci, nestDepth)
+
+		} else if(child instanceof S3ComponentReference) {
+
+			let refersTo = child.refersTo
+
+			if(refersTo instanceof S3SubComponent) {
+
+				let ci = syncComponentDepiction(layout, preset, child, refersTo.instanceOf, nextChain, cDepiction, nestDepth + 1, orientation)
+				syncLabel(layout, preset, cDepiction, ci, nestDepth)
+
+			} else {
+				throw new Error('???')
+			}
+
+		} else {
+			throw new Error('???')
+		}
             }
 
             //console.log(definition.displayName + ' has ' + definition.interactions.length + ' interactions')

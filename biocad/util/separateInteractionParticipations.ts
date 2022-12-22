@@ -13,7 +13,9 @@ let sourceRoles = [
     Specifiers.SBO.Stimulator,
     Specifiers.SBO.Modifier,
     Prefixes.sbo + 'SBO:0000645', // template
-    Specifiers.SBO.Control
+    Specifiers.SBO.Control,
+    'https://identifiers.org/SBO:0000010', // reactant
+    'https://identifiers.org/SBO:0000645' // template
 ]
 
 let destRoles = [
@@ -22,6 +24,8 @@ let destRoles = [
     Specifiers.SBO.Promoter,
     Specifiers.SBO.Product,
     Prefixes.sbo + 'SBO:0000644', // modified
+    'https://identifiers.org/SBO:0000011', // product
+    'https://identifiers.org/SBO:0000642' // inhibited
 ]
 
 export default function separateInteractionParticipations(interaction:S3Interaction):SeparateResult {
